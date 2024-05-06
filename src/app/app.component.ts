@@ -14,5 +14,4 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 })
 export class AppComponent {
   title = 'SeedLabFrontend';
-  mostrarMenu: boolean = true;
 }
