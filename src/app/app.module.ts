@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-
+import { MenuComponent } from './inicio/menu/menu.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './inicio/menu/menu.component';
@@ -13,8 +13,7 @@ import { Router } from '@angular/router';
 @NgModule({
   declarations: [
     AppComponent,
-    MenuComponent,
-    BodyComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,

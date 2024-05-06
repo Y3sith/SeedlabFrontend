@@ -35,8 +35,9 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css",
-              "node_modules/font-awesome/css/font-awesome.css"
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              "src/styles.css"
+
             ],
             "scripts": [],
             "server": "src/main.server.ts",
@@ -100,6 +101,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -109,6 +111,7 @@
     }
   },
   "cli": {
-    "analytics": "ebe4ac82-af27-4f76-94f0-22077889a0e8"
+    "analytics": "72d4fb1e-e571-42b8-9f57-591a1ab672c7"
+
   }
 }
