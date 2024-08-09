@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import { ActividadService } from '../../../../servicios/actividad.service';
+import { AlertService } from '../../../../servicios/alert.service';
 import { User } from '../../../../Modelos/user.model';
 import { Aliado } from '../../../../Modelos/aliado.model';
 import Pica from 'pica';
@@ -16,7 +17,7 @@ import { Actividad } from '../../../../Modelos/actividad.model';
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
   styleUrls: ['./add-aliados.component.css'],
-  providers: [AliadoService, ActividadService]
+  providers: [AliadoService, ActividadService, AlertService]
 })
 export class AddAliadosComponent {
   nombre: string = '';
@@ -55,6 +56,7 @@ export class AddAliadosComponent {
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
+    private alertService: AlertService,
     private router: Router,
     private formBuilder: FormBuilder,
     private imageCompress: NgxImageCompressService,
@@ -159,19 +161,14 @@ export class AddAliadosComponent {
 
     this.aliadoService.crearAliado(this.token, formData).subscribe(
       data => {
-        console.log('Aliado creado', formData);
-        this.aliadoid = data.banner.id_aliado;
-        console.log('Banner creado', this.aliadoid);
+      
+       this.alertService.successAlert('Exito', data.message);
       },
-      err => {
-        console.error('Error al crear aliado', err);
-        if (err.error && err.error.message) {
-          alert(err.error.message);
-        } else {
-          alert('Ocurrió un error al crear el aliado');
+      error => {
+        if (error.status === 400) {
+          this.alertService.errorAlert('Error', error.error.message);
         }
-      }
-    );
+      });
   }
 
   tipoDato(): void {
@@ -248,23 +245,63 @@ export class AddAliadosComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
+      let maxSize = 0;
+  
+      if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
+        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+      } else if (field === 'ruta_documento') {
+        maxSize = 18 * 1024 * 1024; // 20MB para documentos
+      }
+  
+      if (file.size > maxSize) {
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+  
+        // Muestra la alerta de error
+        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+  
+        // Limpia el archivo seleccionado
+        event.target.value = ''; // Borra la selección del input
+  
+        // También puedes resetear el control de formulario correspondiente si lo necesitas
+        if (field === 'urlImagen') {
+          this.bannerForm.patchValue({ urlImagen: null });
+          this.selectedBanner = null;
+        } else if (field === 'logo') {
+          this.aliadoForm.patchValue({ logo: null });
+          this.selectedLogo = null;
+        } else if (field === 'ruta_multi') {
+          this.aliadoForm.patchValue({ ruta_multi: null });
+          this.selectedruta = null;
+        }
+  
+        return;
+      }
+  
       if (field === 'urlImagen') {
         this.selectedBanner = file;
         this.bannerForm.patchValue({ urlImagen: file });
-      }
-      if (field === 'logo') {
+      } else if (field === 'logo') {
         this.selectedLogo = file;
         this.aliadoForm.patchValue({ logo: file });
-      }
-      if (field === 'ruta_multi') {
+      } else if (field === 'ruta_multi') {
+        this.selectedruta = file;
+        this.aliadoForm.patchValue({ ruta_multi: file });
+      } else if (field === 'ruta_documento') {
         this.selectedruta = file;
         this.aliadoForm.patchValue({ ruta_multi: file });
       }
+      
     } else {
-      // Si no se seleccionó un archivo, se puede asignar un valor de texto al campo ruta_multi
       if (field === 'ruta_multi') {
         this.aliadoForm.patchValue({ ruta_multi: event.target.value });
       }
+      //Limpiar el input file directamente en el DOM
+      if (field === 'urlImagen') {
+        this.selectedBanner = null;
+      } else {
+        this.selectedLogo = null;
+      }
+      event.target.value = ''; // Esta línea limpia el input de tipo file
     }
   }
 
