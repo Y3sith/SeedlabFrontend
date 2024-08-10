@@ -220,15 +220,11 @@ export class AddEmpresaComponent {
       data => {
         console.log('Respuesta de la API (empresa creada):', data);
         this.alertService.successAlert('Éxito', 'Registro exitoso');
-        this.emprendedorDocumento = data.empresa.id_emprendedor;
-        //console.log(`------------------------------------------------ ${this.emprendedorDocumento}`);
-        //debugger;
-        location.reload();
         this.router.navigate(['list-empresa']);
       },
       error => {
         this.alertService.errorAlert('Error', error.message);
-       console.log('Respuesta de la API ERRRRORRRRRR')
+        console.log('Respuesta de la API ERROR:', error);
       }
     );
   }

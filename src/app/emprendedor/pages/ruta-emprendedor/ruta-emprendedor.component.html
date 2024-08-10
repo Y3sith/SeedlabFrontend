@@ -1,98 +1,18 @@
-<div class="flex">
-  <!-- Main Content -->
-  <div class="flex-1 pt-4 divide-y divide-light-blue-400 ml-12 mr-4">
-    <h1 class="text-center text-sky-500 font-bold bg-gray-100 rounded-lg shadow-md p-4 mb-6">Vista general de la Ruta</h1>
-
-    <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-4">
-        <h2>Rutas</h2>
-        <div class="flex flex-wrap gap-4 mb-6">
-          <div *ngFor="let ruta of rutaList" (click)="selectRuta(ruta)"
-            class="flex flex-col items-center cursor-pointer transform transition duration-300 hover:scale-110"
-            [ngClass]="{'border-2 border-blue-500': ruta === rutaSeleccionada}">
-            <img *ngIf="ruta.imagen_ruta" [src]="ruta.imagen_ruta" [alt]="ruta.nombre"
-              class="w-24 h-24 object-cover rounded-full">
-            <h3 class="mt-2 w-32 text-center truncate">{{ ruta.nombre }}</h3>
-          </div>
-        </div>
-
-        <div *ngIf="rutaSeleccionada" class="mb-6">
-          <h3 class="text-lg font-semibold mb-3">Actividades</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <div *ngFor="let actividad of rutaSeleccionada.actividades" (click)="selectActividad(actividad)"
-              class="flex items-center justify-center w-24 h-24 bg-sky-200 rounded-full cursor-pointer transform transition duration-300 hover:scale-110"
-              [ngClass]="{'bg-sky-400': actividad === actividadSeleccionada}">
-              <span class="text-center text-sm">{{actividad.nombre}}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Niveles y Lecciones -->
-        <div *ngIf="actividadSeleccionada" class="mb-6">
-          <h3 class="text-lg font-semibold mb-3">Niveles y Lecciones</h3>
-          <div class="bg-white shadow rounded-lg">
-            <div *ngFor="let nivel of actividadSeleccionada.nivel; let i = index">
-              <div class="p-4 border-b cursor-pointer" (click)="toggleNivel(i)">
-                <span class="font-semibold">{{nivel.nombre}}</span>
-                <span class="float-right">▼</span>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="main-timeline">
+        <div *ngFor="let ruta of rutaList">
+          <div *ngFor="let actividad of ruta.actividades; let i = index" class="timeline">
+            <a href="#" class="timeline-content">
+              <span class="timeline-year">{{ i + 1 }}</span>
+              <div class="content">
+                <h3>{{ actividad.nombre }}</h3>
               </div>
-              <div *ngIf="nivelExpandido === i">
-                <div *ngFor="let leccion of nivel.lecciones" 
-                     class="p-4 pl-8 border-b cursor-pointer" 
-                     (click)="selectLeccion(leccion)"
-                     [ngClass]="{'bg-gray-100': leccion === leccionSeleccionada}">
-                  <span>{{leccion.nombre}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Contenido de la lección seleccionada -->
-      <div class="col-span-8">
-        <div *ngIf="leccionSeleccionada" class="mt-6">
-          <h3 class="text-lg font-semibold mb-3">Contenido de la lección: {{leccionSeleccionada.nombre}}</h3>
-          <div class="grid grid-cols-1 gap-4">
-            <div *ngFor="let contenido of leccionSeleccionada.contenido_lecciones" class="p-4 bg-white shadow rounded-lg">
-              <h4 class="font-semibold mb-2">{{contenido.titulo}}</h4>
-              <p class="text-gray-600 mb-3">{{contenido.descripcion}}</p>
-              <img *ngIf="contenido.fuente && contenido.fuente.startsWith('data:image')" 
-                   [src]="contenido.fuente" [alt]="contenido.titulo" 
-                   class="w-full h-auto object-cover rounded-lg">
-            </div>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-<!-- <div class="w-64 bg-white shadow-lg rounded-lg overflow-hidden">
-                    <ul class="divide-y divide-gray-200">
-                        <li>
-                            <details class="group">
-                                <summary class="flex items-center justify-between p-4 hover:bg-gray-50 cursor-pointer">
-                                    <span class="flex items-center">
-                                        <span
-                                            class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center mr-3">1</span>
-                                        <span class="font-medium">Nivel 1</span>
-                                    </span>
-                                    <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </summary>
-                                <ul class="pl-12 pr-4 py-2 space-y-2">
-                                    <li><a href="#" class="text-gray-600 hover:text-blue-500">Lección 1.1</a></li>
-                                    <li><a href="#" class="text-gray-600 hover:text-blue-500">Lección 1.2</a></li>
-                                </ul>
-                            </details>
-                        </li>
-                    </ul>
-                </div> -->
