@@ -7,3 +7,21 @@ input[type="password"]::-ms-reveal { display: none; }
     object-fit: contain; 
   }
  
+  @media (max-width: 900px) {
+    .contenedores {
+        display: block;
+    }
+
+    .contenedor {
+        width: 100%;
+        display: none;
+    }
+
+    .contenedor.active {
+        display: block;
+    }
+
+    .navegacion {
+        justify-content: space-between;
+    }
+}

@@ -40,23 +40,23 @@
   <!-- Primera Sección -->
   <div *ngIf="showFirstSection" class="space-y-6 w-full">
     <!-- Contenido de la primera sección -->
-    <div class="grid grid-cols-1 gap-4 w-full bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+    <div class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6 mx-auto">
       <!-- Campo Nombre -->
-      <div class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2">
+      <div class="text-xl font-normal">
         <label class="text-xl font-normal" for="nombre">Nombre</label>
         <input type="text" formControlName="nombre" class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
       </div>
       <!-- Campo Correo Electrónico -->
-      <div class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2">
+      <div class="text-xl font-normal">
         <label class="text-xl font-normal" for="email">Correo Electrónico</label>
         <input type="text" formControlName="email" class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
       </div>
       <!-- Campo Contraseña -->
-      <div class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2 relative">
+      <div class="text-xl font-normal relative">
         <label class="text-xl font-normal" for="password">Contraseña</label>
         <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password" class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
         <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2" (click)="hide = !hide">
-          <i class="fas text-cyan-500 icon-size text-lg mt-3" [ngClass]="hide ? 'fa-eye' : 'fa-eye-slash'"></i>
+          <i class="fas text-yellow-500 text-lg mt-8" [ngClass]="hide ? 'fa-eye' : 'fa-eye-slash'"></i>
         </button>
       </div>
     </div>
@@ -73,11 +73,13 @@
   <!-- Segunda Sección -->
   <div *ngIf="showSecondSection" class="space-y-6 w-full">
     <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-      <div class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2">
+      <div class="text-xl font-normal">
         <label class="text-xl font-normal" for="descripcion">Descripción fanpage</label>
         <textarea formControlName="descripcion" class="mt-1 block w-full px-2 py-1 h-40 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 resize-none"></textarea>
       </div>
-      <div class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2">
+
+      
+      <div class="text-xl font-normal">
         <label class="text-xl font-normal" for="id_tipo_dato">Tipo de archivo</label>
         <select id="id_tipo_dato" formControlName="id_tipo_dato" class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
           <option value="" disabled selected>Seleccione el tipo de dato...</option>
@@ -85,11 +87,11 @@
         </select>
       </div>
 
-      <div class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2">
+      <div class="text-xl font-normal">
         <label for="fuente"></label>
         <ng-container [ngSwitch]="aliadoForm.get('id_tipo_dato').value">
           <div *ngSwitchCase="'1'">
-            <label class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2" for="nombre">Link del video</label>
+            <label class="text-xl font-normal" for="nombre">Link del video</label>
             <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
               (change)="onFileSelecteds($event, 'ruta_multi')"
               class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
@@ -98,21 +100,24 @@
           <!-- <input *ngSwitchCase="'2'" type="text" id="fuente" formControlName="ruta_multi"
             class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"> -->
             <div *ngSwitchCase="'3'">
-              <label class="block mb-2 text-blue-400" for="nombre">Imagen</label>
-              <input type="file" id="fuente" accept="image/*" (change)="onFileSelecteds($event, 'ruta_multi')"
-                formControlName="Imagen"
-                class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
+              <label class="text-xl font-normal" for="nombre">Imagen</label>
+              <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta" class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
+              formControlName="Imagen"
+                class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
+                <div>
+                  <input type="file" id="fuente" accept="image/*" (change)="onFileSelecteds($event, 'ruta_multi')">
+                </div>
             </div>
 
           <div *ngSwitchCase="'4'">
-            <label class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2" for="nombre">PDF</label>
+            <label class="text-xl font-normal" for="nombre">PDF</label>
             <input type="file" id="fuente" formControlName="ruta_multi" accept="application/pdf"
               (change)="onFileSelecteds($event, 'ruta_multi')"
               class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
           </div>
 
           <div *ngSwitchCase="'5'">
-            <label class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2" for="nombre">Texto</label>
+            <label class="text-xl font-normal" for="nombre">Texto</label>
             <input type="text" id="fuente" formControlName="ruta_multi"
               (change)="onFileSelecteds($event, 'ruta_multi')"
               class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
@@ -123,9 +128,9 @@
 
     
     <!-- Botones Anterior y Siguiente -->
-    <div class="flex justify-between">
+    <div class="flex justify-center gap-2">
       <button
-        class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+        class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300 h-10"
         (click)="previous()">
         Anterior
       </button>
@@ -137,53 +142,50 @@
     </div>
   </div>
 
-  <!-- Tercera Sección -->
-  <div *ngIf="showThirdSection" class="space-y-6 w-full">
-    <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-      <div class="flex flex-col mb-6 items-start pl-8 pr-8 pb-2 space-y-2">
-        <label class="text-xl font-normal" for="logo">Logo</label>
-        <input
-          class="mt-1 block w-full px-2 py-1 h-14 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
-          id="logo" type="file" (change)="onFileSelecteds($event, 'logo')" formControlName="logo" accept="image/*">
-        <fa-icon [icon]="faFileUpload" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"></fa-icon>
-        <img *ngIf="imagePreviewLogo" [src]="imagePreviewLogo"
-          class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
-          alt="Vista previa del logo">
-      </div>
+<!-- Tercera Sección -->
+<div *ngIf="showThirdSection" class="space-y-6 w-full">
+  <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6 w-full sm:w-3/4 md:w-2/3 mx-auto">
+    <div class="text-xl font-normal">
+      <label class="text-xl font-normal" for="logo">Logo</label>
+      <input
+        class="mt-1 block w-full px-2 py-1 h-14 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
+        id="logo" type="file" (change)="onFileSelecteds($event, 'logo')" formControlName="logo" accept="image/*">
+      <img *ngIf="logoPreview" [src]="logoPreview" alt="Vista previa del logo" width="200px" class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+      class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+        alt="Vista previa del logo">
     </div>
 
-    
-      <form [formGroup]="bannerForm" (ngSubmit)="addAliado()">
-        <div id="contenido">
-          <div class="w-full relative">
-            <label class="block mb-2 text-blue-400" for="logo">Imagen</label>
-            <input
-              class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
-              id="banner" type="file" accept="image/*" (change)="onFileSelecteds($event, 'urlImagen')"
-              formControlName="urlImagen">
-            <fa-icon [icon]="faFileUpload" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg">
-            </fa-icon>
-            <img *ngIf="imagePreview" [src]="imagePreview"
-              class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
-              alt="Vista previa del logo">
-          </div>
-
+    <form [formGroup]="bannerForm" (ngSubmit)="addAliado()">
+      <div id="contenido">
+        <div class="w-full relative text-xl font-normal">
+          <label class="text-xl font-normal" for="logo">Imagen</label>
+          <input
+          class="mt-1 block w-full px-2 py-1 h-14 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
+          id="banner" type="file" accept="image/*" (change)="onFileSelecteds($event, 'urlImagen')"
+            formControlName="urlImagen">
+          <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner" width="200px" class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+          class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+            alt="Vista previa de la imagen">
         </div>
 
-      </form>
-    <!-- Botones Anterior y Crear -->
-    <div class="flex justify-between">
-      <button
-        class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
-        (click)="previous()">
-        Anterior
-      </button>
-      <button type="submit"
-        class="bg-sky-400 hover:bg-blue-700 text-white font-bold py-3 px-6 border border-blue-700 rounded">
-        Crear Aliado
-      </button>
-    </div>
+      </div>
+
+    </form>
   </div>
+
+  <!-- Botones Anterior y Crear -->
+  <div class="flex justify-center h-10 gap-2">
+    <button
+      class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+      (click)="previous()">
+      Anterior
+    </button>
+    <button type="submit"
+      class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+      Crear Aliado
+    </button>
+  </div>
+</div>
 </form>
 </div>
 

@@ -47,13 +47,18 @@ export class AddAliadosComponent {
   faEyeSlash = faEyeSlash;
   faFileUpload = faFileUpload;
   faFileLines = faFileLines;
-  imagePreview: string | ArrayBuffer | null = null;
   aliadoid: string;
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   showFirstSection = true;
   showSecondSection = false;
   showThirdSection = false;
+  logoPreview: string | ArrayBuffer | null = null;
+  bannerPreview: string | ArrayBuffer | null = null;
+  rutaPreview: string | ArrayBuffer | null = null;
+  currentIndex: number = 0;
+
+
 
 
   constructor(private aliadoService: AliadoService,
@@ -71,8 +76,6 @@ export class AddAliadosComponent {
       id_tipo_dato: [],
       email: ['', Validators.required],
       password: ['', Validators.required],
-      Imagen: [''],
-      urlImagen: [''],
       estado: [1]
       
     });
@@ -254,6 +257,8 @@ export class AddAliadosComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
+      this.generateImagePreview(file, field);
+
       if (field === 'urlImagen') {
         this.selectedBanner = file;
         this.bannerForm.patchValue({ urlImagen: file });
@@ -267,21 +272,26 @@ export class AddAliadosComponent {
         this.aliadoForm.patchValue({ ruta_multi: file });
       }
     } else {
-      // Si no se seleccionó un archivo, se puede asignar un valor de texto al campo ruta_multi
       if (field === 'ruta_multi') {
         this.aliadoForm.patchValue({ ruta_multi: event.target.value });
       }
     }
   }
 
-  generateImagePreview(file: File) {
+  generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      this.imagePreview = e.target.result;
+      if (field === 'logo') {
+        this.logoPreview = e.target.result;
+      } else if (field === 'urlImagen') {
+        this.bannerPreview = e.target.result;
+      } else if (field === 'ruta_multi') {
+        this.rutaPreview = e.target.result;
+      }
+      this.cdRef.detectChanges(); // Forzar la detección de cambios
     };
     reader.readAsDataURL(file);
   }
-
 
 
   getFormValidationErrors(form: FormGroup) {
@@ -311,24 +321,31 @@ export class AddAliadosComponent {
   }
 
   next() {
-    if (this.showFirstSection) {
+    if (this.currentIndex === 0) {
       this.showFirstSection = false;
       this.showSecondSection = true;
-    } else if (this.showSecondSection) {
+      this.showThirdSection = false;
+      this.currentIndex = 1;
+    } else if (this.currentIndex === 1) {
+      this.showFirstSection = false;
       this.showSecondSection = false;
       this.showThirdSection = true;
+      this.currentIndex = 2;
     }
   }
 
   previous() {
-    if (this.showThirdSection) {
-      this.showThirdSection = false;
-      this.showSecondSection = true;
-    } else if (this.showSecondSection) {
-      this.showSecondSection = false;
+    if (this.currentIndex === 1) {
       this.showFirstSection = true;
+      this.showSecondSection = false;
+      this.showThirdSection = false;
+      this.currentIndex = 0;
+    } else if (this.currentIndex === 2) {
+      this.showFirstSection = false;
+      this.showSecondSection = true;
+      this.showThirdSection = false;
+      this.currentIndex = 1;
     }
   }
-
-
 }
+
