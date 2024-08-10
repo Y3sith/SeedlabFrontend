@@ -47,15 +47,13 @@ export class AddAliadosComponent {
   faEyeSlash = faEyeSlash;
   faFileUpload = faFileUpload;
   faFileLines = faFileLines;
+  imagePreview: string | ArrayBuffer | null = null;
   aliadoid: string;
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   showFirstSection = true;
   showSecondSection = false;
   showThirdSection = false;
-  imagePreviewLogo: string | ArrayBuffer | null = null;  
-  imagePreviewBanner: string | ArrayBuffer | null = null;
-  imagePreview: string | ArrayBuffer | null = null;
 
 
   constructor(private aliadoService: AliadoService,
@@ -73,7 +71,10 @@ export class AddAliadosComponent {
       id_tipo_dato: [],
       email: ['', Validators.required],
       password: ['', Validators.required],
+      Imagen: [''],
+      urlImagen: [''],
       estado: [1]
+      
     });
 
     this.bannerForm = this.formBuilder.group({
@@ -256,35 +257,27 @@ export class AddAliadosComponent {
       if (field === 'urlImagen') {
         this.selectedBanner = file;
         this.bannerForm.patchValue({ urlImagen: file });
-        this.generateImagePreview(file, 'banner');
       }
       if (field === 'logo') {
         this.selectedLogo = file;
         this.aliadoForm.patchValue({ logo: file });
-        this.generateImagePreview(file, 'logo');
       }
-      if (field === 'Imagen') { // Cambiado para coincidir con 'Imagen'
+      if (field === 'ruta_multi') {
         this.selectedruta = file;
-        this.aliadoForm.patchValue({ Imagen: file });
-        this.generateImagePreview(file, 'image'); // Cambiado a 'image'
+        this.aliadoForm.patchValue({ ruta_multi: file });
       }
     } else {
+      // Si no se seleccionó un archivo, se puede asignar un valor de texto al campo ruta_multi
       if (field === 'ruta_multi') {
         this.aliadoForm.patchValue({ ruta_multi: event.target.value });
       }
     }
   }
 
-  generateImagePreview(file: File, type: string) {
+  generateImagePreview(file: File) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      if (type === 'logo') {
-        this.imagePreviewLogo = e.target.result;
-      } else if (type === 'banner') {
-        this.imagePreviewBanner = e.target.result;
-      } else if (type === 'image') { // Añadido para 'image'
-        this.imagePreview = e.target.result;
-      }
+      this.imagePreview = e.target.result;
     };
     reader.readAsDataURL(file);
   }
