@@ -161,8 +161,8 @@ export class AddAliadosComponent {
 
     this.aliadoService.crearAliado(this.token, formData).subscribe(
       data => {
-      
        this.alertService.successAlert('Exito', data.message);
+       this.router.navigate(['list-aliados'])
       },
       error => {
         if (error.status === 400) {
