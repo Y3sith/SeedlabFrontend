@@ -48,11 +48,19 @@ export class AddAliadosComponent {
   faEyeSlash = faEyeSlash;
   faFileUpload = faFileUpload;
   faFileLines = faFileLines;
-  imagePreview: string | ArrayBuffer | null = null;
   aliadoid: string;
-
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
+  showFirstSection = true;
+  showSecondSection = false;
+  showThirdSection = false;
+  logoPreview: string | ArrayBuffer | null = null;
+  bannerPreview: string | ArrayBuffer | null = null;
+  rutaPreview: string | ArrayBuffer | null = null;
+  currentIndex: number = 0;
+
+
+
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -71,6 +79,7 @@ export class AddAliadosComponent {
       email: ['', Validators.required],
       password: ['', Validators.required],
       estado: [1]
+      
     });
 
     this.bannerForm = this.formBuilder.group({
@@ -245,6 +254,8 @@ export class AddAliadosComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
+      this.generateImagePreview(file, field);
+
       let maxSize = 0;
   
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
@@ -305,14 +316,21 @@ export class AddAliadosComponent {
     }
   }
 
-
-  generateImagePreview(file: File) {
+  generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      this.imagePreview = e.target.result;
+      if (field === 'logo') {
+        this.logoPreview = e.target.result;
+      } else if (field === 'urlImagen') {
+        this.bannerPreview = e.target.result;
+      } else if (field === 'ruta_multi') {
+        this.rutaPreview = e.target.result;
+      }
+      this.cdRef.detectChanges(); // Forzar la detección de cambios
     };
     reader.readAsDataURL(file);
   }
+
 
   getFormValidationErrors(form: FormGroup) {
     const result: any = {};
@@ -340,4 +358,32 @@ export class AddAliadosComponent {
     });
   }
 
+  next() {
+    if (this.currentIndex === 0) {
+      this.showFirstSection = false;
+      this.showSecondSection = true;
+      this.showThirdSection = false;
+      this.currentIndex = 1;
+    } else if (this.currentIndex === 1) {
+      this.showFirstSection = false;
+      this.showSecondSection = false;
+      this.showThirdSection = true;
+      this.currentIndex = 2;
+    }
+  }
+
+  previous() {
+    if (this.currentIndex === 1) {
+      this.showFirstSection = true;
+      this.showSecondSection = false;
+      this.showThirdSection = false;
+      this.currentIndex = 0;
+    } else if (this.currentIndex === 2) {
+      this.showFirstSection = false;
+      this.showSecondSection = true;
+      this.showThirdSection = false;
+      this.currentIndex = 1;
+    }
+  }
 }
+

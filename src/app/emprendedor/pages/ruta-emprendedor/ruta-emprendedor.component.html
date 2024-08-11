@@ -1,14 +1,18 @@
-<div *ngFor="let ruta of rutaList" class="mb-6">
-  <!-- <h3 class="text-lg font-semibold mb-3">{{ ruta.nombre }}</h3> no es necesario por el momento -->
-  <div class="grid grid-cols-2 gap-4">
-    <div *ngFor="let actividad of ruta.actividades; let i = index" class="label-container">
-      <div class="label">{{ actividad.nombre }}</div>
-      <!-- <div class="sub-label">{{ actividad.descripcion }}</div> no creo que sea necesario solo para cuando le da click -->
-      <div class="ribbon">
-        <div class="circle">{{ i + 1 }}</div> <!-- Usa el índice más 1 -->
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="main-timeline">
+        <div *ngFor="let ruta of rutaList">
+          <div *ngFor="let actividad of ruta.actividades; let i = index" class="timeline">
+            <a href="#" class="timeline-content">
+              <span class="timeline-year">{{ i + 1 }}</span>
+              <div class="content">
+                <h3>{{ actividad.nombre }}</h3>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
-
-
