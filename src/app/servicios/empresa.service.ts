@@ -18,13 +18,18 @@ export class EmpresaService {
     })
   }
 
-  url = environment.apiUrl + 'empresa/'
+  url = environment.apiUrl + 'empresa'
 
   constructor(private http: HttpClient) { }
 
-  getEmpresas(access_token:any, documento: string): Observable<any>{
+  updateEmpresas(access_token:any, documento: string): Observable<any>{
     const options= { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"/"+documento, options);
+    return this.http.get(this.url+"/updateEmpresa"+documento, options);
+  }
+
+  traerEmpresasola(access_token: any, id_emprendedor:string, documento: string): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(`${this.url}/getEmpresa/${id_emprendedor}/${documento}`, options);
   }
 
   
