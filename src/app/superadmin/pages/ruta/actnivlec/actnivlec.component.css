@@ -1,0 +1,33 @@
+.stepper-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .step-counter {
+    width: 32px;
+    height: 32px;
+    border-width: 2px;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .stepper-item.active .step-counter {
+    @apply text-yellow-500 border-blue-500;
+  }
+  
+  .stepper-item.active h2 {
+    @apply text-yellow-500;
+  }
+  
+  @media (max-width: 640px) {
+    .stepper-item {
+      display: none;
+    }
+  
+    .stepper-item.active {
+      display: flex;
+    }
+  }

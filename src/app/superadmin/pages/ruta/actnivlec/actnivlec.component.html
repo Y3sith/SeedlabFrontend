@@ -1,33 +1,57 @@
 <div class="pt-4 divide-y divide-light-blue-400 ml-12 mr-4">
     <h1 class="text-xl font-bold mb-4">Bienvenido al panel de crear Actividad</h1>
+    <!-- Nuevo componente de pasos -->
+    <div class="w-full flex items-center justify-center px-4">
+        <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
+          <div *ngFor="let stepName of ['Actividad', 'Nivel', 'Lección', 'Contenido']; let i = index" 
+               class="stepper-item mb-2 sm:mb-0"
+               [class.active]="step === i + 1">
+            <div class="step-counter flex items-center justify-center w-8 h-8 border rounded-full mx-auto text-base md:text-xl"
+                 [ngClass]="{'text-yellow-500 border-blue-500': step === i + 1, 'text-gray-400 border-gray-400': step !== i + 1}">
+              {{ i + 1 }}
+            </div>
+            <h2 [ngClass]="{'text-yellow-500': step === i + 1, 'text-gray-400': step !== i + 1}"
+                class="text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
+              {{ stepName }}
+            </h2>
+          </div>
+        </div>
+      </div>
+      
     <div class="grid sm:grid-cols-1 md:grid-cols-1 xl:grid-cols-12 xl:gap-6 mb-2">
         <div class="col-span-8">
             <h2 class="text-center my-8">Crear Actividad</h2>
             <div>
                 <div class="grid grid-cols-1">
-                    <form [formGroup]="actividadForm" (ngSubmit)="addActividadSuperAdmin()">  <!--agregar actividad-->
+                    <form [formGroup]="actividadForm" (ngSubmit)="addActividadSuperAdmin()"> <!--agregar actividad-->
                         <div>
                             <label for="nombre">Nombre de la Actividad:</label>
                             <input type="text" id="nombre" formControlName="nombre"
                                 class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                            <div *ngIf="submittedActividad && actividadForm.controls.nombre.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <span *ngIf="actividadForm.controls.nombre.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                            <div *ngIf="submittedActividad && actividadForm.controls.nombre.errors"
+                                class="max-w-[19rem] overflow-hidden mt-1">
+                                <span *ngIf="actividadForm.controls.nombre.errors.required"
+                                    class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
                             </div>
                         </div>
                         <div>
                             <label for="descripcion">Descripcion Actividad:</label>
                             <input type="text" id="descripcion" formControlName="descripcion"
                                 class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                            <div *ngIf="submittedActividad && actividadForm.controls.descripcion.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <span *ngIf="actividadForm.controls.descripcion.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                            <div *ngIf="submittedActividad && actividadForm.controls.descripcion.errors"
+                                class="max-w-[19rem] overflow-hidden mt-1">
+                                <span *ngIf="actividadForm.controls.descripcion.errors.required"
+                                    class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
                             </div>
                         </div>
                         <div>
                             <label for="ruta_multi">Ruta Multi:</label>
                             <input type="text" id="ruta_multi" formControlName="ruta_multi"
                                 class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                            <div *ngIf="submittedActividad && actividadForm.controls.ruta_multi.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <span *ngIf="actividadForm.controls.ruta_multi.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                            <div *ngIf="submittedActividad && actividadForm.controls.ruta_multi.errors"
+                                class="max-w-[19rem] overflow-hidden mt-1">
+                                <span *ngIf="actividadForm.controls.ruta_multi.errors.required"
+                                    class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
                             </div>
                         </div>
 
@@ -38,8 +62,10 @@
                                 <option *ngFor="let tipodato of listarTipoDato" [value]="tipodato.id">
                                     {{tipodato.nombre}}</option>
                             </select>
-                            <div *ngIf="submittedActividad && actividadForm.controls.id_tipo_dato.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <span *ngIf="actividadForm.controls.id_tipo_dato.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                            <div *ngIf="submittedActividad && actividadForm.controls.id_tipo_dato.errors"
+                                class="max-w-[19rem] overflow-hidden mt-1">
+                                <span *ngIf="actividadForm.controls.id_tipo_dato.errors.required"
+                                    class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
                             </div>
                         </div>
 
@@ -51,8 +77,10 @@
                                     {{aliado.nombre}}
                                 </option>
                             </select>
-                            <div *ngIf="submittedActividad && actividadForm.controls.id_aliado.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <span *ngIf="actividadForm.controls.id_aliado.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                            <div *ngIf="submittedActividad && actividadForm.controls.id_aliado.errors"
+                                class="max-w-[19rem] overflow-hidden mt-1">
+                                <span *ngIf="actividadForm.controls.id_aliado.errors.required"
+                                    class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
                             </div>
                         </div>
 
@@ -65,13 +93,17 @@
                                     {{ asesor.nombre }} {{ asesor.apellido }}
                                 </option>
                             </select>
-                            <div *ngIf="submittedActividad && actividadForm.controls.id_asesor.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <span *ngIf="actividadForm.controls.id_asesor.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                            <div *ngIf="submittedActividad && actividadForm.controls.id_asesor.errors"
+                                class="max-w-[19rem] overflow-hidden mt-1">
+                                <span *ngIf="actividadForm.controls.id_asesor.errors.required"
+                                    class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
                             </div>
                         </div>
                         <div class="flex justify-center">
                             <div>
-                                <button type="submit" class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12">Añadir Nivel</button>
+                                <button type="submit"
+                                    class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12">Añadir
+                                    Nivel</button>
                             </div>
                             <div>
                                 <button type="button" (click)="cancelarcrearActividad()"
@@ -89,22 +121,30 @@
                                 <label for="nivel_nombre">Nombre del Nivel:</label>
                                 <input type="text" id="nivel_nombre" formControlName="nombre"
                                     class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                <div *ngIf="submittedNivel && nivelForm.controls.nombre.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                    <span *ngIf="nivelForm.controls.nombre.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                                <div *ngIf="submittedNivel && nivelForm.controls.nombre.errors"
+                                    class="max-w-[19rem] overflow-hidden mt-1">
+                                    <span *ngIf="nivelForm.controls.nombre.errors.required"
+                                        class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido
+                                        *</span>
                                 </div>
                             </div>
                             <div>
                                 <label for="nivel_descripcion">Descripcion del Nivel:</label>
                                 <input type="text" id="nivel_descripcion" formControlName="descripcion"
                                     class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                <div *ngIf="submittedNivel && nivelForm.controls.descripcion.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                    <span *ngIf="nivelForm.controls.descripcion.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                                <div *ngIf="submittedNivel && nivelForm.controls.descripcion.errors"
+                                    class="max-w-[19rem] overflow-hidden mt-1">
+                                    <span *ngIf="nivelForm.controls.descripcion.errors.required"
+                                        class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido
+                                        *</span>
                                 </div>
                             </div>
                             <input type="hidden" id="id_actividad" formControlName="id_actividad">
                             <div class="flex justify-center">
                                 <div>
-                                    <button type="submit" class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12 mr-7">Guardar Nivel</button>
+                                    <button type="submit"
+                                        class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12 mr-7">Guardar
+                                        Nivel</button>
                                 </div>
                                 <div>
                                     <button type="button" (click)="cancelarGlobal()"
@@ -123,14 +163,19 @@
                                 <label for="leccion_nombre">Nombre de la Lección:</label>
                                 <input type="text" id="leccion_nombre" formControlName="nombre"
                                     class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                <div *ngIf="submittedLeccion && leccionForm.controls.nombre.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                    <span *ngIf="leccionForm.controls.nombre.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                                <div *ngIf="submittedLeccion && leccionForm.controls.nombre.errors"
+                                    class="max-w-[19rem] overflow-hidden mt-1">
+                                    <span *ngIf="leccionForm.controls.nombre.errors.required"
+                                        class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido
+                                        *</span>
                                 </div>
                             </div>
                             <input type="hidden" id="id_nivel" formControlName="id_nivel">
                             <div class="flex justify-center">
                                 <div>
-                                    <button type="submit" class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12 mr-7">Guardar Lección</button>
+                                    <button type="submit"
+                                        class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12 mr-7">Guardar
+                                        Lección</button>
                                 </div>
                                 <div>
                                     <button type="button" (click)="cancelarGlobal()"
@@ -149,16 +194,22 @@
                                 <label for="titulo">Título:</label>
                                 <input type="text" id="titulo" formControlName="titulo"
                                     class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                <div *ngIf="submittedContent && contenidoLeccionForm.controls.titulo.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                    <span *ngIf="contenidoLeccionForm.controls.titulo.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                                <div *ngIf="submittedContent && contenidoLeccionForm.controls.titulo.errors"
+                                    class="max-w-[19rem] overflow-hidden mt-1">
+                                    <span *ngIf="contenidoLeccionForm.controls.titulo.errors.required"
+                                        class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido
+                                        *</span>
                                 </div>
                             </div>
                             <div>
                                 <label for="descripcion">Descripción:</label>
                                 <input type="text" id="descripcion" formControlName="descripcion"
                                     class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                <div *ngIf="submittedContent && contenidoLeccionForm.controls.descripcion.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                    <span *ngIf="contenidoLeccionForm.controls.descripcion.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                                <div *ngIf="submittedContent && contenidoLeccionForm.controls.descripcion.errors"
+                                    class="max-w-[19rem] overflow-hidden mt-1">
+                                    <span *ngIf="contenidoLeccionForm.controls.descripcion.errors.required"
+                                        class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido
+                                        *</span>
                                 </div>
                             </div>
                             <div>
@@ -168,60 +219,80 @@
                                     <option *ngFor="let tipodato of listarTipoDato" [value]="tipodato.id">
                                         {{tipodato.nombre}}</option>
                                 </select>
-                                <div *ngIf="submittedContent && contenidoLeccionForm.controls.id_tipo_dato.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                    <span *ngIf="contenidoLeccionForm.controls.id_tipo_dato.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                                <div *ngIf="submittedContent && contenidoLeccionForm.controls.id_tipo_dato.errors"
+                                    class="max-w-[19rem] overflow-hidden mt-1">
+                                    <span *ngIf="contenidoLeccionForm.controls.id_tipo_dato.errors.required"
+                                        class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido
+                                        *</span>
                                 </div>
                             </div>
                             <div>
-                                
-                                    <ng-container [ngSwitch]="contenidoLeccionForm.get('id_tipo_dato').value">
-                                      <div *ngSwitchCase="'1'">
-                                        <input type="text" id="fuente" formControlName="fuente" placeholder="Example http://example.com"
-                                          class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                        <div *ngIf="submitted && contenidoLeccionForm.controls.fuente.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                          <span *ngIf="contenidoLeccionForm.controls.fuente.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
-                                        </div>
-                                      </div>
-                                      
-                                      <div *ngSwitchCase="'2'">
-                                        <input type="text" id="fuente" formControlName="Multimedia"
-                                          class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                        <div *ngIf="submitted && contenidoLeccionForm.controls.Multimedia.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                          <span *ngIf="contenidoLeccionForm.controls.Multimedia.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
-                                        </div>
-                                      </div>
-                                  
-                                      <div *ngSwitchCase="'3'">
-                                        <input type="file" id="fuente" formControlName="Imagen" (change)="onFileSelected($event)"
-                                          class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                        <div *ngIf="submitted && contenidoLeccionForm.controls.Imagen.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                          <span *ngIf="contenidoLeccionForm.controls.Imagen.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
-                                        </div>
-                                      </div>
-                                  
-                                      <div *ngSwitchCase="'4'">
-                                        <input type="text" id="fuente" formControlName="Pdf"
-                                          class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                        <div *ngIf="submitted && contenidoLeccionForm.controls.Pdf.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                          <span *ngIf="contenidoLeccionForm.controls.Pdf.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
-                                        </div>
-                                      </div>
-                                  
-                                      <div *ngSwitchCase="'5'">
+
+                                <ng-container [ngSwitch]="contenidoLeccionForm.get('id_tipo_dato').value">
+                                    <div *ngSwitchCase="'1'">
                                         <input type="text" id="fuente" formControlName="fuente"
-                                          class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                        <div *ngIf="submitted && contenidoLeccionForm.controls.fuente.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                          <span *ngIf="contenidoLeccionForm.controls.fuente.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
+                                            placeholder="Example http://example.com"
+                                            class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                        <div *ngIf="submitted && contenidoLeccionForm.controls.fuente.errors"
+                                            class="max-w-[19rem] overflow-hidden mt-1">
+                                            <span *ngIf="contenidoLeccionForm.controls.fuente.errors.required"
+                                                class="text-red-700 pl-2 rounded-lg inline-block">Este campo es
+                                                requerido *</span>
                                         </div>
-                                      </div>
-                                    </ng-container>
-                                  </div>
-                                  
-                            
+                                    </div>
+
+                                    <div *ngSwitchCase="'2'">
+                                        <input type="text" id="fuente" formControlName="Multimedia"
+                                            class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                        <div *ngIf="submitted && contenidoLeccionForm.controls.Multimedia.errors"
+                                            class="max-w-[19rem] overflow-hidden mt-1">
+                                            <span *ngIf="contenidoLeccionForm.controls.Multimedia.errors.required"
+                                                class="text-red-700 pl-2 rounded-lg inline-block">Este campo es
+                                                requerido *</span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngSwitchCase="'3'">
+                                        <input type="file" id="fuente" formControlName="Imagen"
+                                            (change)="onFileSelected($event)"
+                                            class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                        <div *ngIf="submitted && contenidoLeccionForm.controls.Imagen.errors"
+                                            class="max-w-[19rem] overflow-hidden mt-1">
+                                            <span *ngIf="contenidoLeccionForm.controls.Imagen.errors.required"
+                                                class="text-red-700 pl-2 rounded-lg inline-block">Este campo es
+                                                requerido *</span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngSwitchCase="'4'">
+                                        <input type="text" id="fuente" formControlName="Pdf"
+                                            class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                        <div *ngIf="submitted && contenidoLeccionForm.controls.Pdf.errors"
+                                            class="max-w-[19rem] overflow-hidden mt-1">
+                                            <span *ngIf="contenidoLeccionForm.controls.Pdf.errors.required"
+                                                class="text-red-700 pl-2 rounded-lg inline-block">Este campo es
+                                                requerido *</span>
+                                        </div>
+                                    </div>
+
+                                    <div *ngSwitchCase="'5'">
+                                        <input type="text" id="fuente" formControlName="fuente"
+                                            class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                        <div *ngIf="submitted && contenidoLeccionForm.controls.fuente.errors"
+                                            class="max-w-[19rem] overflow-hidden mt-1">
+                                            <span *ngIf="contenidoLeccionForm.controls.fuente.errors.required"
+                                                class="text-red-700 pl-2 rounded-lg inline-block">Este campo es
+                                                requerido *</span>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+
                             <input type="hidden" id="id_leccion" formControlName="id_leccion">
                             <div class="flex justify-center">
                                 <div>
-                                    <button type="button" (click)="addContenidoLeccionSuperAdmin()" 
+                                    <button type="button" (click)="addContenidoLeccionSuperAdmin()"
                                         class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12 mr-7">
                                         Guardar leccion
                                     </button>
