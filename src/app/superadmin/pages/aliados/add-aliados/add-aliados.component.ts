@@ -75,8 +75,8 @@ export class AddAliadosComponent {
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: ['',Validators.required],
-      ruta_multi: ['', Validators.required],
+      logo: [Validators.required],
+      ruta_multi: [Validators.required],
       id_tipo_dato: [Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -85,7 +85,7 @@ export class AddAliadosComponent {
     });
 
     this.bannerForm = this.formBuilder.group({
-      urlImagen: ['',Validators.required],
+      urlImagen: [Validators.required],
       estadobanner: ['Activo'],
     });
 
@@ -187,7 +187,7 @@ export class AddAliadosComponent {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
           this.tipoDeDato = data;
-          console.log(data);
+          console.log("DATO",data);
         },
         error => {
           console.log(error);
@@ -371,20 +371,16 @@ export class AddAliadosComponent {
 
   next() {
     if (this.currentIndex === 0) {
-      if (this.isFirstSectionValid()) {
-        this.showFirstSection = false;
-        this.showSecondSection = true;
-        this.currentIndex = 1;
-      }
+      this.showFirstSection = false;
+      this.showSecondSection = true;
+      this.showThirdSection = false;
+      this.currentIndex = 1;
     } else if (this.currentIndex === 1) {
-      if (this.isSecondSectionValid()) {
-        this.showSecondSection = false;
-        this.showThirdSection = true;
-        this.currentIndex = 2;
-      }
+      this.showFirstSection = false;
+      this.showSecondSection = false;
+      this.showThirdSection = true;
+      this.currentIndex = 2;
     }
-    // Forzar la detección de cambios
-    this.cdRef.detectChanges();
   }
   
 
@@ -406,31 +402,31 @@ export class AddAliadosComponent {
       this.currentIndex = 1;
     }
   }
+  }
 
-  isFirstSectionValid(): boolean {
-    const nombreValid = this.aliadoForm.get('nombre').valid;
-    const emailValid = this.aliadoForm.get('email').valid;
-    const passwordValid = this.aliadoForm.get('password').valid;
+  // isFirstSectionValid(): boolean {
+  //   const nombreValid = this.aliadoForm.get('nombre').valid;
+  //   const emailValid = this.aliadoForm.get('email').valid;
+  //   const passwordValid = this.aliadoForm.get('password').valid;
     
-    // Marcar los campos como tocados para que se muestren los errores
-    if (!nombreValid) this.aliadoForm.get('nombre').markAsTouched();
-    if (!emailValid) this.aliadoForm.get('email').markAsTouched();
-    if (!passwordValid) this.aliadoForm.get('password').markAsTouched();
+  //   // Marcar los campos como tocados para que se muestren los errores
+  //   if (!nombreValid) this.aliadoForm.get('nombre').markAsTouched();
+  //   if (!emailValid) this.aliadoForm.get('email').markAsTouched();
+  //   if (!passwordValid) this.aliadoForm.get('password').markAsTouched();
     
-    return nombreValid && emailValid && passwordValid;
-  }
+  //   return nombreValid && emailValid && passwordValid;
+  // }
   
-  isSecondSectionValid(): boolean {
-    const descripcionValid = this.aliadoForm.get('descripcion').valid;
-    const idTipoDatoValid = this.aliadoForm.get('id_tipo_dato').valid;
-    const rutaMultiValid = this.aliadoForm.get('ruta_multi').valid;
+  // isSecondSectionValid(): boolean {
+  //   const descripcionValid = this.aliadoForm.get('descripcion').valid;
+  //   const idTipoDatoValid = this.aliadoForm.get('id_tipo_dato').valid;
+  //   const rutaMultiValid = this.aliadoForm.get('ruta_multi').valid;
     
-    // Marcar los campos como tocados para que se muestren los errores
-    if (!descripcionValid) this.aliadoForm.get('descripcion').markAsTouched();
-    if (!idTipoDatoValid) this.aliadoForm.get('id_tipo_dato').markAsTouched();
-    if (!rutaMultiValid) this.aliadoForm.get('ruta_multi').markAsTouched();
+  //   // Marcar los campos como tocados para que se muestren los errores
+  //   if (!descripcionValid) this.aliadoForm.get('descripcion').markAsTouched();
+  //   if (!idTipoDatoValid) this.aliadoForm.get('id_tipo_dato').markAsTouched();
+  //   if (!rutaMultiValid) this.aliadoForm.get('ruta_multi').markAsTouched();
     
-    return descripcionValid && idTipoDatoValid && rutaMultiValid;
-  }
-}
+  //   return descripcionValid && idTipoDatoValid && rutaMultiValid;
+  // }
 

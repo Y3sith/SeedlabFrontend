@@ -41,49 +41,36 @@
     <!-- Primera Sección -->
     <div *ngIf="showFirstSection" class="space-y-6 w-full">
       <!-- Contenido de la primera sección -->
-      <div
-        class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6 mx-auto">
+      <div class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
         <!-- Campo Nombre -->
         <div class="text-xl font-normal">
           <label class="text-xl font-normal" for="nombre">Nombre</label>
-          <input type="text" formControlName="nombre"
-            class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-          <span *ngIf="isFieldInvalid('nombre')" class="text-red-700 pl-2 rounded-lg inline-block">
-            Este campo es requerido
-          </span>
+          <input type="text" formControlName="nombre" class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
         </div>
         <!-- Campo Correo Electrónico -->
         <div class="text-xl font-normal">
           <label class="text-xl font-normal" for="email">Correo Electrónico</label>
-          <input type="text" formControlName="email"
-            class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-          <span *ngIf="isFieldInvalid('email')" class="text-red-700 pl-2 rounded-lg inline-block">
-            Este campo es requerido
-          </span>
+          <input type="text" formControlName="email" class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
         </div>
         <!-- Campo Contraseña -->
         <div class="text-xl font-normal relative">
-          <div>
-            <label class="text-xl font-normal" for="password">Contraseña</label>
-            <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
-              class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2" (click)="hide = !hide">
-                <i class="fas text-yellow-500 text-lg mt-8" [ngClass]="hide ? 'fa-eye' : 'fa-eye-slash'"></i>
-              </button>
-              <div>
-                <span *ngIf="isFieldInvalid('password')" class="text-red-700 pl-2 rounded-lg inline-block ">
-                  Este campo es requerido
-                </span>
-              </div>
-          </div>
-          </div>
+          <label class="text-xl font-normal" for="password">Contraseña</label>
+          <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password" class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+          <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2" (click)="hide = !hide">
+            <i class="fas text-yellow-500 text-lg mt-8" [ngClass]="hide ? 'fa-eye' : 'fa-eye-slash'"></i>
+          </button>
+        </div>
 
+        <div class="text-xl font-normal">
+          <label class="text-xl font-normal" for="descripcion">Descripción fanpage</label>
+          <textarea formControlName="descripcion" class="mt-1 block w-full px-2 py-1 h-40 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 resize-none"></textarea>
+        </div>
       </div>
       <!-- Botón Siguiente -->
       <div class="flex justify-center h-10 mt-4">
         <button
           class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300"
-          (click)="next()" [disabled]="!isFirstSectionValid()">
+          (click)="next()">
           Siguiente
         </button>
       </div>
@@ -91,15 +78,8 @@
 
     <!-- Segunda Sección -->
     <div *ngIf="showSecondSection" class="space-y-6 w-full">
-      <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-        <div class="text-xl font-normal">
-          <label class="text-xl font-normal" for="descripcion">Descripción fanpage</label>
-          <textarea formControlName="descripcion"
-            class="mt-1 block w-full px-2 py-1 h-40 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 resize-none"></textarea>
-          <span *ngIf="isFieldInvalid('descripcion')" class="text-red-700 pl-2 rounded-lg inline-block">
-            Este campo es requerido
-          </span>
-        </div>
+      <div  class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
+    
 
 
         <div class="text-xl font-normal">
@@ -117,7 +97,7 @@
         <div class="text-xl font-normal">
           <label for="fuente"></label>
           <ng-container [ngSwitch]="aliadoForm.get('id_tipo_dato').value">
-            <div *ngSwitchCase="'1'">
+            <div class="-mt-6" *ngSwitchCase="'1'">
               <label class="text-xl font-normal" for="nombre">Link del video</label>
               <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
                 (change)="onFileSelecteds($event, 'ruta_multi')"
@@ -129,23 +109,23 @@
 
             <!-- <input *ngSwitchCase="'2'" type="text" id="fuente" formControlName="ruta_multi"
             class="p-2 w-full h-14 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"> -->
-            <div *ngSwitchCase="'3'">
+            <div class="-mt-6" *ngSwitchCase="'3'">
               <label class="text-xl font-normal" for="nombre">Imagen</label>
               <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
                 class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
-                formControlName="Imagen"
                 class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
               <div>
-                <input type="file" id="fuente" accept="image/*" (change)="onFileSelecteds($event, 'ruta_multi')">
+                <input type="file" id="fuente" accept="image/*" (change)="onFileSelecteds($event, 'ruta_multi')"
+                class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
               </div>
               <span *ngIf="isFieldInvalid('ruta_multi')" class="text-red-700 pl-2 rounded-lg inline-block">
                 Este campo es requerido
               </span>
             </div>
 
-            <div *ngSwitchCase="'4'">
+            <div class="-mt-6" *ngSwitchCase="'4'">
               <label class="text-xl font-normal" for="nombre">PDF</label>
-              <input type="file" id="fuente" formControlName="ruta_multi" accept="application/pdf"
+              <input type="file" id="fuente" accept="application/pdf"
                 (change)="onFileSelecteds($event, 'ruta_documento')"
                 class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
               <span *ngIf="isFieldInvalid('ruta_multi')" class="text-red-700 pl-2 rounded-lg inline-block">
@@ -153,7 +133,7 @@
               </span>
             </div>
 
-            <div *ngSwitchCase="'5'">
+            <div class="-mt-6"  *ngSwitchCase="'5'">
               <label class="text-xl font-normal" for="nombre">Texto</label>
               <input type="text" id="fuente" formControlName="ruta_multi"
                 (change)="onFileSelecteds($event, 'ruta_multi')"
@@ -164,6 +144,35 @@
             </div>
           </ng-container>
         </div>
+        <div class="text-xl font-normal">
+          <label class="text-xl font-normal" for="logo">Logo del aliado</label>
+          <input
+            class="mt-1 block w-full px-2 py-1 h-14 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
+            id="logo" type="file" (change)="onFileSelecteds($event, 'logo')" accept="image/*">
+          <span *ngIf="isFieldInvalid('logo')" class="text-red-700 pl-2 rounded-lg inline-block">
+            Este campo es requerido
+          </span>
+          <img *ngIf="logoPreview" [src]="logoPreview" alt="Vista previa del logo" width="200px"
+            class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+            class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+            alt="Vista previa del logo">
+        </div>
+
+        <div id="contenido">
+          <div class="w-full relative text-xl font-normal">
+            <label class="text-xl font-normal" for="logo">Banner</label>
+            <input
+              class="mt-1 block w-full px-2 py-1 h-14 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
+              id="banner" type="file" accept="image/*" (change)="onFileSelecteds($event, 'urlImagen')"
+              >
+            <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner" width="200px"
+              class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+              class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
+              alt="Vista previa de la imagen">
+          </div>
+
+        </div>
+
       </div>
 
 
@@ -176,7 +185,7 @@
         </button>
         <button
           class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300"
-          (click)="next()" [disabled]="!isSecondSectionValid()">
+          (click)="next()" >
           Siguiente
         </button>
       </div>
@@ -184,40 +193,11 @@
 
     <!-- Tercera Sección -->
     <div *ngIf="showThirdSection" class="space-y-6 w-full">
-      <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6 w-full sm:w-3/4 md:w-2/3 mx-auto">
-        <div class="text-xl font-normal">
-          <label class="text-xl font-normal" for="logo">Logo del aliado</label>
-          <input
-            class="mt-1 block w-full px-2 py-1 h-14 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
-            id="logo" type="file" (change)="onFileSelecteds($event, 'logo')" formControlName="logo" accept="image/*">
-          <span *ngIf="isFieldInvalid('logo')" class="text-red-700 pl-2 rounded-lg inline-block">
-            Este campo es requerido
-          </span>
-          <img *ngIf="logoPreview" [src]="logoPreview" alt="Vista previa del logo" width="200px"
-            class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
-            class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
-            alt="Vista previa del logo">
-        </div>
+      <div class="bg-gray-50 rounded-lg shadow-md  md:py-6 max-md:p-4 md:px-36 md:my-6 w-full sm:w-3/4 md:w-2/3 mx-auto">
+
 
         <form [formGroup]="bannerForm" (ngSubmit)="addAliado()">
-          <div id="contenido">
-            <div class="w-full relative text-xl font-normal">
-              <label class="text-xl font-normal" for="logo">Banner</label>
-              <input
-                class="mt-1 block w-full px-2 py-1 h-14 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 pr-10"
-                id="banner" type="file" accept="image/*" (change)="onFileSelecteds($event, 'urlImagen')"
-                formControlName="urlImagen">
-              <span *ngIf="isFieldInvalid('urlImagen')" class="text-red-700 pl-2 rounded-lg inline-block">
-                Este campo es requerido
-              </span>
-              <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner" width="200px"
-                class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
-                class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview"
-                alt="Vista previa de la imagen">
-            </div>
-
-          </div>
-
+          
         </form>
       </div>
 
