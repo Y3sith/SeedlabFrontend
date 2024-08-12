@@ -6,7 +6,7 @@
             <!-- transicion basada en el estado -->
             <div class="w-full flex items-center justify-center px-4">
                 <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
-                    <div *ngFor="let contenedor of [1, 2, 3, 4]; let i = index" class="contenedor mb-2 sm:mb-0"
+                    <div *ngFor="let contenedor of [1, 2, 3]; let i = index" class="contenedor mb-2 sm:mb-0"
                         [class.active]="i === currentIndex">
                         <div class="step-number flex items-center justify-center w-8 h-8 border rounded-full mx-auto text-base md:text-xl"
                             [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
@@ -24,13 +24,13 @@
                                 Nivel
                             </h2>
                         </ng-container>
-                        <ng-container *ngIf="i === 2">
+                        <!-- <ng-container *ngIf="i === 2">
                             <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
                                 class=" text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
                                 lección
                             </h2>
-                        </ng-container>
-                        <ng-container *ngIf="i === 3">
+                        </ng-container> -->
+                        <ng-container *ngIf="i === 2">
                             <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
                                 class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
                                 Contenido
@@ -41,11 +41,14 @@
             </div>
             <!---------------------------------------------------agregar actividad------------------------------------------->
             <div>
-                <form [formGroup]="actividadForm" (ngSubmit)="addActividadSuperAdmin()" *ngIf="currentIndex === 0" class="space-y-6 w-full">
-                    <div class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
+                <form [formGroup]="actividadForm" (ngSubmit)="addActividadSuperAdmin()" *ngIf="currentIndex === 0"
+                    class="space-y-6 w-full">
+                    <div
+                        class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
                         <div
                             class="flex flex-col justify-evenly mb-6 md:flex-row items-start  pb-2 md:items-center space-y-2 md:space-y-0 ">
-                            <label for="nombre" class="text-lg font-normal md:w-36 md:pr-2">Nombre de la Actividad:</label>
+                            <label for="nombre" class="text-lg font-normal md:w-36 md:pr-2">Nombre de la
+                                Actividad:</label>
                             <input type="text" id="nombre" formControlName="nombre"
                                 class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <div *ngIf="submittedActividad && actividadForm.controls.nombre.errors"
@@ -56,7 +59,8 @@
                         </div>
                         <div
                             class="flex flex-col justify-evenly mb-6 md:flex-row items-start  pb-2 md:items-center space-y-2 md:space-y-0 ">
-                            <label for="descripcion" class="text-lg font-normal md:w-36 md:pr-2">Descripcion Actividad:</label>
+                            <label for="descripcion" class="text-lg font-normal md:w-36 md:pr-2">Descripcion
+                                Actividad:</label>
                             <textarea type="text" id="descripcion" formControlName="descripcion"
                                 class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                             <div *ngIf="submittedActividad && actividadForm.controls.descripcion.errors"
@@ -147,13 +151,16 @@
 
 
                 <!------------------------------------------------agregar nivel------------------------------------------------->
-                <div *ngIf="mostrarNivelForm"> 
-                    <form [formGroup]="nivelForm" (ngSubmit)="addNivelSuperAdmin()" *ngIf="currentIndex === 1" class="space-y-6 w-full">
-                        <div class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
+                <div *ngIf="mostrarNivelForm">
+                    <form [formGroup]="nivelForm" (ngSubmit)="addNivelSuperAdmin()" *ngIf="currentIndex === 1"
+                        class="space-y-6 w-full">
+                        <div
+                            class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
                             <h2 class="text-center my-8 ">Agregar Nivel</h2>
                             <div
                                 class="flex flex-col mb-6 md:flex-row items-start pl-8 pr-8 pb-2 md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                                <label for="nivel_nombre" class="text-lg font-normal md:w-36 md:pr-2">Nombre del Nivel:</label>
+                                <label for="nivel_nombre" class="text-lg font-normal md:w-36 md:pr-2">Nombre del
+                                    Nivel:</label>
                                 <input type="text" id="nivel_nombre" formControlName="nombre"
                                     class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <div *ngIf="submittedNivel && nivelForm.controls.nombre.errors"
@@ -165,7 +172,8 @@
                             </div>
                             <div
                                 class="flex flex-col mb-6 md:flex-row items-start pl-8 pr-8 pb-2 md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                                <label for="nivel_descripcion" class="text-lg font-normal md:w-36 md:pr-2">Descripcion del
+                                <label for="nivel_descripcion" class="text-lg font-normal md:w-36 md:pr-2">Descripcion
+                                    del
                                     Nivel:</label>
                                 <input type="text" id="nivel_descripcion" formControlName="descripcion"
                                     class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -196,13 +204,16 @@
                 </div>
 
                 <!---------------------------------------------------------------agregar Lección-------------------------------------------------------------->
-                <div *ngIf="mostrarLeccionForm"> 
-                    <form [formGroup]="leccionForm" (ngSubmit)="addLeccionSuperAdmin()" *ngIf="currentIndex === 2" class="space-y-6 w-full">
-                        <div class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
+                <div *ngIf="mostrarLeccionForm">
+                    <form [formGroup]="leccionForm" (ngSubmit)="addLeccionSuperAdmin()" *ngIf="currentIndex === 2"
+                        class="space-y-6 w-full">
+                        <div
+                            class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
                             <h2 class="text-center my-8">Agregar Lección</h2>
                             <div
                                 class="flex flex-col mb-6 md:flex-row items-start pl-8 pr-8 pb-2 md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                                <label for="leccion_nombre" class="text-lg font-normal md:w-36 md:pr-2">Nombre de la Lección:</label>
+                                <label for="leccion_nombre" class="text-lg font-normal md:w-36 md:pr-2">Nombre de la
+                                    Lección:</label>
                                 <input type="text" id="leccion_nombre" formControlName="nombre"
                                     class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <div *ngIf="submittedLeccion && leccionForm.controls.nombre.errors"
@@ -229,16 +240,15 @@
                             </div>
                         </div>
                     </form>
-                </div>
 
-                <!---------------------------------------------------------------agregar contenido por leccion------------------------->
-                <div *ngIf="mostrarContenidoLeccionForm"> 
-                    <form [formGroup]="contenidoLeccionForm" (ngSubmit)="addContenidoLeccionSuperAdmin()" *ngIf="currentIndex === 3" class="space-y-6 w-full">
-                        <div class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
+                    <form [formGroup]="contenidoLeccionForm" (ngSubmit)="addContenidoLeccionSuperAdmin()"
+                        class="space-y-6 w-full">
+                        <div
+                            class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto">
                             <h2 class="text-center my-8">Agregar Contenido a la Lección</h2>
                             <div
                                 class="flex flex-col mb-6 md:flex-row items-start pl-8 pr-8 pb-2 md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                                <label for="titulo"class="text-lg font-normal md:w-36 md:pr-2">Título:</label>
+                                <label for="titulo" class="text-lg font-normal md:w-36 md:pr-2">Título:</label>
                                 <input type="text" id="titulo" formControlName="titulo"
                                     class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <div *ngIf="submittedContent && contenidoLeccionForm.controls.titulo.errors"
@@ -250,7 +260,8 @@
                             </div>
                             <div
                                 class="flex flex-col mb-6 md:flex-row items-start pl-8 pr-8 pb-2 md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                                <label for="descripcion" class="text-lg font-normal md:w-36 md:pr-2">Descripción:</label>
+                                <label for="descripcion"
+                                    class="text-lg font-normal md:w-36 md:pr-2">Descripción:</label>
                                 <input type="text" id="descripcion" formControlName="descripcion"
                                     class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <div *ngIf="submittedContent && contenidoLeccionForm.controls.descripcion.errors"
@@ -262,7 +273,8 @@
                             </div>
                             <div
                                 class="flex flex-col mb-6 md:flex-row items-start pl-8 pr-8 pb-2 md:items-center space-y-2 md:space-y-0 md:space-x-4">
-                                <label for="descripcion" class="text-lg font-normal md:w-36 md:pr-2">Tipo de dato:</label>
+                                <label for="descripcion" class="text-lg font-normal md:w-36 md:pr-2">Tipo de
+                                    dato:</label>
                                 <select id="id_tipo_dato" formControlName="id_tipo_dato"
                                     class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
                                     <option value="" disabled selected>Seleccione el tipo de dato...</option>
@@ -358,6 +370,11 @@
                         </div>
                     </form>
                 </div>
+
+                <!---------------------------------------------------------------agregar contenido por leccion------------------------->
+                <!-- <div *ngIf="mostrarContenidoLeccionForm"> 
+                    
+                </div> -->
             </div>
         </div>
     </div>

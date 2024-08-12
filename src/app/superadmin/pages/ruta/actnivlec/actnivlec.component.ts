@@ -238,7 +238,7 @@ export class ActnivlecComponent implements OnInit {
         this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
         this.mostrarNivelForm = true;   
         this.avanzarSeccion();
-        this.currentIndex = 1;
+        this.currentIndex = 0;
         
       },
       error => {
@@ -265,7 +265,7 @@ export class ActnivlecComponent implements OnInit {
         this.mostrarLeccionForm = true;
         console.log('id nivel: ', data.id);
         this.avanzarSeccion();
-        this.currentIndex = 2;
+        this.currentIndex = 1;
         
 
       },
@@ -293,7 +293,7 @@ export class ActnivlecComponent implements OnInit {
         this.mostrarContenidoLeccionForm = true;
         console.log('id leccion: ', data.id);
         this.avanzarSeccion();
-        this.currentIndex = 3;
+        this.currentIndex = 2;
       },
       error => {
         console.log(error);
@@ -315,7 +315,8 @@ export class ActnivlecComponent implements OnInit {
     this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, contLeccion).subscribe(
       (data: any) => {
         console.log('datos recibidos: ', data);
-        location.reload();
+        this.currentIndex = 2;
+       // location.reload();
       },
       error => {
         console.log(error);
