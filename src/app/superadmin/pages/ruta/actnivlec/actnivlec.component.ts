@@ -10,6 +10,8 @@ import { Aliado } from '../../../../Modelos/aliado.model';
 import { Superadmin } from '../../../../Modelos/superadmin.model';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import Pica from 'pica';
+import { NivelService } from '../../../../servicios/nivel.service';
+import { Nivel } from '../../../../Modelos/nivel.model';
 
 @Component({
   selector: 'app-actnivlec',
@@ -25,6 +27,7 @@ export class ActnivlecComponent implements OnInit {
   listaAsesorAliado: Asesor[] = [];
   listarTipoDato: Actividad[] = [];
   listarAliadoo: Aliado[] = [];
+  listarNiveles: Nivel [] = [];
   ///
   listarAsesores: any[] = [];
   userFilter: any = { nombre: '', estado: 'Activo' };
@@ -85,6 +88,7 @@ export class ActnivlecComponent implements OnInit {
     private actividadService: ActividadService,
     private aliadoService: AliadoService,
     private route: ActivatedRoute,
+    private nivelService: NivelService
   ) { }
 
   ngOnInit(): void {
@@ -108,6 +112,7 @@ export class ActnivlecComponent implements OnInit {
     this.validateToken();
     this.tipoDato();
     this.listaAliado();
+    this.verNivel();
     this.onAliadoChange();
   }
 
@@ -140,7 +145,7 @@ export class ActnivlecComponent implements OnInit {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
           this.listarTipoDato = data;
-          console.log(data);
+          console.log('tipo de dato:',data);
         },
         error => {
           console.log(error);
@@ -194,6 +199,23 @@ export class ActnivlecComponent implements OnInit {
       }
     }
   }
+
+  verNivel():void{
+    if (this.token) {
+      this.nivelService.getNivel(this.token).subscribe(
+        data => {
+          this.listarNiveles = data;
+          console.log('Niveles: ', data);
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
+
+
 
   //agregar una actividad
   addActividadSuperAdmin(): void {
