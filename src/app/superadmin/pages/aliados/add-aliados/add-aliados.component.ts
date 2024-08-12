@@ -13,6 +13,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { faEye, faEyeSlash, faFileUpload, faFileLines } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
+import { data } from 'jquery';
 @Component({
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
@@ -58,9 +59,10 @@ export class AddAliadosComponent {
   bannerPreview: string | ArrayBuffer | null = null;
   rutaPreview: string | ArrayBuffer | null = null;
   currentIndex: number = 0;
-
-
-
+  showErrors: boolean = false;
+  submittedSection: number = -1;
+  aliadoId: number;
+  isActive: boolean = true;
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -73,17 +75,17 @@ export class AddAliadosComponent {
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: [''],
-      ruta_multi: [''],
-      id_tipo_dato: [],
-      email: ['', Validators.required],
+      logo: ['',Validators.required],
+      ruta_multi: ['', Validators.required],
+      id_tipo_dato: [Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       estado: [1]
       
     });
 
     this.bannerForm = this.formBuilder.group({
-      urlImagen: [''],
+      urlImagen: ['',Validators.required],
       estadobanner: ['Activo'],
     });
 
@@ -254,8 +256,7 @@ export class AddAliadosComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      this.generateImagePreview(file, field);
-
+      
       let maxSize = 0;
   
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
@@ -270,23 +271,29 @@ export class AddAliadosComponent {
         // Muestra la alerta de error
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
   
-        // Limpia el archivo seleccionado
+        // Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
   
-        // También puedes resetear el control de formulario correspondiente si lo necesitas
+        // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'urlImagen') {
           this.bannerForm.patchValue({ urlImagen: null });
           this.selectedBanner = null;
+          this.bannerPreview = null; // Resetea la previsualización
         } else if (field === 'logo') {
           this.aliadoForm.patchValue({ logo: null });
           this.selectedLogo = null;
+          this.logoPreview = null; // Resetea la previsualización
         } else if (field === 'ruta_multi') {
           this.aliadoForm.patchValue({ ruta_multi: null });
           this.selectedruta = null;
+          this.rutaPreview = null; // Resetea la previsualización
         }
   
         return;
       }
+  
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
   
       if (field === 'urlImagen') {
         this.selectedBanner = file;
@@ -306,15 +313,19 @@ export class AddAliadosComponent {
       if (field === 'ruta_multi') {
         this.aliadoForm.patchValue({ ruta_multi: event.target.value });
       }
-      //Limpiar el input file directamente en el DOM
+  
+      // Limpia el input file directamente en el DOM
       if (field === 'urlImagen') {
         this.selectedBanner = null;
+        this.bannerPreview = null; // Resetea la previsualización
       } else {
         this.selectedLogo = null;
+        this.logoPreview = null; // Resetea la previsualización
       }
       event.target.value = ''; // Esta línea limpia el input de tipo file
     }
   }
+  
 
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
@@ -360,16 +371,26 @@ export class AddAliadosComponent {
 
   next() {
     if (this.currentIndex === 0) {
-      this.showFirstSection = false;
-      this.showSecondSection = true;
-      this.showThirdSection = false;
-      this.currentIndex = 1;
+      if (this.isFirstSectionValid()) {
+        this.showFirstSection = false;
+        this.showSecondSection = true;
+        this.currentIndex = 1;
+      }
     } else if (this.currentIndex === 1) {
-      this.showFirstSection = false;
-      this.showSecondSection = false;
-      this.showThirdSection = true;
-      this.currentIndex = 2;
+      if (this.isSecondSectionValid()) {
+        this.showSecondSection = false;
+        this.showThirdSection = true;
+        this.currentIndex = 2;
+      }
     }
+    // Forzar la detección de cambios
+    this.cdRef.detectChanges();
+  }
+  
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.aliadoForm.get(fieldName);
+    return field && field.invalid && (field.dirty || field.touched);
   }
 
   previous() {
@@ -384,6 +405,32 @@ export class AddAliadosComponent {
       this.showThirdSection = false;
       this.currentIndex = 1;
     }
+  }
+
+  isFirstSectionValid(): boolean {
+    const nombreValid = this.aliadoForm.get('nombre').valid;
+    const emailValid = this.aliadoForm.get('email').valid;
+    const passwordValid = this.aliadoForm.get('password').valid;
+    
+    // Marcar los campos como tocados para que se muestren los errores
+    if (!nombreValid) this.aliadoForm.get('nombre').markAsTouched();
+    if (!emailValid) this.aliadoForm.get('email').markAsTouched();
+    if (!passwordValid) this.aliadoForm.get('password').markAsTouched();
+    
+    return nombreValid && emailValid && passwordValid;
+  }
+  
+  isSecondSectionValid(): boolean {
+    const descripcionValid = this.aliadoForm.get('descripcion').valid;
+    const idTipoDatoValid = this.aliadoForm.get('id_tipo_dato').valid;
+    const rutaMultiValid = this.aliadoForm.get('ruta_multi').valid;
+    
+    // Marcar los campos como tocados para que se muestren los errores
+    if (!descripcionValid) this.aliadoForm.get('descripcion').markAsTouched();
+    if (!idTipoDatoValid) this.aliadoForm.get('id_tipo_dato').markAsTouched();
+    if (!rutaMultiValid) this.aliadoForm.get('ruta_multi').markAsTouched();
+    
+    return descripcionValid && idTipoDatoValid && rutaMultiValid;
   }
 }
 

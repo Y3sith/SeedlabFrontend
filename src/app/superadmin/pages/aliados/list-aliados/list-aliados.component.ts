@@ -127,8 +127,9 @@ export class ListAliadosComponent implements OnInit {
     });
   }
 
-  editarAliado(id: number):void{
-    this.router.navigate(['add-aliados/', id]);
+  editarAliado(id: number): void {
+    this.aliadoService.setAliadoId(id);
+    this.router.navigate(['edit-aliados']);
   }
 
   changePage(pageNumber: number | string): void {
