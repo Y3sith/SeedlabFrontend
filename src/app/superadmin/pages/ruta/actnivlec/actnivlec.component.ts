@@ -31,7 +31,8 @@ export class ActnivlecComponent implements OnInit {
   aliadoSeleccionado: any | null;
   rutaId: number | null = null;
   ////
-  step: number = 1;
+  // currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
 
   ////
   fuente: string = '';
@@ -213,8 +214,10 @@ export class ActnivlecComponent implements OnInit {
       (data: any) => {
         const actividadCreada = data[0];
         this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-        this.mostrarNivelForm = true;
-        this.step = 2; 
+        this.mostrarNivelForm = true;   
+        this.avanzarSeccion();
+        this.currentIndex = 1;
+        
       },
       error => {
         console.log(error);
@@ -239,7 +242,9 @@ export class ActnivlecComponent implements OnInit {
         this.leccionForm.patchValue({ id_nivel: data.id })
         this.mostrarLeccionForm = true;
         console.log('id nivel: ', data.id);
-        this.step = 3;
+        this.avanzarSeccion();
+        this.currentIndex = 2;
+        
 
       },
       error => {
@@ -265,7 +270,8 @@ export class ActnivlecComponent implements OnInit {
         this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
         this.mostrarContenidoLeccionForm = true;
         console.log('id leccion: ', data.id);
-        this.step = 4;
+        this.avanzarSeccion();
+        this.currentIndex = 3;
       },
       error => {
         console.log(error);
@@ -409,4 +415,10 @@ export class ActnivlecComponent implements OnInit {
       id_tipo_dato: '',
     })
   }
+
+  avanzarSeccion() {
+    if (this.currentIndex < 3) {
+        this.currentIndex++;
+    }
+}
 }
