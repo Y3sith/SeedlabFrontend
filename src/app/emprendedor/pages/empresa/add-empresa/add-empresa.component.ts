@@ -1,28 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
-import { faGlobe } from '@fortawesome/free-solid-svg-icons';
-import { faIdCard } from '@fortawesome/free-solid-svg-icons';
-import { faMountainCity } from '@fortawesome/free-solid-svg-icons';
-import { faLandmarkFlag } from '@fortawesome/free-solid-svg-icons';
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
 import { EmpresaService } from '../../../../servicios/empresa.service';
 import { MunicipioService } from '../../../../servicios/municipio.service';
 import { User } from '../../../../Modelos/user.model';
-import { faRankingStar } from '@fortawesome/free-solid-svg-icons';
-import { faTasks } from '@fortawesome/free-solid-svg-icons';
-import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
-import { faUserTie } from '@fortawesome/free-solid-svg-icons';
-import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
-import { faBuilding } from '@fortawesome/free-solid-svg-icons';
-import { faBriefcase } from '@fortawesome/free-solid-svg-icons';
-import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
-import { faPhone } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-add-empresa',
@@ -32,8 +16,6 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 })
 
 export class AddEmpresaComponent {
-  faGlobe = faGlobe;
-  faCircleQuestion = faCircleQuestion;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
   departamentoPredeterminado = '';
@@ -42,21 +24,6 @@ export class AddEmpresaComponent {
   documento: string;
   user: User | null = null;
   currentRolId: number;
-  faIdCard = faIdCard;
-  faMountainCity = faMountainCity;
-  faLandmarkFlag = faLandmarkFlag;
-  faLocationDot = faLocationDot;
-  faEnvelope = faEnvelope;
-  faUser = faUser;
-  faPhone = faPhone;
-  faMobileAlt = faMobileAlt;
-  faBriefcase = faBriefcase;
-  faBuilding = faBuilding;
-  faAddressCard = faAddressCard;
-  faUserTie = faUserTie;
-  faLightbulb = faLightbulb;
-  faTasks = faTasks;
-  faRankingStar = faRankingStar;
   buttonText: string = 'Guardar Cambios';
   emprendedorDocumento: string;
   currentSubSectionIndex: number = 0;

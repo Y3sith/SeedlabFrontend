@@ -140,6 +140,37 @@
                         <div *ngIf="f.direccion.errors.required">Este campo es requerido *</div>
                       </div>
                     </div>
+
+                    <div class="w-full text-base relative">
+                      <label for="telefono" class="text-lg font-normal">Teléfono:</label>
+                      <input
+                        class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                        formControlName="telefono" />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 mb-6">
+                    <div class="w-full text-base relative">
+                      <label type="number" for="celular" class="text-lg font-normal">Celular:</label>
+                      <input
+                        class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                        formControlName="celular" />
+                      <div *ngIf="submitted && f.celular.errors"
+                        class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block mt-2">
+                        <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
+                        <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos
+                        </div>
+                      </div>
+                    </div>
+        
+                    <div class="w-full text-base relative">
+                      <label for="url_pagina" class="text-lg font-normal">Página web:</label>
+                      <input
+                        class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                        formControlName="url_pagina" />
+                      <div *ngIf="submitted && f.url_pagina.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                        <div *ngIf="f.url_pagina.errors.required">Este campo es requerido *</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -164,52 +195,50 @@
       <div class="space-y-8 max-w-full md:px-8">
         <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
           <div class="container mx-auto px-4 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div class="w-full text-base relative">
-                <label for="profesion" class="text-lg font-normal">Profesión:</label>
-                <input
-                  class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                  formControlName="profesion" />
-                <div *ngIf="submitted && f.profesion.errors"
-                  class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                  <div *ngIf="f.profesion.errors.required">Este campo es requerido *</div>
+            <form [formGroup]="addEmpresaForm" (ngSubmit)="crearEmpresa()">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="w-full text-base relative">
+                  <label for="profesion" class="text-lg font-normal">Profesión:</label>
+                  <input
+                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                    formControlName="profesion" />
+                  <div *ngIf="submitted && f.profesion.errors"
+                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                    <div *ngIf="f.profesion.errors.required">Este campo es requerido *</div>
+                  </div>
+                </div>
+                <div class="w-full text-base relative">
+                  <label for="cargo" class="text-lg font-normal">Cargo:</label>
+                  <input
+                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                    formControlName="cargo" />
+                  <div *ngIf="submitted && f.cargo.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                    <div *ngIf="f.cargo.errors.required">Este campo es requerido *</div>
+                  </div>
+                </div>
+                <div class="w-full text-base relative">
+                  <label for="experiencia" class="text-lg font-normal">Experiencia:</label>
+                  <textarea formControlName="experiencia"
+                    class="p-2 w-full h-40               
+                    mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                    rows="2" cols="20"></textarea>
+                  <div *ngIf="submitted && f.experiencia.errors"
+                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                    <div *ngIf="f.experiencia.errors.required">Este campo es requerido *</div>
+                  </div>
+                </div>
+                <div class="w-full text-base relative">
+                  <label for="funciones" class="text-lg font-normal">Funciones:</label>
+                  <textarea formControlName="funciones"
+                    class="p-2 w-full h-40 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                    rows="4" cols="30"></textarea>
+                  <div *ngIf="submitted && f.funciones.errors"
+                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                    <div *ngIf="f.funciones.errors.required">Este campo es requerido *</div>
+                  </div>
                 </div>
               </div>
-              <div class="w-full text-base relative">
-                <label for="cargo" class="text-lg font-normal">Cargo:</label>
-                <input
-                  class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                  formControlName="cargo" />
-                <div *ngIf="submitted && f.cargo.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                  <div *ngIf="f.cargo.errors.required">Este campo es requerido *</div>
-                </div>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div class="w-full text-base relative">
-                <label for="experiencia" class="text-lg font-normal">Experiencia:</label>
-                <textarea formControlName="experiencia"
-                  class="p-2 w-full h-40               
-                  mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                  rows="2" cols="20"></textarea>
-                <div *ngIf="submitted && f.experiencia.errors"
-                  class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                  <div *ngIf="f.experiencia.errors.required">Este campo es requerido *</div>
-              </div>
-              </div>
-              <div class="w-full text-base relative">
-                <label for="funciones" class="text-lg font-normal">Funciones:</label>
-                <textarea formControlName="funciones"
-                  class="p-2 w-full h-40 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                  rows="4" cols="30"></textarea>
-                <div *ngIf="submitted && f.funciones.errors"
-                  class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                  <div *ngIf="f.funciones.errors.required">Este campo es requerido *</div>
-                </div>
-              </div>
-            </div>
-
-
+            </form>
           </div>
         </div>
         <div class="flex justify-center h-10 space-x-4">
@@ -218,11 +247,16 @@
             (click)="previous()">
             Anterior
           </button>
-          <button type="button" (click)="next()"
-            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
-            <span class="px-2">Siguiente</span>
-            <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
-          </button>
+          <button type="button" (click)="crearEmpresa()"
+          class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+          <span class="px-2">Crear Empresa</span>
+          <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
+        </button>
+        <button type="button" (click)="next()"
+          class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+          <span class="px-2">Agregar Apoyo</span>
+          <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
+        </button>
         </div>
       </div>
     </div>
@@ -327,7 +361,7 @@
             (click)="previous()">
             Anterior
           </button>
-          <button id="guardar" type="submit"
+          <button id="guardar" (click)="crearEmpresa()"
             class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
             Guardar
           </button>
