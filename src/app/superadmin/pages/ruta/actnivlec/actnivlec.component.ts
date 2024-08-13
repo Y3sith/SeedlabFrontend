@@ -30,6 +30,9 @@ export class ActnivlecComponent implements OnInit {
   userFilter: any = { nombre: '', estado: 'Activo' };
   aliadoSeleccionado: any | null;
   rutaId: number | null = null;
+  ////
+  // currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
 
   ////
   fuente: string = '';
@@ -38,11 +41,6 @@ export class ActnivlecComponent implements OnInit {
   submittedLeccion=false;
   submittedContent=false;
   submitted=false;
-  
-
-
-
-
   ////añadir actividad
 
   actividadForm = this.fb.group({
@@ -80,10 +78,6 @@ export class ActnivlecComponent implements OnInit {
     id_leccion: ['', Validators.required]
   })
   mostrarContenidoLeccionForm: boolean = false;
-
-
-
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -91,7 +85,6 @@ export class ActnivlecComponent implements OnInit {
     private actividadService: ActividadService,
     private aliadoService: AliadoService,
     private route: ActivatedRoute,
-
   ) { }
 
   ngOnInit(): void {
@@ -116,9 +109,7 @@ export class ActnivlecComponent implements OnInit {
     this.tipoDato();
     this.listaAliado();
     this.onAliadoChange();
-
   }
-
 
   validateToken(): void {
     if (!this.token) {
@@ -204,8 +195,6 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-
-
   //agregar una actividad
   addActividadSuperAdmin(): void {
     this.submittedActividad = true;
@@ -225,7 +214,10 @@ export class ActnivlecComponent implements OnInit {
       (data: any) => {
         const actividadCreada = data[0];
         this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-        this.mostrarNivelForm = true;
+        this.mostrarNivelForm = true;   
+        this.avanzarSeccion();
+        this.currentIndex = 1;
+        
       },
       error => {
         console.log(error);
@@ -233,8 +225,6 @@ export class ActnivlecComponent implements OnInit {
     );
   }
   
-
-
   addNivelSuperAdmin():void{
     this.submittedNivel = true;
     if (this.actividadForm.invalid) {
@@ -252,6 +242,9 @@ export class ActnivlecComponent implements OnInit {
         this.leccionForm.patchValue({ id_nivel: data.id })
         this.mostrarLeccionForm = true;
         console.log('id nivel: ', data.id);
+        this.avanzarSeccion();
+        this.currentIndex = 2;
+        
 
       },
       error => {
@@ -277,6 +270,8 @@ export class ActnivlecComponent implements OnInit {
         this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
         this.mostrarContenidoLeccionForm = true;
         console.log('id leccion: ', data.id);
+        this.avanzarSeccion();
+        this.currentIndex = 3;
       },
       error => {
         console.log(error);
@@ -305,7 +300,6 @@ export class ActnivlecComponent implements OnInit {
       }
     )
   }
-
   // onTipoDatoChange(): void {
   //   const tipoDatoId = this.contenidoLeccionForm.get('id_tipo_dato').value;
 
@@ -332,7 +326,6 @@ export class ActnivlecComponent implements OnInit {
 
   //   this.contenidoLeccionForm.get('fuente').updateValueAndValidity();
   // }
-
 
   onTipoDatoChange(): void {
     this.submitted = true;
@@ -394,12 +387,6 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
   cancelarcrearActividad(): void {
     this.router.navigate(['/list-ruta'])
     this.actividadForm.patchValue({
@@ -428,4 +415,10 @@ export class ActnivlecComponent implements OnInit {
       id_tipo_dato: '',
     })
   }
+
+  avanzarSeccion() {
+    if (this.currentIndex < 3) {
+        this.currentIndex++;
+    }
+}
 }
