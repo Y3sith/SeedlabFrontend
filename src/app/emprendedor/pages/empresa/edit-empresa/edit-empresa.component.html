@@ -1,33 +1,34 @@
 <app-header [title]="'Bienvenido al panel de empresas'"
     [subtitle]="'Aqui podras ver y gestionar tus empresas'"></app-header>
-<div class="container mx-auto px-4 py-12">
-    <!-- <form [formGroup]="editEmpresaForm" (ngSubmit)="editEmpresa()"> -->
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 mb-6 p-4 sm:p-12">
+<div class="container px-4 py-12 mx-auto">
+    <form [formGroup]="editEmpresaForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-1 gap-4 p-4 mb-6 sm:grid-cols-12 sm:p-12">
             <div class="col-span-12 rounded-lg">
                 <div class="flex flex-col">
                     <div class="text-3xl md:text-9xl">
-                        <h3 class="text-xl md:text-4xl font-bold text-sky-600 -mt-16">Líder</h3>
+                        <h3 class="-mt-16 text-xl font-bold md:text-4xl text-sky-600">Líder</h3>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                        <div class="w-full text-base relative">
+                    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2">
+                        <div class="relative w-full text-base">
                             <label for="nombre" class="block mb-2 text-blue-400">Nombre:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="nombre" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="nombre" [ngModel]="empresa?.nombre" />
                         </div>
 
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="correo" class="block mb-2 text-blue-400">Email:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="correo" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="correo" [ngModel]="empresa?.correo" />
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                        <div class="w-full text-base relative">
+                    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-3">
+                        <div class="relative w-full text-base">
                             <label for="tipodocumento" class="block mb-2 text-blue-400">Tipo de Documento:</label>
                             <select id="tipoDocumento" formControlName="id_tipo_documento"
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                [ngModel]="empresa?.id_tipo_documento"
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
                                 <option value="" disabled selected>
                                     Seleccionar tipo de documento...
                                 </option>
@@ -36,167 +37,202 @@
                                 <option value="3">Carnet de Extranjería</option>
                                 <option value="4">NIT</option>
                             </select>
-                            <fa-icon [icon]="faIdCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                            styles=" pointer-events: auto;"></fa-icon>
+                            <fa-icon [icon]="faIdCard" class="absolute z-0 text-lg right-3 top-4 mt-7 text-cyan-500"
+                                styles=" pointer-events: auto;"></fa-icon>
                         </div>
-                        <div class="w-full text-base relative">
-                            <label for="documento" class="block mb-2 text-blue-400">Número Documento:</label>
+                        <div class="relative w-full text-base">
+                            <label for="documento" class="block mb-2 text-blue-400">Número de Documento:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="documento" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="documento" [ngModel]="empresa?.documento" />
                         </div>
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="razonSocial" class="block mb-2 text-blue-400">Razón Social:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="razonSocial" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="razonSocial" [ngModel]="empresa?.razonSocial" />
                         </div>
                         <div class="w-full text-base relative">
-                            <label for="departamento" class="block mb-2 text-blue-400">Departamento:</label>
+                            <label for="departamento" class="block mb-2 text-sky-400">Departamento:</label>
                             <select id="departamento" name="departamento"
                                 (change)="onDepartamentoSeleccionado($event.target.value)"
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                formControlName="id_departamento" [ngModel]="empresa?.id_departamento"
+                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
                                 <option value="" disabled selected>
                                     Seleccionar Departamento...
                                 </option>
-                                <!-- <option *ngFor="let nameDepartamento of listDepartamentos" [value]="nameDepartamento">
-                                    {{ nameDepartamento }}
-                                </option> -->
+                                <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
+                                    {{ departamento.name }}
+                                </option>
                             </select>
-                            <fa-icon [icon]="faLandmarkFlag" class="absolute right-3 top-5 mt-6 text-cyan-500 z-0 text-lg"
-                            styles=" pointer-events: auto;"></fa-icon>
+                            <fa-icon [icon]="faLandmarkFlag"
+                                class="absolute right-3 top-5 mt-6 text-cyan-500 z-0 text-lg"
+                                styles=" pointer-events: auto;"></fa-icon>
                         </div>
                         <div class="w-full text-base relative">
-                            <label for="municipio" class="block mb-2 text-blue-400">Municipio:</label>
-                            <select id="municipio" name="municipio" formControlName="municipio"
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                <option value="" disabled selected>
+                            <label for="municipio" class="block mb-2 text-sky-400">Municipio:</label>
+                            <select id="municipio" name="municipio" formControlName="id_municipio"
+                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-xs">
+                                <option value="" disabled [ngValue]="null">
                                     Seleccionar Municipio...
                                 </option>
-                                <!-- <option *ngFor="let municipio of listMunicipios" [value]="municipio">
-                                    {{ municipio }}
-                                </option> -->
+                                <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
+                                    {{municipio.nombre}}
+                                </option>
                             </select>
-                            <fa-icon [icon]="faMountainCity" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                            styles=" pointer-events: auto;"></fa-icon>
-                        </div>
-                        <div class="w-full text-base relative">
-                            <label for="direccion" class="block mb-2 text-blue-400">Dirección del emprendimiento:</label>
+                            <fa-icon [icon]="faMountainCity"
+                                class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                                styles=" pointer-events: auto;"></fa-icon>
+                          </div>
+
+
+                        <div class="relative w-full text-base">
+                            <label for="direccion" class="block mb-2 text-blue-400">Dirección del
+                                emprendimiento:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="direccion" />
-                                <fa-icon [icon]="faLocationDot" class="absolute right-3 top-12 text-cyan-500 z-0 text-lg"
-                            styles=" pointer-events: auto;"></fa-icon>
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="direccion" [ngModel]="empresa?.direccion" />
+                            <fa-icon [icon]="faLocationDot" class="absolute z-0 text-lg right-3 top-12 text-cyan-500"
+                                styles=" pointer-events: auto;"></fa-icon>
                         </div>
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="telefono" class="block mb-2 text-blue-400">Teléfono:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="telefono" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="telefono" [ngModel]="empresa?.telefono" />
                         </div>
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="celular" class="block mb-2 text-blue-400">Celular:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="celular" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="celular" [ngModel]="empresa?.celular" />
                         </div>
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="url_pagina" class="block mb-2 text-blue-400">Página web:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="url_pagina" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="url_pagina" [ngModel]="empresa?.url_pagina" />
                         </div>
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="profesion" class="block mb-2 text-blue-400">Profesión:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="profesion" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="profesion" [ngModel]="empresa?.profesion" />
                         </div>
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="cargo" class="block mb-2 text-blue-400">Cargo:</label>
                             <input
-                                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                                formControlName="cargo" />
+                                class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                formControlName="cargo" [ngModel]="empresa?.cargo" />
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div class="w-full text-base relative">
+                    <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3">
+                        <div class="relative w-full text-base">
                             <label for="experiencia" class="block mb-2 text-blue-400">Experiencia:</label>
-                            <textarea formControlName="experiencia"
-                                class="p-2 w-full h-full mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                            <textarea formControlName="experiencia" [ngModel]="empresa?.experiencia"
+                                class="w-full h-full p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
                                 rows="4" cols="30"></textarea>
                         </div>
-                        <div class="w-full text-base relative">
+                        <div class="relative w-full text-base">
                             <label for="funciones" class="block mb-2 text-blue-400">Funciones:</label>
-                            <textarea formControlName="funciones"
-                                class="p-2 w-full h-full mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-1000"
+                            <textarea formControlName="funciones" [ngModel]="empresa?.funciones"
+                                class="w-full h-full p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-1000"
                                 rows="4" cols="30"></textarea>
                         </div>
-                        <div
-                            class="  relative p-4 text-lg bg-slate-50 lg:bottom-20">
+                        <div class="relative p-4 text-lg bg-slate-50 lg:bottom-20">
                             <p class="w-full resize-none focus:outline-none focus:border-gray-300 ">
                                 El apoyo es un recurso o asistencia proporcionada a los
                                 empleados para mejorar la eficiencia y la productividad.
                             </p>
                             <div class="flex items-center">
-                                <input type="checkbox" id="mostrarContenido" name="checkbox" class="custom-checkbox scale-150 -mt-3 border-blue-300" (change)="mostrarOcultarContenido()" />
-                                <h5 class="pl-3 text-blue-500 text-base">Apoyo</h5>
-                              </div>
-                              
+                                <input type="checkbox" id="mostrarContenido" name="checkbox"
+                                    class="-mt-3 scale-150 border-blue-300 custom-checkbox"
+                                    (change)="mostrarOcultarContenido()" />
+                                <h5 class="pl-3 text-base text-blue-500">Apoyo</h5>
+                            </div>
+
                         </div>
                     </div>
-                    <div class="flex justify-end relative bottom-12 -left-2">
+                    <div class="relative flex justify-end bottom-12 -left-2">
                         <button id="guardar" type="submit"
-                            class="px-10 py-3 bg-sky-500 bg-opacity-80 text-white rounded-xl cursor-pointer">
-                            Guardar Empresa
-                        </button>
+                                        class="px-10 py-3 text-white cursor-pointer bg-sky-500 bg-opacity-80 rounded-xl">
+                                        Guardar empresa
+                                    </button> 
                     </div>
                     <div id="contenido" class="mt-6 sm:mt-14">
-                        <hr class="w-full border-t-gray-600 border-gray-400" />
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl md:text-4xl font-bold text-sky-600">Apoyo</h3>
+                        <hr class="w-full border-gray-400 border-t-gray-600" />
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-bold md:text-4xl text-sky-600">Apoyo</h3>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                            <div class="w-full text-base relative">
-                                <label for="nombre" class="block mb-2 text-blue-400">Nombre:</label>
-                                <input class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                        <form [formGroup]="editApoyoForm" (ngSubmit)="onSubmit()">
+                            <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 md:grid-cols-3">
+                                <div class="relative w-full text-base">
+                                    <label for="nombre" class="block mb-2 text-blue-400">Nombre:</label>
+                                    <input
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                        formControlName="nombre" [ngModel]="apoyo?.nombre" />
+                                </div>
+                                <div class="relative w-full text-base">
+                                    <label for="apellido" class="block mb-2 text-blue-400">Apellido:</label>
+                                    <input
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                        formControlName="apellido" [ngModel]="apoyo?.apellido" />
+                                </div>
+                                <div class="relative w-full text-base">
+                                    <label for="tipoDocumento" class="block mb-2 text-blue-400">Tipo de
+                                        documento:</label>
+                                    <select id="tipoDocumento" formControlName="id_tipo_documento"
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
+                                        <option value="" disabled selected>
+                                            Seleccionar tipo de documento...
+                                        </option>
+                                        <option value="1">Cédula ciudadanía</option>
+                                        <option value="2">Pasaporte</option>
+                                        <option value="3">Carnet de Extranjería</option>
+                                        <option value="4">NIT</option>
+                                    </select>
+                                </div>
+                                <div class="relative w-full text-base">
+                                    <label for="documento" class="block mb-2 text-blue-400">Número de Documento:</label>
+                                    <input
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                        formControlName="documento" [ngModel]="apoyo?.documento" />
+                                </div>
+                                <div class="relative w-full text-base">
+                                    <label for="cargo" class="block mb-2 text-blue-400">Cargo:</label>
+                                    <input
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                        formControlName="cargo" [ngModel]="apoyo?.cargo" />
+                                </div>
+                                <div class="relative w-full text-base">
+                                    <label for="email" class="block mb-2 text-blue-400">Correo:</label>
+                                    <input
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                        formControlName="email" [ngModel]="apoyo?.email" />
+                                </div>
+                                <div class="relative w-full text-base">
+                                    <label for="celular" class="block mb-2 text-blue-400">Celular:</label>
+                                    <input
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                        formControlName="celular" [ngModel]="apoyo?.celular" />
+                                </div>
+                                <div class="relative w-full text-base">
+                                    <label for="telefono" class="block mb-2 text-blue-400">Teléfono:</label>
+                                    <input
+                                        class="w-full h-12 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
+                                        formControlName="telefono" [ngModel]="apoyo?.telefono" />
+                                </div>
+                                <div class="flex justify-end -mt-20">
+                                    <button id="guardar" type="submit"
+                                        class="px-10 py-3 text-white cursor-pointer bg-sky-500 bg-opacity-80 rounded-xl">
+                                        Guardar cambios
+                                    </button> 
+                                  </div>                              
                             </div>
-                            <div class="w-full text-base relative">
-                                <label for="cargo" class="block mb-2 text-blue-400">Cargo:</label>
-                                <input class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                            </div>
-                            <div class="w-full text-base relative">
-                                <label for="celular" class="block mb-2 text-blue-400">Celular:</label>
-                                <input class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                            </div>
-                            <div class="w-full text-base relative">
-                                <label for="correo" class="block mb-2 text-blue-400">Correo:</label>
-                                <input class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                            </div>
-                            <div class="w-full text-base relative">
-                                <label for="tipoDocumento" class="block mb-2 text-blue-400">Tipo de documento:</label>
-                                <input class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                                <fa-icon [icon]="faIdCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                                    styles=" pointer-events: auto;"></fa-icon>
-                            </div>
-                            <div class="w-full text-base relative">
-                                <label for="numeroDocumento" class="block mb-2 text-blue-400">Número de documento:</label>
-                                <input class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                            </div>
-                            <div class="w-full text-base relative">
-                                <label for="fijo" class="block mb-2 text-blue-400">Fijo:</label>
-                                <input class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                            </div>
-                        </div>
-                        <div class="flex justify-end -mt-20">
-                            <button id="guardar" type="submit"
-                                class="px-10 py-3 bg-sky-500 bg-opacity-80 text-white rounded-xl cursor-pointer">
-                                Guardar cambios
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    <!-- </form> -->
+    </form>
 </div>

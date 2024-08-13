@@ -106,6 +106,7 @@ export class AddEmpresaComponent {
     id_tipo_documento: ['', Validators.required],
     documento: ['', Validators.required],
     razonSocial: ['', Validators.required],
+    id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     telefono: [''],
     celular: ['', Validators.required],
@@ -159,6 +160,7 @@ export class AddEmpresaComponent {
       experiencia: this.addEmpresaForm.get('experiencia')?.value,
       funciones: this.addEmpresaForm.get('funciones')?.value,
       id_tipo_documento: this.addEmpresaForm.get('id_tipo_documento')?.value,
+      id_departamento: this.addEmpresaForm.get('id_departamento')?.value,
       id_municipio: this.addEmpresaForm.get('id_municipio')?.value,
       id_emprendedor: this.user?.emprendedor.documento,
     };
