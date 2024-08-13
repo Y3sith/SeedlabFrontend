@@ -22,9 +22,9 @@ export class EmpresaService {
 
   constructor(private http: HttpClient) { }
 
-  updateEmpresas(access_token:any, documento: string): Observable<any>{
-    const options= { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"/updateEmpresa"+documento, options);
+  updateEmpresas(access_token: any, documento: string, empresaData: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.put(`${this.url}/updateEmpresa/${documento}`, empresaData, options);
   }
 
   traerEmpresasola(access_token: any, id_emprendedor:string, documento: string): Observable<any> {
@@ -38,7 +38,7 @@ export class EmpresaService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + access_token
     });
-    return this.http.post(this.url+"createEmpresa", payload, { headers });
+    return this.http.post(this.url+"/createEmpresa", payload, { headers });
   }
 
   

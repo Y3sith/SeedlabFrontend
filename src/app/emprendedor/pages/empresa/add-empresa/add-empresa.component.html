@@ -78,13 +78,13 @@
 
             <div class="w-full text-base relative">
               <label for="departamento" class="block mb-2 text-sky-400">Departamento:</label>
-              <select id="departamento" name="departamento" (change)="onDepartamentoSeleccionado($event.target.value)"
+              <select id="departamento" name="departamento" (change)="onDepartamentoSeleccionado($event.target.value)" formControlName="id_departamento"
                 class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
                 <option value="" disabled selected>
                   Seleccionar Departamento...
                 </option>
-                <option *ngFor="let nameDepartamento of listDepartamentos" [value]="nameDepartamento">
-                  {{ nameDepartamento }}
+                <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
+                  {{ departamento.name }}
                 </option>
               </select>
               <fa-icon [icon]="faLandmarkFlag" class="absolute right-3 top-5 mt-6 text-cyan-500 z-0 text-lg"
@@ -97,7 +97,7 @@
                 <option value="" disabled selected>
                   Seleccionar Municipio...
                 </option>
-                <option *ngFor="let municipio of listMunicipios" value="{{municipio.id}}">{{municipio.nombre}}
+                <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">{{municipio.nombre}}
                 </option>
               </select>
               <div *ngIf="submitted && f.id_municipio.errors"

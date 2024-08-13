@@ -14,8 +14,8 @@ export class MunicipioService {
 
   constructor(private http: HttpClient) { }
 
-  getMunicipios(nombreDepartamento: string): Observable<any> {
-    const url = nombreDepartamento ? `${this.url}?dep_name=${nombreDepartamento}` : this.url;
+  getMunicipios(idDepartamento: string): Observable<any> {
+    const url = idDepartamento ? `${this.url}?dep_id=${idDepartamento}` : this.url;
     return this.http.get(url);
   }
 
