@@ -59,6 +59,9 @@ export class AddEmpresaComponent {
   faRankingStar = faRankingStar;
   buttonText: string = 'Guardar Cambios';
   emprendedorDocumento: string;
+  currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
 
   constructor(
     private fb: FormBuilder,
@@ -237,6 +240,33 @@ export class AddEmpresaComponent {
       contenidoDiv.style.display = checkbox.checked ? "block" : "none";
       guardar.style.display = checkbox.checked ? "none" : "block";
     }
+  }
+
+  
+
+  
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 }
 

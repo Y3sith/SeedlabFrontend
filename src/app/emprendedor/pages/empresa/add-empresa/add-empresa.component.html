@@ -1,165 +1,191 @@
-<app-header [title]="'Bienvenido al panel de empresas'"
-  [subtitle]="'Aquí podrás ver y gestionar tus empresas'"></app-header>
-<div class="container mx-auto px-4 py-12">
-  <form [formGroup]="addEmpresaForm" (ngSubmit)="crearEmpresa()">
-    <div class="grid grid-cols-1 sm:grid-cols-9 gap-4 mb-4 p-4 sm:p-12">
-      <div class="col-span-12 rounded-lg">
-        <div class="flex flex-col">
-          <div class="text-3xl md:text-9xl">
-            <h5 class="text-xl md:text-4xl font-bold text-sky-600 -mt-16">
-              Líder
-            </h5>
-          </div>
-          <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2  gap-6 mb-6">
-            <div class="w-full text-base relative">
-              <label for="nombre" class="block mb-2 text-sky-400">Nombre:</label>
-              <input type="text" formControlName="nombre"
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-              <fa-icon [icon]="faUser" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-              <div *ngIf="submitted && f.nombre.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                <div *ngIf="f.nombre.errors.required">Este campo es requerido *</div>
-              </div>
-            </div>
+<div class="container mx-auto p-0 pt-2 ">
+  <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+    <app-header [title] [subtitle]="'Agregar empresa y apoyos'"></app-header>
+  </header>
+  <!-- transicion basada en el estado -->
+  <div class="w-full flex items-center justify-center px-4">
+    <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
+      <div *ngFor="let contenedor of [1, 2, 3]; let i = index" class="contenedor mb-2 sm:mb-0"
+        [class.active]="i === currentIndex">
+        <div
+          class="step-number flex items-center justify-center w-8 h-8 border rounded-full mx-auto text-base md:text-xl"
+          [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
+          {{ i + 1 }}
+        </div>
+        <ng-container *ngIf="i === 0">
+          <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
+            class=" text-base md:text-1xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate">
+            Datos basicos
+          </h2>
+        </ng-container>
+        <ng-container *ngIf="i === 1">
+          <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
+            class="text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
+            Datos profesionales
+          </h2>
+        </ng-container>
+        <ng-container *ngIf="i === 2">
+          <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
+            class=" text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
+            Datos Aliados
+          </h2>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <!-- Datos Basicos Lider -->
+  <ng-container *ngIf="currentIndex === 0">
+    <div *ngIf="currentSubSectionIndex === 0">
+      <div class="space-y-8 max-w-full md:px-8">
+        <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+          <div class="container mx-auto px-4 py-12">
+            <form [formGroup]="addEmpresaForm" (ngSubmit)="crearEmpresa()">
+              <div class="grid grid-cols-1 sm:grid-cols-9 gap-4 mb-4 p-4 sm:p-12">
+                <div class="col-span-12 rounded-lg">
+                  <div class="flex flex-col">
+                    <div class="text-3xl md:text-9xl">
+                      <h5 class="text-xl md:text-4xl font-bold text-sky-600 -mt-16">
+                        Líder
+                      </h5>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 mb-6">
+                      <div class="w-full text-base relative">
+                        <label for="nombre" class="block mb-2 text-sky-400">Nombre:</label>
+                        <input type="text" formControlName="nombre"
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                        <fa-icon [icon]="faUser" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                        <div *ngIf="submitted && f.nombre.errors"
+                          class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                          <div *ngIf="f.nombre.errors.required">Este campo es requerido *</div>
+                        </div>
+                      </div>
 
-            <div class="w-full text-base relative">
-              <label for="correo" class="block mb-2 text-sky-400">Correo Electrónico:</label>
-              <input type="email" formControlName="correo"
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-              <fa-icon [icon]="faEnvelope" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-              <div *ngIf="submitted && f.correo.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                <div *ngIf="f.correo.errors.required">Este campo es requerido *</div>
-              </div>
-            </div>
+                      <div class="w-full text-base relative">
+                        <label for="correo" class="block mb-2 text-sky-400">Correo Electrónico:</label>
+                        <input type="email" formControlName="correo"
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                        <fa-icon [icon]="faEnvelope" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                        <div *ngIf="submitted && f.correo.errors"
+                          class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                          <div *ngIf="f.correo.errors.required">Este campo es requerido *</div>
+                        </div>
+                      </div>
 
-            <div class="w-full text-base relative">
-              <label for="tipodocumento" class="block mb-2 text-sky-400 ">Tipo de Documento:</label>
-              <select id="tipoDocumento" formControlName="id_tipo_documento"
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
-                <option value="" disabled selected>Seleccionar tipo de documento...</option>
-                <option value="1">Cédula ciudadanía</option>
-                <option value="2">Pasaporte</option>
-                <option value="3">Carnet de Extranjería</option>
-                <option value="4">NIT</option>
-              </select>
-              <div *ngIf="submitted && f.id_tipo_documento.errors"
-                class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
-              </div>
-              <fa-icon [icon]="faIdCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
+                      <div class="w-full text-base relative">
+                        <label for="tipodocumento" class="block mb-2 text-sky-400">Tipo de Documento:</label>
+                        <select id="tipoDocumento" formControlName="id_tipo_documento"
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
+                          <option value="" disabled selected>Seleccionar tipo de documento...</option>
+                          <option value="1">Cédula ciudadanía</option>
+                          <option value="2">Pasaporte</option>
+                          <option value="3">Carnet de Extranjería</option>
+                          <option value="4">NIT</option>
+                        </select>
+                        <div *ngIf="submitted && f.id_tipo_documento.errors"
+                          class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                          <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
+                        </div>
+                        <fa-icon [icon]="faIdCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                      </div>
 
-            <div class="w-full text-base relative">
-              <label for="documento" class="block mb-2 text-sky-400">Número Documento:</label>
-              <input
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                formControlName="documento" />
-              <div *ngIf="submitted && f.documento.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                <div *ngIf="f.documento.errors.required">Este campo es requerido *</div>
-              </div>
-              <fa-icon [icon]="faAddressCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
+                      <div class="w-full text-base relative">
+                        <label for="documento" class="block mb-2 text-sky-400">Número Documento:</label>
+                        <input
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                          formControlName="documento" />
+                        <div *ngIf="submitted && f.documento.errors"
+                          class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                          <div *ngIf="f.documento.errors.required">Este campo es requerido *</div>
+                        </div>
+                        <fa-icon [icon]="faAddressCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                      </div>
 
-            <div class="w-full text-base relative">
-              <label for="razonSocial" class="block mb-2 text-sky-400">Razón Social:</label>
-              <input
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                formControlName="razonSocial" />
-              <div *ngIf="submitted && f.razonSocial.errors"
-                class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                <div *ngIf="f.razonSocial.errors.required">Este campo es requerido *</div>
-              </div>
-              <fa-icon [icon]="faBuilding" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
+                      <div class="w-full text-base relative">
+                        <label for="razonSocial" class="block mb-2 text-sky-400">Razón Social:</label>
+                        <input
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                          formControlName="razonSocial" />
+                        <div *ngIf="submitted && f.razonSocial.errors"
+                          class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                          <div *ngIf="f.razonSocial.errors.required">Este campo es requerido *</div>
+                        </div>
+                        <fa-icon [icon]="faBuilding" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                      </div>
 
-            <div class="w-full text-base relative">
-              <label for="departamento" class="block mb-2 text-sky-400">Departamento:</label>
-              <select id="departamento" name="departamento" (change)="onDepartamentoSeleccionado($event.target.value)"
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
-                <option value="" disabled selected>
-                  Seleccionar Departamento...
-                </option>
-                <option *ngFor="let nameDepartamento of listDepartamentos" [value]="nameDepartamento">
-                  {{ nameDepartamento }}
-                </option>
-              </select>
-              <fa-icon [icon]="faLandmarkFlag" class="absolute right-3 top-5 mt-6 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
-            <div class="w-full text-base relative">
-              <label for="municipio" class="block mb-2 text-sky-400">Municipio:</label>
-              <select id="municipio" name="municipio" formControlName="id_municipio"
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-xs">
-                <option value="" disabled selected>
-                  Seleccionar Municipio...
-                </option>
-                <option *ngFor="let municipio of listMunicipios" value="{{municipio.id}}">{{municipio.nombre}}
-                </option>
-              </select>
-              <div *ngIf="submitted && f.id_municipio.errors"
-                class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                <div *ngIf="f.id_municipio.errors.required">Este campo es requerido *</div>
-              </div>
-              <fa-icon [icon]="faMountainCity" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
+                      <div class="w-full text-base relative">
+                        <label for="departamento" class="block mb-2 text-sky-400">Departamento:</label>
+                        <select id="departamento" name="departamento"
+                          (change)="onDepartamentoSeleccionado($event.target.value)"
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
+                          <option value="" disabled selected>
+                            Seleccionar Departamento...
+                          </option>
+                          <option *ngFor="let nameDepartamento of listDepartamentos" [value]="nameDepartamento">
+                            {{ nameDepartamento }}
+                          </option>
+                        </select>
+                        <fa-icon [icon]="faLandmarkFlag" class="absolute right-3 top-5 mt-6 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                      </div>
+                      <div class="w-full text-base relative">
+                        <label for="municipio" class="block mb-2 text-sky-400">Municipio:</label>
+                        <select id="municipio" name="municipio" formControlName="id_municipio"
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-xs">
+                          <option value="" disabled selected>
+                            Seleccionar Municipio...
+                          </option>
+                          <option *ngFor="let municipio of listMunicipios" value="{{municipio.id}}">{{municipio.nombre}}
+                          </option>
+                        </select>
+                        <div *ngIf="submitted && f.id_municipio.errors"
+                          class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                          <div *ngIf="f.id_municipio.errors.required">Este campo es requerido *</div>
+                        </div>
+                        <fa-icon [icon]="faMountainCity" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                      </div>
 
-            <div class="w-full text-base relative">
-              <label for="direccion" class="block mb-2 text-sky-400 ">Dirección del emprendimiento:</label>
-              <input
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                formControlName="direccion" />
-              <div *ngIf="submitted && f.celular.errors"
-                class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block mt-2">
-                <div *ngIf="f.direccion.errors.required">Este campo es requerido *</div>
-                <div *ngIf="f.direccion.errors.maxlength">El número de celular no debe tener más de 10 dígitos
+                      <div class="w-full text-base relative">
+                        <label for="direccion" class="block mb-2 text-sky-400">Dirección del emprendimiento:</label>
+                        <input
+                          class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                          formControlName="direccion" />
+                        <div *ngIf="submitted && f.direccion.errors"
+                          class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block mt-2">
+                          <div *ngIf="f.direccion.errors.required">Este campo es requerido *</div>
+                        </div>
+                        <fa-icon [icon]="faMapPin" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                          styles=" pointer-events: auto;"></fa-icon>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <fa-icon [icon]="faLocationDot" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
-
-            <div class="w-full text-base relative">
-              <label for="telefono" class="block mb-2 text-sky-400">Teléfono:</label>
-              <input
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                formControlName="telefono" />
-              <fa-icon [icon]="faPhone" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
+            </form>
           </div>
-          <div class="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-4 mb-6">
-            <div class="w-full text-base relative">
-              <label type="number" for="celular" class="block mb-2 text-sky-400">Celular:</label>
-              <input
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                formControlName="celular" />
-              <div *ngIf="submitted && f.celular.errors"
-                class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block mt-2">
-                <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
-                <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos
-                </div>
-              </div>
-              <fa-icon [icon]="faMobileAlt" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
+        </div>
+        <div class="flex justify-center h-10 space-x-4">
+          <button type="button" (click)="next()"
+            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+            <span class="px-2">Siguiente</span>
+            <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 
-            <div class="w-full text-base relative">
-              <label for="url_pagina" class="block mb-2 text-sky-400">Página web:</label>
-              <input
-                class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                formControlName="url_pagina" />
-              <div *ngIf="submitted && f.url_pagina.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                <div *ngIf="f.url_pagina.errors.required">Este campo es requerido *</div>
-              </div>
-              <fa-icon [icon]="faGlobe" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                styles=" pointer-events: auto;"></fa-icon>
-            </div>
-
+  <!-- Datos Profesionales Lider -->
+  <ng-container *ngIf="currentIndex === 1">
+    <div *ngIf="currentSubSectionIndex === 0">
+      <div class="space-y-8 max-w-full md:px-8">
+        <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+          <div class="container mx-auto px-4 py-12">
             <div class="w-full text-base relative">
               <label for="profesion" class="block mb-2 text-sky-400">Profesión:</label>
               <input
@@ -232,125 +258,137 @@
               </div>
             </div>
           </div>
-          <form [formGroup]="addApoyoEmpresaForm" (ngSubmit)="crearEmpresa()">
-            <div id="contenido" class="mt-6 sm:mt-14">
-              <hr class="w-full border-t-gray-600 border-gray-400" />
-              <div class="flex justify-between items-center mb-6">
-                <h1 class="text-xl md:text-4xl font-bold text-sky-600">
-                  Apoyo
-                </h1>
-              </div>
-
-              <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2  gap-6 mb-6">
-                <div class="w-full text-base relative">
-                  <label for="nombre" class="block mb-2 text-sky-400">Nombre:</label><fa-icon [icon]="faUser"
-                    class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                    styles=" pointer-events: auto;"></fa-icon>
-                  <input formControlName="nombre"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && f.nombre.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.nombre.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="apellido" class="block mb-2 text-sky-400">Apellido:</label><fa-icon [icon]="faUser"
-                    class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                    styles=" pointer-events: auto;"></fa-icon>
-                  <input formControlName="apellido"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && g.apellido.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="g.apellido.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="tipodocumento" class="block mb-2 text-sky-400">Tipo de Documento:</label>
-                  <select id="tipoDocumento" formControlName="id_tipo_documento"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                    <option value="" disabled selected>
-                      Seleccionar tipo de documento..
-                    </option>
-                    h-12
-                    <option value="1">Cédula ciudadanía</option>
-                    <option value="2">Pasaporte</option>
-                    <option value="3">Carnet de Extranjería</option>
-                    <option value="4">NIT</option>
-                  </select>
-                  <fa-icon [icon]="faIdCard" class="absolute right-5 top-4 mt-7 text-cyan-500 z-0"
-                    styles=" pointer-events: auto;"></fa-icon>
-                  <div *ngIf="submitted && f.id_tipo_documento.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="numeroDocumento" class="block mb-2 text-sky-400">Número de documento:</label>
-                  <input formControlName="documento"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <fa-icon [icon]="faIdCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                    styles=" pointer-events: auto;"></fa-icon>
-                  <div *ngIf="submitted && f.documento.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.documento.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="cargo" class="block mb-2 text-sky-400">Cargo:</label>
-                  <input formControlName="cargo"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <fa-icon [icon]="faUserTie" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                    styles=" pointer-events: auto;"></fa-icon>
-                  <div *ngIf="submitted && f.cargo.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.cargo.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="correo" class="block mb-2 text-sky-400">Correo:</label>
-                  <input formControlName="email"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <fa-icon [icon]="faEnvelope" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                    styles=" pointer-events: auto;"></fa-icon>
-                  <div *ngIf="submitted && g.email.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="g.email.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="celular" class="block mb-2 text-sky-400">Celular:</label>
-                  <input formControlName="celular"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <fa-icon [icon]="faMobileAlt" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                    styles=" pointer-events: auto;"></fa-icon>
-                  <div *ngIf="submitted && f.celular.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="fijo" class="block mb-2 text-sky-400">Telefono:</label>
-                  <input formControlName="telefono"
-                    class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <fa-icon [icon]="faPhone" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
-                    styles=" pointer-events: auto;"></fa-icon>
-                </div>
-              </div>
-
-              <div class="flex justify-end lg:-mt-20">
-                <button id="guardar" type="submit"
-                  class="px-8 py-2 bg-sky-500 bg-opacity-80 text-white rounded-xl cursor-pointer">
-                  Guardar cambios
-                </button>
-              </div>
-            </div>
-          </form>
+        </div>
+        <div class="flex justify-center h-10 space-x-4">
+          <button type="button" (click)="next()"
+            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+            <span class="px-2">Siguiente</span>
+            <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
+          </button>
         </div>
       </div>
     </div>
-  </form>
+  </ng-container>
+
+  <ng-container *ngIf="currentIndex === 2">
+    <div *ngIf="currentSubSectionIndex === 0">
+      <div class="space-y-8 max-w-full md:px-8">
+        <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+          <div class="container mx-auto px-4 py-12">
+            <form [formGroup]="addApoyoEmpresaForm" (ngSubmit)="crearEmpresa()">
+              <div id="contenido" class="mt-6 sm:mt-14">
+                <div class="flex justify-between items-center mb-6">
+                  <h1 class="text-xl md:text-4xl font-bold text-sky-600">
+                    Apoyo
+                  </h1>
+                </div>
+          
+                <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2  gap-6 mb-6">
+                  <div class="w-full text-base relative">
+                    <label for="nombre" class="block mb-2 text-sky-400">Nombre:</label><fa-icon [icon]="faUser"
+                      class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg" styles=" pointer-events: auto;"></fa-icon>
+                    <input formControlName="nombre"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                    <div *ngIf="submitted && f.nombre.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="f.nombre.errors.required">Este campo es requerido *</div>
+                    </div>
+                  </div>
+          
+                  <div class="w-full text-base relative">
+                    <label for="apellido" class="block mb-2 text-sky-400">Apellido:</label><fa-icon [icon]="faUser"
+                      class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg" styles=" pointer-events: auto;"></fa-icon>
+                    <input formControlName="apellido"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                    <div *ngIf="submitted && g.apellido.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="g.apellido.errors.required">Este campo es requerido *</div>
+                    </div>
+                  </div>
+          
+                  <div class="w-full text-base relative">
+                    <label for="tipodocumento" class="block mb-2 text-sky-400">Tipo de Documento:</label>
+                    <select id="tipoDocumento" formControlName="id_tipo_documento"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                      <option value="" disabled selected>
+                        Seleccionar tipo de documento..
+                      </option>
+                      h-12
+                      <option value="1">Cédula ciudadanía</option>
+                      <option value="2">Pasaporte</option>
+                      <option value="3">Carnet de Extranjería</option>
+                      <option value="4">NIT</option>
+                    </select>
+                    <fa-icon [icon]="faIdCard" class="absolute right-5 top-4 mt-7 text-cyan-500 z-0"
+                      styles=" pointer-events: auto;"></fa-icon>
+                    <div *ngIf="submitted && f.id_tipo_documento.errors"
+                      class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
+                    </div>
+                  </div>
+          
+                  <div class="w-full text-base relative">
+                    <label for="numeroDocumento" class="block mb-2 text-sky-400">Número de documento:</label>
+                    <input formControlName="documento"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                    <fa-icon [icon]="faIdCard" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                      styles=" pointer-events: auto;"></fa-icon>
+                    <div *ngIf="submitted && f.documento.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="f.documento.errors.required">Este campo es requerido *</div>
+                    </div>
+                  </div>
+          
+                  <div class="w-full text-base relative">
+                    <label for="cargo" class="block mb-2 text-sky-400">Cargo:</label>
+                    <input formControlName="cargo"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                    <fa-icon [icon]="faUserTie" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                      styles=" pointer-events: auto;"></fa-icon>
+                    <div *ngIf="submitted && f.cargo.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="f.cargo.errors.required">Este campo es requerido *</div>
+                    </div>
+                  </div>
+          
+                  <div class="w-full text-base relative">
+                    <label for="correo" class="block mb-2 text-sky-400">Correo:</label>
+                    <input formControlName="email"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                    <fa-icon [icon]="faEnvelope" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                      styles=" pointer-events: auto;"></fa-icon>
+                    <div *ngIf="submitted && g.email.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="g.email.errors.required">Este campo es requerido *</div>
+                    </div>
+                  </div>
+          
+                  <div class="w-full text-base relative">
+                    <label for="celular" class="block mb-2 text-sky-400">Celular:</label>
+                    <input formControlName="celular"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                    <fa-icon [icon]="faMobileAlt" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                      styles=" pointer-events: auto;"></fa-icon>
+                    <div *ngIf="submitted && f.celular.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
+                    </div>
+                  </div>
+          
+                  <div class="w-full text-base relative">
+                    <label for="fijo" class="block mb-2 text-sky-400">Telefono:</label>
+                    <input formControlName="telefono"
+                      class="p-2 w-full h-12 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                    <fa-icon [icon]="faPhone" class="absolute right-3 top-4 mt-7 text-cyan-500 z-0 text-lg"
+                      styles=" pointer-events: auto;"></fa-icon>
+                  </div>
+                </div>
+          
+                <div class="flex justify-end lg:-mt-20">
+                  <button id="guardar" type="submit"
+                    class="px-8 py-2 bg-sky-500 bg-opacity-80 text-white rounded-xl cursor-pointer">
+                    Guardar cambios
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </div>
