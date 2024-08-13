@@ -15,18 +15,6 @@ import { AnyTxtRecord } from 'dns';
 export class AliadoService {
   constructor(private http: HttpClient) { }
 
-  setAliadoId(id: number): void {
-    localStorage.setItem('aliadoId', id.toString());
-  }
-
-  getAliadoId(): number {
-    return parseInt(localStorage.getItem('aliadoId'), 10);
-  }
-
-  clearAliadoId(): void {
-    localStorage.removeItem('aliadoId');
-  }
-
   private CreacionHeaders(access_token: any): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
@@ -49,9 +37,9 @@ export class AliadoService {
     return this.http.get(url, options);
   }
 
-  getAliadoxid(access_token: any, aliadoId: number): Observable<any> {
+  getAliadoxid(access_token: any, idAliado: any): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
-    return this.http.get(`${this.url}/traeraliadoxid/${aliadoId}`, options);
+    return this.http.get(`${this.url}/traeraliadoxid/${idAliado}`, options);
   }
 
   getbanner(): Observable<any> {

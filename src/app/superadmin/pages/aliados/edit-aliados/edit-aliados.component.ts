@@ -56,11 +56,6 @@ export class EditAliadosComponent {
 
 ngOnInit(): void {
   this.validateToken();
-  this.aliadoId = this.aliadoService.getAliadoId();
-  console.log(this.aliadoId);  // Aquí debería mostrar el ID correctamente
-  if (this.aliadoId) {
-    //this.cargarAliado(this.aliadoId);
-  }
   this.tipoDato();
   this.traerAliadosxId();
 }
