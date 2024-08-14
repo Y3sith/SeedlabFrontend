@@ -1,28 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
-import { faGlobe } from '@fortawesome/free-solid-svg-icons';
-import { faIdCard } from '@fortawesome/free-solid-svg-icons';
-import { faMountainCity } from '@fortawesome/free-solid-svg-icons';
-import { faLandmarkFlag } from '@fortawesome/free-solid-svg-icons';
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
 import { EmpresaService } from '../../../../servicios/empresa.service';
 import { MunicipioService } from '../../../../servicios/municipio.service';
 import { User } from '../../../../Modelos/user.model';
-import { faRankingStar } from '@fortawesome/free-solid-svg-icons';
-import { faTasks } from '@fortawesome/free-solid-svg-icons';
-import { faLightbulb } from '@fortawesome/free-solid-svg-icons';
-import { faUserTie } from '@fortawesome/free-solid-svg-icons';
-import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
-import { faBuilding } from '@fortawesome/free-solid-svg-icons';
-import { faBriefcase } from '@fortawesome/free-solid-svg-icons';
-import { faMobileAlt } from '@fortawesome/free-solid-svg-icons';
-import { faPhone } from '@fortawesome/free-solid-svg-icons';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-add-empresa',
@@ -32,8 +16,6 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 })
 
 export class AddEmpresaComponent {
-  faGlobe = faGlobe;
-  faCircleQuestion = faCircleQuestion;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
   departamentoPredeterminado = '';
@@ -42,23 +24,11 @@ export class AddEmpresaComponent {
   documento: string;
   user: User | null = null;
   currentRolId: number;
-  faIdCard = faIdCard;
-  faMountainCity = faMountainCity;
-  faLandmarkFlag = faLandmarkFlag;
-  faLocationDot = faLocationDot;
-  faEnvelope = faEnvelope;
-  faUser = faUser;
-  faPhone = faPhone;
-  faMobileAlt = faMobileAlt;
-  faBriefcase = faBriefcase;
-  faBuilding = faBuilding;
-  faAddressCard = faAddressCard;
-  faUserTie = faUserTie;
-  faLightbulb = faLightbulb;
-  faTasks = faTasks;
-  faRankingStar = faRankingStar;
   buttonText: string = 'Guardar Cambios';
   emprendedorDocumento: string;
+  currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
 
   constructor(
     private fb: FormBuilder,
@@ -136,6 +106,7 @@ export class AddEmpresaComponent {
     id_tipo_documento: ['', Validators.required],
     documento: ['', Validators.required],
     razonSocial: ['', Validators.required],
+    id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     telefono: [''],
     celular: ['', Validators.required],
@@ -189,6 +160,7 @@ export class AddEmpresaComponent {
       experiencia: this.addEmpresaForm.get('experiencia')?.value,
       funciones: this.addEmpresaForm.get('funciones')?.value,
       id_tipo_documento: this.addEmpresaForm.get('id_tipo_documento')?.value,
+      id_departamento: this.addEmpresaForm.get('id_departamento')?.value,
       id_municipio: this.addEmpresaForm.get('id_municipio')?.value,
       id_emprendedor: this.user?.emprendedor.documento,
     };
@@ -220,15 +192,11 @@ export class AddEmpresaComponent {
       data => {
         console.log('Respuesta de la API (empresa creada):', data);
         this.alertService.successAlert('Éxito', 'Registro exitoso');
-        this.emprendedorDocumento = data.empresa.id_emprendedor;
-        //console.log(`------------------------------------------------ ${this.emprendedorDocumento}`);
-        //debugger;
-        location.reload();
         this.router.navigate(['list-empresa']);
       },
       error => {
         this.alertService.errorAlert('Error', error.message);
-       console.log('Respuesta de la API ERRRRORRRRRR')
+        console.log('Respuesta de la API ERROR:', error);
       }
     );
   }
@@ -241,6 +209,33 @@ export class AddEmpresaComponent {
       contenidoDiv.style.display = checkbox.checked ? "block" : "none";
       guardar.style.display = checkbox.checked ? "none" : "block";
     }
+  }
+
+  
+
+  
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 }
 

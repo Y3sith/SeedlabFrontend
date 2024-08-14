@@ -18,13 +18,18 @@ export class EmpresaService {
     })
   }
 
-  url = environment.apiUrl + 'empresa/'
+  url = environment.apiUrl + 'empresa'
 
   constructor(private http: HttpClient) { }
 
-  getEmpresas(access_token:any, documento: string): Observable<any>{
-    const options= { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"/"+documento, options);
+  updateEmpresas(access_token: any, documento: string, empresaData: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.put(`${this.url}/updateEmpresa/${documento}`, empresaData, options);
+  }
+
+  traerEmpresasola(access_token: any, id_emprendedor:string, documento: string): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(`${this.url}/getEmpresa/${id_emprendedor}/${documento}`, options);
   }
 
   
@@ -33,7 +38,7 @@ export class EmpresaService {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + access_token
     });
-    return this.http.post(this.url+"createEmpresa", payload, { headers });
+    return this.http.post(this.url+"/createEmpresa", payload, { headers });
   }
 
   

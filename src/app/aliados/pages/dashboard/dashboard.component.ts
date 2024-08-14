@@ -109,9 +109,7 @@ export class DashboardComponent {
               },
               emphasis: {
                 label: {
-                  show: true,
-                  fontSize: 40,
-                  fontWeight: 'bold'
+                  show: false,
                 }
               },
               labelLine: {
@@ -241,9 +239,7 @@ export class DashboardComponent {
               },
               emphasis: {
                 label: {
-                  show: true,
-                  fontSize: 40,
-                  fontWeight: 'bold'
+                  show: false,
                 }
               },
               labelLine: {
@@ -322,9 +318,7 @@ export class DashboardComponent {
             },
             emphasis: {
               label: {
-                show: true,
-                fontSize: 40,
-                fontWeight: 'bold'
+                show: false,
               }
             },
             labelLine: {

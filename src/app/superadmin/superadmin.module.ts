@@ -15,6 +15,7 @@ import { SuperadminRoutingModule } from './superadmin-routing.module';
 import { ModalCrearOrientadorComponent } from './pages/orientador/modal-crear-orientador/modal-crear-orientador.component';
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
 
+
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FilterPipeModule } from 'ngx-filter-pipe';
@@ -29,6 +30,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 import { NgChartsModule } from 'ng2-charts';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
+import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -67,7 +69,8 @@ import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.
     ColorPickerModule,
     MatIconModule,
     RouterModule,
-    NgChartsModule
+    NgChartsModule,
+    MatTooltipModule
   ]
 })
 export class SuperadminModule { }

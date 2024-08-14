@@ -23,7 +23,7 @@ export const PREGUNTAS: Preguntas[] = [
             { id: 3, texto: 'Producción', puntaje: 0, id_pregunta: 2,  },
             { id: 4, texto: 'Innovación y/o desarrollo', puntaje: 0, id_pregunta: 2,  },
             { id: 5, texto: 'Comercialización', puntaje: 0, id_pregunta: 2,  },
-            { id: 6, texto: 'Otro, cuál / cuántos?', puntaje: 0, id_pregunta: 2,  },
+            //{ id: 6, texto: 'Otro, cuál / cuántos?', puntaje: 0, id_pregunta: 2,  },
         ]
     },
     {
@@ -113,7 +113,7 @@ export const PREGUNTAS: Preguntas[] = [
         puntaje: 0,
         id_seccion: 1,
         isAffirmativeQuestion: true,
-        isText: false,
+        isText: true,
         subPreguntas: [
             { id: 7, texto: 'Meta 1', puntaje: 0, id_pregunta: 12,  },
             { id: 8, texto: 'Meta 2', puntaje: 0, id_pregunta: 12,  },
