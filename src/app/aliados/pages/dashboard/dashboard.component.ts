@@ -110,7 +110,7 @@ export class DashboardComponent {
               emphasis: {
                 label: {
                   show: true,
-                  fontSize: 40,
+                  fontSize: 10,
                   fontWeight: 'bold'
                 }
               },
@@ -242,7 +242,7 @@ export class DashboardComponent {
               emphasis: {
                 label: {
                   show: true,
-                  fontSize: 40,
+                  fontSize: 20,
                   fontWeight: 'bold'
                 }
               },
@@ -323,7 +323,7 @@ export class DashboardComponent {
             emphasis: {
               label: {
                 show: true,
-                fontSize: 40,
+                fontSize: 20,
                 fontWeight: 'bold'
               }
             },

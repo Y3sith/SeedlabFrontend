@@ -101,7 +101,7 @@ export class DashboardComponent implements AfterViewInit {
               emphasis: {
                 label: {
                   show: true,
-                  fontSize: 40,
+                  fontSize: 10,
                   fontWeight: 'bold'
                 }
               },
@@ -235,7 +235,7 @@ export class DashboardComponent implements AfterViewInit {
                 radius: ['40%', '70%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
-                  borderRadius: 10
+                  borderRadius: 20
                 },
                 label: {
                   show: false,
@@ -244,7 +244,7 @@ export class DashboardComponent implements AfterViewInit {
                 emphasis: {
                   label: {
                     show: true,
-                    fontSize: 40,
+                    fontSize: 10,
                     fontWeight: 'bold'
                   }
                 },

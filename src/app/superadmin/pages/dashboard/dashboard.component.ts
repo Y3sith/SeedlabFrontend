@@ -100,7 +100,7 @@ export class DashboardComponent implements AfterViewInit {
               emphasis: {
                 label: {
                   show: true,
-                  fontSize: 40,
+                  fontSize: 10,
                   fontWeight: 'bold'
                 }
               },
@@ -244,7 +244,7 @@ export class DashboardComponent implements AfterViewInit {
               emphasis: {
                 label: {
                   show: true,
-                  fontSize: 40,
+                  fontSize: 20,
                   fontWeight: 'bold'
                 }
               },
