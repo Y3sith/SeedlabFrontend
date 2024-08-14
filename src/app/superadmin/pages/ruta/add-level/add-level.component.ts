@@ -63,7 +63,6 @@ export class AddLevelComponent {
     this.submitted = true;
     const nivel: Nivel={
       nombre: this.addLevelForm.value.nombre,
-      descripcion: this.addLevelForm.value.descripcion,
       //id_actividad: this.addLevelForm.value.id_actividad
     }
   }

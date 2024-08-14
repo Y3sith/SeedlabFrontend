@@ -219,7 +219,7 @@ export class EncuestaEmpresaComponent {
     let isValidForm = true;
 
     this.listaRespuestas1 = [];
-
+    //pregunta 1
     this.listaRespuestas1.push(this.respuesta1);
     //pregunta 2
     this.listaRespuestas1.push(this.respuesta2);
@@ -228,17 +228,24 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas1.push(this.respuesta5);
     this.listaRespuestas1.push(this.respuesta6);
     //fin pregunta 2
+    //pregunta 3
     this.listaRespuestas1.push(this.respuesta7);
+    //pregunta 4
     this.listaRespuestas1.push(this.respuesta8);
+    //pregunta 5
     this.listaRespuestas1.push(this.respuesta9);
+    //pregunta 6
     this.listaRespuestas1.push(this.respuesta10);
+    //pregunta 7
     this.listaRespuestas1.push(this.respuesta11);
+    //pregunta 8
     this.listaRespuestas1.push(this.respuesta12);
+    //pregunta 9
     this.listaRespuestas1.push(this.respuesta13);
     if (this.respuesta13.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta14);
       this.listaRespuestas1.push(this.respuesta15);
-    }else{
+    } else {
       this.respuesta14.texto_res = 'N/A';
       this.respuesta14.id_pregunta = 10
       this.listaRespuestas1.push(this.respuesta14);
@@ -246,94 +253,119 @@ export class EncuestaEmpresaComponent {
       this.respuesta15.id_pregunta = 11
       this.listaRespuestas1.push(this.respuesta15);
     }
+    //pregunta 12
     this.listaRespuestas1.push(this.respuesta16);
     if (this.respuesta16.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta17);
       this.listaRespuestas1.push(this.respuesta18);
       this.listaRespuestas1.push(this.respuesta19);
       this.listaRespuestas1.push(this.respuesta20);
-    }else{
+    } else {
       this.respuesta17.texto_res = 'N/A';
-      this.respuesta17.id_pregunta = 13
+      this.respuesta17.id_pregunta = 12;
+      this.respuesta17.id_subpregunta = 7
       this.listaRespuestas1.push(this.respuesta17);
       this.respuesta18.texto_res = 'N/A';
-      this.respuesta18.id_pregunta = 14
+      this.respuesta17.id_pregunta = 12;
+      this.respuesta18.id_subpregunta = 8
       this.listaRespuestas1.push(this.respuesta18);
       this.respuesta19.texto_res = 'N/A';
-      this.respuesta19.id_pregunta = 15
+      this.respuesta17.id_pregunta = 12;
+      this.respuesta19.id_subpregunta = 9
       this.listaRespuestas1.push(this.respuesta19);
       this.respuesta20.texto_res = 'N/A';
-      this.respuesta20.id_pregunta = 16
+      this.respuesta17.id_pregunta = 12;
+      this.respuesta20.id_subpregunta = 10
       this.listaRespuestas1.push(this.respuesta20);
     }
+    //pregunta 13
     this.listaRespuestas1.push(this.respuesta21);
+    //pregunta 14
     this.listaRespuestas1.push(this.respuesta22);
+    //pregunta 15
     this.listaRespuestas1.push(this.respuesta23);
 
     const payload = { respuestas: this.listaRespuestas1, id_empresa: id_empresa };
 
 
     for (let i = 0; i < 15; i++) {
-      debugger; 
+      //debugger;
+      console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
       const currentPregunta = PREGUNTAS[i];
-      this.listaRespuestas1[respCounter].id_pregunta = i + 1;
+      this.listaRespuestas1[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas1[respCounter].id_empresa = id_empresa;
       this.listaRespuestas1[respCounter].id_subpregunta = null;
 
       if (currentPregunta.id === 2) {
         for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
-          //debugger;
-          if (this.listaRespuestas1[respCounter + j].opcion !== 'Si') {
-            this.listaRespuestas1[respCounter + j].texto_res = '0';
+          const respuestaActual = this.listaRespuestas1[respCounter + j];
+          if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+            this.alertService.errorAlert('Error', `La subpregunta ${currentPregunta.subPreguntas[j].id} de la pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            return;
           }
-          this.listaRespuestas1[respCounter + j].id_pregunta = currentPregunta.id;
-          this.listaRespuestas1[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
-          this.listaRespuestas1[respCounter + j].id_empresa = id_empresa;
-
+          if (respuestaActual.opcion !== 'Si') {
+            respuestaActual.texto_res = '0';
+          }
+          respuestaActual.id_pregunta = currentPregunta.id;
+          respuestaActual.id_subpregunta = currentPregunta.subPreguntas[j].id;
         }
-        respCounter += currentPregunta.subPreguntas.length - 1;
+        respCounter += currentPregunta.subPreguntas.length;
+        continue;
+      } else if (currentPregunta.id === 9) {
+        if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          return;
+        } else if (this.listaRespuestas1[respCounter].opcion === 'No') {
+          i += 2;
+          respCounter += 2;
+          console.log(`Saltando preguntas 10 y 11 debido a respuesta 'No' en la pregunta 9`);
+        }
+        respCounter++;
+      } else if (currentPregunta.id === 10 || currentPregunta.id === 11) {
+        if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        }
+        respCounter++;
       } else if (currentPregunta.id === 12) {
-        //debugger
-        if (this.listaRespuestas1[respCounter].opcion === 'Si') {
+        if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        } else if (this.listaRespuestas1[respCounter].opcion === 'Si') {
           for (let k = 0; k < currentPregunta.subPreguntas.length; k++) {
             this.listaRespuestas1[respCounter + 1 + k].id_pregunta = currentPregunta.id;
             this.listaRespuestas1[respCounter + 1 + k].id_subpregunta = currentPregunta.subPreguntas[k].id;
-            //this.listaRespuestas1[respCounter + 1 + k].id_empresa = id_empresa;
-
           }
-          respCounter += currentPregunta.subPreguntas.length - 1;
+          respCounter += currentPregunta.subPreguntas.length;
+        } else if (this.listaRespuestas1[respCounter].opcion === 'No') {
+          respCounter += 4;
         }
         respCounter++;
       } else {
         if (currentPregunta.isText) {
-          if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res === '') {
-            this.alertService.errorAlert('Error', 'Deben llenar los campos');
+          if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '' || this.listaRespuestas1[respCounter].texto_res !== 'N/A') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
             return;
           }
         } else {
           if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
-            this.alertService.errorAlert('Error', 'Deben llenar los campos');
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
             return;
           }
         }
-        if (currentPregunta.isAffirmativeQuestion) {
-          if (this.listaRespuestas1[respCounter].opcion === 'No') {
-            i += currentPregunta.subPreguntas.length;
-            respCounter += currentPregunta.subPreguntas.length;
-            continue;
-          }
-        }
         respCounter++;
       }
-      //this.listaRespuestas1[i].valor = 3;
-      //console.log(i);
       console.log('fuera del ciclo', this.listaRespuestas1);
     }
     if (!isValidForm) {
-      return
+      return;
     }
+
   }
 
 
@@ -430,10 +462,10 @@ export class EncuestaEmpresaComponent {
     } else {
       this.respuesta40.texto_res = 'N/A';
       this.respuesta40.id_pregunta = 21;
-      this.respuesta40.id_subpregunta = 24;        
+      this.respuesta40.id_subpregunta = 24;
       this.listaRespuestas2.push(this.respuesta40);
       this.respuesta41.texto_res = 'N/A';
-      this.respuesta41.id_pregunta = 21;  
+      this.respuesta41.id_pregunta = 21;
       this.respuesta41.id_subpregunta = 25;
       this.listaRespuestas2.push(this.respuesta41);
       this.respuesta42.texto_res = 'N/A';
@@ -477,12 +509,14 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas2.push(this.respuesta52);
     this.listaRespuestas2.push(this.respuesta53);
 
-    //pregunta25 y 26
+    //pregunta 25 y 26
     this.listaRespuestas2.push(this.respuesta54);
     if (this.respuesta54.opcion === 'Si') {
       this.listaRespuestas2.push(this.respuesta55);
     } else {
       this.respuesta55.texto_res = 'N/A';
+      this.respuesta55.id_pregunta = 26;
+      this.respuesta55.id_subpregunta = 37;
       this.listaRespuestas2.push(this.respuesta55);
     }
     //pregunta27
@@ -499,13 +533,21 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta64);
       this.listaRespuestas2.push(this.respuesta65);
     } else {
-      this.respuesta62 = null;
+      this.respuesta62.texto_res = 'N/A';
+      this.respuesta62.id_pregunta = 29;
+      this.respuesta62.id_subpregunta = 46;
       this.listaRespuestas2.push(this.respuesta62);
-      this.respuesta63 = null;
+      this.respuesta63.texto_res = 'N/A';
+      this.respuesta63.id_pregunta = 29;
+      this.respuesta63.id_subpregunta = 47;
       this.listaRespuestas2.push(this.respuesta63);
-      this.respuesta64 = null;
+      this.respuesta64.texto_res = 'N/A';
+      this.respuesta64.id_pregunta = 29;
+      this.respuesta64.id_subpregunta = 48;
       this.listaRespuestas2.push(this.respuesta64);
-      this.respuesta65 = null;
+      this.respuesta65.texto_res = 'N/A';
+      this.respuesta65.id_pregunta = 29;
+      this.respuesta65.id_subpregunta = 49;
       this.listaRespuestas2.push(this.respuesta65);
     }
 
@@ -519,43 +561,260 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2[respCounter].id_empresa = id_empresa;
       this.listaRespuestas2[respCounter].id_subpregunta = null;
 
-      if ([16, 18, 20, 22, 28].includes(currentPregunta.id)) {
+      if (currentPregunta.id === 16) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        }
         if (this.listaRespuestas2[respCounter].opcion === 'Si') {
           const nextPregunta = PREGUNTAS[i + 1];
+          let subPreguntaCounter = 0; // Contador para las subpreguntas
+
           for (let j = 0; j < nextPregunta.subPreguntas.length; j++) {
-            //debugger;
-            this.listaRespuestas2[respCounter + 1 + j].id_pregunta = nextPregunta.id;
-            this.listaRespuestas2[respCounter + 1 + j].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + j].id_empresa = id_empresa;
+            const respuestaActual = this.listaRespuestas2[respCounter + 1 + subPreguntaCounter];
+
+            if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+              this.alertService.errorAlert('Error', `La subpregunta ${nextPregunta.subPreguntas[j].id} de la pregunta ${currentPregunta.id} está vacía.`);
+              isValidForm = false;
+              return;
+            }
+            // Asignar valores a la respuesta actual
+            this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_pregunta = nextPregunta.id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_empresa = id_empresa;
+
+            subPreguntaCounter++;
           }
 
-          respCounter += nextPregunta.subPreguntas.length;
+          respCounter += subPreguntaCounter + 1;
+        }
+        else if (this.listaRespuestas2[respCounter].opcion === 'No') {
+          respCounter += 8;
+        }
+        respCounter++;
+        continue;
+      }
+
+      if (currentPregunta.id === 18) {
+        // Validar la respuesta de la pregunta principal
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        }
+
+        // Si la respuesta es "Sí", validar las subpreguntas
+        if (this.listaRespuestas2[respCounter].opcion === 'Si') {
+          const nextPregunta = PREGUNTAS[i + 1];
+          let subPreguntasCounter = 0; // Contador para las subpreguntas
+
+          for (let j = 0; j < nextPregunta.subPreguntas.length; j++) {
+            const respuestaActual = this.listaRespuestas2[respCounter + 1 + subPreguntasCounter];
+
+            if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+              this.alertService.errorAlert('Error', `La subpregunta ${nextPregunta.subPreguntas[j].id} de la pregunta ${nextPregunta.id} está vacía.`);
+              isValidForm = false;
+              return;
+            }
+
+            // Asignar valores a la respuesta actual
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+
+            subPreguntasCounter++;
+          }
+
+          respCounter += subPreguntasCounter + 1; // Actualizar el índice para la siguiente pregunta
+        }
+        // Si la respuesta es "No", saltar al siguiente grupo de preguntas
+        else if (this.listaRespuestas2[respCounter].opcion === 'No') {
+          respCounter += 5;
+        }
+
+        respCounter++;
+        continue;
+      }
+
+
+      if (currentPregunta.id === 20) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        }
+        if (this.listaRespuestas2[respCounter].opcion === 'Si') {
+          const nextPregunta = PREGUNTAS[i + 1];
+          let subPreguntasCounter = 0;
+
+          for (let j = 0; j < nextPregunta.subPreguntas.length; j++) {
+            const respuestaActual = this.listaRespuestas2[respCounter + 1 + subPreguntasCounter];
+
+            if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+              this.alertService.errorAlert('Error', `La subpregunta ${nextPregunta.subPreguntas[j].id} de la pregunta ${currentPregunta.id} está vacía.`);
+              isValidForm = false;
+              return;
+            }
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+
+            subPreguntasCounter++;
+          }
+
+          respCounter += subPreguntasCounter + 1;
+
+        } else if (this.listaRespuestas2[respCounter].opcion === 'No') {
+          respCounter += 4;
+        }
+        respCounter++;
+        continue;
+      }
+
+      if (currentPregunta.id === 22) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        }
+
+        if (this.listaRespuestas2[respCounter].opcion === 'Si') {
+          const nextPregunta = PREGUNTAS[i + 1];
+          let subPreguntasCounter = 0;
+          for (let j = 0; j < nextPregunta.subPreguntas.length; j++) {
+            const respuestaActual = this.listaRespuestas2[respCounter + 1 + subPreguntasCounter];
+
+            if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+              this.alertService.errorAlert('Error', `La subpregunta ${nextPregunta.subPreguntas[j].id} de la pregunta ${currentPregunta.id} está vacía.`);
+              isValidForm = false;
+              return;
+            }
+
+            this.listaRespuestas2[respCounter + 1 + j].id_pregunta = nextPregunta.id;
+            this.listaRespuestas2[respCounter + 1 + j].id_subpregunta = nextPregunta.subPreguntas[j].id;
+            this.listaRespuestas2[respCounter + 1 + j].id_empresa = id_empresa;
+
+            subPreguntasCounter++;
+          }
+          respCounter += subPreguntasCounter + 1;
+        } else if (this.listaRespuestas2[respCounter].opcion === 'No') {
+          respCounter += 4;
+        }
+        respCounter++;
+        continue;
+      }
+
+
+      if (currentPregunta.id === 24) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
         } else {
+          for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
+            this.listaRespuestas2[respCounter + j].id_pregunta = currentPregunta.id;
+            this.listaRespuestas2[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
+            this.listaRespuestas2[respCounter + j].id_empresa = id_empresa;
+          }
+          respCounter += currentPregunta.subPreguntas.length - 1;
+        }
+        respCounter++;
+        continue;
+      }
+      if (currentPregunta.id === 25) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        } else if (this.listaRespuestas2[respCounter].opcion === 'No') {
+          i += 1;
+          respCounter += 1;
+
+        } else if (this.listaRespuestas2[respCounter].opcion === 'Si') {
+          respCounter++;
           continue;
         }
       }
-
-      if (currentPregunta.id === 24 || currentPregunta.id === 27) {
-        for (let i = 0; i < currentPregunta.subPreguntas.length; i++) {
-          //debugger
-          this.listaRespuestas2[respCounter + i].id_pregunta = currentPregunta.id;
-          this.listaRespuestas2[respCounter + i].id_subpregunta = currentPregunta.subPreguntas[i].id;
-          this.listaRespuestas2[respCounter + i].id_empresa = id_empresa;
+      if (currentPregunta.id === 26) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
         }
-        respCounter += currentPregunta.subPreguntas.length;
+        respCounter++;
+        continue;
       }
 
-      if (currentPregunta.isText) {
-        if (!this.listaRespuestas2[respCounter].texto_res || this.listaRespuestas2[respCounter].texto_res === '') {
-          this.alertService.errorAlert('Error', 'Deben llenar los campos');
-          isValidForm = false;
-          return;
-        }
-      } else {
+
+      if (currentPregunta.id === 27) {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
-          this.alertService.errorAlert('Error', 'Deben llenar los campos');
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
           return;
+        } else {
+          for (let h = 0; h < currentPregunta.subPreguntas.length; h++) {
+            const subPreguntaIndex = respCounter + h;
+            const respuestaActual = this.listaRespuestas2[respCounter + h];
+            if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+              this.alertService.errorAlert('Error', `La subpregunta ${currentPregunta.subPreguntas[h].id} de la pregunta ${currentPregunta.id} está vacía.`);
+              isValidForm = false;
+              return;
+            }
+            this.listaRespuestas2[subPreguntaIndex].id_pregunta = currentPregunta.id;
+            this.listaRespuestas2[subPreguntaIndex].id_subpregunta = currentPregunta.subPreguntas[h].id;
+            this.listaRespuestas2[subPreguntaIndex].id_empresa = id_empresa;
+          }
+          respCounter += currentPregunta.subPreguntas.length - 1;
+        }
+        respCounter++;
+        continue;
+      }
+
+      if (currentPregunta.id === 28) {
+        //debugger;
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        } 
+        if (this.listaRespuestas2[respCounter].opcion === 'Si') {
+          const nextPregunta = PREGUNTAS[i + 1];
+          let subPreguntasCounter = 0;
+          for (let j = 0; j < nextPregunta.subPreguntas.length; j++) {
+            const respuestaActual = this.listaRespuestas2[respCounter + 1 + subPreguntasCounter];
+
+            if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+              this.alertService.errorAlert('Error', `La subpregunta ${nextPregunta.subPreguntas[j].id} de la pregunta ${currentPregunta.id} está vacía.`);
+              isValidForm = false;
+              return;
+            }
+
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+            subPreguntasCounter++;
+          }
+          respCounter += subPreguntasCounter + 1;
+        } 
+        else if (this.listaRespuestas2[respCounter].opcion === 'No') {
+          respCounter += 4;
+        }
+        respCounter++;
+      }
+      if (currentPregunta.isText) {
+        if (currentPregunta.isText) {
+          if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '' || this.listaRespuestas1[respCounter].texto_res !== 'N/A') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            return;
+          }
+        } else {
+          if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            return;
+          }
         }
       }
       if (currentPregunta.isAffirmativeQuestion) {
@@ -569,10 +828,9 @@ export class EncuestaEmpresaComponent {
       if (!isValidForm) {
         return
       }
-      //this.listaRespuestas2[i].valor = 3;
       console.log(i);
+      console.log('fuera del ciclo', this.listaRespuestas2);
     }
-    console.log('fuera del ciclo', this.listaRespuestas2);
     if (!isValidForm) {
       return
     }
@@ -589,6 +847,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas3.push(this.respuesta67);
     } else {
       this.respuesta67.texto_res = 'null';
+      this.respuesta67.id_pregunta = 31;
       this.listaRespuestas3.push(this.respuesta67);
     }
     this.listaRespuestas3.push(this.respuesta68);
@@ -596,6 +855,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas3.push(this.respuesta69);
     } else {
       this.respuesta69.texto_res = 'null';
+      this.respuesta69.id_pregunta = 33;
       this.listaRespuestas3.push(this.respuesta69);
     }
     this.listaRespuestas3.push(this.respuesta70);
@@ -608,20 +868,21 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas3.push(this.respuesta77);
 
     for (let i = 29; i < 41; i++) {
-      debugger;
+      //debugger;
+      const currentRespuesta = PREGUNTAS[i];
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas3[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas3[respCounter].id_empresa = id_empresa;
       this.listaRespuestas3[respCounter].id_subpregunta = null;
       if (currentPregunta.isText) {
         if (!this.listaRespuestas3[respCounter].texto_res || this.listaRespuestas3[respCounter].texto_res === '' && this.listaRespuestas3[respCounter].texto_res !== 'N/A') {
-          this.alertService.errorAlert('Error', 'Deben llenar los campos');
+          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
           isValidForm = false;
           return;
         }
       } else {
         if (!this.listaRespuestas3[respCounter].opcion || this.listaRespuestas3[respCounter].opcion === '') {
-          this.alertService.errorAlert('Error', 'Deben llenar los campos');
+          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
           isValidForm = false;
           return;
         }
@@ -688,19 +949,33 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas4.push(this.respuesta116);
       this.listaRespuestas4.push(this.respuesta117);
     } else {
-      this.respuesta111 = null;
+      this.respuesta111.texto_res = 'N/A';
+      this.respuesta111.id_pregunta = 45;
+      this.respuesta111.id_subpregunta = 81;
       this.listaRespuestas4.push(this.respuesta111);
-      this.respuesta112 = null;
+      this.respuesta112.texto_res = 'N/A';
+      this.respuesta112.id_pregunta = 45;
+      this.respuesta112.id_subpregunta = 82;
       this.listaRespuestas4.push(this.respuesta112);
-      this.respuesta113 = null;
+      this.respuesta113.texto_res = 'N/A';
+      this.respuesta113.id_pregunta = 45;
+      this.respuesta113.id_subpregunta = 83;
       this.listaRespuestas4.push(this.respuesta113);
-      this.respuesta114 = null;
+      this.respuesta114.texto_res = 'N/A';
+      this.respuesta114.id_pregunta = 45;
+      this.respuesta114.id_subpregunta = 84;
       this.listaRespuestas4.push(this.respuesta114);
-      this.respuesta115 = null;
+      this.respuesta115.texto_res = 'N/A';
+      this.respuesta115.id_pregunta = 45;
+      this.respuesta115.id_subpregunta = 85;
       this.listaRespuestas4.push(this.respuesta115);
-      this.respuesta116 = null;
+      this.respuesta116.texto_res = 'N/A';
+      this.respuesta116.id_pregunta = 45;
+      this.respuesta116.id_subpregunta = 86;
       this.listaRespuestas4.push(this.respuesta116);
-      this.respuesta117 = null;
+      this.respuesta117.texto_res = 'N/A';
+      this.respuesta117.id_pregunta = 45;
+      this.respuesta117.id_subpregunta = 87;
       this.listaRespuestas4.push(this.respuesta117);
     }
     //pregunta 46
@@ -716,29 +991,48 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas4.push(this.respuesta126);
       this.listaRespuestas4.push(this.respuesta127);
     } else {
-      this.respuesta119 = null;
+      this.respuesta119.texto_res = 'N/A';
+      this.respuesta119.id_pregunta = 46;
+      this.respuesta119.id_subpregunta = 88;
       this.listaRespuestas4.push(this.respuesta119);
-      this.respuesta120 = null;
+      this.respuesta120.texto_res = 'N/A';
+      this.respuesta120.id_pregunta = 46;
+      this.respuesta120.id_subpregunta = 89;
       this.listaRespuestas4.push(this.respuesta120);
-      this.respuesta121 = null;
+      this.respuesta121.texto_res = 'N/A';
+      this.respuesta121.id_pregunta = 46;
+      this.respuesta121.id_subpregunta = 90;
       this.listaRespuestas4.push(this.respuesta121);
-      this.respuesta122 = null;
+      this.respuesta122.texto_res = 'N/A';
+      this.respuesta122.id_pregunta = 46;
+      this.respuesta122.id_subpregunta = 91;
       this.listaRespuestas4.push(this.respuesta122);
-      this.respuesta123 = null;
+      this.respuesta123.texto_res = 'N/A';
+      this.respuesta123.id_pregunta = 46;
+      this.respuesta123.id_subpregunta = 92;
       this.listaRespuestas4.push(this.respuesta123);
-      this.respuesta124 = null;
+      this.respuesta124.texto_res = 'N/A';
+      this.respuesta124.id_pregunta = 46;
+      this.respuesta124.id_subpregunta = 93;
       this.listaRespuestas4.push(this.respuesta124);
-      this.respuesta125 = null;
+      this.respuesta125.texto_res = 'N/A';
+      this.respuesta125.id_pregunta = 46;
+      this.respuesta125.id_subpregunta = 94;
       this.listaRespuestas4.push
-      this.respuesta126 = null;
+      this.respuesta126.texto_res = 'N/A';
+      this.respuesta126.id_pregunta = 46;
+      this.respuesta126.id_subpregunta = 95;
       this.listaRespuestas4.push(this.respuesta126);
-      this.respuesta127 = null;
+      this.respuesta127.texto_res = 'N/A';
+      this.respuesta127.id_pregunta = 46;
+      this.respuesta127.id_subpregunta = 96;
       this.listaRespuestas4.push(this.respuesta127);
     }
 
 
     for (let i = 41; i < 48; i++) {
-      debugger;
+      //debugger;
+      const currentRespuesta = PREGUNTAS[i];
       const currentPregunta = PREGUNTAS[i - 1];
       this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas4[respCounter].id_empresa = id_empresa;
@@ -759,13 +1053,13 @@ export class EncuestaEmpresaComponent {
       }
       if (currentPregunta.isText) {
         if (!this.listaRespuestas4[respCounter].texto_res || this.listaRespuestas4[respCounter].texto_res === '') {
-          this.alertService.errorAlert('Error', 'Deben llenar los campos');
+          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
           isValidForm = false;
           return;
         }
       } else {
         if (!this.listaRespuestas4[respCounter].opcion || this.listaRespuestas4[respCounter].opcion === '') {
-          this.alertService.errorAlert('Error', 'Deben llenar los campos');
+          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
           isValidForm = false;
           return;
         }

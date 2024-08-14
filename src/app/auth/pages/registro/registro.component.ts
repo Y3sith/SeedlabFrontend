@@ -201,8 +201,8 @@ export class RegistroComponent implements OnInit {
     this.cargarMunicipios(selectedDepartamento);
   }
 
-  cargarMunicipios(nombreDepartamento: string): void {
-    this.municipioService.getMunicipios(nombreDepartamento).subscribe(
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
         this.listMunicipios = data;
         console.log('Municipios cargados:', JSON.stringify(data));

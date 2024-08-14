@@ -1,9 +1,8 @@
 import { Component, HostListener } from '@angular/core';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { User } from '../../Modelos/user.model';
 import { AuthService } from '../../servicios/auth.service';
-import { SuperadminRoutingModule } from '../../superadmin/superadmin-routing.module';
 import { MenuService } from '../../servicios/menu.service';
 import { SuperadminService } from '../../servicios/superadmin.service';
 
@@ -67,12 +66,12 @@ export class MenuComponent {
       console.log("No está logueado o no se pudo cargar el usuario.");
     }
     this.menuItems = this.menuService.getRoutesByRole(this.currentRolName); 
-    console.log(this.menuItems);
+    //console.log(this.menuItems);
     this.personalizacionService.getPersonalizacion().subscribe(
       data => {
         this.colorPrincipal = data.color_principal;
         this.colorSecundario = data.color_secundario;
-        console.log(this.colorPrincipal, this.colorSecundario);
+        //console.log(this.colorPrincipal, this.colorSecundario);
       },
       err => console.log(err)
     );
@@ -90,7 +89,6 @@ export class MenuComponent {
 
  
   getIconColor(): string {
-    //console.log('isMobile:', this.isMobile);
     return this.isMobile ? '#00B3ED' : '#FFFFFF'; // Color blanco en pantallas grandes
   }
   

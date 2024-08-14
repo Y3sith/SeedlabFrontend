@@ -13,12 +13,19 @@ import { Ruta } from '../Modelos/ruta.modelo';
 export class RutaService {
 
   url = environment.apiUrl + 'ruta';
+  url2 = environment.apiUrl + 'nivel';
 
   constructor(private http:HttpClient) { }
 
   private CreacionHeaders(access_token: any): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + access_token
+    });
+  }
+
+  private CreacionHeaderss(access_token: any): HttpHeaders {
+    return new HttpHeaders({
       'Authorization': 'Bearer ' + access_token
     });
   }
@@ -53,7 +60,7 @@ export class RutaService {
   
   //////  editar
   updateRutas(access_token:any, ruta:Ruta,id:number):Observable<any>{
-    const options= { headers: this.CreacionHeaders(access_token)};
+    const options= { headers: this.CreacionHeaderss(access_token)};
     return this.http.put(this.url+'/ruta/'+id,ruta,options);
   }
 
@@ -62,20 +69,20 @@ export class RutaService {
   //   return this.http.put(this.url+'/editarActividad',actividad,options)
   // }
 
-  // updateNivel(access_token:any,):Observable<any>{
-  //   const options = { headers: this.CreacionHeaders(access_token)};
-  //   return this.http.put(this.url+'nivel',options)
-  // }
+  updateNivel(access_token:any,id:number,nivel:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.put(this.url+'/editar_nivel/'+id,nivel,options)
+  }
 
-  // updateLeccion(access_token:any):Observable<any>{
-  //   const options = { headers: this.CreacionHeaders(access_token)};
-  //   return this.http.put(this.url+'leccion',options)
-  // }
+  updateLeccion(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.put(this.url+'leccion',options)
+  }
 
-  // updateContenidoLecciones(access_token:any):Observable<any>{
-  //   const options = { headers: this.CreacionHeaders(access_token)};
-  //   return this.http.put(this.url+'contenido_por_leccion',options)
-  // }
+  updateContenidoLecciones(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.put(this.url+'contenido_por_leccion',options)
+  }
 
   
 

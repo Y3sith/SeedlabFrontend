@@ -10,6 +10,8 @@ import { Aliado } from '../../../../Modelos/aliado.model';
 import { Superadmin } from '../../../../Modelos/superadmin.model';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import Pica from 'pica';
+import { NivelService } from '../../../../servicios/nivel.service';
+import { Nivel } from '../../../../Modelos/nivel.model';
 
 @Component({
   selector: 'app-actnivlec',
@@ -25,24 +27,24 @@ export class ActnivlecComponent implements OnInit {
   listaAsesorAliado: Asesor[] = [];
   listarTipoDato: Actividad[] = [];
   listarAliadoo: Aliado[] = [];
+  listarNiveles: Nivel[] = [];
   ///
   listarAsesores: any[] = [];
   userFilter: any = { nombre: '', estado: 'Activo' };
   aliadoSeleccionado: any | null;
   rutaId: number | null = null;
+  //nivelSeleccionado: any | null;
+  ////
+  // currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
 
   ////
   fuente: string = '';
   submittedActividad = false;
   submittedNivel = false;
-  submittedLeccion=false;
-  submittedContent=false;
-  submitted=false;
-  
-
-
-
-
+  submittedLeccion = false;
+  submittedContent = false;
+  submitted = false;
   ////añadir actividad
 
   actividadForm = this.fb.group({
@@ -80,10 +82,6 @@ export class ActnivlecComponent implements OnInit {
     id_leccion: ['', Validators.required]
   })
   mostrarContenidoLeccionForm: boolean = false;
-
-
-
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -91,7 +89,7 @@ export class ActnivlecComponent implements OnInit {
     private actividadService: ActividadService,
     private aliadoService: AliadoService,
     private route: ActivatedRoute,
-
+    private nivelService: NivelService
   ) { }
 
   ngOnInit(): void {
@@ -115,10 +113,9 @@ export class ActnivlecComponent implements OnInit {
     this.validateToken();
     this.tipoDato();
     this.listaAliado();
+    this.verNivel();
     this.onAliadoChange();
-
   }
-
 
   validateToken(): void {
     if (!this.token) {
@@ -149,7 +146,7 @@ export class ActnivlecComponent implements OnInit {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
           this.listarTipoDato = data;
-          console.log(data);
+          console.log('tipo de dato:', data);
         },
         error => {
           console.log(error);
@@ -204,6 +201,26 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  verNivel(): void {
+    if (this.token) {
+      this.nivelService.getNivel(this.token).subscribe(
+        data => {
+          this.listarNiveles = data;
+          console.log('Niveles: ', data);
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
+  // selectNivel(nivel:any):void{
+  //   this.nivelSeleccionado = nivel;
+  //   console.log("el nivel seleccionado fue: ", this.nivelSeleccionado)
+  // }
+
+
 
 
   //agregar una actividad
@@ -226,16 +243,17 @@ export class ActnivlecComponent implements OnInit {
         const actividadCreada = data[0];
         this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
         this.mostrarNivelForm = true;
+        this.avanzarSeccion();
+        this.currentIndex = 1;
+
       },
       error => {
         console.log(error);
       }
     );
   }
-  
 
-
-  addNivelSuperAdmin():void{
+  addNivelSuperAdmin(): void {
     this.submittedNivel = true;
     if (this.actividadForm.invalid) {
       return;
@@ -250,8 +268,12 @@ export class ActnivlecComponent implements OnInit {
       (data: any) => {
         console.log('datos recibidos', data);
         this.leccionForm.patchValue({ id_nivel: data.id })
+        this.verNivel();
         this.mostrarLeccionForm = true;
         console.log('id nivel: ', data.id);
+        this.avanzarSeccion();
+        this.currentIndex = 2;
+
 
       },
       error => {
@@ -260,7 +282,32 @@ export class ActnivlecComponent implements OnInit {
     )
   }
 
-  addLeccionSuperAdmin():void{
+  agregarOtroNivel():void{
+    this.submittedNivel = true;
+    if (this.nivelForm.invalid) {
+        return;
+    }
+    const nivel: any = {
+      nombre: this.nivelForm.value.nombre,
+      descripcion: this.nivelForm.value.descripcion,
+      id_actividad: this.nivelForm.value.id_actividad
+  };
+  console.log('nivel data', nivel);
+  this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
+      (data: any) => {
+          console.log('datos recibidos', data);
+          // Resetea el formulario para agregar otro nivel
+          this.nivelForm.reset();
+          this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
+          
+      },
+      error => {
+          console.log(error);
+      }
+  );
+  }
+
+  addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
     if (this.actividadForm.invalid) {
       return;
@@ -277,18 +324,20 @@ export class ActnivlecComponent implements OnInit {
         this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
         this.mostrarContenidoLeccionForm = true;
         console.log('id leccion: ', data.id);
+        //this.avanzarSeccion();
+        //this.currentIndex = 3;
       },
       error => {
         console.log(error);
       }
     )
   }
-   addContenidoLeccionSuperAdmin():void{
+  addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true;
     if (this.actividadForm.invalid) {
       return;
     }
-    const contLeccion: any= {
+    const contLeccion: any = {
       titulo: this.contenidoLeccionForm.value.titulo,
       descripcion: this.contenidoLeccionForm.value.descripcion,
       fuente: this.contenidoLeccionForm.value.fuente,
@@ -298,55 +347,28 @@ export class ActnivlecComponent implements OnInit {
     this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, contLeccion).subscribe(
       (data: any) => {
         console.log('datos recibidos: ', data);
-        location.reload();
+        //this.currentIndex = 2;
+       // this.currentIndex = 3;
       },
       error => {
         console.log(error);
       }
     )
   }
-
-  // onTipoDatoChange(): void {
-  //   const tipoDatoId = this.contenidoLeccionForm.get('id_tipo_dato').value;
-
-  //   switch (tipoDatoId) {
-  //     case '1': // Video
-  //       this.contenidoLeccionForm.get('Video').setValidators([Validators.required]);
-  //       break;
-  //     case '2': // Multimedia
-  //       this.contenidoLeccionForm.get('Multimedia').setValidators([Validators.required,]);
-  //       break;
-  //     case '3': // Imagen
-  //     this.contenidoLeccionForm.get('Imagen').setValidators([Validators.required,]);
-  //     break;
-  //     case '4': // PDF
-  //     this.contenidoLeccionForm.get('PDF').setValidators([Validators.required,]);
-  //     break;
-  //     case '5': // Texto
-  //       this.contenidoLeccionForm.get('Texto').setValidators([Validators.required]);
-  //       break;
-  //     default:
-  //       this.contenidoLeccionForm.get('fuente').clearValidators();
-  //       break;
-  //   }
-
-  //   this.contenidoLeccionForm.get('fuente').updateValueAndValidity();
-  // }
-
-
+ 
   onTipoDatoChange(): void {
     this.submitted = true;
     if (this.contenidoLeccionForm.invalid) {
       return; // Detener la ejecución si el formulario es inválido
     }
     const tipoDatoId = this.contenidoLeccionForm.get('id_tipo_dato').value;
-    
+
     // Limpiar validadores para todos los campos
     this.contenidoLeccionForm.get('fuente').clearValidators();
     this.contenidoLeccionForm.get('Multimedia').clearValidators();
     this.contenidoLeccionForm.get('Imagen').clearValidators();
     this.contenidoLeccionForm.get('Pdf').clearValidators();
-    
+
     // Aplicar validadores según el tipo de dato
     if (tipoDatoId === '1') { // URL
       this.contenidoLeccionForm.get('fuente').setValidators([Validators.required]);
@@ -359,7 +381,7 @@ export class ActnivlecComponent implements OnInit {
     } else if (tipoDatoId === '5') { // Texto
       this.contenidoLeccionForm.get('fuente').setValidators([Validators.required]);
     }
-    
+
     // Actualizar la validez de todos los campos afectados
     this.contenidoLeccionForm.get('fuente').updateValueAndValidity();
     this.contenidoLeccionForm.get('Multimedia').updateValueAndValidity();
@@ -394,12 +416,6 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-
-
-
-
-
-
   cancelarcrearActividad(): void {
     this.router.navigate(['/list-ruta'])
     this.actividadForm.patchValue({
@@ -428,4 +444,14 @@ export class ActnivlecComponent implements OnInit {
       id_tipo_dato: '',
     })
   }
+
+  avanzarSeccion() {
+    if (this.currentIndex < 3) {
+      this.currentIndex++;
+      if (this.currentIndex === 3) {
+        this.verNivel();  //me muestra los niveles que cree
+    }
+    }
+  }
+
 }
