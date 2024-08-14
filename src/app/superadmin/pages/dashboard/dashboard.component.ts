@@ -99,9 +99,7 @@ export class DashboardComponent implements AfterViewInit {
               },
               emphasis: {
                 label: {
-                  show: true,
-                  fontSize: 10,
-                  fontWeight: 'bold'
+                  show: false,
                 }
               },
               labelLine: {
@@ -243,9 +241,7 @@ export class DashboardComponent implements AfterViewInit {
               },
               emphasis: {
                 label: {
-                  show: true,
-                  fontSize: 20,
-                  fontWeight: 'bold'
+                  show: false,
                 }
               },
               labelLine: {
