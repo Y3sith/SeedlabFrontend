@@ -104,7 +104,6 @@ export class AddAliadosComponent {
     this.tipoDato();
     this.verEditar();
     this.ocultosBotones();
-    this.guardar();
   }
 
   validateToken(): void {
@@ -175,10 +174,6 @@ export class AddAliadosComponent {
         console.log(error);
       }
     )
-  }
-
-  guardar() {
-    
   }
 
   addAliado(): void {
@@ -257,6 +252,20 @@ export class AddAliadosComponent {
         });
     }
   }
+
+  toggleActive() {
+    this.isActive = !this.isActive;
+    //this.asesorForm.patchValue({ estado: this.isActive ? 'Activo' : 'Inactivo' });
+    this.aliadoForm.patchValue({ estado: this.isActive ? true : false });
+  }
+  
+    /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
+    mostrarToggle(): void {
+      if (this.idAliado != null) {
+        this.boton = false;
+      }
+      this.boton = true;
+    }
 
   tipoDato(): void {
     if (this.token) {
