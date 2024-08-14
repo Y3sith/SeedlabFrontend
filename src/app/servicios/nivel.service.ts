@@ -23,4 +23,9 @@ export class NivelService {
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.http.put(this.url+'/editar_nivel/'+id,nivel,options)
   }
+
+  getNivel(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/listar_Nivel',options)
+  }
 }

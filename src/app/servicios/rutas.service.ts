@@ -24,6 +24,12 @@ export class RutaService {
     });
   }
 
+  private CreacionHeaderss(access_token: any): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': 'Bearer ' + access_token
+    });
+  }
+
   getAllRutas(access_token:any, estado: boolean): Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado) };
@@ -54,7 +60,7 @@ export class RutaService {
   
   //////  editar
   updateRutas(access_token:any, ruta:Ruta,id:number):Observable<any>{
-    const options= { headers: this.CreacionHeaders(access_token)};
+    const options= { headers: this.CreacionHeaderss(access_token)};
     return this.http.put(this.url+'/ruta/'+id,ruta,options);
   }
 
