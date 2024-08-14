@@ -31,6 +31,10 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
 
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
+  
+  page: number = 1; // Inicializa la página actual
+  totalAsesorias: number = 0; // variable para almacenar el total de asesorias
+  itemsPerPage: number = 6; // Número de asesorias por página
 
   constructor(
     private asesoriaService: AsesoriaService,
@@ -84,6 +88,7 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
         response => {
           this.asesoriasTrue = response;
           this.asignadasCount = this.asesoriasTrue.length; // Actualiza el contador
+          this.totalAsesorias = response.length; // Actualiza el total de asesorias
         },
         error => {
           console.error(error);
@@ -94,6 +99,7 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
         response => {
           this.asesoriasFalse = response;
           this.sinAsignarCount = this.asesoriasFalse.length; // Actualiza el contador
+          this.totalAsesorias = response.length; // Actualiza el total de asesorias
         },
         error => {
           console.error(error);
@@ -102,6 +108,41 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
     } else {
       console.error('Documento o token no encontrado en el localStorage');
     }
+  }
+
+  // Código para la paginación
+  changePage(pageNumber: number | string): void {
+    if (pageNumber === 'previous') {
+      if (this.page > 1) {
+        this.page--;
+        this.listarAsesorias(); // Carga las asesorias de la página anterior
+      }
+    } else if (pageNumber === 'next') {
+      if (this.page < this.getTotalPages()) {
+        this.page++;
+        this.listarAsesorias(); // Carga las asesorias de la página siguiente
+      }
+    } else {
+      this.page = pageNumber as number;
+      this.listarAsesorias(); // Carga las asesorias de la página seleccionada
+    }
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalAsesorias / this.itemsPerPage);
+  }
+
+  getPages(): number[] {
+    const totalPages = this.getTotalPages();
+    return Array(totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  canGoPrevious(): boolean {
+    return this.page > 1;
+  }
+
+  canGoNext(): boolean {
+    return this.page < this.getTotalPages();
   }
 
   openCrearAsesoriaModal() {

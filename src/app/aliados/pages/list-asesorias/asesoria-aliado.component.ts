@@ -27,6 +27,10 @@ export class AsesoriaAliadoComponent implements OnInit {
   Nombre_sol: string | null = null;
   tiempoEspera = 1800;
 
+  page: number = 1; // Inicializa la página actual
+  totalAsesorias: number = 0; // variable para almacenar el total de asesorias
+  itemsPerPage: number = 6; // Número de asesorias por página
+
   constructor(
     private asesoriaService: AsesoriaService,
     public dialog: MatDialog,
@@ -37,6 +41,7 @@ export class AsesoriaAliadoComponent implements OnInit {
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
+    this.separarAsesorias();
   }
 
   /* Valida el token del login */
@@ -66,11 +71,47 @@ export class AsesoriaAliadoComponent implements OnInit {
         this.asesorias = data;
         this.separarAsesorias();
         this.showSinAsignar(); // Show "Sin asignar" asesorias by default
+        this.totalAsesorias = data.length; // Actualiza el total de asesorias
       },
       error => {
         console.error('Error al obtener las asesorías:', error);
       }
     );
+  }
+
+   // Código para la paginación
+   changePage(pageNumber: number | string): void {
+    if (pageNumber === 'previous') {
+      if (this.page > 1) {
+        this.page--;
+        this.separarAsesorias(); // Carga las asesorias de la página anterior
+      }
+    } else if (pageNumber === 'next') {
+      if (this.page < this.getTotalPages()) {
+        this.page++;
+        this.separarAsesorias(); // Carga las asesorias de la página siguiente
+      }
+    } else {
+      this.page = pageNumber as number;
+      this.separarAsesorias(); // Carga las asesorias de la página seleccionada
+    }
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalAsesorias / this.itemsPerPage);
+  }
+
+  getPages(): number[] {
+    const totalPages = this.getTotalPages();
+    return Array(totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  canGoPrevious(): boolean {
+    return this.page > 1;
+  }
+
+  canGoNext(): boolean {
+    return this.page < this.getTotalPages();
   }
 
   separarAsesorias(): void {
