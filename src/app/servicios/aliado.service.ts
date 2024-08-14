@@ -61,9 +61,9 @@ export class AliadoService {
     return this.http.post(`${this.url}/create_aliado`, formData, options);
   }
 
-  editarAliado(access_token: string, formData: FormData, aliadoId:number): Observable<any> {
+  editarAliado(access_token: string, formData: FormData, idAliado:String): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
-    const url = `${environment.apiUrl}aliado/editaraliado/${aliadoId}`;
+    const url = `${environment.apiUrl}aliado/editaraliado/${idAliado}`;
     return this.http.post(url, formData, options);
   }
 

@@ -50,7 +50,7 @@ export class AddAliadosComponent {
   faEyeSlash = faEyeSlash;
   faFileUpload = faFileUpload;
   faFileLines = faFileLines;
-  aliadoid: string;
+  idAliado: string; ///
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   showFirstSection = true;
@@ -65,7 +65,6 @@ export class AddAliadosComponent {
   aliadoId: number;
   isActive: boolean = true;
   boton: boolean;
-  idAliado: string | null;
   formSubmitted = false;
   
   constructor(private aliadoService: AliadoService,
@@ -183,22 +182,24 @@ export class AddAliadosComponent {
   }
 
   addAliado(): void {
-    if (this.aliadoForm.invalid || this.bannerForm.invalid) {
-      // Mostrar alert si algún formulario es inválido
-      this.alertService.errorAlert('Error', 'Por favor, completa todos los campos requeridos.');
-
-      this.formSubmitted = true;
-
-    if (this.aliadoForm.invalid) {
-      this.formSubmitted = true;
-      console.log("aqui",this.formSubmitted)   
-      return; // Detiene la ejecución si el formulario es inválido
-    }
-      
-      console.error('Formulario inválido');
-      console.log('Errores aliadoForm:', this.getFormValidationErrors(this.aliadoForm));
-      console.log('Errores bannerForm:', this.getFormValidationErrors(this.bannerForm));
-      return;
+    if (this.idAliado == null){
+      if (this.aliadoForm.invalid || this.bannerForm.invalid) {
+        // Mostrar alert si algún formulario es inválido
+        this.alertService.errorAlert('Error', 'Por favor, completa todos los campos requeridos.');
+  
+        this.formSubmitted = true;
+  
+      if (this.aliadoForm.invalid) {
+        this.formSubmitted = true;
+        console.log("aqui",this.formSubmitted)   
+        return; // Detiene la ejecución si el formulario es inválido
+      }
+        
+        console.error('Formulario inválido');
+        console.log('Errores aliadoForm:', this.getFormValidationErrors(this.aliadoForm));
+        console.log('Errores bannerForm:', this.getFormValidationErrors(this.bannerForm));
+        return;
+       }
     }
 
     const formData = new FormData();
@@ -230,12 +231,13 @@ export class AddAliadosComponent {
 
     console.log("SSSSSSSSSSSSSSSSSSSSSSSS", formData);
 
-    console.log("aliado aqui", this.aliadoId);
+    console.log("aliado aqui", this.idAliado);
     
-    if ( this.aliadoId != null ) {
-    this.aliadoService.editarAliado(this.token, formData, this.aliadoId).subscribe(
+    if ( this.idAliado != null ) {
+    this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
       data =>{
         console.log("ACTUALIZAAAAAA", data);
+        this.alertService.successAlert('Exito', data.message);
       },
       error => {
         console.error(error);
