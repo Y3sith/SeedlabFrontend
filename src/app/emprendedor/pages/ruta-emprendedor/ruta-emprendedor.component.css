@@ -1,59 +1,58 @@
-.main-timeline {
-  position: relative;
-  font-family: Arial, sans-serif;
-  padding: 35px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+.main-timeline-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: 20px;
 }
 
-.main-timeline .timeline {
+.main-timeline-container .timeline {
   position: relative;
-  background-color: #e63946; /* Color rojo aplicado a todos los .timeline */
-  overflow: hidden;
+  background-color: #e63946;
   z-index: 1;
-  height: 100px;
-  margin-bottom: 20px;
+  height: 50px;
+  margin-bottom: 40px;
+  width: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.main-timeline .timeline::after {
+.main-timeline-container .timeline::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  border-top: 50px solid transparent;
-  border-bottom: 55px solid transparent;
+  border-top: 25px solid transparent;
+  border-bottom: 25px solid transparent;
   border-left: 22px solid rgb(255, 255, 255);
 }
 
-.main-timeline .timeline::before {
+.main-timeline-container .timeline::before {
   content: '';
   position: absolute;
   top: 0;
   right: 0;
   width: 0;
   height: 0;
-  border-top: 50px solid transparent;
-  border-bottom: 50px solid transparent;
-  border-left: 30px solid; /* Ancho de la punta */
-  border-left-width: 30px;
-  background-color: white; 
-  color: #e63946/* Ancho de la punta */
+  border-top: 25px solid transparent;
+  border-bottom: 25px solid transparent;
+  border-left: 30px solid;
+  background-color: white;
+  color: #e63946;
 }
 
-.main-timeline .timeline-content {
-  display: inline-block;
+.main-timeline-container .timeline-content {
   padding: 20px;
   color: #fff;
 }
 
-.main-timeline .timeline-year {
+.main-timeline-container .timeline-year {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   background-color: white;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(253, 20, 20, 0.2);
@@ -66,99 +65,51 @@
   z-index: 2;
 }
 
-/* Primeros 3 campos alineados */
-.main-timeline .timeline:nth-child(-n+3) {
-  float: left;
-  width: 33.33%;
+/* Ajustes de longitud para campos 1, 2 y 3 */
+.main-timeline-container .timeline-1,
+.main-timeline-container .timeline-2,
+.main-timeline-container .timeline-3 {
+  width: 300px; /* Incrementar longitud */
 }
 
-/* Modificar la regla del campo 4 */
-.main-timeline .timeline:nth-child(4) {
-  width: 50px;
-  height: 200px;
-  margin-left: -50px;
-  float: left;
+/* Estilo específico para el campo 4 */
+.main-timeline-container .timeline-4 {
+  width: 160px;
+  height: 300px;
+  border-radius: 0 300px 300px 0;
+  border: 50px solid #8cc63f;
+  border-left: none;
+  background-color: transparent !important;
+  margin-bottom: 0;
+  margin-left: 20px; /* Reducir la distancia para acercarlo al campo 3 */
   position: relative;
-  top: 50px;
-  z-index: 3;
-  background: none; /* Eliminar el fondo rojo del campo 4 */
+
 }
 
-/* Configurar el pseudo-elemento para solo mostrar el amarillo */
-.main-timeline .timeline:nth-child(4)::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: yellow; /* Solo amarillo */
-  border-radius: 0 100px 100px 0;
+/* Estilo específico para los campos 5 y 6 */
+.main-timeline-container .timeline-5,
+.main-timeline-container .timeline-7,
+.main-timeline-container .timeline-6 {
+  width: 300px;
+  clear: left; /* Forzar a que estén en una nueva línea */
+  margin-top: 10px; /* Espacio debajo del campo 1 */
+  position: relative;
+  margin-left: 0; /* Asegura que estén alineados con el campo 1 */
 }
+ 
 
-/* Eliminar el fondo rojo del campo 4 si se aplica por el ::before */
-.main-timeline .timeline:nth-child(4)::after {
-  background: none; /* Eliminar cualquier fondo aplicado */
-}
 
-/* Quinto campo alineado al lado izquierdo del campo 4 pero debajo de él */
-.main-timeline .timeline:nth-child(5) {
-  float: right;
-  width: 33.33%;
-  margin-top: 100px;
-}
 
-/* Sexto campo alineado al lado izquierdo del campo 5 pero debajo de él */
-.main-timeline .timeline:nth-child(6) {
-  float: right;
-  width: 33.33%;
-  margin-top: 100px;
-}
 
-/* Ajustes generales */
-.main-timeline .content {
-  color: #909090;
-  width: 80%;
-  padding: 20px;
-  text-align: left;
-}
 
-.main-timeline .timeline:nth-child(even) .content {
-  text-align: right;
-}
 
-.main-timeline .timeline-icon {
-  color: inherit;
-}
 
-.main-timeline .title {
-  color: inherit;
-}
 
-.main-timeline .timeline:nth-child(5n+1) .timeline-year,
-.main-timeline .timeline:nth-child(5n+1) .title {
-  color: #65c7d0;
-}
 
-.main-timeline .timeline:nth-child(5n+2) .timeline-year,
-.main-timeline .timeline:nth-child(5n+2) .title {
-  color: #EA3C14;
-}
 
-.main-timeline .timeline:nth-child(5n+3) .timeline-year,
-.main-timeline .timeline:nth-child(5n+3) .title {
-  color: #8CC63E;
-}
 
-.main-timeline .timeline:nth-child(5n+4) .timeline-year,
-.main-timeline .timeline:nth-child(5n+4) .title {
-  color: #F99324;
-}
 
-.main-timeline .timeline:nth-child(5n+5) .timeline-year,
-.main-timeline .timeline:nth-child(5n+5) .title {
-  color: #0071BD;
-}
+
 
 
 
