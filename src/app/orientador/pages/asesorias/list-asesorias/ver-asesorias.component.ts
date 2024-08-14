@@ -26,6 +26,10 @@ export class VerAsesoriasComponent implements OnInit {
 
   fullHeightIndices: number[] = [];
 
+  page: number = 1; // Inicializa la página actual
+  totalAsesorias: number = 0; // variable para almacenar el total de asesorias
+  itemsPerPage: number = 6; // Número de asesorias por página
+
   constructor(
     private asesoriaService: AsesoriaService,
     public dialog: MatDialog,
@@ -34,8 +38,7 @@ export class VerAsesoriasComponent implements OnInit {
 
   ngOnInit() {
     this.validateToken();
-    this.loadAsignadas();
-    this.loadSinAsignar();
+    this.loadCurrentPage(); // Carga las asesorías correctas al iniciar la página
     // Load both on init to ensure counts are accurate
   }
 
@@ -63,15 +66,60 @@ export class VerAsesoriasComponent implements OnInit {
         if (pendiente) {
           this.asesoriasSinAsesor = data;
           this.sinAsignarCount = this.asesoriasSinAsesor.length;
+          this.totalAsesorias = data.length; // Actualiza el total de asesorias
         } else {
           this.asesoriasConAsesor = data;
           this.asignadasCount = this.asesoriasConAsesor.length;
+          this.totalAsesorias = data.length; // Actualiza el total de asesorias
         }
       },
       error => {
         console.error('Error al obtener las asesorías orientador:', error);
       }
     );
+  }
+
+  // Código para la paginación
+  changePage(pageNumber: number | string): void {
+    if (pageNumber === 'previous') {
+      if (this.page > 1) {
+        this.page--;
+        this.loadCurrentPage(); // Carga las asesorias de la página anterior
+      }
+    } else if (pageNumber === 'next') {
+      if (this.page < this.getTotalPages()) {
+        this.page++;
+        this.loadCurrentPage(); // Carga las asesorias de la página siguiente
+      }
+    } else {
+      this.page = pageNumber as number;
+      this.loadCurrentPage(); // Carga las asesorias de la página seleccionada
+    }
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalAsesorias / this.itemsPerPage);
+  }
+
+  getPages(): number[] {
+    const totalPages = this.getTotalPages();
+    return Array(totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  canGoPrevious(): boolean {
+    return this.page > 1;
+  }
+
+  canGoNext(): boolean {
+    return this.page < this.getTotalPages();
+  }
+
+  loadCurrentPage(): void {
+    if (this.showAsignadasFlag) {
+      this.loadAsignadas(); // Carga asesorías asignadas
+    } else {
+      this.loadSinAsignar(); // Carga asesorías sin asignar
+    }
   }
 
   openModal(asesoria: Asesoria): void {

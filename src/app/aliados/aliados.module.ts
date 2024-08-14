@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { NgChartsModule } from 'ng2-charts';
+import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -43,7 +44,8 @@ import { NgChartsModule } from 'ng2-charts';
     MatIconModule,
     SharedModule,
     FontAwesomeModule,
-    NgChartsModule
+    NgChartsModule,
+    MatTooltipModule
   ]
 })
 export class AliadosModule { }
