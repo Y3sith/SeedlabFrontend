@@ -2,119 +2,68 @@
     <!-- Encabezado -->
     <header class="flex flex-col md:flex-row justify-between items-center mb-6">
         <app-header [title] [subtitle]="'Ruta'"></app-header>
-        </header>   
+    </header>
 
-<div class="flex justify-center items-center h-full md:w-full pt-5">
-    <div class="justify-center items-center w-4/6 max-md:w-72">
-        <div class="min-md:pb-6 md:pb-8 min-[1024px]:flex max-md:w-72 hd:w-full">
-            <div class="min-[1024px]:flex">
-                <div class="relative max-[1024px]:mb-5">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <fa-icon [icon]="falupa" class="text-xl right-2 transform" style="color: #adb7c7;"></fa-icon>
-                    </div>
-                    <input type="search" id="search" [(ngModel)]="userFilter.nombre"
-                        class="w-60 h-12 ps-5 text-sm border border-gray-300 rounded-lg max-md:w-full max-[1024px]:w-full max-[600px]:w-full md:mr-4 focus:outline-none"
-                        placeholder="Buscar..." required />
-                </div>
-                <div class="relative max-[1024px]:mb-5">
-                    <input type="date" id="search" [(ngModel)]="userFilter.fecha_creacion"
-                        class="w-60 h-12 ps-3 text-sm border border-gray-300 rounded-lg max-md:w-full max-[1024px]:w-full focus:outline-none"
-                        placeholder="Buscar..." required />
-                </div>
-
-            </div>
-            <div class="flex min-[1024px]:justify-end max-[1024px]:justify-center  w-full space-x-4">
-                <select (change)="onEstadoChange($event)"
-                    class="border rounded-lg text-gray-400 md:w-24 h-12 ml-3 focus:outline-none ">
-                    <option value="1" class="text-gray-600 text-center">Activo</option>
-                    <option value="0" class="text-gray-600 text-center">Inactivo</option>
-                </select>
-                <div class="relative max-md:mb-5">
-                    <div class="absolute inset-y-0 end-2 flex items-center">
-                        <fa-icon [icon]="fax" class="text-xl transform" style="color: #4fbbff;"></fa-icon>
-                    </div>
-                    <button class="border-1 border-sky-300 text-sky-400 rounded h-12 font-bold pl-3 pr-6"
-                        (click)="limpiarFiltro()">Limpiar</button>
-                </div>
-                <button class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12"
-                    (click)="openModalSINId()">Agregar
-                    Ruta</button>
-                <div class="absolute top-0 right-0" *ngIf="modalSwitch == true">
-                    <app-modal></app-modal>
-
-                </div>
-            </div>
-        </div>
-        <!-- <div class="headers md:flex md:justify-between md:mb-6 md:w-auto">
-            <h2 class="hidden md:block md:w-28 whitespace-nowrap overflow-hidden text-center font-bold">Nombre</h2>
-            <h2
-                class="hidden md:block md:w-24 whitespace-nowrap overflow-hidden text-center font-bold max-[1024px]:ml-10">
-                Fecha
-            </h2>
-            <h2
-                class="hidden md:block md:w-auto whitespace-nowrap overflow-hidden text-center font-bold max-[1024px]:w-64">
-                Actividades</h2>
-            <h2 class="hidden md:block  whitespace-nowrap overflow-hidden text-center font-bold md:w-32 md:-ml-6">Estado
-            </h2>
-            <h2
-                class="hidden md:block  whitespace-nowrap overflow-hidden text-center font-bold min-[1024px]:w-20 max-[1024px]:w-10">
-            </h2>
-
-        </div> -->
-        <div class="contenido flex flex-row">
-            <div *ngFor="let rutas of listaRutas | paginate: { itemsPerPage: 8, currentPage: page }"
-                class="info-empresa flex flex-row bg-red-700">
-                <!-- <div class="flex max-md:pt-3 px-2 max-md:h-10 md:w-auto">
-                    <div class="max-md:flex">
-                        <h3 class="block md:hidden mr-1 font-bold ">Nombre: </h3>
-                        <h3 class="md:w-32 max-md:w-32 whitespace-nowrap overflow-hidden max-md:h-6 text-start md:pl-4 md:pt-2"
-                            style="text-overflow: ellipsis;">
-                            {{rutas.nombre }}</h3>
-                        <fa-icon [icon]="faeye"
-                            class=" text-xl right-5 top-1/2 transform -translate-y-1/2 max-md:h-5 md:hidden pl-8 pt-2 "></fa-icon>
-                    </div>
-                </div>
-                <div class="flex px-2 max-md:h-7">
-                    <h3 class="block md:hidden mr-1 font-bold ">Fecha: </h3>
-                    <h3 class="md:w-24 whitespace-nowrap overflow-hidden max-md:h-6  md:pt-2"
-                        style="text-overflow: ellipsis;">
-                        {{rutas.fecha_creacion}}</h3>
-                </div>
-                <div class="flex  px-2 max-md:h-8">
-                    <h3 class="block md:hidden mr-1 font-bold ">Estado: </h3>
-                    <h3 class="md:w-20 whitespace-nowrap overflow-hidden max-md:h-6 md:pt-2 "
-                        style="text-overflow: ellipsis;">
-                        {{ rutas.estado }} </h3>
-                </div> -->
-                <div class="flex flex-row ">
-                    <div class="flex flex-col ">
-                        <h3 class="block md:hidden mr-1 font-bold ">Logo: </h3>
-                        <div class="flex flex-col items-center ">
-                                <img [src]="rutas.imagen_ruta" (click)="openModal(rutas.id)"
-                                class="w-52 h-52  flex items-center justify-center border overflow-hidden mb-2 rounded-full border-x-gray-900 cursor-pointer 
-                                transform transition duration-300 hover:scale-110"
-                                    alt="Ruta Imagen">
-                                <h3 class="md:w-32 max-md:w-32 whitespace-nowrap overflow-hidden max-md:h-6 md:pl-4 text-center"
-                                    style="text-overflow: ellipsis;">
-                                    {{rutas.nombre }}</h3>
+    <div class="flex justify-center items-center h-full md:w-full pt-5">
+        <div class="justify-center items-center w-4/6 max-md:w-72">
+            <div class="min-md:pb-6 md:pb-8 min-[1024px]:flex max-md:w-72 hd:w-full">
+                <div class="min-[1024px]:flex">
+                    <div class="relative max-[1024px]:mb-5">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <fa-icon [icon]="falupa" class="text-xl right-2 transform"
+                                style="color: #adb7c7;"></fa-icon>
                         </div>
+                        <input type="search" id="search" [(ngModel)]="userFilter.nombre"
+                            class="w-60 h-12 ps-5 text-sm border border-gray-300 rounded-lg max-md:w-full max-[1024px]:w-full max-[600px]:w-full md:mr-4 focus:outline-none"
+                            placeholder="Buscar..." required />
+                    </div>
+                    <div class="relative max-[1024px]:mb-5">
+                        <input type="date" id="search" [(ngModel)]="userFilter.fecha_creacion"
+                            class="w-60 h-12 ps-3 text-sm border border-gray-300 rounded-lg max-md:w-full max-[1024px]:w-full focus:outline-none"
+                            placeholder="Buscar..." required />
+                    </div>
 
+                </div>
+                <div class="flex min-[1024px]:justify-end max-[1024px]:justify-center  w-full space-x-4">
+                    <select (change)="onEstadoChange($event)"
+                        class="border rounded-lg text-gray-400 md:w-24 h-12 ml-3 focus:outline-none ">
+                        <option value="1" class="text-gray-600 text-center">Activo</option>
+                        <option value="0" class="text-gray-600 text-center">Inactivo</option>
+                    </select>
+                    <div class="relative max-md:mb-5">
+                        <div class="absolute inset-y-0 end-2 flex items-center">
+                            <fa-icon [icon]="fax" class="text-xl transform" style="color: #4fbbff;"></fa-icon>
+                        </div>
+                        <button class="border-1 border-sky-300 text-sky-400 rounded h-12 font-bold pl-3 pr-6"
+                            (click)="limpiarFiltro()">Limpiar</button>
+                    </div>
+                    <button class="bg-sky-400 hover:bg-sky-500 text-white font-bold px-3 py-0 rounded h-12"
+                        (click)="openModalSINId()">Agregar
+                        Ruta</button>
+                    <div class="absolute top-0 right-0" *ngIf="modalSwitch == true">
+                        <app-modal></app-modal>
 
                     </div>
                 </div>
-
-                <!-- <div class="flex justify-center px-2 pt-2">
-                    <h3 class="block md:hidden"></h3>
-                    <h3 class="md:w-11 md:mr-9 md:pr-14 "><fa-icon [icon]="faeye"
-                            class=" text-xl right-5 top-20 transform -translate-y-1/2 max-md:h-5 max-md:hidden"></fa-icon>
-                    </h3>
-                </div> -->
-
             </div>
-        </div>
-        <div class="text-center max-md:pr-10">
-            <pagination-controls (pageChange)="page = $event" previousLabel="Anterior"
-                nextLabel="Siguiente"></pagination-controls>
+            <div class="contenido flex flex-row">
+                <div *ngFor="let rutas of listaRutas | paginate: { itemsPerPage: 8, currentPage: page }"
+                    class="info-empresa flex flex-row bg-red-700">
+
+                    <div class="flex flex-row ">
+                        <div class="flex flex-col ">
+                            <div class="flex flex-col items-center ">
+                                <h3 class="md:w-32 max-md:w-32 whitespace-nowrap overflow-hidden max-md:h-6 md:pl-4 text-center"
+                                    style="text-overflow: ellipsis;" (click)="openModal(rutas.id)">
+                                    {{rutas.nombre }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center max-md:pr-10">
+                <pagination-controls (pageChange)="page = $event" previousLabel="Anterior"
+                    nextLabel="Siguiente"></pagination-controls>
+            </div>
         </div>
     </div>
-</div>

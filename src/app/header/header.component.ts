@@ -23,7 +23,7 @@ export class HeaderComponent implements AfterViewInit {
       data => {
         this.logoUrl = data.imagen_logo;
         //console.log('logoUrl', this.logoUrl);
-        console.log("personalizaciones obtenidas", data);
+        //console.log("personalizaciones obtenidas", data);
       },
       error => {
         console.error("no funciona", error);
