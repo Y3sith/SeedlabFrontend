@@ -29,6 +29,7 @@ export class ListRutasComponent implements OnInit {
   currentRolId: number;
   modalSwitch: boolean;
   listaRutasFiltrada: Ruta[] = [];
+  isLoading: boolean = false;
 
   constructor(
     private rutaService: RutaService,
@@ -76,13 +77,16 @@ export class ListRutasComponent implements OnInit {
 
   cargarRutas(): void {
     if (this.token) {
+      this.isLoading = true;
       this.rutaService.getAllRutas(this.token, this.userFilter.estado).subscribe(
         (data) => {
           this.listaRutas = data;
           console.log('listaRutas filtrada:', this.listaRutas);
+          this.isLoading = false;
         },
         (err) => {
           console.log(err);
+          this.isLoading = false;
         }
       );
     } else {
@@ -91,8 +95,8 @@ export class ListRutasComponent implements OnInit {
   }
 
   onEstadoChange(event: any): void {
-    const estado = event.target.value;
-    this.userFilter.estado = estado === '1' ? 'Activo' : 'Inactivo';
+    // const estado = event.target.value;
+    // this.userFilter.estado = estado === '1' ? 'Activo' : 'Inactivo';
     this.cargarRutas();
   }
 
@@ -103,6 +107,33 @@ export class ListRutasComponent implements OnInit {
   
   openModalSINId(): void {
     this.openModal(null);
+  }
+
+  canGoPrevious(): boolean {
+    return this.page > 1;
+  }
+  canGoNext(): boolean {
+    const totalItems = this.listaRutas.length;
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    return this.page < totalPages;
+  }
+
+  changePage(page: number | 'previous' | 'next'): void {
+    if (page === 'previous' && this.canGoPrevious()) {
+      this.page--;
+    } else if (page === 'next' && this.canGoNext()) {
+      this.page++;
+    } else if (typeof page === 'number') {
+      this.page = page;
+    }
+  }
+
+  getPages(): number[] {
+    const totalItems = this.listaRutas.length;
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
 }
