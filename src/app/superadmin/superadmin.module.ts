@@ -30,6 +30,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 import { NgChartsModule } from 'ng2-charts';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
+import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -68,7 +69,8 @@ import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.
     ColorPickerModule,
     MatIconModule,
     RouterModule,
-    NgChartsModule
+    NgChartsModule,
+    MatTooltipModule
   ]
 })
 export class SuperadminModule { }
