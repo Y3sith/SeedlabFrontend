@@ -112,7 +112,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
         this.ubicacion = data.ubicacion;
 
         //console.log(data);
-        console.log("personalizaciones obtenidas", data);
+        //console.log("personalizaciones obtenidas", data);
       },
       error => {
         console.error("no funciona", error);

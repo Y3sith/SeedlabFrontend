@@ -118,8 +118,8 @@ export class ListEmpresasComponent implements OnInit {
     return this.page < this.getTotalPages();
   }
 
-  editEmpresa(id: number): void {
+  editEmpresa(id_emprendedor: string ,documento: string): void {
     // Implementa la lógica para editar una empresa
-    console.log('Editar empresa con ID:', id);
+    this.router.navigate(['edit-empresa', id_emprendedor, documento ]);
   }
 }
