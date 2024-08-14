@@ -42,6 +42,11 @@ export class AliadoService {
     return this.http.get(`${this.url}/traeraliadoxid/${idAliado}`, options);
   }
 
+  getBannerxAliado(access_token: any, idAliado: any): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.get(`${this.url}/banner/${idAliado}`, options);
+  }
+
   getbanner(): Observable<any> {
     const url = `${environment.apiUrl}banner/activo`;
     return this.http.get(url);

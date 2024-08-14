@@ -29,8 +29,6 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 import { NgChartsModule } from 'ng2-charts';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
-import { EditAliadosComponent } from './pages/aliados/edit-aliados/edit-aliados.component';
-
 
 
 
@@ -54,7 +52,6 @@ import { EditAliadosComponent } from './pages/aliados/edit-aliados/edit-aliados.
     ActnivlecComponent,
     DashboardComponent,
     EditarActRutaComponent,
-    EditAliadosComponent,
     
   ],
   imports: [

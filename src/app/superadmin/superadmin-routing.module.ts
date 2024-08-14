@@ -11,7 +11,6 @@ import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.com
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
-import { EditAliadosComponent } from './pages/aliados/edit-aliados/edit-aliados.component';
 
 const routes: Routes = [
   {
