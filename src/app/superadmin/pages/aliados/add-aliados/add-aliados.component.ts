@@ -30,7 +30,7 @@ export class AddAliadosComponent {
   pdfRuta: string = ''; // Ruta para el PDF
   email: string = '';
   password: string = '';
-  estado: boolean = true;
+  estado: true;
   token: string;
   hide = true;
   user: User | null = null;
@@ -87,7 +87,7 @@ export class AddAliadosComponent {
       id_tipo_dato: [Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      estado: [1]
+      estado: [true]
       
     });
 
@@ -109,8 +109,7 @@ export class AddAliadosComponent {
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
-    console.log('logoPreview:', this.logoPreview);
-console.log('logo value:', this.aliadoForm.get('logo')?.value);
+    console.log('Initial estado value:', this.aliadoForm.get('estado')?.value);
   }
 
   validateToken(): void {
@@ -173,7 +172,7 @@ console.log('logo value:', this.aliadoForm.get('logo')?.value);
           id_tipo_dato: data.id_tipo_dato,
           email: data.email,
           password: '',
-          estado: data.estado
+          estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
         console.log("aaaa",data);
         this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
@@ -240,7 +239,11 @@ console.log('logo value:', this.aliadoForm.get('logo')?.value);
 
     console.log("SSSSSSSSSSSSSSSSSSSSSSSS", formData);
 
-    console.log("aliado aqui", this.idAliado);
+   // console.log("aliado aqui", this.idAliado);
+    console.log('Form value before submission:', this.aliadoForm.value);
+    console.log('isActive before submission:', this.isActive);
+    console.log('estado from form before submission:', this.aliadoForm.get('estado')?.value);
+    console.log('Estado final antes de crear FormData:', this.aliadoForm.get('estado')?.value);
     
     if ( this.idAliado != null ) {
     this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
@@ -253,6 +256,8 @@ console.log('logo value:', this.aliadoForm.get('logo')?.value);
       }
     )
       // crea el aliado
+      console.log('Estado before submission:', this.aliadoForm.get('estado')?.value);
+      formData.append('estado', '1');
     }else {
       this.aliadoService.crearAliado(this.token, formData).subscribe(
         data => {
@@ -272,8 +277,8 @@ toggleActive() {
   this.isActive = !this.isActive;
   this.aliadoForm.patchValue({ estado: this.isActive });
   console.log("Toggle activado, nuevo estado:", this.isActive);
+  console.log("Estado en el formulario después del toggle:", this.aliadoForm.get('estado')?.value);
 }
-
 /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
 mostrarToggle(): void {
   this.boton = this.idAliado != null;
