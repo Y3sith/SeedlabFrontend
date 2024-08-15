@@ -207,14 +207,25 @@ export class AddAliadosComponent {
        }
     }
 
+    
     const formData = new FormData();
-
+    let estadoValue: string;
+    if (this.idAliado == null) {
+      // Es un nuevo aliado, forzar el estado a 'true'
+      estadoValue = 'true';
+    } else {
+      // Es una edición, usar el valor del formulario
+      estadoValue = this.aliadoForm.get('estado')?.value ? 'true' : 'false';
+    }
+  
+    console.log('Estado antes de crear FormData:', estadoValue);
+    
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
     formData.append('descripcion', this.aliadoForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.aliadoForm.get('id_tipo_dato')?.value);
     formData.append('email', this.aliadoForm.get('email')?.value);
     formData.append('password', this.aliadoForm.get('password')?.value);
-    formData.append('estado', this.isActive ? 'true' : 'false');
+    formData.append('estado', estadoValue);
 
 
     if (this.selectedLogo) {
@@ -238,13 +249,8 @@ export class AddAliadosComponent {
     formData.append('banner_estadobanner', this.bannerForm.get('estadobanner')?.value);
 
     console.log("SSSSSSSSSSSSSSSSSSSSSSSS", formData);
-
-   // console.log("aliado aqui", this.idAliado);
-    console.log('Form value before submission:', this.aliadoForm.value);
-    console.log('isActive before submission:', this.isActive);
-    console.log('estado from form before submission:', this.aliadoForm.get('estado')?.value);
-    console.log('Estado final antes de crear FormData:', this.aliadoForm.get('estado')?.value);
-    
+   
+        
     if ( this.idAliado != null ) {
     this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
       data =>{
@@ -255,9 +261,7 @@ export class AddAliadosComponent {
         console.error(error);
       }
     )
-      // crea el aliado
-      console.log('Estado before submission:', this.aliadoForm.get('estado')?.value);
-      formData.append('estado', '1');
+      
     }else {
       this.aliadoService.crearAliado(this.token, formData).subscribe(
         data => {
