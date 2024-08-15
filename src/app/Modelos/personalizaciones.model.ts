@@ -2,7 +2,7 @@ export class Personalizaciones {
 
     id_superadmin: string | null;
     imagen_logo: File | null;
-    logo_footer: File | null;
+    //logo_footer: File | null;
     nombre_sistema: string | null;
     color_principal: string | null;
     color_secundario: string | null;
@@ -22,7 +22,7 @@ export class Personalizaciones {
         this.color_principal = color_principal;
         this.color_secundario = color_secundario;
         this.color_terciario = color_terciario;
-        this.logo_footer = logo_footer;
+        //this.logo_footer = logo_footer;
         this.descripcion_footer = descripcion_footer;
         this.paginaWeb = paginaWeb;
         this.email = email;

@@ -36,6 +36,9 @@ export class PersonalizacionesComponent implements OnInit {
   id: number | null = null;
   currentRolId: number;
   selectedFile: File;
+  currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
 
   @ViewChild('colorPickerPrincipal') colorPickerPrincipal: ColorPickerDirective;
   @ViewChild('colorPickerSecundario') colorPickerSecundario: ColorPickerDirective;
@@ -52,7 +55,7 @@ export class PersonalizacionesComponent implements OnInit {
     this.personalizacionForm = this.fb.group({
       nombre_sistema: ['', Validators.required],
       imagen_logo: ['', Validators.required],
-      logo_footer: ['', Validators.required],
+      //logo_footer: ['', Validators.required],
       color_principal: ['#C2FFFB', Validators.required],
       color_secundario: ['#C2FFFB', Validators.required],
       color_terciario: ['#C2FFFB', Validators.required],
@@ -150,7 +153,7 @@ export class PersonalizacionesComponent implements OnInit {
         const personalizaciones: Personalizaciones = {
           nombre_sistema: this.personalizacionForm.value.nombre_sistema,
           imagen_logo: this.personalizacionForm.value.imagen_logo,
-          logo_footer: this.personalizacionForm.value.logo_footer,
+          //logo_footer: this.personalizacionForm.value.logo_footer,
           color_principal: this.selectedColorPrincipal,
           color_secundario: this.selectedColorSecundario,
           color_terciario: this.selectedColorTerciario,
@@ -216,6 +219,30 @@ export class PersonalizacionesComponent implements OnInit {
         console.error(`Error en el control ${key}:`, controlErrors);
       }
     });
+  }
+
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 
 
