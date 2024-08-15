@@ -33,6 +33,12 @@ export class SuperadminService {
     });
   }
 
+  private CreacionHeaderss(access_token: any): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': 'Bearer ' + access_token
+    });
+  }
+
   createSuperadmin(access_token: any, superadmin: Superadmin,): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(this.url + "crearSuperAdmin", superadmin, options);
@@ -91,9 +97,9 @@ export class SuperadminService {
   }
 
   
-  createPersonalizacion(access_token: any, personalizaciones: any, id): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.put(this.url + "personalizacion/"+ id, personalizaciones, options);
+  createPersonalizacion(access_token: any, formData: FormData, id): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(this.url + "personalizacion/"+ id, formData, options);
   }
 
   getPersonalizacion(): Observable<any> {
