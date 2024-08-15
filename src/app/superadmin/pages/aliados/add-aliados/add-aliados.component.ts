@@ -11,10 +11,11 @@ import Pica from 'pica';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { ChangeDetectorRef } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
 import { data } from 'jquery';
 import { Console, error } from 'console';
+import { Banner } from '../../../../Modelos/banner.model';
 @Component({
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
@@ -50,6 +51,8 @@ export class AddAliadosComponent {
   faEyeSlash = faEyeSlash;
   faFileUpload = faFileUpload;
   faFileLines = faFileLines;
+  fatrash = faTrashCan;
+  fapaint = faPaintBrush;
   idAliado: string; ///
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
@@ -69,6 +72,7 @@ export class AddAliadosComponent {
   falupa = faCircleQuestion;
   faImages = faImage;
   @ViewChild('fileInput') fileInput: ElementRef;
+  listBanners: Banner[] =[];
   
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -109,6 +113,7 @@ export class AddAliadosComponent {
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
+    this.verEditarBanners();
     console.log('Initial estado value:', this.aliadoForm.get('estado')?.value);
   }
 
@@ -140,6 +145,18 @@ export class AddAliadosComponent {
 
   triggerFileInput() {
     this.fileInput.nativeElement.click();
+  }
+
+  verEditarBanners():void {
+    this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
+      data => {
+        this.listBanners = data;
+        console.log('Banners:', this.listBanners);
+      },
+      error => {
+        console.error('Error al obtener los banners:', error);
+      }
+    )
   }
 
   validateImageDimensions(file: File, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number): Promise<boolean> {
