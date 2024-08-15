@@ -1,7 +1,7 @@
 export class Banner {
     id?: number;
     urlImagen:File;
-    estadobanner: string | null;
+    estadobanner: string ;
     id_aliado: number;
 
     constructor(id: number, urlImagen:File, estadobanner:string, id_aliado: number){

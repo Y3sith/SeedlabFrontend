@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { environment } from '../../environment/env'
 
@@ -13,7 +13,6 @@ import { AnyTxtRecord } from 'dns';
   providedIn: 'root'
 })
 export class AliadoService {
-
   constructor(private http: HttpClient) { }
 
   private CreacionHeaders(access_token: any): HttpHeaders {
@@ -38,6 +37,16 @@ export class AliadoService {
     return this.http.get(url, options);
   }
 
+  getAliadoxid(access_token: any, idAliado: any): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.get(`${this.url}/traeraliadoxid/${idAliado}`, options);
+  }
+
+  getBannerxAliado(access_token: any, idAliado: any): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.get(`${this.url}/banner/${idAliado}`, options);
+  }
+
   getbanner(): Observable<any> {
     const url = `${environment.apiUrl}banner/activo`;
     return this.http.get(url);
@@ -57,6 +66,11 @@ export class AliadoService {
     return this.http.post(`${this.url}/create_aliado`, formData, options);
   }
 
+  editarAliado(access_token: string, formData: FormData, idAliado:String): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    const url = `${environment.apiUrl}aliado/editaraliado/${idAliado}`;
+    return this.http.post(url, formData, options);
+  }
 
   mostrarAliado(access_token: any) {
     const options = { headers: this.CreacionHeaders(access_token) };

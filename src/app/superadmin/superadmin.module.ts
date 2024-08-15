@@ -37,7 +37,6 @@ import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 
 
 
-
 @NgModule({
   declarations: [
     AddAliadosComponent,

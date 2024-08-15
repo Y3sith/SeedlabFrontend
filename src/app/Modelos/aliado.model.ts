@@ -5,8 +5,8 @@ export class Aliado {
     nombre: string;
     descripcion: string;
     logo: File; 
-    ruta_multi: File | null;
-    id_tipo_dato: number | null;
+    ruta_multi: File ;
+    id_tipo_dato: number ;
     email: string;
     password: string;
     estado: boolean;

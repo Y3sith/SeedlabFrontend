@@ -3,7 +3,7 @@ import { faEye, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-i
 import { AliadoService } from '../../../../servicios/aliado.service';
 import { Aliado } from '../../../../Modelos/aliado.model';
 import { User } from '../../../../Modelos/user.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-aliados',
@@ -26,11 +26,13 @@ export class ListAliadosComponent implements OnInit {
   currentRolId: number;
   isLoading: boolean = true;
   nombre: string | null = null;
+  id: string | null;
 
   constructor(
     private aliadoService: AliadoService,
     private router: Router,
-  ) { }
+    private aRoute: ActivatedRoute
+  ) { this.id = this.aRoute.snapshot.paramMap.get('id');}
 
   /* Inicializa con esas funciones al cargar la página */
   ngOnInit(): void {
@@ -127,8 +129,8 @@ export class ListAliadosComponent implements OnInit {
     });
   }
 
-  editarAliado(id: number):void{
-    this.router.navigate(['add-aliados/', id]);
+  editarAliado(id: any): void {
+    this.router.navigateByUrl("edit-aliados/" + id);
   }
 
   changePage(pageNumber: number | string): void {
