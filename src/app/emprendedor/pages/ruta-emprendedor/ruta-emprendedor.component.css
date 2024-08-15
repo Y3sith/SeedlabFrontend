@@ -3,16 +3,14 @@
   flex-wrap: wrap;
   align-items: flex-start;
   margin-top: 20px;
+  justify-content: center;
 }
 
 .main-timeline-container .timeline {
   position: relative;
   background-color: #e63946;
-  z-index: 1;
   height: 50px;
-  margin-bottom: 40px;
   width: 160px;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -39,11 +37,13 @@
   border-left: 30px solid;
   background-color: white;
   color: #e63946;
+
+  
 }
 
 .main-timeline-container .timeline-content {
   padding: 20px;
-  color: #fff;
+  color: #000000;
 }
 
 .main-timeline-container .timeline-year {
@@ -53,7 +53,7 @@
   transform: translate(-50%, -50%);
   width: 80px;
   height: 80px;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(253, 20, 20, 0.2);
   display: flex;
@@ -65,12 +65,15 @@
   z-index: 2;
 }
 
-/* Ajustes de longitud para campos 1, 2 y 3 */
+/* Ajustes de longitud para campos 1, 2, 3, 5, 6, 7 */
 .main-timeline-container .timeline-1,
 .main-timeline-container .timeline-2,
-.main-timeline-container .timeline-3 {
+.main-timeline-container .timeline-3{
   width: 300px; /* Incrementar longitud */
+  display: inline-block;
 }
+
+
 
 /* Estilo específico para el campo 4 */
 .main-timeline-container .timeline-4 {
@@ -79,23 +82,100 @@
   border-radius: 0 300px 300px 0;
   border: 50px solid #8cc63f;
   border-left: none;
-  background-color: transparent !important;
+  background-color: transparent;
   margin-bottom: 0;
   margin-left: 20px; /* Reducir la distancia para acercarlo al campo 3 */
   position: relative;
-
+  display: inline-block;
 }
 
-/* Estilo específico para los campos 5 y 6 */
+.main-timeline-container .timeline-4::before {
+  display: none; /* Esconde la pseudo-clase ::before */
+}
+.main-timeline-container .timeline-4::after {
+  display: none; /* Esconde la pseudo-clase ::before */
+}
+
+/* campos 5, 6 ,7 y 8 */
+
+.main-timeline-container .timeline-6,
 .main-timeline-container .timeline-5,
 .main-timeline-container .timeline-7,
-.main-timeline-container .timeline-6 {
-  width: 300px;
-  clear: left; /* Forzar a que estén en una nueva línea */
-  margin-top: 10px; /* Espacio debajo del campo 1 */
-  position: relative;
-  margin-left: 0; /* Asegura que estén alineados con el campo 1 */
+.main-timeline-container .timeline-8 {
+  width: 300px; /* Incrementar longitud */
+  display: inline-block;
+  margin-top: -50px; /* Ajusta este valor para alinear con el final del campo 4 */
+
 }
+
+
+.main-timeline-container .timeline-5 {
+  position: relative;
+  left: 600px; /* Mueve el campo 5 hacia la derecha */
+}
+
+/* Campo 7: Colocarlo en la posición del campo 5 */
+.main-timeline-container .timeline-7 {
+  position: relative;
+  left: -600px; /* Mueve el campo 7 hacia la izquierda */
+}
+
+.main-timeline-container .timeline-8 {
+  width: 160px;
+  height: 300px;
+  border-radius: 300px 0 0 300px; /* This changes the curve direction */
+  border: 50px solid #8cc63f;
+  border-right: none;
+  background-color: transparent !important;
+  margin-bottom: 0;
+  margin-left: -1090px; /* Adjust this value to properly position element 7 */
+  position: relative;
+  display: inline-block;
+
+}
+
+.main-timeline-container .timeline-8::after {
+  display: none; /* Esconde la pseudo-clase ::before */
+}
+
+.main-timeline-container .timeline-8::before {
+  display: none; /* Esconde la pseudo-clase ::before */
+}
+
+
+
+/* Invertir flechas para los campos 5, 6 y 7 */
+.main-timeline-container .timeline-5::before,
+.main-timeline-container .timeline-6::before,
+.main-timeline-container .timeline-7::before {
+  right: 0;
+  border-top: 25px solid transparent;
+  border-bottom: 25px solid transparent;
+  color: white;
+  background-color:#e63946;
+  border-right:30px solid #ffffff;
+  border-left: white;
+  
+
+}
+
+.main-timeline-container .timeline-5::after,
+.main-timeline-container .timeline-6::after,
+.main-timeline-container .timeline-7::after {
+  left: 0;
+  border-left: none;
+  border-right: 30px solid #e63946; 
+  background-color: white;
+}
+
+
+/* ---------------------- */
+
+
+
+
+
+
  
 
 
