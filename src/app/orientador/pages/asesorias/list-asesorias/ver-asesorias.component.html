@@ -82,7 +82,6 @@
             <p class="italic text-sm text-black mb-2 ml-[4%]"><strong>Correo: </strong>{{ asesoria.email }}</p>
             <p *ngIf="asesoria.aliado_redirigido" class="text-sm text-black mb-2 ml-[4%]"><strong>Aliado: </strong>{{ asesoria.aliado_redirigido }}</p>
           </div>
-
           <!-- Círculo en la esquina superior derecha -->
           <div class="cursor-pointer absolute top-[5px] right-[-37px] sm:top-[-5px] sm:right-[-25px] sm:h-12  w-16 h-16 z-10" 
             (click)="openModal(asesoria)">
