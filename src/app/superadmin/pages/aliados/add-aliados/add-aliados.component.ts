@@ -82,8 +82,8 @@ export class AddAliadosComponent {
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: [Validators.required],
-      ruta_multi: [Validators.required],
+      logo: [null, Validators.required],
+      ruta_multi: [null, Validators.required],
       id_tipo_dato: [Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -109,6 +109,8 @@ export class AddAliadosComponent {
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
+    console.log('logoPreview:', this.logoPreview);
+console.log('logo value:', this.aliadoForm.get('logo')?.value);
   }
 
   validateToken(): void {
