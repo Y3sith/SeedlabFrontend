@@ -109,38 +109,20 @@ export class PersonalizacionesComponent implements OnInit {
 
   // Resto de tu código...
 
+  onFileSelecteds(event: any, type: string) {
+    const file = event.target.files[0];
+    if (file) {
+        this.selectedImagen = file;
 
-  onFileSelecteds(event: any, field: string): void {
-
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.generateImagePreview(file, field);
-      if (field === 'imagen') {
-          this.selectedImagen = file;
-          this.personalizacionForm.patchValue({ imagen_logo: file });
-        } else {
-          this.resetFileField(field);
-        }
+        // Generate a preview URL
+        const reader = new FileReader();
+        reader.onload = () => {
+            this.previewUrl = reader.result as string;
+        };
+        reader.readAsDataURL(file);
     }
-    // const input = event.target as HTMLInputElement;
-    // if (input.files && input.files.length) {
-    //   const file = input.files[0];
-    //   const reader = new FileReader();
-    //   reader.readAsDataURL(file);
-    //   reader.onload = () => {
-    //     this.previewUrl = reader.result;
-    //     this.personalizacionForm.patchValue({
-    //       imagen_logo: reader.result // Guarda la imagen en base64 en el formulario
-    //     });
-    //   };
-    // }
+}
 
-
-  // } else if (field === 'logo') {
-  //   this.selectedLogo = file;
-  //   this.aliadoForm.patchValue({ logo: file });
-  // } 
-  }
 
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
