@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<nav class="sidebar shadow-xl p-1 m-0" [ngClass]="{ 'expand': isExpanded }" *ngIf="isAuthenticated"
+<nav class="p-1 m-0 shadow-xl sidebar" [ngClass]="{ 'expand': isExpanded }" *ngIf="isAuthenticated"
     [style.backgroundColor]="(!isMobile || isExpanded) ? colorPrincipal : 'white'">
     <header class="relative">
         <div class="toggle absolute top-[20px] lg:left-[calc(100%-50px)] left-[calc(100%-40px)] transform -translate-y-1/2 h-[40px] w-[40px] flex items-center justify-center rounded-r-xl text-white text-xl transition-all duration-300"
@@ -30,27 +30,27 @@
                 class="relative overflow-y-auto overflow-x-hidden max-h-[245.9px] md:max-h-full custom-scrollbar xl:mt-12">
                 <ul class="p-0 space-y-2">
                     <!-- Inicio -->
-                    <li class="group h-12 flex items-center">
+                    <li class="flex items-center h-12 group">
                         <a href="home"
-                            class="appearance-none no-underline flex items-center w-full h-full p-2 rounded-md transition-all duration-400 text-white">
+                            class="flex items-center w-full h-full p-2 text-white no-underline transition-all rounded-md appearance-none duration-400">
                             <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: white;"
                                 class="text-center group-hover:text-white text-xl min-w-[60px] transition duration-200"
                                 fill="currentColor" viewBox="0 0 576 512">
                                 <path
                                     d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z" />
                             </svg>
-                            <span class="text nav-text text-base font-medium">Inicio</span>
+                            <span class="text-base font-medium text nav-text">Inicio</span>
                         </a>
                     </li>
 
                     <!-- Iterar sobre los elementos del menú -->
                     <div *ngFor="let item of menuItems">
-                        <li class="h-14 flex items-center">
+                        <li class="flex items-center h-14">
                             <a [routerLink]="item.route"
                                 class="appearance-none no-underline flex items-center w-full h-full p-2 rounded-md transition-all duration-400 text-white group-hover:bg-[#ffb000]">
                                 <i class="{{item.icon}} text-center text-xl min-w-[60px] transition duration-200"
                                     style="color: white;"></i>
-                                <span class="text nav-text text-base"> {{item.name}} </span>
+                                <span class="text-base text nav-text"> {{item.name}} </span>
                             </a>
                         </li>
                     </div>
@@ -60,9 +60,14 @@
 
         <!-- Botón de Cerrar sesión -->
         <div class="containerLogout">
+            <div *ngIf="isExpanded" class="pl-6 mt-4 text-white">
+                <div class="text-lg font-bold">
+                    {{ rolUser }}
+                </div>
+            </div>
             <div [style.backgroundColor]= "colorSecundario" [ngClass]="{ 'expand-line': isExpanded, 'collapse-line': !isExpanded }"
                 class="transition-all duration-300"></div>
-            <li class="h-14 mt-2 flex items-center" *ngIf="logueado">
+            <li class="flex items-center mt-2 h-14" *ngIf="logueado">
                 <a *ngIf="token != null" (click)="logout()"
                     class="appearance-none no-underline flex justify-center items-center w-full h-full p-2 rounded-md transition-all duration-400 text-white group-hover:bg-[#ffb000]">
                     <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: white;"
@@ -71,7 +76,7 @@
                         <path
                             d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
                     </svg>
-                    <span class="text nav-text text-base mr-16">Cerrar Sesión</span>
+                    <span class="mr-16 text-base text nav-text">Cerrar Sesión</span>
                 </a>
             </li>
         </div>

@@ -26,6 +26,7 @@ export class MenuComponent {
   colorSecundario: string = '';
   isMobile: boolean = false;
   iconColor: string = '#00B3ED';
+  rolUser: String;
 
   constructor(private router: Router,
               private authservices: AuthService,
@@ -35,6 +36,24 @@ export class MenuComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
     this.isMobile = window.innerWidth < 768;
+  }
+
+  getRolUser(): void {
+    if (this.user.id_rol === 1){
+      this.rolUser = 'Super Admin';
+    }
+    else if (this.user.id_rol === 2){
+      this.rolUser = 'Orientador';
+    }
+    else if (this.user.id_rol === 3){
+      this.rolUser = 'Aliado';
+    }
+    else if (this.user.id_rol === 4){
+      this.rolUser = 'Asesor';
+    }
+    else if (this.user.id_rol === 5){
+      this.rolUser = 'Emprendedor';
+    }
   }
 
   toggleSidebar() {
@@ -59,9 +78,11 @@ export class MenuComponent {
     this.validateToken();
     this.isAuthenticated = this.authservices.isAuthenticated();
     this.logueado = this.token !== null;
+    this.getRolUser();
 
     if (this.logueado && this.user) {
       this.currentRolId = this.user.id_rol?.toString();
+      
     } else {
       console.log("No está logueado o no se pudo cargar el usuario.");
     }
