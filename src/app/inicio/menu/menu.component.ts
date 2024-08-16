@@ -71,7 +71,7 @@ export class MenuComponent {
       data => {
         this.colorPrincipal = data.color_principal;
         this.colorSecundario = data.color_secundario;
-        //console.log(this.colorPrincipal, this.colorSecundario);
+        console.log(this.colorPrincipal, this.colorSecundario);
       },
       err => console.log(err)
     );
