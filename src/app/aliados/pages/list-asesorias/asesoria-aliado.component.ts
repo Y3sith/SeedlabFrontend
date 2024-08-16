@@ -20,6 +20,7 @@ export class AsesoriaAliadoComponent implements OnInit {
   asesoriasSinAsesor: Asesoria[] = [];
   token: string | null = null;
   user: any = null;
+  id_aliado: number;
   currentRolId: number;
   mensaje: string | null = null;
   @ViewChild('sinAsignarButton') sinAsignarButton!: ElementRef;
@@ -53,6 +54,8 @@ export class AsesoriaAliadoComponent implements OnInit {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.currentRolId = this.user.id_rol;
+        this.id_aliado = this.user.id;
+        console.log("IIIIIIIIIIIIIIIII",this.id_aliado);
         if (this.currentRolId != 3) {
           this.router.navigate(['home']);
         }
@@ -61,23 +64,28 @@ export class AsesoriaAliadoComponent implements OnInit {
     if (!this.token) {
       this.router.navigate(['home']);
     } else {
-      this.loadAsesorias(1, 0);
+      this.loadAsesorias(this.id_aliado, [0, 1]);
+      
     }
   }
 
-  loadAsesorias(rol: number, estado: number): void {
-    this.asesoriaService.getAsesoriasPorRolYEstado(this.token, rol, estado).subscribe(
-      data => {
-        this.asesorias = data;
-        this.separarAsesorias();
-        this.showSinAsignar(); // Show "Sin asignar" asesorias by default
-        this.totalAsesorias = data.length; // Actualiza el total de asesorias
-      },
-      error => {
-        console.error('Error al obtener las asesorías:', error);
-      }
-    );
-  }
+  loadAsesorias(rol: number, estados: number[]): void {
+    this.asesorias = []; // Reiniciar las asesorías
+
+    estados.forEach(estado => {
+        this.asesoriaService.getAsesoriasPorRolYEstado(this.token, rol, estado).subscribe(
+            data => {
+                this.asesorias = this.asesorias.concat(data); // Combinar resultados
+                this.separarAsesorias();
+                this.showSinAsignar(); // Mostrar asesorías "Sin asignar" por defecto
+                this.totalAsesorias = this.asesorias.length; // Actualiza el total de asesorías
+            },
+            error => {
+                console.error('Error al obtener las asesorías:', error);
+            }
+        );
+    });
+}
 
    // Código para la paginación
    changePage(pageNumber: number | string): void {
@@ -136,7 +144,7 @@ export class AsesoriaAliadoComponent implements OnInit {
     });
 
     dialogRef.componentInstance.asesoriaAsignada.subscribe(() => {
-      this.loadAsesorias(1, 0); // Recargar las asesorías
+      this.loadAsesorias(this.id_aliado, [0,1]); // Recargar las asesorías
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -146,26 +154,26 @@ export class AsesoriaAliadoComponent implements OnInit {
 
   rechazarAsesoria(asesoria: Asesoria): void {
     if (asesoria && asesoria.id_asesoria) {
-      this.alertService.alertaActivarDesactivar("¿Estas seguro de rechazar la asesoria?", 'question',).then((result) => {
-        if (result.isConfirmed) {
-          this.asesoriaService.rechazarAsesoria(this.token, asesoria.id_asesoria, 'rechazar').subscribe(
-            data => {
-              this.loadAsesorias((this.currentRolId!), 1);
-              this.alertService.successAlert('Exito', data.message);
-              setTimeout(function () {
-                location.reload();
-              }, this.tiempoEspera);
-            },
-            error => {
-              this.alertService.errorAlert('Error', error.error.message);
-              console.error('Error al rechazar asesoría:', error);
+        this.alertService.alertaActivarDesactivar("¿Estás seguro de rechazar la asesoría?", 'question').then((result) => {
+            if (result.isConfirmed) {
+                this.asesoriaService.rechazarAsesoria(this.token, asesoria.id_asesoria, 'rechazar').subscribe(
+                    data => {
+                        this.loadAsesorias(this.currentRolId!, [1]); // Pasa un array con el estado 1
+                        this.alertService.successAlert('Éxito', data.message);
+                        setTimeout(() => {
+                            location.reload();
+                        }, this.tiempoEspera);
+                    },
+                    error => {
+                        this.alertService.errorAlert('Error', error.error.message);
+                        console.error('Error al rechazar asesoría:', error);
+                    }
+                );
             }
-          );
-        }
-
-      })
+        });
     }
-  }
+}
+
 
   showSinAsignar(): void {
     this.asesorias = this.asesoriasSinAsesor;

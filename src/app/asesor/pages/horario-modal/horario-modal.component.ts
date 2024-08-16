@@ -70,4 +70,9 @@ export class HorarioModalComponent implements OnInit {
       this.alertService.errorAlert('Error', 'Formulario inválido, debes asignar un horario correcto');
     }
   }
+
+  /* Cerrar el modal */
+  cancelarCrerAsesoria() {
+    this.dialogRef.close();
+  }
 }

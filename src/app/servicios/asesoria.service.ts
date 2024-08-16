@@ -58,12 +58,12 @@ export class AsesoriaService {
   }
 
   // Método para obtener asesorías por rol y estado
-  getAsesoriasPorRolYEstado(access_token: any, rol: number, estado: number): Observable<Asesoria[]> {
+  getAsesoriasPorRolYEstado(access_token: any, id_aliado: number, estado: number): Observable<Asesoria[]> {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ` + access_token,
       'Content-Type': 'application/json'
     });
-    return this.http.get<Asesoria[]>(`${this.apiUrl}mostrarAsesorias/${rol}/${estado}`, { headers });
+    return this.http.get<Asesoria[]>(`${this.apiUrl}mostrarAsesorias/${id_aliado}/${estado}`, { headers });
   }
 
   //ver asesores disponibles por aliado

@@ -19,13 +19,13 @@ export class PersonalizacionesComponent implements OnInit {
   selectedColorTerciario = '#C2FFFB';
   descripcion_footer: Text;
   paginaWeb: string;
-  email: string ;
-  telefono: string ;
-  direccion: string ;
-  ubicacion: string;  
+  email: string;
+  telefono: string;
+  direccion: string;
+  ubicacion: string;
   previewUrl: any = null;
   PreviewLogoFooter: any = null;
-  idPersonalizacion:number = 1;
+  idPersonalizacion: number = 1;
   ImagenPreview: string | ArrayBuffer | null = null;
 
 
@@ -42,6 +42,7 @@ export class PersonalizacionesComponent implements OnInit {
   faArrowRight = faArrowRight;
   faImage = faImage;
 
+
   @ViewChild('colorPickerPrincipal') colorPickerPrincipal: ColorPickerDirective;
   @ViewChild('colorPickerSecundario') colorPickerSecundario: ColorPickerDirective;
 
@@ -51,20 +52,20 @@ export class PersonalizacionesComponent implements OnInit {
     private router: Router,
     private cdRef: ChangeDetectorRef,) {
 
-      this.personalizacionForm = this.fb.group({
-        nombre_sistema: ['', Validators.required],
-        imagen_logo: [Validators.required],
-        //logo_footer: ['', Validators.required],
-        color_principal: ['#C2FFFB', Validators.required],
-        color_secundario: ['#C2FFFB', Validators.required],
-        //color_terciario: ['#C2FFFB', Validators.required],
-        descripcion_footer: ['', Validators.required],
-        paginaWeb: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        telefono: ['', Validators.required],
-        direccion: ['', Validators.required],
-        ubicacion: ['', Validators.required]
-      })
+    this.personalizacionForm = this.fb.group({
+      nombre_sistema: ['', Validators.required],
+      imagen_logo: [Validators.required],
+      //logo_footer: ['', Validators.required],
+      color_principal: ['', Validators.required],
+      color_secundario: ['', Validators.required],
+      //color_terciario: ['#C2FFFB', Validators.required],
+      descripcion_footer: ['', Validators.required],
+      paginaWeb: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      telefono: ['', Validators.required],
+      direccion: ['', Validators.required],
+      ubicacion: ['', Validators.required]
+    })
   }
 
 
@@ -95,12 +96,12 @@ export class PersonalizacionesComponent implements OnInit {
 
   onColorChangePrincipal(color: string): void {
     this.selectedColorPrincipal = color;
+    this.personalizacionForm.get('color_principal')?.setValue(color, { emitEvent: false });
   }
-
-
 
   onColorChangeSecundario(color: string): void {
     this.selectedColorSecundario = color;
+    this.personalizacionForm.get('color_secundario')?.setValue(color, { emitEvent: false });
   }
 
   // onColorChangeTerciario(color: string): void {
@@ -112,16 +113,16 @@ export class PersonalizacionesComponent implements OnInit {
   onFileSelecteds(event: any, type: string) {
     const file = event.target.files[0];
     if (file) {
-        this.selectedImagen = file;
+      this.selectedImagen = file;
 
-        // Generate a preview URL
-        const reader = new FileReader();
-        reader.onload = () => {
-            this.previewUrl = reader.result as string;
-        };
-        reader.readAsDataURL(file);
+      // Generate a preview URL
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
     }
-}
+  }
 
 
   generateImagePreview(file: File, field: string) {
@@ -171,7 +172,7 @@ export class PersonalizacionesComponent implements OnInit {
         }
         const id_temp = JSON.parse(itemslocal).id;
         console.log("ID Superadmin:", id_temp);
-       
+
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
         formData.append('color_principal', this.personalizacionForm.get('color_principal')?.value);
@@ -183,7 +184,6 @@ export class PersonalizacionesComponent implements OnInit {
         formData.append('direccion', this.personalizacionForm.get('direccion')?.value);
         formData.append('ubicacion', this.personalizacionForm.get('ubicacion')?.value);
         formData.append('id_superadmin', id_temp);
-
 
         // const personalizaciones: Personalizaciones = {
         //   nombre_sistema: this.personalizacionForm.value.nombre_sistema,
@@ -230,7 +230,7 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
-  restorePersonalizacion():void{
+  restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
         console.log("Personalización restaurada", data);

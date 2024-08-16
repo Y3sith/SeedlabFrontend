@@ -119,7 +119,7 @@
                   <label class="text-lg font-normal">Color Principal - Para Menu lateral</label>
                   <div class="flex content-center mb-2 md:mb-0 w-full">
                     <div class="w-24 h-10 rounded-l" [style.background]="selectedColorPrincipal"
-                      [(colorPicker)]="selectedColorPrincipal" [cpOKButton]="true"
+                      [(colorPicker)]="selectedColorPrincipal" [cpOKButton]="true" (colorPickerChange)="onColorChangePrincipal($event)"
                       [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
                       [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
                       [cpCancelButtonText]="'Cancelar'"></div>
@@ -135,7 +135,7 @@
                   <label class="text-lg font-normal">Color Secundario - Linea del menu lateral</label>
                   <div class="flex content-center mb-2 md:mb-0 w-full">
                     <div class="w-24 h-10 rounded-l" [style.background]="selectedColorSecundario"
-                      [(colorPicker)]="selectedColorSecundario" [cpOKButton]="true"
+                      [(colorPicker)]="selectedColorSecundario" [cpOKButton]="true" (colorPickerChange)="onColorChangeSecundario($event)"
                       [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
                       [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
                       [cpCancelButtonText]="'Cancelar'"></div>

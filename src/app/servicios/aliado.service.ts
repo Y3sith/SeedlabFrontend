@@ -38,8 +38,13 @@ export class AliadoService {
   }
 
   getAliadoxid(access_token: any, idAliado: any): Observable<any> {
-    const options = { headers: this.CreacionHeaderss(access_token) };
+    const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(`${this.url}/traeraliadoxid/${idAliado}`, options);
+  }
+
+  getBannerxid(access_token: any, id: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(`${this.url}/traeraliadoxid/${id}`, options);
   }
 
   getBannerxAliado(access_token: any, idAliado: any): Observable<any> {
