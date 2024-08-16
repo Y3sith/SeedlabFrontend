@@ -8,7 +8,6 @@
 
 .main-timeline-container .timeline {
   position: relative;
-  background-color: #e63946;
   height: 50px;
   width: 160px;
   justify-content: center;
@@ -36,14 +35,20 @@
   border-bottom: 25px solid transparent;
   border-left: 30px solid;
   background-color: white;
-  color: #e63946;
 
   
 }
 
 .main-timeline-container .timeline-content {
   padding: 20px;
-  color: #000000;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
+  text-align: left;
+  text-decoration: none;
+
+
 }
 
 .main-timeline-container .timeline-year {
@@ -53,19 +58,22 @@
   transform: translate(-50%, -50%);
   width: 80px;
   height: 80px;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(252, 250, 250);
   border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(253, 20, 20, 0.2);
+  box-shadow: 23px 10px 10px rgba(0, 0, 0.1, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 50px;
   font-weight: bold;
-  color: #e63946;
+  font-style: oblique;
   z-index: 2;
 }
 
-/* Ajustes de longitud para campos 1, 2, 3, 5, 6, 7 */
+
+
+
+/* Ajustes de longitud para campos 1, 2, 3,*/
 .main-timeline-container .timeline-1,
 .main-timeline-container .timeline-2,
 .main-timeline-container .timeline-3{
@@ -84,19 +92,49 @@
   border-left: none;
   background-color: transparent;
   margin-bottom: 0;
-  margin-left: 20px; /* Reducir la distancia para acercarlo al campo 3 */
+  margin-left: 5px; /* Reducir la distancia para acercarlo al campo 3 */
   position: relative;
   display: inline-block;
 }
 
 .main-timeline-container .timeline-4::before {
-  display: none; /* Esconde la pseudo-clase ::before */
+  margin-top: 200px;
+  margin-left: -15px;
+  left: 0;
+  border-left: none;
+  border-right: 30px solid #8cc63f; 
+  background-color: white;
 }
 .main-timeline-container .timeline-4::after {
-  display: none; /* Esconde la pseudo-clase ::before */
+  margin-top: -50px;
+  top: 0;
+  left: 0;
+  border-top: 25px solid transparent;
+  border-bottom: 25px solid transparent;
+  border-left: 22px solid rgb(255, 255, 255);}
+
+  .main-timeline-container .timeline-4 .timeline-year {
+    top: 50%; /* Center vertically */
+    left: 130px; /* Adjust horizontally to align with the green border */
+    transform: translate(-50%, -50%); /* Keep it centered based on the adjusted left */
+}
+
+.main-timeline-container .timeline-4 .content {
+  margin-left: 180px;
+  margin-top: 65px;
+
+}
+.main-timeline-container .timeline-1 .content,
+ .main-timeline-container .timeline-2 .content,
+ .main-timeline-container .timeline-3 .content
+{
+margin-top: 55px;
+margin-left: 100px;
 }
 
 /* campos 5, 6 ,7 y 8 */
+
+
 
 .main-timeline-container .timeline-6,
 .main-timeline-container .timeline-5,
@@ -111,38 +149,19 @@
 
 .main-timeline-container .timeline-5 {
   position: relative;
-  left: 600px; /* Mueve el campo 5 hacia la derecha */
+  left: 500px; /* Mueve el campo 5 hacia la derecha */
 }
+.main-timeline-container .timeline-6 {
+  position: relative;
+  right: 100px; /* Mueve el campo 5 hacia la derecha */
+}
+
 
 /* Campo 7: Colocarlo en la posición del campo 5 */
 .main-timeline-container .timeline-7 {
   position: relative;
-  left: -600px; /* Mueve el campo 7 hacia la izquierda */
+  left: -700px; /* Mueve el campo 7 hacia la izquierda */
 }
-
-.main-timeline-container .timeline-8 {
-  width: 160px;
-  height: 300px;
-  border-radius: 300px 0 0 300px; /* This changes the curve direction */
-  border: 50px solid #8cc63f;
-  border-right: none;
-  background-color: transparent !important;
-  margin-bottom: 0;
-  margin-left: -1090px; /* Adjust this value to properly position element 7 */
-  position: relative;
-  display: inline-block;
-
-}
-
-.main-timeline-container .timeline-8::after {
-  display: none; /* Esconde la pseudo-clase ::before */
-}
-
-.main-timeline-container .timeline-8::before {
-  display: none; /* Esconde la pseudo-clase ::before */
-}
-
-
 
 /* Invertir flechas para los campos 5, 6 y 7 */
 .main-timeline-container .timeline-5::before,
@@ -151,9 +170,7 @@
   right: 0;
   border-top: 25px solid transparent;
   border-bottom: 25px solid transparent;
-  color: white;
-  background-color:#e63946;
-  border-right:30px solid #ffffff;
+  border-right:30px solid;
   border-left: white;
   
 
@@ -167,6 +184,188 @@
   border-right: 30px solid #e63946; 
   background-color: white;
 }
+
+.main-timeline-container .timeline-8 {
+  width: 160px;
+  height: 300px;
+  border-radius: 300px 0 0 300px; /* This changes the curve direction */
+  border: 50px solid #ff006e;
+  border-right: none;
+  background-color: transparent !important;
+  margin-bottom: 0;
+  margin-left: -1180px; /* Adjust this value to properly position element 7 */
+  position: relative;
+  display: inline-block;
+
+}
+
+.main-timeline-container .timeline-8::after {
+  right: 0;
+  margin-top: -50px;
+  border-top: 25px solid transparent;
+  border-bottom: 25px solid transparent;
+  color: white;
+  background-color:#ff006e;
+  border-right:30px solid #ffffff;
+  border-left: white;
+  width: 30px;
+  margin-left: 95px;
+}
+
+.main-timeline-container .timeline-8::before {
+ margin-top: 200px;
+ margin-right: -25px;
+ color:#ff006e;
+}
+
+.main-timeline-container .timeline-8 .timeline-year {
+  top: 50%; /* Center vertically */
+  left: -20px; /* Adjust horizontally to align with the green border */
+  transform: translate(-50%, -50%); /* Keep it centered based on the adjusted left */
+}
+
+.main-timeline-container .timeline-8 .content {
+  margin-left: -160px;
+  margin-top: 65px;
+
+}
+
+.main-timeline-container .timeline-5 .content,
+ .main-timeline-container .timeline-6 .content,
+ .main-timeline-container .timeline-7 .content
+{
+margin-top: 55px;
+margin-left: 100px;
+}
+
+
+/* Campo 1 */
+.main-timeline-container .timeline-1 {
+  background-color: #e63946; /* Rojo */
+}
+
+.main-timeline-container .timeline-1::before
+ {
+  border-left-color: #e63946; /* Rojo */
+}
+
+.main-timeline-container .timeline-1 .timeline-year {
+  color: #e63946;;
+}
+
+/* Campo 2 */
+.main-timeline-container .timeline-2 {
+  background-color: #f77f00; /* Naranja */
+}
+
+.main-timeline-container .timeline-2::before {
+  border-left-color: #f77f00; /* Naranja */
+}
+
+.main-timeline-container .timeline-2 .timeline-year {
+  color: #f77f00;
+}
+
+/* Campo 3 */
+.main-timeline-container .timeline-3 {
+  background-color: #ffba08; /* Amarillo */
+}
+
+.main-timeline-container .timeline-3::before {
+  border-left-color: #ffba08; /* Amarillo */
+}
+
+.main-timeline-container .timeline-3 .timeline-year {
+  color: #ffba08;
+}
+
+/* Campo 4 */
+
+
+.main-timeline-container .timeline-4 .timeline-year {
+  color: #8cc63f;;
+}
+
+/* Campo 5 */
+.main-timeline-container .timeline-5 {
+  background-color: #48cae4; /* Azul Claro */
+}
+
+.main-timeline-container .timeline-5::before{
+  color: white;
+  background-color: #48cae4;
+
+}
+.main-timeline-container .timeline-5::after {
+  border-right-color: #48cae4; /* Azul Claro */
+}
+
+.main-timeline-container .timeline-5 .timeline-year {
+  color: #48cae4;
+}
+
+/* Campo 6 */
+.main-timeline-container .timeline-6 {
+  background-color: #023e8a; /* Azul Oscuro */
+}
+
+.main-timeline-container .timeline-6::before {
+  color: white;
+  background-color: #023e8a;
+
+}
+.main-timeline-container .timeline-6::after {
+  border-right-color: #023e8a; /* Azul Oscuro */
+}
+
+.main-timeline-container .timeline-6 .timeline-year {
+  color: #023e8a;
+}
+
+/* Campo 7 */
+.main-timeline-container .timeline-7 {
+  background-color: #9d4edd; /* Púrpura */
+}
+
+.main-timeline-container .timeline-7::before {
+  color: white;
+  background-color: #9d4edd;
+}
+.main-timeline-container .timeline-7::after {
+  border-right-color: #9d4edd; /* Púrpura */
+}
+
+.main-timeline-container .timeline-7 .timeline-year {
+  color: #9d4edd;
+}
+
+/* Campo 8 */
+.main-timeline-container .timeline-8 {
+  background-color: #ff006e; /* Rosa */
+}
+
+.main-timeline-container .timeline-8::before,
+.main-timeline-container .timeline-8::after {
+  border-right-color: #ffffff; /* Rosa */
+}
+
+.main-timeline-container .timeline-8 .timeline-year {
+  color: #ff006e;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ---------------------- */
