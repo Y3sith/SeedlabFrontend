@@ -11,10 +11,13 @@ import Pica from 'pica';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { ChangeDetectorRef } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
 import { data } from 'jquery';
 import { Console, error } from 'console';
+import { Banner } from '../../../../Modelos/banner.model';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AddBannerModalComponent } from '../add-banner-modal/add-banner-modal.component';
 @Component({
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
@@ -38,8 +41,8 @@ export class AddAliadosComponent {
   rutaSeleccionada: string = '';
   pdfFileName: string = '';
   currentRolId: number;
-  id: number | null = null;
   compressedImage: string;
+  id: number | null = null;
   bannerFile: File | null = null;
   selectedBanner: File | null = null;
   selectedLogo: File | null = null;
@@ -50,6 +53,8 @@ export class AddAliadosComponent {
   faEyeSlash = faEyeSlash;
   faFileUpload = faFileUpload;
   faFileLines = faFileLines;
+  fatrash = faTrashCan;
+  fapaint = faPaintBrush;
   idAliado: string; ///
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
@@ -69,6 +74,7 @@ export class AddAliadosComponent {
   falupa = faCircleQuestion;
   faImages = faImage;
   @ViewChild('fileInput') fileInput: ElementRef;
+  listBanners: Banner[] =[];
   
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -76,6 +82,7 @@ export class AddAliadosComponent {
     private router: Router,
     private formBuilder: FormBuilder,
     private imageCompress: NgxImageCompressService,
+    public dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
     private aRoute: ActivatedRoute) {
 
@@ -98,6 +105,8 @@ export class AddAliadosComponent {
     this.isActive = true;
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');
    // console.log("IDDDD",this.idAliado);
+
+   
   }
 
   get f() { return this.aliadoForm.controls; }
@@ -109,6 +118,7 @@ export class AddAliadosComponent {
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
+    this.verEditarBanners();
     console.log('Initial estado value:', this.aliadoForm.get('estado')?.value);
   }
 
@@ -132,6 +142,20 @@ export class AddAliadosComponent {
     }
   }
 
+  openModal(id:number | null, idAliado: string): void{
+    let dialogRef: MatDialogRef<AddBannerModalComponent>;
+
+    dialogRef = this.dialog.open(AddBannerModalComponent, {
+      data: { id: id, idAliado: this.idAliado 
+      },
+    });
+   // console.log("aliado", idAliado);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.verEditarBanners();
+    });
+  }
+
   ocultosBotones(): void {
     if (this.idAliado != null) {
       this.boton = false;
@@ -140,6 +164,18 @@ export class AddAliadosComponent {
 
   triggerFileInput() {
     this.fileInput.nativeElement.click();
+  }
+
+  verEditarBanners():void {
+    this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
+      data => {
+        this.listBanners = data;
+        console.log('Banners:', this.listBanners);
+      },
+      error => {
+        console.error('Error al obtener los banners:', error);
+      }
+    )
   }
 
   validateImageDimensions(file: File, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number): Promise<boolean> {
