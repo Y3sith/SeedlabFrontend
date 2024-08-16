@@ -4,6 +4,7 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
+
 import { data } from 'jquery';
 import { response } from 'express';
 
@@ -468,17 +469,18 @@ export class DashboardComponent implements AfterViewInit {
     this.superAdminService.emprendedoresPorDepartamento(this.token).subscribe(
       (data: { municipio: string; total_emprendedores: number }[]) => {
         console.log('data municipios', data);
-        fetch('assets/data/COL.geo.json')
+        fetch('assets/data/colombia_topojson.json')  // Asegúrate de que la ruta sea correcta
           .then(response => response.json())
-          .then(colJson => {
-            echarts.registerMap('Colombia', colJson);
+          .then(topoJsonData => {
+            // Convertir TopoJSON a GeoJSON
+            const geojson = topojson.feature(topoJsonData, topoJsonData.objects.mpios);
+            
+            echarts.registerMap('Colombia', geojson);
             
             const mappedData = data.map(item => ({
               name: item.municipio,
               value: item.total_emprendedores
             }));
-  
-            console.log('Datos mapeados:', mappedData);
   
             const maxValue = Math.max(...data.map(item => item.total_emprendedores));
   
@@ -508,21 +510,10 @@ export class DashboardComponent implements AfterViewInit {
                   map: 'Colombia',
                   roam: true,
                   data: mappedData,
-                  nameProperty: 'name', // Asegúrate de que esto coincida con la propiedad en tu GeoJSON
+                  nameProperty: 'name',  // Esto coincide con la propiedad 'name' en tu TopoJSON
                   emphasis: {
                     label: {
                       show: true
-                    },
-                    itemStyle: {
-                      areaColor: '#eee'
-                    }
-                  },
-                  select: {
-                    label: {
-                      show: true
-                    },
-                    itemStyle: {
-                      color: 'rgb(255, 215, 0)'
                     }
                   }
                 }
@@ -536,6 +527,7 @@ export class DashboardComponent implements AfterViewInit {
       error => console.error('Error al obtener datos de emprendedores:', error)
     );
   }
+ 
   
   initEchartsEmprendedorXDepartamento(): void {
     const chartDom = document.getElementById('echarts-empXDepar');
