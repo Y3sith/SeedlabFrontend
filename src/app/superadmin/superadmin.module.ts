@@ -31,6 +31,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { NgChartsModule } from 'ng2-charts';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
+import { AddBannerModalComponent } from './pages/aliados/add-banner-modal/add-banner-modal.component';
 
 
 
@@ -54,6 +55,7 @@ import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
     ActnivlecComponent,
     DashboardComponent,
     EditarActRutaComponent,
+    AddBannerModalComponent,
     
   ],
   imports: [

@@ -16,6 +16,8 @@ import { Actividad } from '../../../../Modelos/actividad.model';
 import { data } from 'jquery';
 import { Console, error } from 'console';
 import { Banner } from '../../../../Modelos/banner.model';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AddBannerModalComponent } from '../add-banner-modal/add-banner-modal.component';
 @Component({
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
@@ -39,8 +41,8 @@ export class AddAliadosComponent {
   rutaSeleccionada: string = '';
   pdfFileName: string = '';
   currentRolId: number;
-  id: number | null = null;
   compressedImage: string;
+  id: number | null = null;
   bannerFile: File | null = null;
   selectedBanner: File | null = null;
   selectedLogo: File | null = null;
@@ -80,6 +82,7 @@ export class AddAliadosComponent {
     private router: Router,
     private formBuilder: FormBuilder,
     private imageCompress: NgxImageCompressService,
+    public dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
     private aRoute: ActivatedRoute) {
 
@@ -102,6 +105,8 @@ export class AddAliadosComponent {
     this.isActive = true;
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');
    // console.log("IDDDD",this.idAliado);
+
+   
   }
 
   get f() { return this.aliadoForm.controls; }
@@ -135,6 +140,20 @@ export class AddAliadosComponent {
     if (!this.token) {
       this.router.navigate(['home']);
     }
+  }
+
+  openModal(id:number | null, idAliado: string): void{
+    let dialogRef: MatDialogRef<AddBannerModalComponent>;
+
+    dialogRef = this.dialog.open(AddBannerModalComponent, {
+      data: { id: id, idAliado: this.idAliado 
+      },
+    });
+   // console.log("aliado", idAliado);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.verEditarBanners();
+    });
   }
 
   ocultosBotones(): void {
