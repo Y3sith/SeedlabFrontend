@@ -35,19 +35,20 @@
           <table class="w-full max-w-full lg:w-5/6 md:5/6 md:mx-auto">
               <thead>
                   <tr>
-                      <th class="p-2 text-left">Nombre</th>
-                      <th class="p-2 text-left">Correo</th>
-                      <th class="hidden p-2 text-left sm:table-cell">Estado</th>
-                      <th class="p-2 text-left"></th>
+                      <th class="text-left p-2">Nombre</th>
+                      <th class="text-left p-2">Correo</th>
+                      <th class="text-left p-2 hidden sm:table-cell">Estado</th>
+                      <th class="text-left p-2"></th>
                   </tr>
               </thead>
               <tbody class="space-y-6">
                   <ng-container *ngIf="paginatedAdmins.length > 0">
                       <ng-container *ngFor="let admin of paginatedAdmins; let i = index">
                           <tr class="my-5 bg-gray-300 rounded-xl">
-                              <td class="p-2 rounded-s-lg w-full">{{ admin.nombre }}</td>
-                              <td class="p-2 max-sm:break-all">{{ admin.email }}</td>                              <td class="hidden p-2 sm:table-cell w-full">{{ admin.estado }}</td>
-                              <td class="p-2 text-center rounded-e-lg w-full">
+                              <td class="p-2 rounded-s-lg">{{ admin.nombre }}</td>
+                              <td class="p-2 max-sm:break-all">{{ admin.email }}</td>                              
+                              <td class="p-2 hidden sm:table-cell">{{ admin.estado }}</td>
+                              <td class="p-2 text-center rounded-e-lg ">
                                   <button [routerLink]="'/edit-superadmin'" class="text-blue-500" (click)="openModal(admin.id)">
                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4 h-4" fill="currentColor">
                                           <path

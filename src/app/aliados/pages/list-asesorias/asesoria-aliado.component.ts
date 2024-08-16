@@ -142,6 +142,7 @@ export class AsesoriaAliadoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+  
 
   rechazarAsesoria(asesoria: Asesoria): void {
     if (asesoria && asesoria.id_asesoria) {

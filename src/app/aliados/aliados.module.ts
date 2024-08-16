@@ -24,6 +24,7 @@ import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 
 
 
+
 @NgModule({
   declarations: [
     ListAsesoresComponent,
@@ -45,7 +46,8 @@ import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
     SharedModule,
     FontAwesomeModule,
     NgChartsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    
   ]
 })
 export class AliadosModule { }

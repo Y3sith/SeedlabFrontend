@@ -126,5 +126,10 @@ export class CrearAsesoriaModalComponent {
       );
     }
   }
+
+  /* Cerrar el modal */
+  cancelarCrerAsesoria() {
+    this.dialogRef.close();
+  }
   
 }

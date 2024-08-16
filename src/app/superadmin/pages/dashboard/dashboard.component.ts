@@ -70,6 +70,7 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
+  //
   onYearChange(year: number): void {
     this.selectedYear = year;
     this.promedioAsesoriasMesAnio(this.selectedYear);

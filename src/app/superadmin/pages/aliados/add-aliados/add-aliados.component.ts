@@ -30,7 +30,7 @@ export class AddAliadosComponent {
   pdfRuta: string = ''; // Ruta para el PDF
   email: string = '';
   password: string = '';
-  estado: boolean = true;
+  estado: true;
   token: string;
   hide = true;
   user: User | null = null;
@@ -82,12 +82,12 @@ export class AddAliadosComponent {
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: [Validators.required],
-      ruta_multi: [Validators.required],
+      logo: [null, Validators.required],
+      ruta_multi: [null, Validators.required],
       id_tipo_dato: [Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      estado: [1]
+      estado: [true]
       
     });
 
@@ -109,6 +109,7 @@ export class AddAliadosComponent {
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
+    console.log('Initial estado value:', this.aliadoForm.get('estado')?.value);
   }
 
   validateToken(): void {
@@ -171,7 +172,7 @@ export class AddAliadosComponent {
           id_tipo_dato: data.id_tipo_dato,
           email: data.email,
           password: '',
-          estado: data.estado
+          estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
         console.log("aaaa",data);
         this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
@@ -206,14 +207,25 @@ export class AddAliadosComponent {
        }
     }
 
+    
     const formData = new FormData();
-
+    let estadoValue: string;
+    if (this.idAliado == null) {
+      // Es un nuevo aliado, forzar el estado a 'true'
+      estadoValue = 'true';
+    } else {
+      // Es una edición, usar el valor del formulario
+      estadoValue = this.aliadoForm.get('estado')?.value ? 'true' : 'false';
+    }
+  
+    console.log('Estado antes de crear FormData:', estadoValue);
+    
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
     formData.append('descripcion', this.aliadoForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.aliadoForm.get('id_tipo_dato')?.value);
     formData.append('email', this.aliadoForm.get('email')?.value);
     formData.append('password', this.aliadoForm.get('password')?.value);
-    formData.append('estado', this.isActive ? 'true' : 'false');
+    formData.append('estado', estadoValue);
 
 
     if (this.selectedLogo) {
@@ -237,9 +249,8 @@ export class AddAliadosComponent {
     formData.append('banner_estadobanner', this.bannerForm.get('estadobanner')?.value);
 
     console.log("SSSSSSSSSSSSSSSSSSSSSSSS", formData);
-
-    console.log("aliado aqui", this.idAliado);
-    
+   
+        
     if ( this.idAliado != null ) {
     this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
       data =>{
@@ -250,7 +261,7 @@ export class AddAliadosComponent {
         console.error(error);
       }
     )
-      // crea el aliado
+      
     }else {
       this.aliadoService.crearAliado(this.token, formData).subscribe(
         data => {
@@ -270,8 +281,8 @@ toggleActive() {
   this.isActive = !this.isActive;
   this.aliadoForm.patchValue({ estado: this.isActive });
   console.log("Toggle activado, nuevo estado:", this.isActive);
+  console.log("Estado en el formulario después del toggle:", this.aliadoForm.get('estado')?.value);
 }
-
 /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
 mostrarToggle(): void {
   this.boton = this.idAliado != null;
