@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { Console } from 'console';
+import { Banner } from '../../../../Modelos/banner.model';
 
 @Component({
   selector: 'app-add-banner-modal',
@@ -71,7 +72,8 @@ export class AddBannerModalComponent implements OnInit {
 
   ngOnInit(): void{
     this.validateToken();
-console.log("PARA EL TOKEN",this.currentRolId)
+    console.log("PARA EL TOKEN",this.currentRolId);
+    this.verEditar();
   }
 
   addBanner(): void {
@@ -118,6 +120,22 @@ console.log("PARA EL TOKEN",this.currentRolId)
           console.error(error);
         });
     }
+  }
+
+  verEditar(): void{
+    this.aliadoService.getBannerxid(this.token, this.id_banner).subscribe(
+      data => {
+        this.bannerForm.patchValue({
+          urlImagen: data.urlImagen,
+          estadobanner: data.estadobanner,
+        })
+        console.log(data);
+      },
+      error => {
+        console.error(error);
+        this.alertService.errorAlert('Error', error.error.message);
+      }
+    )
   }
 
 
