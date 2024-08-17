@@ -169,11 +169,13 @@ export class AddAliadosComponent {
   eliminarBanner(id_aliado: number): void {
     this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
       data=>{
-        console.log("eliminaaa", data)
+        this.alertService.successAlert('Exito', data.message);
+        //console.log("eliminaaa", data)
         location.reload();
       },
       error => {
-        console.error(error);
+       // console.error(error);
+        this.alertService.successAlert('Error', error.error.message);
       }
     )
   }
@@ -307,6 +309,8 @@ export class AddAliadosComponent {
       },
       error => {
         console.error(error);
+        this.alertService.successAlert('Error', error.error.message);
+
       }
     )
       
