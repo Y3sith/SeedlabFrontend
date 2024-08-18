@@ -4,6 +4,7 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
+import * as topojson from 'topojson-client';
 
 import { data } from 'jquery';
 import { response } from 'express';
@@ -464,44 +465,50 @@ export class DashboardComponent implements AfterViewInit {
     return monthNames[monthNumber - 1];
   }
 
-  
+
   emprendedorPorDepartamento() {
     this.superAdminService.emprendedoresPorDepartamento(this.token).subscribe(
-      (data: { municipio: string; total_emprendedores: number }[]) => {
-        console.log('data municipios', data);
-        fetch('assets/data/colombia_topojson.json')  // Asegúrate de que la ruta sea correcta
+      (data: { departamento: string; total_emprendedores: number }[]) => {
+        console.log('data departamentos', data);  
+        fetch('assets/data/COL1.geo.json')
           .then(response => response.json())
-          .then(topoJsonData => {
-            // Convertir TopoJSON a GeoJSON
-            const geojson = topojson.feature(topoJsonData, topoJsonData.objects.mpios);
-            
-            echarts.registerMap('Colombia', geojson);
-            
+          .then(colJson => {
+            echarts.registerMap('Colombia', colJson);
+
             const mappedData = data.map(item => ({
-              name: item.municipio,
-              value: item.total_emprendedores
+              name: this.normalizeName(item.departamento),
+              value: Number(item.total_emprendedores) || 0
             }));
-  
+
+            colJson.features.forEach(feature => {
+              feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
+            });
+            
+            //console.log('Datos mapeados:', mappedData);  
+
             const maxValue = Math.max(...data.map(item => item.total_emprendedores));
-  
+
             this.emprenDeparEchartsOptions = {
               title: {
-                text: 'Emprendedores por Municipio',
+                text: 'Emprendedores por Departamento',
                 left: 'center'
               },
               tooltip: {
                 trigger: 'item',
-                formatter: '{b}: {c} emprendedores'
+                formatter: function(params) {
+                  return `
+                    Departamento: ${params.name}<br>
+                    Valor: ${isNaN(params.value) ? 0 : params.value}<br>
+                  `;
+                }
               },
               visualMap: {
                 min: 0,
                 max: maxValue,
-                text: ['Alto', 'Bajo'],
-                realtime: false,
-                calculable: true,
-                inRange: {
-                  color: ['lightskyblue', 'yellow', 'orangered']
-                }
+                left: 'left',
+                top: 'bottom',
+                text: ['Alta', 'Baja'],
+                calculable: true
               },
               series: [
                 {
@@ -509,17 +516,28 @@ export class DashboardComponent implements AfterViewInit {
                   type: 'map',
                   map: 'Colombia',
                   roam: true,
-                  data: mappedData,
-                  nameProperty: 'name',  // Esto coincide con la propiedad 'name' en tu TopoJSON
+                  data: mappedData,                
+                  nameProperty: 'NOMBRE_DPT', 
                   emphasis: {
                     label: {
                       show: true
+                    },
+                    itemStyle: {
+                      areaColor: '#eee'
+                    }
+                  },
+                  select: {
+                    label: {
+                      show: true
+                    },
+                    itemStyle: {
+                      color: 'rgb(255, 215, 0)'
                     }
                   }
                 }
               ]
             };
-  
+
             this.initEchartsEmprendedorXDepartamento();
           })
           .catch(error => console.error('Error al cargar el mapa:', error));
@@ -527,14 +545,15 @@ export class DashboardComponent implements AfterViewInit {
       error => console.error('Error al obtener datos de emprendedores:', error)
     );
   }
- 
-  
+
+
+
   initEchartsEmprendedorXDepartamento(): void {
     const chartDom = document.getElementById('echarts-empXDepar');
     if (chartDom) {
       const myChart = echarts.init(chartDom);
       myChart.setOption(this.emprenDeparEchartsOptions);
-      
+
       // Manejar el cambio de tamaño
       window.addEventListener('resize', () => {
         myChart.resize();
@@ -542,6 +561,17 @@ export class DashboardComponent implements AfterViewInit {
     } else {
       console.error('No se pudo encontrar el elemento con id "echarts-empXDepar"');
     }
+  }
+
+  normalizeName(name: string): string {
+    return name.toUpperCase()
+      .replace(/Á/g, 'A')
+      .replace(/É/g, 'E')
+      .replace(/Í/g, 'I')
+      .replace(/Ó/g, 'O')
+      .replace(/Ú/g, 'U')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
 
