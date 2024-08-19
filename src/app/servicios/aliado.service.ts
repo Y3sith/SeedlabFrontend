@@ -44,12 +44,28 @@ export class AliadoService {
 
   getBannerxid(access_token: any, id: any): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(`${this.url}/traeraliadoxid/${id}`, options);
+    return this.http.get(`${this.url}/bannerxid/${id}`, options);
+  }
+
+  crearBanner(access_token: string, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}/crearbanner`, formData, options);
   }
 
   getBannerxAliado(access_token: any, idAliado: any): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
     return this.http.get(`${this.url}/banner/${idAliado}`, options);
+  }
+
+  editarBanner(access_token: string, id:number, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}/editarbanner/${id}`, formData, options);
+  }
+
+  
+  EliminarBanner(access_token: string, id:number): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.delete(`${this.url}/eliminarbanner/${id}`, options);
   }
 
   getbanner(): Observable<any> {
