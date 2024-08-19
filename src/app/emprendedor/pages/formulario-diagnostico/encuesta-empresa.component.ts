@@ -42,7 +42,7 @@ export class EncuestaEmpresaComponent {
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
 
-  id_empresa = 1;
+  id_empresa:number | null = null;
   //private originalAttributes: Map<Element, { colspan: string | null, rowspan: string | null }> = new Map();
 
   respuesta1: Respuesta = new Respuesta({});
@@ -220,7 +220,7 @@ export class EncuestaEmpresaComponent {
 
   onSubmitSeccion1() {
 
-    let id_empresa = 1;
+    this.id_empresa;
     let respCounter = 0;
     let isValidForm = true;
 
@@ -291,7 +291,7 @@ export class EncuestaEmpresaComponent {
     //pregunta 15
     this.listaRespuestas1.push(this.respuesta23);
 
-    const payload = { respuestas: this.listaRespuestas1, id_empresa: id_empresa };
+    const payload = { respuestas: this.listaRespuestas1, id_empresa: this.id_empresa };
 
 
     for (let i = 0; i < 15; i++) {
@@ -299,7 +299,7 @@ export class EncuestaEmpresaComponent {
       console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas1[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas1[respCounter].id_empresa = id_empresa;
+      this.listaRespuestas1[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas1[respCounter].id_subpregunta = null;
 
       if (currentPregunta.id === 2) {
@@ -380,7 +380,7 @@ export class EncuestaEmpresaComponent {
     //console.log(this.respuesta1);
     let respCounter = 0;
     let isValidForm = true;
-    let id_empresa = 1;
+    this.id_empresa;
     this.listaRespuestas2 = [];
 
     //Pregunta 16 y 17
@@ -557,14 +557,14 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta65);
     }
 
-    const payload = { respuestas: this.listaRespuestas2, id_empresa: id_empresa };
+    const payload = { respuestas: this.listaRespuestas2, id_empresa: this.id_empresa };
 
 
     for (let i = 15; i < 30; i++) {
       //debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas2[respCounter].id_empresa = id_empresa;
+      this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas2[respCounter].id_subpregunta = null;
 
       if (currentPregunta.id === 16) {
@@ -588,7 +588,7 @@ export class EncuestaEmpresaComponent {
             // Asignar valores a la respuesta actual
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_empresa = this.id_empresa;
 
             subPreguntaCounter++;
           }
@@ -627,7 +627,7 @@ export class EncuestaEmpresaComponent {
             // Asignar valores a la respuesta actual
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = this.id_empresa;
 
             subPreguntasCounter++;
           }
@@ -664,7 +664,7 @@ export class EncuestaEmpresaComponent {
             }
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = this.id_empresa;
 
             subPreguntasCounter++;
           }
@@ -699,7 +699,7 @@ export class EncuestaEmpresaComponent {
 
             this.listaRespuestas2[respCounter + 1 + j].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + j].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + j].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + j].id_empresa = this.id_empresa;
 
             subPreguntasCounter++;
           }
@@ -721,7 +721,7 @@ export class EncuestaEmpresaComponent {
           for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
             this.listaRespuestas2[respCounter + j].id_pregunta = currentPregunta.id;
             this.listaRespuestas2[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + j].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + j].id_empresa = this.id_empresa;
           }
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
@@ -769,7 +769,7 @@ export class EncuestaEmpresaComponent {
             }
             this.listaRespuestas2[subPreguntaIndex].id_pregunta = currentPregunta.id;
             this.listaRespuestas2[subPreguntaIndex].id_subpregunta = currentPregunta.subPreguntas[h].id;
-            this.listaRespuestas2[subPreguntaIndex].id_empresa = id_empresa;
+            this.listaRespuestas2[subPreguntaIndex].id_empresa = this.id_empresa;
           }
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
@@ -798,7 +798,7 @@ export class EncuestaEmpresaComponent {
 
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = this.id_empresa;
             subPreguntasCounter++;
           }
           respCounter += subPreguntasCounter + 1;
@@ -845,7 +845,7 @@ export class EncuestaEmpresaComponent {
   onSubmitSeccion3() {
     let respCounter = 0;
     let isValidForm = true;
-    let id_empresa = 1;
+    this.id_empresa;
     this.listaRespuestas3 = [];
 
     this.listaRespuestas3.push(this.respuesta66);
@@ -878,7 +878,7 @@ export class EncuestaEmpresaComponent {
       const currentRespuesta = PREGUNTAS[i];
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas3[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas3[respCounter].id_empresa = id_empresa;
+      this.listaRespuestas3[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas3[respCounter].id_subpregunta = null;
       if (currentPregunta.isText) {
         if (!this.listaRespuestas3[respCounter].texto_res || this.listaRespuestas3[respCounter].texto_res === '' && this.listaRespuestas3[respCounter].texto_res !== 'N/A') {
@@ -908,7 +908,7 @@ export class EncuestaEmpresaComponent {
   onSubmitSeccion4() {
     let respCounter = 0;
     let isValidForm = true;
-    let id_empresa = 1;
+    this.id_empresa;
     this.listaRespuestas4 = [];
 
     this.listaRespuestas4.push(this.respuesta78);
@@ -1041,7 +1041,7 @@ export class EncuestaEmpresaComponent {
       const currentRespuesta = PREGUNTAS[i];
       const currentPregunta = PREGUNTAS[i - 1];
       this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas4[respCounter].id_empresa = id_empresa;
+      this.listaRespuestas4[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas4[respCounter].id_subpregunta = null;
 
       if (currentPregunta.id === 42 || currentPregunta.id === 45 || currentPregunta.id === 47) {
@@ -1052,7 +1052,7 @@ export class EncuestaEmpresaComponent {
           }
           this.listaRespuestas4[respCounter + j].id_pregunta = currentPregunta.id;
           this.listaRespuestas4[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
-          this.listaRespuestas4[respCounter + j].id_empresa = id_empresa;
+          this.listaRespuestas4[respCounter + j].id_empresa = this.id_empresa;
         }
         respCounter += currentPregunta.subPreguntas.length;
         continue;
