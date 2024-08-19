@@ -42,7 +42,7 @@ export class EncuestaEmpresaComponent {
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
 
-  id_empresa:number | null = null;
+  id_empresa: number | null = null;
   //private originalAttributes: Map<Element, { colspan: string | null, rowspan: string | null }> = new Map();
 
   respuesta1: Respuesta = new Respuesta({});
@@ -192,7 +192,7 @@ export class EncuestaEmpresaComponent {
     this.validateToken();
     this.route.paramMap.subscribe(params => {
       this.id_empresa = +params.get('id');
-      console.log('id_empresa',this.id_empresa);
+      console.log('id_empresa', this.id_empresa);
     })
   }
 
@@ -783,7 +783,7 @@ export class EncuestaEmpresaComponent {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
           return;
-        } 
+        }
         if (this.listaRespuestas2[respCounter].opcion === 'Si') {
           const nextPregunta = PREGUNTAS[i + 1];
           let subPreguntasCounter = 0;
@@ -802,7 +802,7 @@ export class EncuestaEmpresaComponent {
             subPreguntasCounter++;
           }
           respCounter += subPreguntasCounter + 1;
-        } 
+        }
         else if (this.listaRespuestas2[respCounter].opcion === 'No') {
           respCounter += 4;
         }
@@ -1037,49 +1037,98 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 41; i < 48; i++) {
-      //debugger;
-      const currentRespuesta = PREGUNTAS[i];
-      const currentPregunta = PREGUNTAS[i - 1];
-      this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas4[respCounter].id_empresa = this.id_empresa;
-      this.listaRespuestas4[respCounter].id_subpregunta = null;
+      debugger;
+      const currentPregunta = PREGUNTAS[i];
+      const currentRespuesta = this.listaRespuestas4[respCounter];
 
-      if (currentPregunta.id === 42 || currentPregunta.id === 45 || currentPregunta.id === 47) {
-        for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
-          if (respCounter + j >= this.listaRespuestas4.length) {
-            console.log(`Saliendo del loop de subpreguntas en j=${j} porque respCounter (${respCounter}) + j >= listaRespuestas4.length (${this.listaRespuestas4.length})`);
-            break;
-          }
-          this.listaRespuestas4[respCounter + j].id_pregunta = currentPregunta.id;
-          this.listaRespuestas4[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
-          this.listaRespuestas4[respCounter + j].id_empresa = this.id_empresa;
-        }
-        respCounter += currentPregunta.subPreguntas.length;
-        continue;
+      // Verifica que la respuesta para la pregunta actual exista en la lista de respuestas
+      if (!currentRespuesta) {
+        this.alertService.errorAlert('Error', `No se encontró respuesta para la pregunta ${currentPregunta.id}.`);
+        isValidForm = false;
+        break;
       }
-      if (currentPregunta.isText) {
-        if (!this.listaRespuestas4[respCounter].texto_res || this.listaRespuestas4[respCounter].texto_res === '') {
-          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
-          isValidForm = false;
-          return;
-        }
-      } else {
-        if (!this.listaRespuestas4[respCounter].opcion || this.listaRespuestas4[respCounter].opcion === '') {
-          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
-          isValidForm = false;
-          return;
-        }
-      }
+
+      // Validar pregunta afirmativa
       if (currentPregunta.isAffirmativeQuestion) {
-        if (this.listaRespuestas4[respCounter].opcion === 'No') {
-          i += currentPregunta.subPreguntas.length;
-          respCounter++;
+        if (currentRespuesta.opcion === 'No') {
+          // Si la respuesta es 'No', saltar la pregunta actual y todas las subpreguntas
+          if (i + 1 < 48) { // Verifica si hay una pregunta siguiente para saltar
+            const nextPregunta = PREGUNTAS[i + 1];
+            if (nextPregunta.subPreguntas && nextPregunta.subPreguntas.length > 0) {
+              // Saltar también las subpreguntas de la siguiente pregunta si las hay
+              respCounter += nextPregunta.subPreguntas.length;
+            }
+          }
+         
+          // Avanzar al siguiente índice del ciclo
+          i++;
           continue;
         }
       }
-      respCounter++;
+
+      // Si la pregunta tiene subpreguntas, validar subpreguntas
+      if (currentPregunta.subPreguntas && currentPregunta.subPreguntas.length > 0) {
+        let firstEmptySubPreguntaId: number | null = null; // Variable para almacenar el ID de la primera subpregunta vacía
+
+        for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
+          const subPregunta = currentPregunta.subPreguntas[j];
+          const respuestaSubPregunta = this.listaRespuestas4[respCounter + j];
+
+          // Verifica que la respuesta para la subpregunta exista en la lista de respuestas
+          if (!respuestaSubPregunta) {
+            this.alertService.errorAlert('Error', `No se encontró respuesta para la subpregunta ${subPregunta.id}.`);
+            isValidForm = false;
+            break;
+          }
+
+          respuestaSubPregunta.id_pregunta = currentPregunta.id;
+          respuestaSubPregunta.id_subpregunta = subPregunta.id;
+          respuestaSubPregunta.id_empresa = this.id_empresa;
+
+          // Validar respuesta de subpregunta
+          if (!respuestaSubPregunta.opcion || respuestaSubPregunta.opcion === '') {
+            firstEmptySubPreguntaId = subPregunta.id; // Guarda el ID de la primera subpregunta vacía
+            isValidForm = false;
+          }
+
+          // Si se encontró un error en una subpregunta, detener el bucle
+          if (!isValidForm) {
+            break;
+          }
+        }
+
+        // Si se encontró una subpregunta vacía, mostrar un mensaje de error y salir
+        if (!isValidForm && firstEmptySubPreguntaId !== null) {
+          this.alertService.errorAlert('Error', `La subpregunta ${firstEmptySubPreguntaId} está vacía.`);
+          break;
+        }
+        // Aumenta el contador de respuestas por el número de subpreguntas
+        respCounter += currentPregunta.subPreguntas.length;
+      } else {
+        // Validar pregunta sin subpreguntas
+        if (currentPregunta.isText) {
+          if (!currentRespuesta.texto_res || currentRespuesta.texto_res === '') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            break;
+          }
+        } else {
+          if (!currentRespuesta.opcion || currentRespuesta.opcion === '') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            break;
+          }
+        }
+
+
+
+        respCounter++;
+      }
     }
+
     console.log('fuera del ciclo', this.listaRespuestas4);
+
+
   }
 
   enviarRespuestasJson() {
