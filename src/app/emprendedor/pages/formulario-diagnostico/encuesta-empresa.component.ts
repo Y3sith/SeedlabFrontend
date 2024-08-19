@@ -1175,10 +1175,10 @@ export class EncuestaEmpresaComponent {
 
   updateProgress() {
     let answeredQuestions = 0;
-    const totalQuestions = 126; // Ajuste este número al total real de preguntas
+    const totalQuestions = 100; // Ajuste este número al total real de preguntas
 
     // Verifique cada respuesta
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= totalQuestions; i++) {
       const respuesta = this['respuesta' + i] as Respuesta;
       if (respuesta && (respuesta.opcion || respuesta.texto_res)) {
         answeredQuestions++;
