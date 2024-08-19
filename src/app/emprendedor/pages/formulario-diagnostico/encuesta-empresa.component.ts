@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { fa1 } from '@fortawesome/free-solid-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -180,7 +181,8 @@ export class EncuestaEmpresaComponent {
   constructor(
     private respuestasService: RespuestasService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
 
@@ -188,6 +190,10 @@ export class EncuestaEmpresaComponent {
   ngOnInit() {
     this.updateProgress();
     this.validateToken();
+    this.route.paramMap.subscribe(params => {
+      this.id_empresa = +params.get('id');
+      console.log('id_empresa',this.id_empresa);
+    })
   }
 
   validateToken(): void {
