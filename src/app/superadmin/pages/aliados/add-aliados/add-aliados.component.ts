@@ -1,7 +1,7 @@
 
 import { FormGroup, FormControl, FormBuilder, Validators, ValidationErrors } from '@angular/forms';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import { ActividadService } from '../../../../servicios/actividad.service';
 import { AlertService } from '../../../../servicios/alert.service';
@@ -11,8 +11,13 @@ import Pica from 'pica';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { ChangeDetectorRef } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { faEye, faEyeSlash, faFileUpload, faFileLines } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
+import { data } from 'jquery';
+import { Console, error } from 'console';
+import { Banner } from '../../../../Modelos/banner.model';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AddBannerModalComponent } from '../add-banner-modal/add-banner-modal.component';
 @Component({
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
@@ -28,7 +33,7 @@ export class AddAliadosComponent {
   pdfRuta: string = ''; // Ruta para el PDF
   email: string = '';
   password: string = '';
-  estado: boolean = true;
+  estado: true;
   token: string;
   hide = true;
   user: User | null = null;
@@ -36,8 +41,8 @@ export class AddAliadosComponent {
   rutaSeleccionada: string = '';
   pdfFileName: string = '';
   currentRolId: number;
-  id: number | null = null;
   compressedImage: string;
+  id: number | null = null;
   bannerFile: File | null = null;
   selectedBanner: File | null = null;
   selectedLogo: File | null = null;
@@ -48,7 +53,9 @@ export class AddAliadosComponent {
   faEyeSlash = faEyeSlash;
   faFileUpload = faFileUpload;
   faFileLines = faFileLines;
-  aliadoid: string;
+  fatrash = faTrashCan;
+  fapaint = faPaintBrush;
+  idAliado: string; ///
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   showFirstSection = true;
@@ -58,40 +65,61 @@ export class AddAliadosComponent {
   bannerPreview: string | ArrayBuffer | null = null;
   rutaPreview: string | ArrayBuffer | null = null;
   currentIndex: number = 0;
-
-
-
-
+  showErrors: boolean = false;
+  submittedSection: number = -1;
+  aliadoId: number;
+  isActive: boolean = true;
+  boton: boolean;
+  formSubmitted = false;
+  falupa = faCircleQuestion;
+  faImages = faImage;
+  @ViewChild('fileInput') fileInput: ElementRef;
+  listBanners: Banner[] =[];
+  
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
     private alertService: AlertService,
     private router: Router,
     private formBuilder: FormBuilder,
     private imageCompress: NgxImageCompressService,
-    private cdRef: ChangeDetectorRef) {
+    public dialog: MatDialog,
+    private cdRef: ChangeDetectorRef,
+    private aRoute: ActivatedRoute) {
 
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      logo: [''],
-      ruta_multi: [''],
-      id_tipo_dato: [],
-      email: ['', Validators.required],
+      logo: [null, Validators.required],
+      ruta_multi: [null, Validators.required],
+      id_tipo_dato: [Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      estado: [1]
+      estado: [true]
       
     });
 
     this.bannerForm = this.formBuilder.group({
-      urlImagen: [''],
+      urlImagen: [Validators.required],
       estadobanner: ['Activo'],
     });
+    this.isActive = true;
+    this.idAliado = this.aRoute.snapshot.paramMap.get('id');
+   // console.log("IDDDD",this.idAliado);
 
+   
   }
+
+  get f() { return this.aliadoForm.controls; }
 
   ngOnInit(): void {
     this.validateToken();
     this.tipoDato();
+    this.verEditar();
+    this.ocultosBotones();
+    this.mostrarToggle();
+    this.toggleActive();
+    this.verEditarBanners();
+    console.log('Initial estado value:', this.aliadoForm.get('estado')?.value);
   }
 
   validateToken(): void {
@@ -114,6 +142,42 @@ export class AddAliadosComponent {
     }
   }
 
+  openModal(id:number | null, idAliado: string): void{
+    let dialogRef: MatDialogRef<AddBannerModalComponent>;
+
+    dialogRef = this.dialog.open(AddBannerModalComponent, {
+      data: { id: id, idAliado: this.idAliado 
+      },
+    });
+   // console.log("aliado", idAliado);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.verEditarBanners();
+    });
+  }
+
+  ocultosBotones(): void {
+    if (this.idAliado != null) {
+      this.boton = false;
+    }
+  }
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
+  }
+
+  verEditarBanners():void {
+    this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
+      data => {
+        this.listBanners = data;
+        console.log('Banners:', this.listBanners);
+      },
+      error => {
+        console.error('Error al obtener los banners:', error);
+      }
+    )
+  }
+
   validateImageDimensions(file: File, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -133,22 +197,71 @@ export class AddAliadosComponent {
     });
   }
 
+  verEditar():void{
+    this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
+      data => {
+        this.aliadoForm.patchValue({
+          nombre: data.nombre,
+          descripcion: data.descripcion,
+          logo: data.logo,
+          //ruta_multi: data.ruta_multi,
+          id_tipo_dato: data.id_tipo_dato,
+          email: data.email,
+          password: '',
+          estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
+        });
+        console.log("aaaa",data);
+        this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
+        this.aliadoForm.patchValue({ estado: this.isActive });
+
+        console.log("Estado cargado:", this.isActive);
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
   addAliado(): void {
-    if (this.aliadoForm.invalid || this.bannerForm.invalid) {
-      console.error('Formulario inválido');
-      console.log('Errores aliadoForm:', this.getFormValidationErrors(this.aliadoForm));
-      console.log('Errores bannerForm:', this.getFormValidationErrors(this.bannerForm));
-      return;
+    if (this.idAliado == null){
+      if (this.aliadoForm.invalid || this.bannerForm.invalid) {
+        // Mostrar alert si algún formulario es inválido
+        this.alertService.errorAlert('Error', 'Por favor, completa todos los campos requeridos.');
+  
+        this.formSubmitted = true;
+  
+      if (this.aliadoForm.invalid) {
+        this.formSubmitted = true;
+        console.log("aqui",this.formSubmitted)   
+        return; // Detiene la ejecución si el formulario es inválido
+      }
+        
+        console.error('Formulario inválido');
+        console.log('Errores aliadoForm:', this.getFormValidationErrors(this.aliadoForm));
+        console.log('Errores bannerForm:', this.getFormValidationErrors(this.bannerForm));
+        return;
+       }
     }
 
+    
     const formData = new FormData();
-
+    let estadoValue: string;
+    if (this.idAliado == null) {
+      // Es un nuevo aliado, forzar el estado a 'true'
+      estadoValue = 'true';
+    } else {
+      // Es una edición, usar el valor del formulario
+      estadoValue = this.aliadoForm.get('estado')?.value ? 'true' : 'false';
+    }
+  
+    console.log('Estado antes de crear FormData:', estadoValue);
+    
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
     formData.append('descripcion', this.aliadoForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.aliadoForm.get('id_tipo_dato')?.value);
     formData.append('email', this.aliadoForm.get('email')?.value);
     formData.append('password', this.aliadoForm.get('password')?.value);
-    formData.append('estado', this.aliadoForm.get('estado')?.value ?? '1');
+    formData.append('estado', estadoValue);
 
 
     if (this.selectedLogo) {
@@ -156,9 +269,12 @@ export class AddAliadosComponent {
     }
     if (this.selectedruta) {
       formData.append('ruta_multi', this.selectedruta, this.selectedruta.name);
-    } else if (this.aliadoForm.get('ruta_multi')?.value) {
-      formData.append('ruta_multi', this.aliadoForm.get('ruta_multi')?.value);
+    } else{
+      const rutaMultiValue = this.aliadoForm.get('ruta_multi')?.value;
+      if (rutaMultiValue) {
+        formData.append('ruta_multi', rutaMultiValue);
     }
+  }
 
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
 
@@ -168,24 +284,53 @@ export class AddAliadosComponent {
     }
     formData.append('banner_estadobanner', this.bannerForm.get('estadobanner')?.value);
 
-    this.aliadoService.crearAliado(this.token, formData).subscribe(
-      data => {
-       this.alertService.successAlert('Exito', data.message);
-       this.router.navigate(['list-aliados'])
+    console.log("SSSSSSSSSSSSSSSSSSSSSSSS", formData);
+   
+        
+    if ( this.idAliado != null ) {
+    this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
+      data =>{
+        console.log("ACTUALIZAAAAAA", data);
+        this.alertService.successAlert('Exito', data.message);
       },
       error => {
-        if (error.status === 400) {
-          this.alertService.errorAlert('Error', error.error.message);
-        }
-      });
+        console.error(error);
+      }
+    )
+      
+    }else {
+      this.aliadoService.crearAliado(this.token, formData).subscribe(
+        data => {
+         this.alertService.successAlert('Exito', data.message);
+         this.router.navigate(['list-aliados'])
+        },
+        error => {
+          if (error.status === 400) {
+            this.alertService.errorAlert('Error', error.error.message);
+          }
+        });
+    }
   }
+
+/* Cambia el estado del toggle*/
+toggleActive() {
+  this.isActive = !this.isActive;
+  this.aliadoForm.patchValue({ estado: this.isActive });
+  console.log("Toggle activado, nuevo estado:", this.isActive);
+  console.log("Estado en el formulario después del toggle:", this.aliadoForm.get('estado')?.value);
+}
+/* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
+mostrarToggle(): void {
+  this.boton = this.idAliado != null;
+}
+
 
   tipoDato(): void {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
           this.tipoDeDato = data;
-          console.log(data);
+          console.log("DATO",data);
         },
         error => {
           console.log(error);
@@ -193,6 +338,7 @@ export class AddAliadosComponent {
       )
     }
   }
+
 
   //  onFileSelecteds(event: any, field: string){
   //   if (event.target.files && event.target.files.length > 0) {
@@ -225,6 +371,7 @@ export class AddAliadosComponent {
 
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
+    this.aliadoForm.get('ruta_multi').clearValidators();
 
     switch (tipoDatoId) {
       case '1': // Video
@@ -254,8 +401,7 @@ export class AddAliadosComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      this.generateImagePreview(file, field);
-
+      
       let maxSize = 0;
   
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
@@ -266,28 +412,49 @@ export class AddAliadosComponent {
   
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
-  
-        // Muestra la alerta de error
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.resetFileField(field);
   
-        // Limpia el archivo seleccionado
+        ////Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
   
-        // También puedes resetear el control de formulario correspondiente si lo necesitas
+        // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'urlImagen') {
           this.bannerForm.patchValue({ urlImagen: null });
           this.selectedBanner = null;
+          this.bannerPreview = null; // Resetea la previsualización
         } else if (field === 'logo') {
           this.aliadoForm.patchValue({ logo: null });
           this.selectedLogo = null;
+          this.logoPreview = null; // Resetea la previsualización
         } else if (field === 'ruta_multi') {
           this.aliadoForm.patchValue({ ruta_multi: null });
           this.selectedruta = null;
+          this.rutaPreview = null; // Resetea la previsualización
         }
-  
+        this.resetFileField(field);
         return;
       }
+
+      const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const previewUrl = e.target.result;
+      if (field === 'urlImagen') {
+        this.bannerForm.patchValue({ urlImagen: previewUrl });
+        this.bannerPreview = previewUrl;
+      } else if (field === 'logo') {
+        this.aliadoForm.patchValue({ logo: previewUrl });
+        this.logoPreview = previewUrl;
+      } else if (field === 'ruta_multi') {
+        this.aliadoForm.patchValue({ ruta_multi: previewUrl });
+        this.rutaPreview = previewUrl;
+      }
+    };
+    reader.readAsDataURL(file);
   
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
+
       if (field === 'urlImagen') {
         this.selectedBanner = file;
         this.bannerForm.patchValue({ urlImagen: file });
@@ -302,17 +469,35 @@ export class AddAliadosComponent {
         this.aliadoForm.patchValue({ ruta_multi: file });
       }
       
-    } else {
-      if (field === 'ruta_multi') {
-        this.aliadoForm.patchValue({ ruta_multi: event.target.value });
-      }
-      //Limpiar el input file directamente en el DOM
-      if (field === 'urlImagen') {
-        this.selectedBanner = null;
-      } else {
-        this.selectedLogo = null;
-      }
-      event.target.value = ''; // Esta línea limpia el input de tipo file
+  } else {
+    this.resetFileField(field);
+  }
+  }
+
+  // onTextInput(event: any) {
+  //   const value = event.target.value;
+  //   this.aliadoForm.patchValue({ ruta_multi: value });
+  // }
+  
+  onTextInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.aliadoForm.patchValue({ ruta_multi: value });
+    console.log('ruta_multi actualizada:', value);  // Para depuración
+  }
+
+  resetFileField(field: string) {
+    if (field === 'urlImagen') {
+      this.bannerForm.patchValue({ urlImagen: null });
+      this.selectedBanner = null;
+      this.bannerPreview = null;
+    } else if (field === 'logo') {
+      this.aliadoForm.patchValue({ logo: null });
+      this.selectedLogo = null;
+      this.logoPreview = null;
+    } else if (field === 'ruta_multi') {
+      this.aliadoForm.patchValue({ ruta_multi: null });
+      this.selectedruta = null;
+      this.rutaPreview = null;
     }
   }
 
@@ -326,7 +511,7 @@ export class AddAliadosComponent {
       } else if (field === 'ruta_multi') {
         this.rutaPreview = e.target.result;
       }
-      this.cdRef.detectChanges(); // Forzar la detección de cambios
+      this.cdRef.detectChanges();
     };
     reader.readAsDataURL(file);
   }
@@ -371,6 +556,12 @@ export class AddAliadosComponent {
       this.currentIndex = 2;
     }
   }
+  
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.aliadoForm.get(fieldName);
+    return field && field.invalid && (field.dirty || field.touched);
+  }
 
   previous() {
     if (this.currentIndex === 1) {
@@ -385,5 +576,31 @@ export class AddAliadosComponent {
       this.currentIndex = 1;
     }
   }
-}
+  }
+
+  // isFirstSectionValid(): boolean {
+  //   const nombreValid = this.aliadoForm.get('nombre').valid;
+  //   const emailValid = this.aliadoForm.get('email').valid;
+  //   const passwordValid = this.aliadoForm.get('password').valid;
+    
+  //   // Marcar los campos como tocados para que se muestren los errores
+  //   if (!nombreValid) this.aliadoForm.get('nombre').markAsTouched();
+  //   if (!emailValid) this.aliadoForm.get('email').markAsTouched();
+  //   if (!passwordValid) this.aliadoForm.get('password').markAsTouched();
+    
+  //   return nombreValid && emailValid && passwordValid;
+  // }
+  
+  // isSecondSectionValid(): boolean {
+  //   const descripcionValid = this.aliadoForm.get('descripcion').valid;
+  //   const idTipoDatoValid = this.aliadoForm.get('id_tipo_dato').valid;
+  //   const rutaMultiValid = this.aliadoForm.get('ruta_multi').valid;
+    
+  //   // Marcar los campos como tocados para que se muestren los errores
+  //   if (!descripcionValid) this.aliadoForm.get('descripcion').markAsTouched();
+  //   if (!idTipoDatoValid) this.aliadoForm.get('id_tipo_dato').markAsTouched();
+  //   if (!rutaMultiValid) this.aliadoForm.get('ruta_multi').markAsTouched();
+    
+  //   return descripcionValid && idTipoDatoValid && rutaMultiValid;
+  // }
 

@@ -1,20 +1,4 @@
-/* Estilo general de la tarjeta */
-.card {
-  position: relative;
-  width: 240px; /* Tarjeta más pequeña */
-  height: 240px; /* Ajustar la altura para hacerlo más compacto */
-  border-radius: 12px; /* Bordes más redondeados */
-  overflow: hidden;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
 
-/* Efecto de hover para la tarjeta */
-.card:hover:not(.no-hover) {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transform: translateY(-5px);
-}
 
 /* Indicador de estado en el lateral de la tarjeta */
 .status-indicator {
@@ -22,31 +6,6 @@
   left: 0;
   top: 0;
   width: 5px; /* Más delgado para una apariencia más limpia */
-}
-
-/* Contenido de la tarjeta */
-.card-content {
-  padding: 16px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Distribuir el contenido */
-  height: 100%; /* Usar toda la altura */
-}
-
-/* Título de la tarjeta */
-.card-content h2 {
-  font-size: 1.125rem; /* Tamaño de fuente ajustado */
-  color: #333;
-  margin-bottom: 8px;
-  text-align: left;
-}
-
-/* Descripción y detalles */
-.card-content p {
-  font-size: 0.875rem; /* Tamaño de fuente más pequeño */
-  color: #666;
-  margin-bottom: 8px;
 }
 
 /* Botones que aparecen en hover */
@@ -60,13 +19,6 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
-}
-
-/* Mostrar botones en hover */
-.card:hover:not(.no-hover) .hover-buttons {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
 }
 
 /* Estilo de los botones */

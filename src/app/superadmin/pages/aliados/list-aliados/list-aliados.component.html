@@ -31,7 +31,7 @@
             <table class="lg:w-5/6 md:5/6  md:mx-auto">
                 <thead>
                     <tr>
-                        <th class="text-left p-2">Nombre de Aliado</th>
+                        <th class="text-left p-2">Nombre</th>
                         <th class="text-left p-2">Correo</th>
                         <th class="text-left p-2 hidden sm:table-cell">Estado</th>
                         <th class="text-left p-2"></th>
@@ -42,7 +42,7 @@
                         <ng-container *ngFor="let aliado of listaAliado | filterBy:userFilter | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index">
                         <tr class="bg-line-gray my-5 rounded-xl">
                           <td class="p-2 rounded-s-lg">{{ aliado.nombre }}</td>
-                          <td class="p-2">{{ aliado.email }}</td>
+                          <td class="p-2 max-sm:break-all">{{ aliado.email }}</td>
                           <td class="p-2 hidden sm:table-cell">
                             <span *ngIf="aliado.estado === 1">Activo</span>
                             <span *ngIf="aliado.estado === 0">Inactivo</span>                        

@@ -24,17 +24,26 @@ export class DashboardComponent implements AfterViewInit {
   topAliados: any = {};
   pieChartOption: echarts.EChartsOption;
   doughnutChartOption: echarts.EChartsOption;
+  registrosEchartsOptions: echarts.EChartsOption;
+  promedioAsesoriasEchartsOptions: echarts.EChartsOption;
+  years: number[] = [];
+  selectedYear: number;
 
   constructor(
     private superAdminService: SuperadminService,
     private aliadoService: AliadoService,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.validateToken();
     this.getDatosDashboard();
     this.getDatosGenerosGrafica();
+    this.getRegistrosMensuales();
+    const currentYear = new Date().getFullYear();
+    this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
+    this.selectedYear = currentYear;
+    this.promedioAsesoriasMesAnio(this.selectedYear);
   }
 
   ngAfterViewInit() {
@@ -61,6 +70,77 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
+  //
+  onYearChange(year: number): void {
+    this.selectedYear = year;
+    this.promedioAsesoriasMesAnio(this.selectedYear);
+  }
+
+  initEchartsPromedioAsesorias() {
+    const chartDom = document.getElementById('promedio-asesorias');
+    if (chartDom) {
+      const myChart = echarts.init(chartDom);
+      myChart.setOption(this.promedioAsesoriasEchartsOptions);
+    } else {
+      console.error('No se pudo encontrar el elemento con id "promedio-asesorias"');
+    }
+  }
+
+  promedioAsesoriasMesAnio(year: number): void {
+    this.superAdminService.promedioAsesorias(this.token, this.selectedYear).subscribe(
+      data => {
+        console.log('Promedio de asesorías:', data);
+
+        const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
+        const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
+        
+        this.promedioAsesoriasEchartsOptions = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+          },
+          yAxis: {
+            type: 'category',
+            data: meses
+          },
+          series: [
+            {
+              name: `Promedio Mensual`,
+              data: promedios,
+              type: 'bar',
+              itemStyle: {
+                color: '#73c0de'
+              }
+            },
+            {
+              name: `Promedio ${this.selectedYear}`,
+              data: data.promedio_anual,
+              type: 'bar',
+            }
+          ],
+        };
+        this.initEchartsPromedioAsesorias();
+      },
+      error => {
+        console.error('Error al obtener promedio de asesorías:', error);
+      }
+    );
+  }
+
+ 
+
   getDatosDashboard(): void {
     this.superAdminService.dashboardAdmin(this.token).subscribe(
       data => {
@@ -72,7 +152,7 @@ export class DashboardComponent implements AfterViewInit {
         this.totalEmprendedores = data.emprendedor;
         this.topAliados = data.topAliados;
 
-        // Configuración para la gráfica de Top Aliados
+        // Configuración para la gráfica de Asesorías
         this.initEChartsBar();
 
         // Configuración para la gráfica de Asesorías
@@ -80,37 +160,40 @@ export class DashboardComponent implements AfterViewInit {
           tooltip: {
             trigger: 'item'
           },
+          toolbox: {
+            feature: {
+              dataView: { show: true, readOnly: false },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
           legend: {
-            top: '5%',
-            left: 'center'
+            orient: 'vertical',
+            left: 'left',
           },
           series: [
             {
               name: 'Asesorías',
               type: 'pie',
-              radius: ['40%', '70%'],
+              radius: ['80%'],
               avoidLabelOverlap: false,
               itemStyle: {
                 borderRadius: 10
               },
-              label: {
-                show: false,
-                position: 'center'
-              },
               emphasis: {
-                label: {
-                  show: true,
-                  fontSize: 40,
-                  fontWeight: 'bold'
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
                 }
               },
               labelLine: {
                 show: false
               },
               data: [
-                { value: data.conteoAsesorias.asesoriasAsignadas, name: 'Asesorías asignadas' },
-                { value: data.conteoAsesorias.asesoriasSinAsignar, name: 'Asesorías sin asignar' }
-              ]
+                { value: data.conteoAsesorias.asesoriasAsignadas, name: 'Asignadas' },
+                { value: data.conteoAsesorias.asesoriasSinAsignar, name: 'Sin asignar' }
+              ],
             }
           ]
         };
@@ -168,7 +251,7 @@ export class DashboardComponent implements AfterViewInit {
         series: [
           {
             name: 'Top Aliados',
-            type: 'bar',
+            type: 'line',
             data: this.topAliados.map((aliado, index) => ({
               value: aliado.asesorias,
               itemStyle: {
@@ -243,9 +326,7 @@ export class DashboardComponent implements AfterViewInit {
               },
               emphasis: {
                 label: {
-                  show: true,
-                  fontSize: 40,
-                  fontWeight: 'bold'
+                  show: false,
                 }
               },
               labelLine: {
@@ -275,4 +356,109 @@ export class DashboardComponent implements AfterViewInit {
       console.error('No se pudo encontrar el elemento con id "echarts-doughnut"');
     }
   }
+
+  initEchartsRegistrosMenusales(): void {
+    const chartDom = document.getElementById('echarts-registros');
+    if (chartDom) {
+      const myChart = echarts.init(chartDom);
+      myChart.setOption(this.registrosEchartsOptions);
+    } else {
+      console.error('No se pudo encontrar el elemento con id "echarts-doughnut"');
+    }
+  }
+
+  getRegistrosMensuales(): void {
+    this.superAdminService.contarRegistrosMensual(this.token).subscribe(
+      data => {
+        console.log('data meses', data);
+
+
+        const emprendedoresData = data.promedios.map(item => parseInt(item.emprendedores));
+        const aliadosData = data.promedios.map(item => parseInt(item.aliados));
+        const meses = data.promedios.map(item => this.getMonthName(item.mes)); // Transforma el número del mes en nombre
+
+        this.registrosEchartsOptions = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'cross',
+              crossStyle: {
+                color: '#999'
+              }
+            }
+          },
+          toolbox: {
+            feature: {
+              dataView: { show: true, readOnly: false },
+              magicType: { show: true, type: ['line', 'bar'] },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
+          legend: {
+            orient: 'horizontal',
+            left: 'left',
+            data: ['Emprendedor', 'Aliados']
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: meses,
+              axisPointer: {
+                type: 'shadow'
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value',
+              name: 'Emprendedor',
+              min: 0,
+              max: Math.max(...emprendedoresData, ...aliadosData) + 10,
+              interval: 500,
+              axisLabel: {
+                formatter: '{value} '
+              }
+            },
+            {
+              type: 'value',
+              name: 'Aliados',
+              min: 0,
+              max: Math.max(...emprendedoresData, ...aliadosData) + 10,
+              interval: 500,
+              axisLabel: {
+                formatter: '{value} '
+              }
+            }
+          ],
+          series: [
+            {
+              name: 'Emprendedor',
+              type: 'bar',
+              data: emprendedoresData
+            },
+            {
+              name: 'Aliados',
+              type: 'bar',
+              data: aliadosData
+            }
+          ]
+        };
+
+        this.initEchartsRegistrosMenusales();
+      },
+      error => {
+        console.error('Error al obtener los registros mensuales', error);
+      }
+    );
+  }
+
+
+  getMonthName(monthNumber: number): string {
+    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    return monthNames[monthNumber - 1];
+  }
+
+
+
 }

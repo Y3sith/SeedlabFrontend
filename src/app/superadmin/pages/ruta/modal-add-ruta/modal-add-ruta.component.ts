@@ -2,21 +2,17 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RutaService } from '../../../../servicios/rutas.service';
-import { SwitchService } from '../../../../servicios/switch.service';
 import { Ruta } from '../../../../Modelos/ruta.modelo';
 import { User } from '../../../../Modelos/user.model';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import Pica from 'pica';
 import { AlertService } from '../../../../servicios/alert.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
-import { AliadoService } from '../../../../servicios/aliado.service';
-import { SuperadminService } from '../../../../servicios/superadmin.service';
 import { Superadmin } from '../../../../Modelos/superadmin.model';
-import { ActividadService } from '../../../../servicios/actividad.service';
+
 
 
 
@@ -62,16 +58,11 @@ export class ModalAddRutaComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModalAddRutaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    // private modalSS: SwitchService,
     private rutaService: RutaService,
     private fb: FormBuilder,
-    // private datePipe: DatePipe,
     private router: Router,
     private alertService: AlertService,
-    // private sanitizer: DomSanitizer,
-    // private aliadoService: AliadoService,
-    // private superAdminService: SuperadminService,
-    // private actividadService: ActividadService,
+   
   ) {
 
     this.rutaId = data.rutaId;
@@ -84,13 +75,7 @@ export class ModalAddRutaComponent implements OnInit {
     if (this.rutaId != null) {
       this.isEditing = true;
     }
-    //this.isEditing = true;
-    //this.mostrarRutas();
     this.verEditar();
-    // if (this.rutaId != null) {
-    //   this.isEditing = true
-    //   this.verEditar();
-    // }
   }
 
   /* Valida el token del login */

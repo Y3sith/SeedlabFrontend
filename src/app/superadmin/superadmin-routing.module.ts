@@ -11,6 +11,7 @@ import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.com
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
+import { ReportesAdmComponent } from './reportes-adm/reportes-adm.component';
 
 const routes: Routes = [
   {
@@ -24,9 +25,12 @@ const routes: Routes = [
       { path: 'personalizaciones', component: PersonalizacionesComponent, data: { title: 'Personalización Sistema', icon: 'fa-solid fa-paintbrush', showInMenu: true } },
       { path: 'perfil-admin', component: PerfilSuperadminComponent, data: { title: 'Perfil', icon: 'fa-solid fa-circle-user', showInMenu: true } },
       { path: 'add-aliados', component: AddAliadosComponent, data: { showInMenu: false } },
+      { path: 'edit-aliados/:id', component: AddAliadosComponent, data: { showInMenu: false } },
       { path: 'actnivlec', component: ActnivlecComponent, data: { title: 'Act-Niv-Lec', showInMenu: false } },
       { path: 'add-actividad', component: AddActividadComponent, data: { title: 'Actividad', icon: 'fa-solid fa-table-list', showInMenu: false } },
-      { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}}
+      { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
+      /////
+      { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}},
     ]
   }
 ];

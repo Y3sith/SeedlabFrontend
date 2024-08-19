@@ -7,6 +7,7 @@ import { EmpresaService } from '../../../../servicios/empresa.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service'; 
 import { MunicipioService } from '../../../../servicios/municipio.service';
 import { ApoyoEmpresa } from '../../../../Modelos/apoyo-empresa.modelo';
+import { AlertService } from '../../../../servicios/alert.service';
 
 @Component({
   selector: 'app-edit-empresa',
@@ -32,6 +33,10 @@ export class EditEmpresaComponent implements OnInit {
   currentRolId: number;
   id_emprendedor: string | null = null;
   submitted = false; 
+  currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
+
 
   constructor(
     private fb: FormBuilder, 
@@ -39,7 +44,8 @@ export class EditEmpresaComponent implements OnInit {
     private empresaService: EmpresaService,
     private router: Router,
     private departamentoService: DepartamentoService, 
-    private municipioService: MunicipioService
+    private municipioService: MunicipioService,
+    private alertService: AlertService,
   ) { 
     this.editEmpresaForm = this.fb.group({
       nombre: [''],
@@ -194,6 +200,8 @@ export class EditEmpresaComponent implements OnInit {
     this.empresaService.updateEmpresas(this.token, empresaData.documento, empresaData).subscribe(
       response => {
         console.log('Datos actualizados:', response);
+        this.alertService.successAlert('Éxito', 'Edición Realizada');
+        this.router.navigate(['list-empresa']);
       },
       error => {
         console.error('Error al actualizar:', error);
@@ -232,5 +240,29 @@ export class EditEmpresaComponent implements OnInit {
         console.log('Error al cargar los municipios:', err);
       }
     );
+  }
+
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 }
