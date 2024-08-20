@@ -49,7 +49,7 @@ export class AliadoService {
 
   crearBanner(access_token: string, formData: FormData): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
-    return this.http.post(`${this.url}/crearbanner`, formData, options);
+    return this.http.post(`${this.url}/crearbannerr`, formData, options);
   }
 
   getBannerxAliado(access_token: any, idAliado: any): Observable<any> {

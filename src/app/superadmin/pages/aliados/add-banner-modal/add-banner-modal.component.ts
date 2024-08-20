@@ -7,6 +7,7 @@ import { AliadoService } from '../../../../servicios/aliado.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { Console } from 'console';
 import { Banner } from '../../../../Modelos/banner.model';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-add-banner-modal',
@@ -25,6 +26,9 @@ export class AddBannerModalComponent implements OnInit {
   selectedBanner: File | null = null;
   idAliado: string;
   bannerPreview: string | ArrayBuffer | null = null;
+  isActive: boolean = true;
+  boton: boolean;
+  falupa = faCircleQuestion;
   
 
   constructor(
@@ -42,8 +46,8 @@ export class AddBannerModalComponent implements OnInit {
     console.log("IDDD", this.id_banner);
 
     this.bannerForm = this.formBuilder.group({
-      urlImagen: [null, Validators.required],
-      estadobanner: ['Activo'],
+      urlImagen: [Validators.required],
+      estadobanner: [1],
     });
 
   }
@@ -74,20 +78,45 @@ export class AddBannerModalComponent implements OnInit {
     this.validateToken();
     console.log("PARA EL TOKEN",this.currentRolId);
     this.verEditar();
+    this.mostrarToggle();
+    this.toggleActive();
+  }
+
+  verEditar(): void{
+    this.aliadoService.getBannerxid(this.token, this.id_banner).subscribe(
+      data => {
+        this.bannerForm.patchValue({
+          urlImagen: data.urlImagen,
+          estadobanner: data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1
+        });
+        console.log(data);
+        this.isActive = data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1;
+        this.bannerForm.patchValue({ estadobanner: this.isActive });
+      },
+      error => {
+        console.error(error);
+        this.alertService.errorAlert('Error', error.error.message);
+      }
+    )
   }
 
   addBanner(): void {
 
     const formData = new FormData();
     let aliado_modal = this.idAliado;
+
+    let estadoValue: string;
+    if (this.id_banner == null) {
+      estadoValue = '1';
+    } else {
+      estadoValue = this.bannerForm.get('estadobanner')?.value ? 'true' : 'false';
+    }
   
-
-
     if (this.selectedBanner) {
       formData.append('urlImagen', this.selectedBanner, this.selectedBanner.name);
     }
 
-    formData.append('estadobanner', this.bannerForm.get('estadobanner')?.value);
+    formData.append('estadobanner', estadoValue);
     formData.append('id_aliado', aliado_modal);
 
 
@@ -122,22 +151,6 @@ export class AddBannerModalComponent implements OnInit {
     }
   }
 
-  verEditar(): void{
-    this.aliadoService.getBannerxid(this.token, this.id_banner).subscribe(
-      data => {
-        this.bannerForm.patchValue({
-          urlImagen: data.urlImagen,
-          estadobanner: data.estadobanner,
-        })
-        console.log(data);
-      },
-      error => {
-        console.error(error);
-        this.alertService.errorAlert('Error', error.error.message);
-      }
-    )
-  }
-
 
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
@@ -154,7 +167,7 @@ export class AddBannerModalComponent implements OnInit {
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
   
-        ////Limpia el archivo seleccionado y resetea la previsualización
+        //Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
   
         // Resetea el campo correspondiente en el formulario y la previsualización
@@ -214,6 +227,15 @@ export class AddBannerModalComponent implements OnInit {
     this.dialogRef.close();
   }
 
-
+  toggleActive() {
+  this.isActive = !this.isActive;
+  this.bannerForm.patchValue({ estadobanner: this.isActive });
+  console.log("Toggle activado, nuevo estado:", this.isActive);
+  console.log("Estado en el formulario después del toggle:", this.bannerForm.get('estadobanner')?.value);
+  }
+  /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
+  mostrarToggle(): void {
+    this.boton = this.id_banner != null;
+  }
 
 }
