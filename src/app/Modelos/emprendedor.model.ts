@@ -2,6 +2,7 @@ export class Emprendedor {
     documento: string | null;
     nombre: string | null;
     apellido: string | null;
+    //imagen_perfil:File | null;
     celular: string | null;
     email: string | null;
     password: string | null;
@@ -17,6 +18,7 @@ export class Emprendedor {
         nombretipodoc: string | null,
         nombre: string | null,
         apellido: string | null,
+        //imagen_perfil: File | null,
         celular: string | null,
         email: string | null,
         password: string | null,
@@ -30,6 +32,7 @@ export class Emprendedor {
         this.nombretipodoc = nombretipodoc;
         this.nombre = nombre;
         this.apellido = apellido;
+        //this.imagen_perfil= imagen_perfil;
         this.celular = celular;
         this.email = email;
         this.password = password;
