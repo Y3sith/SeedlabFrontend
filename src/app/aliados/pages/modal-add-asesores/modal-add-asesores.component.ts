@@ -39,7 +39,13 @@ export class ModalAddAsesoresComponent implements OnInit {
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
+    documento: ['', Validators.required],
+    imagen_perfil: [null],
+    genero: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
+    direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
+    id_municipio: ['', Validators.required],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -107,7 +113,13 @@ export class ModalAddAsesoresComponent implements OnInit {
           this.asesorForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
+            documento: data.documento,
+            imagen_perfil: data.imagen_perfil,
+            genero: data.genero,
+            fecha_nac: data.fecha_nac,
+            direccion: data.direccion,
             celular: data.celular,
+            id_municipio: data.id_municipio,
             aliado: data.id,
             email: data.email,
             password: '',
@@ -118,6 +130,7 @@ export class ModalAddAsesoresComponent implements OnInit {
           setTimeout(() => {
             this.asesorForm.get('estado')?.setValue(this.isActive);
           });
+          console.log('wwwwwwwwww: ',this.user)
         },
         error => {
           console.log(error);
