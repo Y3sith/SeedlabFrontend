@@ -4,7 +4,6 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
-import * as topojson from 'topojson-client';
 
 import { data } from 'jquery';
 import { response } from 'express';
@@ -33,6 +32,7 @@ export class DashboardComponent implements AfterViewInit {
   emprenDeparEchartsOptions: echarts.EChartsOption;
   years: number[] = [];
   selectedYear: number;
+  isLoading: boolean = false;
 
   constructor(
     private superAdminService: SuperadminService,
@@ -148,6 +148,7 @@ export class DashboardComponent implements AfterViewInit {
 
 
   getDatosDashboard(): void {
+    this.isLoading = true;
     this.superAdminService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
@@ -211,6 +212,9 @@ export class DashboardComponent implements AfterViewInit {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.isLoading = false;
       }
     );
   }

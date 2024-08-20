@@ -29,7 +29,7 @@ export class DashboardComponent {
   doughnutChartOption: echarts.EChartsOption;
   pendientesFinalizadasLabels: string[] = ['Pendientes', 'Finalizadas', 'Sin Asignar', 'Asignadas'];
   pendientesFinalizadasData: { data: number[] }[] = [{ data: [0, 0, 0, 0] }];
- 
+  isLoading: boolean = false;
 
  
 
@@ -72,6 +72,7 @@ export class DashboardComponent {
   }
 
   getDatosDashboard(): void {
+    this.isLoading = true;
     this.superAdminService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
@@ -130,6 +131,9 @@ export class DashboardComponent {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.isLoading = false;
       }
     );
   }
