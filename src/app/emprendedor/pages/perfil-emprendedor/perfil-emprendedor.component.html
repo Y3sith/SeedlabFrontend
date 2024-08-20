@@ -15,7 +15,7 @@
 
                     <div class="absolute max-[800px]:translate-x-1/2 max-[1281px]:translate-x-16 min-[1282px]:translate-x-20 transform  -translate-y-1/2">
                         <ng-container *ngIf="imagenPreview || emprendedorForm.get('imagen_perfil')?.value; else noImage">
-                            <img [src]="imagenPreview || emprendedorForm.get('imagen_perfil')?.value" class="object-cover w-full h-full">
+                            <img [src]="imagenPreview || emprendedorForm.get('imagen_perfil')?.value" class="w-44 h-44 rounded-full border-[5px] border-amber-500">
                           </ng-container>
                           <ng-template #noImage>
                             <span class="text-gray-500">Foto perfil</span>
