@@ -32,6 +32,7 @@ export class DashboardComponent implements AfterViewInit {
   emprenDeparEchartsOptions: echarts.EChartsOption;
   years: number[] = [];
   selectedYear: number;
+  isLoading: boolean = false;
 
   constructor(
     private superAdminService: SuperadminService,
@@ -147,6 +148,7 @@ export class DashboardComponent implements AfterViewInit {
 
 
   getDatosDashboard(): void {
+    this.isLoading = true;
     this.superAdminService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
@@ -210,6 +212,9 @@ export class DashboardComponent implements AfterViewInit {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.isLoading = false;
       }
     );
   }
