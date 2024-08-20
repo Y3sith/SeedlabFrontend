@@ -33,6 +33,9 @@ export class PerfilAsesorComponent implements OnInit {
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
+    imagen_perfil: ['', Validators.required],
+    genero: ['',Validators.required],
+    direccion: ['',Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -78,6 +81,9 @@ export class PerfilAsesorComponent implements OnInit {
         this.asesorForm.patchValue({
           nombre: data.nombre,
           apellido: data.apellido,
+          imagen_perfil: data.imagen_perfil,
+          genero: data.genero,
+          direccion: data.direccion,
           celular: data.celular,
           email: data.email,
         });
@@ -93,6 +99,9 @@ export class PerfilAsesorComponent implements OnInit {
     const asesor: Asesor = {
       nombre: this.asesorForm.get('nombre')?.value,
       apellido: this.asesorForm.get('apellido')?.value,
+      imagen_perfil: this.asesorForm.get('')?.value,
+      genero: this.asesorForm.get('genero')?.value,
+      direccion: this.asesorForm.get('direccion')?.value,
       celular: this.asesorForm.get('celular')?.value,
       aliado: this.asesorForm.get('aliado')?.value,
       email: this.asesorForm.get('email')?.value,

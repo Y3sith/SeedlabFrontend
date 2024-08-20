@@ -14,19 +14,18 @@
                 <div class=" md:max-w-[25rem]">
 
                     <div class="absolute max-[800px]:translate-x-1/2 max-[1281px]:translate-x-16 min-[1282px]:translate-x-20 transform  -translate-y-1/2">
-                        <img src="../../../assets/images/perfilimg.webp" alt="Imagen"
-                            class="w-44 h-44 rounded-full border-[5px] border-amber-500" loading="lazy" />
+                        <ng-container *ngIf="imagenPreview || emprendedorForm.get('imagen_perfil')?.value; else noImage">
+                            <img [src]="imagenPreview || emprendedorForm.get('imagen_perfil')?.value" class="object-cover w-full h-full">
+                          </ng-container>
+                          <ng-template #noImage>
+                            <span class="text-gray-500">Foto perfil</span>
+                          </ng-template>
                         <button class="absolute bottom-0 left-[70%] bg-white rounded-full p-2 text-gray-500 shadow">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
                     </div>
-
-                  
-
                     <div class="bg-[#e6e6e6]  rounded-lg p-4 h-full md:max-w-[45rem]">
-    
                         <!-- Estilo de la imagen -->
-    
                         <h5 class="text-xl font-bold mt-20 text-center">Información Básica</h5>
     
                         <label for="nombre" class="block mt-4 mb-2">Nombre(s)</label>
@@ -59,7 +58,6 @@
                             
                             
                         </div>
-    
                         <label for="genero" class="block mb-2 mt-4">Género</label>
                         <select id="genero" formControlName="genero"
                             class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">

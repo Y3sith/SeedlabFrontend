@@ -135,6 +135,9 @@ export class ModalAddAsesoresComponent implements OnInit {
     const asesor: Asesor = {
       nombre: this.asesorForm.get('nombre')?.value,
       apellido: this.asesorForm.get('apellido')?.value,
+      imagen_perfil: this.asesorForm.get('')?.value,
+      genero: this.asesorForm.get('genero')?.value,
+      direccion:this.asesorForm.get('direccion')?.value,
       celular: this.asesorForm.get('celular')?.value,
       aliado: this.nombreAliado,
       email: this.asesorForm.get('email')?.value,
