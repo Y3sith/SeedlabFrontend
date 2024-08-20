@@ -204,6 +204,9 @@
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
                 Este campo es obligatorio.
               </div>
+              <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
+                Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
+              </div>
             </div>
 
             <div class="-mt-6" *ngSwitchCase="'5'">
