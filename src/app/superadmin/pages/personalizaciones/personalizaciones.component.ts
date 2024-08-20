@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { ColorPickerDirective } from 'ngx-color-picker';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { User } from '../../../Modelos/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Personalizaciones } from '../../../Modelos/personalizaciones.model';
 import { Router } from '@angular/router';
+import { faArrowRight, faImage } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-personalizaciones',
@@ -19,15 +19,14 @@ export class PersonalizacionesComponent implements OnInit {
   selectedColorTerciario = '#C2FFFB';
   descripcion_footer: Text;
   paginaWeb: string;
-  email: string ;
-  telefono: string ;
-  direccion: string ;
-  ubicacion: string;  
+  email: string;
+  telefono: string;
+  direccion: string;
+  ubicacion: string;
   previewUrl: any = null;
   PreviewLogoFooter: any = null;
-  faImage = faImage;
-  idPersonalizacion:number = 1;
-
+  idPersonalizacion: number = 1;
+  ImagenPreview: string | ArrayBuffer | null = null;
 
 
   // crear personalización
@@ -36,6 +35,13 @@ export class PersonalizacionesComponent implements OnInit {
   id: number | null = null;
   currentRolId: number;
   selectedFile: File;
+  currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
+  selectedImagen: File | null = null;
+  faArrowRight = faArrowRight;
+  faImage = faImage;
+
 
   @ViewChild('colorPickerPrincipal') colorPickerPrincipal: ColorPickerDirective;
   @ViewChild('colorPickerSecundario') colorPickerSecundario: ColorPickerDirective;
@@ -43,19 +49,16 @@ export class PersonalizacionesComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private personalizacionesService: SuperadminService,
-    private router: Router,) {
-  }
+    private router: Router,
+    private cdRef: ChangeDetectorRef,) {
 
-
-  ngOnInit(): void {
-    this.validateToken();
     this.personalizacionForm = this.fb.group({
       nombre_sistema: ['', Validators.required],
-      imagen_logo: ['', Validators.required],
-      logo_footer: ['', Validators.required],
-      color_principal: ['#C2FFFB', Validators.required],
-      color_secundario: ['#C2FFFB', Validators.required],
-      color_terciario: ['#C2FFFB', Validators.required],
+      imagen_logo: [Validators.required],
+      //logo_footer: ['', Validators.required],
+      color_principal: ['', Validators.required],
+      color_secundario: ['', Validators.required],
+      //color_terciario: ['#C2FFFB', Validators.required],
       descripcion_footer: ['', Validators.required],
       paginaWeb: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -63,6 +66,11 @@ export class PersonalizacionesComponent implements OnInit {
       direccion: ['', Validators.required],
       ubicacion: ['', Validators.required]
     })
+  }
+
+
+  ngOnInit(): void {
+    this.validateToken();
   }
 
   validateToken(): void {
@@ -88,33 +96,51 @@ export class PersonalizacionesComponent implements OnInit {
 
   onColorChangePrincipal(color: string): void {
     this.selectedColorPrincipal = color;
+    this.personalizacionForm.get('color_principal')?.setValue(color, { emitEvent: false });
   }
-
-
 
   onColorChangeSecundario(color: string): void {
     this.selectedColorSecundario = color;
+    this.personalizacionForm.get('color_secundario')?.setValue(color, { emitEvent: false });
   }
 
-  onColorChangeTerciario(color: string): void {
-    this.selectedColorTerciario = color;
-  }
+  // onColorChangeTerciario(color: string): void {
+  //   this.selectedColorTerciario = color;
+  // }
 
   // Resto de tu código...
 
+  onFileSelecteds(event: any, type: string) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImagen = file;
 
-  onFileChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      const file = input.files[0];
+      // Generate a preview URL
       const reader = new FileReader();
-      reader.readAsDataURL(file);
       reader.onload = () => {
-        this.previewUrl = reader.result;
-        this.personalizacionForm.patchValue({
-          imagen_logo: reader.result // Guarda la imagen en base64 en el formulario
-        });
+        this.previewUrl = reader.result as string;
       };
+      reader.readAsDataURL(file);
+    }
+  }
+
+
+  generateImagePreview(file: File, field: string) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      if (field === 'imagen') {
+        this.ImagenPreview = e.target.result;
+      }
+      this.cdRef.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  resetFileField(field: string) {
+    if (field === 'imagen') {
+      this.personalizacionForm.patchValue({ imagen_logo: null });
+      this.selectedImagen = null;
+      this.ImagenPreview = null;
     }
   }
 
@@ -147,25 +173,41 @@ export class PersonalizacionesComponent implements OnInit {
         const id_temp = JSON.parse(itemslocal).id;
         console.log("ID Superadmin:", id_temp);
 
-        const personalizaciones: Personalizaciones = {
-          nombre_sistema: this.personalizacionForm.value.nombre_sistema,
-          imagen_logo: this.personalizacionForm.value.imagen_logo,
-          logo_footer: this.personalizacionForm.value.logo_footer,
-          color_principal: this.selectedColorPrincipal,
-          color_secundario: this.selectedColorSecundario,
-          color_terciario: this.selectedColorTerciario,
-          descripcion_footer: this.personalizacionForm.value.descripcion_footer,
-          paginaWeb: this.personalizacionForm.value.paginaWeb,
-          email: this.personalizacionForm.value.email,
-          telefono: this.personalizacionForm.value.telefono,
-          direccion: this.personalizacionForm.value.direccion,
-          ubicacion: this.personalizacionForm.value.ubicacion,
-          id_superadmin: id_temp
-        };
+        const formData = new FormData();
+        formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
+        formData.append('color_principal', this.personalizacionForm.get('color_principal')?.value);
+        formData.append('color_secundario', this.personalizacionForm.get('color_secundario')?.value);
+        formData.append('descripcion_footer', this.personalizacionForm.get('descripcion_footer')?.value);
+        formData.append('paginaWeb', this.personalizacionForm.get('paginaWeb')?.value);
+        formData.append('email', this.personalizacionForm.get('email')?.value);
+        formData.append('telefono', this.personalizacionForm.get('telefono')?.value);
+        formData.append('direccion', this.personalizacionForm.get('direccion')?.value);
+        formData.append('ubicacion', this.personalizacionForm.get('ubicacion')?.value);
+        formData.append('id_superadmin', id_temp);
 
-        console.log("Datos a enviar:", personalizaciones);
+        // const personalizaciones: Personalizaciones = {
+        //   nombre_sistema: this.personalizacionForm.value.nombre_sistema,
+        //   imagen_logo: this.personalizacionForm.value.imagen_logo,
+        //   //logo_footer: this.personalizacionForm.value.logo_footer,
+        //   color_principal: this.selectedColorPrincipal,
+        //   color_secundario: this.selectedColorSecundario,
+        //   //color_terciario: this.selectedColorTerciario,
+        //   descripcion_footer: this.personalizacionForm.value.descripcion_footer,
+        //   paginaWeb: this.personalizacionForm.value.paginaWeb,
+        //   email: this.personalizacionForm.value.email,
+        //   telefono: this.personalizacionForm.value.telefono,
+        //   direccion: this.personalizacionForm.value.direccion,
+        //   ubicacion: this.personalizacionForm.value.ubicacion,
+        //   id_superadmin: id_temp
+        // };
+        if (this.selectedImagen) {
+          formData.append('imagen_logo', this.selectedImagen, this.selectedImagen.name);
+        }
 
-        this.personalizacionesService.createPersonalizacion(this.token, personalizaciones, this.idPersonalizacion).subscribe(
+
+        console.log("Datos a enviar:");
+
+        this.personalizacionesService.createPersonalizacion(this.token, formData, this.idPersonalizacion).subscribe(
           data => {
             console.log("personalizacion creada", data);
             // console.log("Imagen en base64:", this.personalizacionForm.value.imagen_Logo);
@@ -188,7 +230,7 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
-  restorePersonalizacion():void{
+  restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
         console.log("Personalización restaurada", data);
@@ -216,6 +258,30 @@ export class PersonalizacionesComponent implements OnInit {
         console.error(`Error en el control ${key}:`, controlErrors);
       }
     });
+  }
+
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 
 

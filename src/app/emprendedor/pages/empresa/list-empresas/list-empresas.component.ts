@@ -7,6 +7,7 @@ import { EmprendedorService } from '../../../../servicios/emprendedor.service';
 import { Empresa } from '../../../../Modelos/empresa.model';
 import { User } from '../../../../Modelos/user.model';
 
+
 @Component({
   selector: 'app-list-empresas',
   templateUrl: './list-empresas.component.html',
@@ -27,12 +28,13 @@ export class ListEmpresasComponent implements OnInit {
   currentRolId: number;
   totalEmpresas: number = 0; // Variable para almacenar el total de empresas
   itemsPerPage: number = 5; // Número de empresas por página
+  empresaId: number;
 
   constructor(
     private emprendedorService: EmprendedorService,
     private router: Router,
     private aRoute: ActivatedRoute,
-    private fb: FormBuilder
+    
   ) {
     this.documento = this.aRoute.snapshot.paramMap.get('id');
   }
@@ -40,6 +42,9 @@ export class ListEmpresasComponent implements OnInit {
   ngOnInit(): void {
     this.validarToken();
     this.cargarEmpresas();
+    this.aRoute.paramMap.subscribe(params => {
+      this.empresaId = +params.get('id'); // se captura el ID de la empresa
+    });
   }
 
   validarToken(): void {

@@ -15,6 +15,7 @@ import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterModule } from '@angular/router';
+import { ModalActividadComponent } from './pages/modal-actividad/modal-actividad.component';
 
 
 
@@ -35,6 +36,7 @@ import { RouterModule } from '@angular/router';
     EncuestaEmpresaComponent,
     RutaEmprendedorComponent,
     PerfilEmprendedorComponent,
+    ModalActividadComponent,
   ],
   imports: [
     CommonModule,

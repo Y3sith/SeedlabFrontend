@@ -14,6 +14,7 @@ import { Actividad } from '../Modelos/actividad.model';
 import { Nivel } from '../Modelos/nivel.model';
 import { Leccion } from '../Modelos/leccion.model';
 import { Contenido_Leccion } from '../Modelos/contenido-leccion.model';
+import { access } from 'fs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,12 @@ export class SuperadminService {
   private CreacionHeaders(access_token: any): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + access_token
+    });
+  }
+
+  private CreacionHeaderss(access_token: any): HttpHeaders {
+    return new HttpHeaders({
       'Authorization': 'Bearer ' + access_token
     });
   }
@@ -90,9 +97,9 @@ export class SuperadminService {
   }
 
   
-  createPersonalizacion(access_token: any, personalizaciones: any, id): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.put(this.url + "personalizacion/"+ id, personalizaciones, options);
+  createPersonalizacion(access_token: any, formData: FormData, id): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(this.url + "personalizacion/"+ id, formData, options);
   }
 
   getPersonalizacion(): Observable<any> {
@@ -107,6 +114,27 @@ export class SuperadminService {
   dashboardAdmin(access_token:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.http.get(this.url+"contar-usuarios",options)
+  }
+
+  contarRegistrosMensual(access_token:any):Observable<any>{
+    const options = { headers:this.CreacionHeaders(access_token) };
+    return this.http.get(this.url+"listRegistrosAnioMes",options)
+  }
+
+  promedioAsesorias(access_token:any, year:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options);
+  }
+
+  emprendedoresPorDepartamento(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url+"emprendedor_departamento",options)
+  }
+  
+//////////////////////////
+  pdfEmpenrededorMunicipio(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url+"reporte-emprendedores",options)
   }
   
 }
