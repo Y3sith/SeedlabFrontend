@@ -4,6 +4,7 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
+import { DashboardsService } from '../../../servicios/dashboards.service';
 
 
 @Component({
@@ -31,7 +32,7 @@ export class DashboardComponent implements AfterViewInit {
   selectedYear: number;
 
   constructor(
-    private superAdminService: SuperadminService,
+    private dashboardService: DashboardsService,
     private aliadoService: AliadoService,
     private router: Router
   ) {}
@@ -87,7 +88,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   promedioAsesoriasMesAnio(year: number): void {
-    this.superAdminService.promedioAsesorias(this.token, this.selectedYear).subscribe(
+    this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
       data => {
         console.log('Promedio de asesorías:', data);
 
@@ -141,7 +142,7 @@ export class DashboardComponent implements AfterViewInit {
 
 
   getDatosDashboard(): void {
-    this.superAdminService.dashboardAdmin(this.token).subscribe(
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
         this.totalSuperAdmin = data.superadmin;
@@ -292,7 +293,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   getDatosGenerosGrafica(): void {
-    this.aliadoService.graficaDatosGeneros(this.token).subscribe(
+    this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
         console.log('Datos de géneros recibidos:', data); // Verifica los datos aquí
         if (data && data.length > 0) {
@@ -367,7 +368,7 @@ export class DashboardComponent implements AfterViewInit {
 
 
   getRegistrosMensuales(): void {
-    this.superAdminService.contarRegistrosMensual(this.token).subscribe(
+    this.dashboardService.contarRegistrosMensual(this.token).subscribe(
       data => {
         console.log('data meses', data);
 

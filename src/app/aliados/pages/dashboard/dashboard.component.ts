@@ -4,6 +4,7 @@ import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import * as echarts from 'echarts';
+import { DashboardsService } from '../../../servicios/dashboards.service';
 
 
 
@@ -34,7 +35,7 @@ export class DashboardComponent {
  
 
   constructor(
-    private superAdminService: SuperadminService,
+    private dashboardService: DashboardsService,
     private aliadoService: AliadoService,
     private router: Router,
   ) { }
@@ -72,7 +73,7 @@ export class DashboardComponent {
   }
 
   getDatosDashboard(): void {
-    this.superAdminService.dashboardAdmin(this.token).subscribe(
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
         this.totalSuperAdmin = data.superadmin;
@@ -212,7 +213,7 @@ export class DashboardComponent {
 
 
   getDatosGenerosGrafica(): void {
-    this.aliadoService.graficaDatosGeneros(this.token).subscribe(
+    this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
         console.log('data generos', data);
         const dataGenero = data.map(item => item.total);
@@ -271,7 +272,7 @@ export class DashboardComponent {
   }
 
   loadChartData() {
-    this.aliadoService.getDashboard(this.token, this.id).subscribe(
+    this.dashboardService.getDashboard(this.token, this.id).subscribe(
       data => {
         console.log(data);
         this.pendientesFinalizadasData[0].data = [
