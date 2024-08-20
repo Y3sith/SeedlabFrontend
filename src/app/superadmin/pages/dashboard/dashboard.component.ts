@@ -4,7 +4,6 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
-import * as topojson from 'topojson-client';
 
 import { data } from 'jquery';
 import { response } from 'express';
