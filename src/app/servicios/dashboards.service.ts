@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/env';
 import { Observable } from 'rxjs';
+import { helper } from 'echarts';
 
 @Injectable({
   providedIn: 'root'
@@ -43,14 +44,23 @@ export class DashboardsService {
   //Aliados
   getDashboard(access_token: any, idAsesor: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}/dashboardAliado/${idAsesor}`, options);
+    return this.http.get<any>(`${this.url}dashboardAliado/${idAsesor}`, options);
   }
 
   graficaDatosGeneros(access_token: string): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url + "/generoAliado", options)
+    return this.http.get<any>(this.url + "generoAliado", options)
   }
 
+  asesoriasTotalesAliados(access_token: string, id:number): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get<any>(this.url + "asesoriasTotalesAliado", options);
+  }
+
+  asesoriasXMesAliados(access_token: string, id:number): Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get<any>(this.url + "asesorias_mes/" + id, options);
+  }
   
 
 
