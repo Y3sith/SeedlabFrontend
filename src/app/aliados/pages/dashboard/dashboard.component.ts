@@ -158,14 +158,13 @@ export class DashboardComponent {
       });
 
         this.barAsesoriasTotales = {
-          title: {
-            text: 'Asesorías Mensuales',
-          },
           tooltip: {
             trigger: 'axis'
           },
           legend: {
-            data: ['Asesorias']
+            data: ['Asesorias'],
+            left: 'left',
+            top: '5%'
           },
           toolbox: {
             show: true,
