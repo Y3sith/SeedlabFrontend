@@ -46,7 +46,7 @@ export class AddBannerModalComponent implements OnInit {
     console.log("IDDD", this.id_banner);
 
     this.bannerForm = this.formBuilder.group({
-      urlImagen: [Validators.required],
+      urlImagen: [null, Validators.required],
       estadobanner: [1],
     });
 
@@ -107,9 +107,9 @@ export class AddBannerModalComponent implements OnInit {
 
     let estadoValue: string;
     if (this.id_banner == null) {
-      estadoValue = '1';
+      estadoValue = 'true';
     } else {
-      estadoValue = this.bannerForm.get('estadobanner')?.value ? 'true' : 'false';
+      estadoValue = this.isActive ? 'true' : 'false';
     }
   
     if (this.selectedBanner) {
@@ -228,11 +228,10 @@ export class AddBannerModalComponent implements OnInit {
   }
 
   toggleActive() {
-  this.isActive = !this.isActive;
-  this.bannerForm.patchValue({ estadobanner: this.isActive });
-  console.log("Toggle activado, nuevo estado:", this.isActive);
-  console.log("Estado en el formulario después del toggle:", this.bannerForm.get('estadobanner')?.value);
+    this.isActive = !this.isActive;
+    this.bannerForm.patchValue({ estadobanner: this.isActive });
   }
+
   /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
   mostrarToggle(): void {
     this.boton = this.id_banner != null;

@@ -15,10 +15,10 @@
                                 <ng-container *ngIf="bannerPreview || bannerForm.get('urlImagen')?.value; else noImage">
                                     <img [src]="bannerPreview || bannerForm.get('urlImagen')?.value"
                                         class="object-cover w-full h-full">
-                                </ng-container>
-                                <ng-template #noImage>
+                                  </ng-container>
+                                  <ng-template #noImage>
                                     <span class="text-gray-500">Imagen</span>
-                                </ng-template>
+                                  </ng-template>
                                 <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'urlImagen')"
                                     accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
                             </div>

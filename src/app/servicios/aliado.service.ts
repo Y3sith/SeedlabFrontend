@@ -69,7 +69,7 @@ export class AliadoService {
   }
 
   getbanner(): Observable<any> {
-    const url = `${environment.apiUrl}banner/activo`;
+    const url = `${environment.apiUrl}banner/1`;
     return this.http.get(url);
   }
 
