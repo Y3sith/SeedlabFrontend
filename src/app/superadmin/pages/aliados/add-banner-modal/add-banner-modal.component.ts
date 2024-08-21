@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { User } from '../../../../Modelos/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -7,7 +7,7 @@ import { AliadoService } from '../../../../servicios/aliado.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { Console } from 'console';
 import { Banner } from '../../../../Modelos/banner.model';
-import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-add-banner-modal',
@@ -29,7 +29,8 @@ export class AddBannerModalComponent implements OnInit {
   isActive: boolean = true;
   boton: boolean;
   falupa = faCircleQuestion;
-  
+  faImages = faImage;
+  @ViewChild('fileInput') fileInput: ElementRef;
 
   constructor(
     public dialogRef: MatDialogRef<AddBannerModalComponent>,
@@ -225,6 +226,10 @@ export class AddBannerModalComponent implements OnInit {
   /* Cerrar el modal */
   cancelarModal() {
     this.dialogRef.close();
+  }
+
+  triggerFileInput() {
+    this.fileInput.nativeElement.click();
   }
 
   toggleActive() {
