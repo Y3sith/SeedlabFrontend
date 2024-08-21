@@ -35,7 +35,7 @@
                     <select id="id_tipo_documento" formControlName="id_tipo_documento"
                         class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                         <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                        <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
+                        <option *ngFor="let tipo of listTipoDocumento" >{{ tipo.nombre }}</option>
                     </select>
                 </div>
 
