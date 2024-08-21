@@ -36,11 +36,17 @@ export class EmprendedorService {
 
   getInfoEmprendedor(access_token: any, documento: string): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(`${this.url}/userProfile/${documento}`, options);
+    return this.http.get(`${this.url}/userProfileEmprendedor/${documento}`, options);
   }
 
   destroy(access_token: any, documento: string): Observable<any>{  
     const options = {headers: this.CreacionHeaders(access_token)};
     return this.http.delete(this.url + "/emprendedor/" + documento, options);
   }
+
+  tipoDato(): Observable<any>{
+    return this.http.get(environment.apiUrl+"tipo_documento");
+  }
+
+
 }
