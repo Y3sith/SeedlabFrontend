@@ -8,7 +8,7 @@
 
 .main-timeline-container .timeline {
   position: relative;
-  height: 50px;
+  height: 49px;
   width: 160px;
   justify-content: center;
   align-items: center;
@@ -36,7 +36,7 @@
   border-left: 30px solid;
   background-color: white;
 
-  
+
 }
 
 .main-timeline-container .timeline-content {
@@ -76,9 +76,9 @@
 /* Ajustes de longitud para campos 1, 2, 3,*/
 .main-timeline-container .timeline-1,
 .main-timeline-container .timeline-2,
-.main-timeline-container .timeline-3{
-  width: 300px; /* Incrementar longitud */
-  display: inline-block;
+.main-timeline-container .timeline-3 {
+  width: 300px;
+  /* Incrementar longitud */
 }
 
 
@@ -92,9 +92,9 @@
   border-left: none;
   background-color: transparent;
   margin-bottom: 0;
-  margin-left: 5px; /* Reducir la distancia para acercarlo al campo 3 */
+  margin-left: 5px;
+  /* Reducir la distancia para acercarlo al campo 3 */
   position: relative;
-  display: inline-block;
 }
 
 .main-timeline-container .timeline-4::before {
@@ -102,21 +102,26 @@
   margin-left: -15px;
   left: 0;
   border-left: none;
-  border-right: 30px solid #8cc63f; 
+  border-right: 30px solid #8cc63f;
   background-color: white;
 }
+
 .main-timeline-container .timeline-4::after {
   margin-top: -50px;
   top: 0;
   left: 0;
   border-top: 25px solid transparent;
   border-bottom: 25px solid transparent;
-  border-left: 22px solid rgb(255, 255, 255);}
+  border-left: 22px solid rgb(255, 255, 255);
+}
 
-  .main-timeline-container .timeline-4 .timeline-year {
-    top: 50%; /* Center vertically */
-    left: 130px; /* Adjust horizontally to align with the green border */
-    transform: translate(-50%, -50%); /* Keep it centered based on the adjusted left */
+.main-timeline-container .timeline-4 .timeline-year {
+  top: 50%;
+  /* Center vertically */
+  left: 130px;
+  /* Adjust horizontally to align with the green border */
+  transform: translate(-50%, -50%);
+  /* Keep it centered based on the adjusted left */
 }
 
 .main-timeline-container .timeline-4 .content {
@@ -124,12 +129,12 @@
   margin-top: 65px;
 
 }
+
 .main-timeline-container .timeline-1 .content,
- .main-timeline-container .timeline-2 .content,
- .main-timeline-container .timeline-3 .content
-{
-margin-top: 55px;
-margin-left: 100px;
+.main-timeline-container .timeline-2 .content,
+.main-timeline-container .timeline-3 .content {
+  margin-top: 55px;
+  margin-left: 100px;
 }
 
 /* campos 5, 6 ,7 y 8 */
@@ -140,27 +145,27 @@ margin-left: 100px;
 .main-timeline-container .timeline-5,
 .main-timeline-container .timeline-7,
 .main-timeline-container .timeline-8 {
-  width: 300px; /* Incrementar longitud */
-  display: inline-block;
-  margin-top: -50px; /* Ajusta este valor para alinear con el final del campo 4 */
+  width: 300px;
+  /* Incrementar longitud */
+  margin-top: -50px;
+  /* Ajusta este valor para alinear con el final del campo 4 */
+  position: relative;
+
 
 }
 
 
 .main-timeline-container .timeline-5 {
-  position: relative;
-  left: 500px; /* Mueve el campo 5 hacia la derecha */
+  margin-left: 410px;
 }
+
 .main-timeline-container .timeline-6 {
-  position: relative;
-  right: 100px; /* Mueve el campo 5 hacia la derecha */
+  margin-left: -600px;
 }
 
 
-/* Campo 7: Colocarlo en la posición del campo 5 */
 .main-timeline-container .timeline-7 {
-  position: relative;
-  left: -700px; /* Mueve el campo 7 hacia la izquierda */
+  margin-left: -900px;
 }
 
 /* Invertir flechas para los campos 5, 6 y 7 */
@@ -170,9 +175,9 @@ margin-left: 100px;
   right: 0;
   border-top: 25px solid transparent;
   border-bottom: 25px solid transparent;
-  border-right:30px solid;
+  border-right: 30px solid;
   border-left: white;
-  
+
 
 }
 
@@ -181,19 +186,21 @@ margin-left: 100px;
 .main-timeline-container .timeline-7::after {
   left: 0;
   border-left: none;
-  border-right: 30px solid #e63946; 
+  border-right: 30px solid #e63946;
   background-color: white;
 }
 
 .main-timeline-container .timeline-8 {
   width: 160px;
   height: 300px;
-  border-radius: 300px 0 0 300px; /* This changes the curve direction */
+  border-radius: 300px 0 0 300px;
+  /* This changes the curve direction */
   border: 50px solid #ff006e;
   border-right: none;
   background-color: transparent !important;
   margin-bottom: 0;
-  margin-left: -1180px; /* Adjust this value to properly position element 7 */
+  margin-left: -1080px;
+  /* Adjust this value to properly position element 7 */
   position: relative;
   display: inline-block;
 
@@ -205,61 +212,152 @@ margin-left: 100px;
   border-top: 25px solid transparent;
   border-bottom: 25px solid transparent;
   color: white;
-  background-color:#ff006e;
-  border-right:30px solid #ffffff;
+  background-color: #ff006e;
+  border-right: 30px solid #ffffff;
   border-left: white;
   width: 30px;
   margin-left: 95px;
 }
 
 .main-timeline-container .timeline-8::before {
- margin-top: 200px;
- margin-right: -25px;
- color:#ff006e;
+  margin-top: 200px;
+  margin-right: -25px;
+  color: #ff006e;
 }
 
 .main-timeline-container .timeline-8 .timeline-year {
-  top: 50%; /* Center vertically */
-  left: -20px; /* Adjust horizontally to align with the green border */
-  transform: translate(-50%, -50%); /* Keep it centered based on the adjusted left */
+  top: 50%;
+  /* Center vertically */
+  left: -20px;
+  /* Adjust horizontally to align with the green border */
+  transform: translate(-50%, -50%);
+  /* Keep it centered based on the adjusted left */
 }
 
 .main-timeline-container .timeline-8 .content {
-  margin-left: -160px;
+  margin-left: -100px;
   margin-top: 65px;
 
 }
 
 .main-timeline-container .timeline-5 .content,
- .main-timeline-container .timeline-6 .content,
- .main-timeline-container .timeline-7 .content
-{
-margin-top: 55px;
-margin-left: 100px;
+.main-timeline-container .timeline-6 .content,
+.main-timeline-container .timeline-7 .content {
+  margin-top: 55px;
+  margin-left: 100px;
 }
+
+.main-timeline-container .timeline-9,
+.main-timeline-container .timeline-10,
+.main-timeline-container .timeline-11
+ {
+  width: 300px;
+  margin-top: -50px;
+}
+
+
+.main-timeline-container .timeline-9 {
+  margin-right: 780px;
+}
+
+.main-timeline-container .timeline-10  {
+  margin-right: 0px;
+  margin-left: -780px;
+}
+
+.main-timeline-container .timeline-11 {
+  margin-left: -480px;
+
+}
+
+
+
+.main-timeline-container .timeline-9 .content,
+.main-timeline-container .timeline-10 .content,
+.main-timeline-container .timeline-11 .content {
+  margin-top: 55px;
+  margin-left: 100px;
+}
+
+
+.main-timeline-container .timeline-12 {
+  width: 160px;
+  height: 300px;
+  border-radius: 0 300px 300px 0;
+  border: 50px solid #ff0000;
+  border-left: none;
+  background-color: transparent;
+  margin-bottom: 0;
+  margin-left: -180px;
+  position: relative;
+  margin-top: -50px;
+
+}
+
+.main-timeline-container .timeline-12::before {
+  margin-top: 200px;
+  margin-left: -15px;
+  left: 0;
+  border-left: none;
+  border-right: 30px solid #ff0000;
+  background-color: white;
+}
+
+.main-timeline-container .timeline-12::after {
+  margin-top: -50px;
+  top: 0;
+  left: 0;
+  border-top: 25px solid transparent;
+  border-bottom: 25px solid transparent;
+  border-left: 22px solid rgb(255, 255, 255);
+}
+
+.main-timeline-container .timeline-12 .timeline-year {
+  top: 50%;
+  /* Center vertically */
+  left: 130px;
+  /* Adjust horizontally to align with the green border */
+  transform: translate(-50%, -50%);
+  /* Keep it centered based on the adjusted left */
+}
+
+.main-timeline-container .timeline-12 .content {
+  margin-left: 180px;
+  margin-top: 65px;
+
+}
+
+
+
+
+
 
 
 /* Campo 1 */
 .main-timeline-container .timeline-1 {
-  background-color: #e63946; /* Rojo */
+  background-color: #e63946;
+  /* Rojo */
 }
 
-.main-timeline-container .timeline-1::before
- {
-  border-left-color: #e63946; /* Rojo */
+.main-timeline-container .timeline-1::before {
+  border-left-color: #e63946;
+  /* Rojo */
 }
 
 .main-timeline-container .timeline-1 .timeline-year {
-  color: #e63946;;
+  color: #e63946;
+  ;
 }
 
 /* Campo 2 */
 .main-timeline-container .timeline-2 {
-  background-color: #f77f00; /* Naranja */
+  background-color: #f77f00;
+  /* Naranja */
 }
 
 .main-timeline-container .timeline-2::before {
-  border-left-color: #f77f00; /* Naranja */
+  border-left-color: #f77f00;
+  /* Naranja */
 }
 
 .main-timeline-container .timeline-2 .timeline-year {
@@ -268,11 +366,13 @@ margin-left: 100px;
 
 /* Campo 3 */
 .main-timeline-container .timeline-3 {
-  background-color: #ffba08; /* Amarillo */
+  background-color: #ffba08;
+  /* Amarillo */
 }
 
 .main-timeline-container .timeline-3::before {
-  border-left-color: #ffba08; /* Amarillo */
+  border-left-color: #ffba08;
+  /* Amarillo */
 }
 
 .main-timeline-container .timeline-3 .timeline-year {
@@ -283,21 +383,25 @@ margin-left: 100px;
 
 
 .main-timeline-container .timeline-4 .timeline-year {
-  color: #8cc63f;;
+  color: #8cc63f;
+  ;
 }
 
 /* Campo 5 */
 .main-timeline-container .timeline-5 {
-  background-color: #48cae4; /* Azul Claro */
+  background-color: #48cae4;
+  /* Azul Claro */
 }
 
-.main-timeline-container .timeline-5::before{
+.main-timeline-container .timeline-5::before {
   color: white;
   background-color: #48cae4;
 
 }
+
 .main-timeline-container .timeline-5::after {
-  border-right-color: #48cae4; /* Azul Claro */
+  border-right-color: #48cae4;
+  /* Azul Claro */
 }
 
 .main-timeline-container .timeline-5 .timeline-year {
@@ -306,7 +410,8 @@ margin-left: 100px;
 
 /* Campo 6 */
 .main-timeline-container .timeline-6 {
-  background-color: #023e8a; /* Azul Oscuro */
+  background-color: #023e8a;
+  /* Azul Oscuro */
 }
 
 .main-timeline-container .timeline-6::before {
@@ -314,8 +419,10 @@ margin-left: 100px;
   background-color: #023e8a;
 
 }
+
 .main-timeline-container .timeline-6::after {
-  border-right-color: #023e8a; /* Azul Oscuro */
+  border-right-color: #023e8a;
+  /* Azul Oscuro */
 }
 
 .main-timeline-container .timeline-6 .timeline-year {
@@ -324,15 +431,18 @@ margin-left: 100px;
 
 /* Campo 7 */
 .main-timeline-container .timeline-7 {
-  background-color: #9d4edd; /* Púrpura */
+  background-color: #9d4edd;
+  /* Púrpura */
 }
 
 .main-timeline-container .timeline-7::before {
   color: white;
   background-color: #9d4edd;
 }
+
 .main-timeline-container .timeline-7::after {
-  border-right-color: #9d4edd; /* Púrpura */
+  border-right-color: #9d4edd;
+  /* Púrpura */
 }
 
 .main-timeline-container .timeline-7 .timeline-year {
@@ -341,17 +451,70 @@ margin-left: 100px;
 
 /* Campo 8 */
 .main-timeline-container .timeline-8 {
-  background-color: #ff006e; /* Rosa */
+  background-color: #ff006e;
+  /* Rosa */
 }
 
 .main-timeline-container .timeline-8::before,
 .main-timeline-container .timeline-8::after {
-  border-right-color: #ffffff; /* Rosa */
+  border-right-color: #ffffff;
+  /* Rosa */
 }
 
 .main-timeline-container .timeline-8 .timeline-year {
   color: #ff006e;
 }
+
+.main-timeline-container .timeline-9 {
+  background-color: #56e639;
+  /* Rojo */
+}
+
+.main-timeline-container .timeline-9::before {
+  border-left-color: #56e639;
+  /* Rojo */
+}
+
+.main-timeline-container .timeline-9 .timeline-year {
+  color: #56e639;
+  ;
+}
+
+.main-timeline-container .timeline-10 {
+  background-color: #fffb00ea;
+  /* Rojo */
+}
+
+.main-timeline-container .timeline-10::before {
+  border-left-color: #fffb00ea;
+  /* Rojo */
+}
+
+.main-timeline-container .timeline-10 .timeline-year {
+  color: #fffb00ea;
+  ;
+}
+
+.main-timeline-container .timeline-11 {
+  background-color: #6f00ffea;
+  /* Rojo */
+}
+
+.main-timeline-container .timeline-11::before {
+  border-left-color: #6f00ffea;
+  /* Rojo */
+}
+
+.main-timeline-container .timeline-11 .timeline-year {
+  color: #6f00ffea;
+  ;
+}
+
+.main-timeline-container .timeline-12 .timeline-year {
+  color: #ff0000;
+  ;
+}
+
 
 
 
@@ -360,11 +523,12 @@ margin-left: 100px;
 /* General media query for tablets */
 @media (max-width: 768px) {
   .main-timeline-container .timeline {
-    width: 100%; /* Ajusta el ancho al 100% en pantallas más pequeñas */
+    width: 100%;
+    /* Ajusta el ancho al 100% en pantallas más pequeñas */
     height: auto;
   }
 
-  .main-timeline-container .timeline-4, 
+  .main-timeline-container .timeline-4,
   .main-timeline-container .timeline-8 {
     width: 100%;
     height: auto;
@@ -382,7 +546,7 @@ margin-left: 100px;
     font-size: 40px;
   }
 
-  .main-timeline-container .timeline-4 .content, 
+  .main-timeline-container .timeline-4 .content,
   .main-timeline-container .timeline-8 .content {
     margin-left: 0;
     margin-top: 10px;
@@ -407,7 +571,7 @@ margin-left: 100px;
     padding: 10px;
   }
 
-  .main-timeline-container .timeline-4 .content, 
+  .main-timeline-container .timeline-4 .content,
   .main-timeline-container .timeline-8 .content {
     margin-left: 0;
     margin-top: 5px;
@@ -430,7 +594,7 @@ margin-left: 100px;
 
 
 
- 
+
 
 
 
@@ -506,5 +670,3 @@ margin-left: 100px;
         right: 9%;
     }
 */
-   
-  
