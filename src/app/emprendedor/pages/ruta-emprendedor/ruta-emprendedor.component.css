@@ -8,7 +8,7 @@
 
 .main-timeline-container .timeline {
   position: relative;
-  height: 50px;
+  height: 49px;
   width: 160px;
   justify-content: center;
   align-items: center;
@@ -149,7 +149,7 @@ margin-left: 100px;
 
 .main-timeline-container .timeline-5 {
   position: relative;
-  left: 650px; /* Mueve el campo 5 hacia la derecha */
+  left: 505px; /* Mueve el campo 5 hacia la derecha */
 }
 .main-timeline-container .timeline-6 {
   position: relative;
