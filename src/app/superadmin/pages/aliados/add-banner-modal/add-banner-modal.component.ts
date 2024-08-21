@@ -107,9 +107,9 @@ export class AddBannerModalComponent implements OnInit {
 
     let estadoValue: string;
     if (this.id_banner == null) {
-      estadoValue = 'true';
+      estadoValue = '1';
     } else {
-      estadoValue = this.isActive ? 'true' : 'false';
+      estadoValue = this.isActive ? '1' : '0';
     }
   
     if (this.selectedBanner) {
