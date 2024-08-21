@@ -143,24 +143,23 @@ margin-left: 100px;
   width: 300px; /* Incrementar longitud */
   display: inline-block;
   margin-top: -50px; /* Ajusta este valor para alinear con el final del campo 4 */
+  position: relative;
+
 
 }
 
 
 .main-timeline-container .timeline-5 {
-  position: relative;
-  left: 505px; /* Mueve el campo 5 hacia la derecha */
+  margin-left: 410px; /* Mueve el campo 5 hacia la derecha */
 }
 .main-timeline-container .timeline-6 {
-  position: relative;
-  right: 100px; /* Mueve el campo 5 hacia la derecha */
+  margin-left: -600px; /* Mueve el campo 5 hacia la derecha */
 }
 
 
 /* Campo 7: Colocarlo en la posición del campo 5 */
 .main-timeline-container .timeline-7 {
-  position: relative;
-  left: -700px; /* Mueve el campo 7 hacia la izquierda */
+  margin-left: -900px; /* Mueve el campo 7 hacia la izquierda */
 }
 
 /* Invertir flechas para los campos 5, 6 y 7 */
@@ -193,7 +192,7 @@ margin-left: 100px;
   border-right: none;
   background-color: transparent !important;
   margin-bottom: 0;
-  margin-left: -1180px; /* Adjust this value to properly position element 7 */
+  margin-left: -1080px; /* Adjust this value to properly position element 7 */
   position: relative;
   display: inline-block;
 
@@ -225,7 +224,7 @@ margin-left: 100px;
 }
 
 .main-timeline-container .timeline-8 .content {
-  margin-left: -160px;
+  margin-left: -100px;
   margin-top: 65px;
 
 }
@@ -237,6 +236,51 @@ margin-left: 100px;
 margin-top: 55px;
 margin-left: 100px;
 }
+
+.main-timeline-container .timeline-9,
+.main-timeline-container .timeline-10,
+.main-timeline-container .timeline-11{
+    width: 300px;
+    margin-top: -50px;
+    position: relative;
+
+
+
+}
+
+
+
+  .main-timeline-container .timeline-9 {
+  margin-right: 780px; /* Mueve el campo 5 hacia la derecha */
+
+
+  } 
+
+  .main-timeline-container .timeline-10 {
+  margin-right: 180px; 
+
+  }
+
+  .main-timeline-container .timeline-11 {
+    margin-right: -1000px; 
+  
+    }
+
+  .main-timeline-container .timeline-9 .content,
+ .main-timeline-container .timeline-10 .content,
+ .main-timeline-container .timeline-11 .content
+{
+margin-top: 55px;
+margin-left: 100px;
+}
+
+
+
+
+
+
+
+
 
 
 /* Campo 1 */
@@ -352,6 +396,45 @@ margin-left: 100px;
 .main-timeline-container .timeline-8 .timeline-year {
   color: #ff006e;
 }
+.main-timeline-container .timeline-9 {
+  background-color: #56e639; /* Rojo */
+}
+
+.main-timeline-container .timeline-9::before
+ {
+  border-left-color: #56e639; /* Rojo */
+}
+
+.main-timeline-container .timeline-9 .timeline-year {
+  color: #56e639;;
+}
+
+.main-timeline-container .timeline-10 {
+  background-color: #fffb00ea; /* Rojo */
+}
+
+.main-timeline-container .timeline-10::before
+ {
+  border-left-color: #fffb00ea; /* Rojo */
+}
+
+.main-timeline-container .timeline-10 .timeline-year {
+  color: #fffb00ea;;
+}
+
+.main-timeline-container .timeline-11 {
+  background-color: #6f00ffea; /* Rojo */
+}
+
+.main-timeline-container .timeline-11::before
+ {
+  border-left-color: #6f00ffea; /* Rojo */
+}
+
+.main-timeline-container .timeline-11 .timeline-year {
+  color: #6f00ffea;;
+}
+
 
 
 
