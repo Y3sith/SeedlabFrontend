@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
@@ -40,10 +40,12 @@ export class ModalAddAsesoresComponent implements OnInit {
   tiempoEspera = 1800;
   falupa = faCircleQuestion;
   /////
-  listTipoDocumento: []= [];
+  listTipoDocumento: [] = [];
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  
+  /////
+  imagenPerlil_Preview: string | ArrayBuffer | null = null;
+  selectedImagen_Perfil: File | null = null;
 
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -72,6 +74,8 @@ export class ModalAddAsesoresComponent implements OnInit {
     private emprendedorService: EmprendedorService,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
+    private alertService: AlertService,
+    private cdRef: ChangeDetectorRef,
 
   ) {
     this.asesorId = data.asesorId;
@@ -120,7 +124,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
   }
 
-  tipodato():void{
+  tipodato(): void {
     if (this.token) {
       this.emprendedorService.tipoDato().subscribe(
         data => {
@@ -192,22 +196,22 @@ export class ModalAddAsesoresComponent implements OnInit {
             password: '',
             estado: data.estado
           });
-  
+
           this.isActive = data.estado === 'Activo';
           setTimeout(() => {
             this.asesorForm.get('estado')?.setValue(this.isActive);
           });
-  
+
           // Cargar los departamentos y municipios
           this.cargarDepartamentos();
-  
+
           setTimeout(() => {
             // Establecer el departamento seleccionado
-            this.asesorForm.patchValue({ id_municipio: data.id_departamentos});
-  
+            this.asesorForm.patchValue({ id_municipio: data.id_departamentos });
+
             // Cargar los municipios de ese departamento
             this.cargarMunicipios(data.id_departamento);
-  
+
             setTimeout(() => {
               // Establecer el municipio seleccionado
               this.asesorForm.patchValue({ id_municipio: data.id_municipio });
@@ -220,7 +224,7 @@ export class ModalAddAsesoresComponent implements OnInit {
       );
     }
   }
-  
+
   /* Crear asesor o actualiza dependendiendo del asesorId */
   addAsesor(): void {
     this.submitted = true;
@@ -235,14 +239,15 @@ export class ModalAddAsesoresComponent implements OnInit {
       imagen_perfil: this.asesorForm.get('')?.value,
       genero: this.asesorForm.get('genero')?.value,
       fecha_nac: this.asesorForm.get('')?.value,
-      direccion:this.asesorForm.get('direccion')?.value,
+      direccion: this.asesorForm.get('direccion')?.value,
       celular: this.asesorForm.get('celular')?.value,
-      id_municipio: this.asesorForm.get('')?.value,
+      id_municipio: +this.asesorForm.get('id_municipio')?.value,
       aliado: this.nombreAliado,
       email: this.asesorForm.get('email')?.value,
       password: this.asesorForm.get('password')?.value,
       estado: this.asesorForm.get('estado')?.value,
     };
+    console.log('Asesor:', asesor);
     /* Actualiza asesor */
     if (this.asesorId != null) {
       this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
@@ -263,7 +268,7 @@ export class ModalAddAsesoresComponent implements OnInit {
       });
       /* Crea asesor */
     } else {
-      this.asesorService.createAsesor(this.token, asesor).subscribe(
+      this.asesorService.createAsesor(this.token, asesor).subscribe(  
         data => {
           setTimeout(function () {
             location.reload();
@@ -271,8 +276,8 @@ export class ModalAddAsesoresComponent implements OnInit {
           this.alerService.successAlert('Exito', data.message);
         },
         error => {
-          //console.error('Error al crear el asesor:', error);
-          this.alerService.errorAlert('Error', error.error.message);
+          console.error('Error al crear el asesor:', error);
+          //this.alerService.errorAlert('Error', error.error.message);
         });
     }
   }
@@ -296,6 +301,96 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
     this.boton = true;
   }
+
+  onFileSelecteds(event: any, field: string) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+
+      let maxSize = 0;
+
+      if (field === 'imagen_perfil') {
+        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+      }
+
+      if (file.size > maxSize) {
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.resetFileField(field);
+
+        ////Limpia el archivo seleccionado y resetea la previsualización
+        event.target.value = ''; // Borra la selección del input
+
+        // Resetea el campo correspondiente en el formulario y la previsualización
+        if (field === 'imagen_perfil') {
+          this.asesorForm.patchValue({ imagen_perfil: null });
+          this.imagenPerlil_Preview = null; // Resetea la previsualización
+        }
+        this.resetFileField(field);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.asesorForm.patchValue({ imagen_perfil: previewUrl });
+          this.imagenPerlil_Preview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
+
+      if (field === 'imagen_perfil') {
+        this.selectedImagen_Perfil = file;
+        this.asesorForm.patchValue({ imagen_perfil: file });
+      }
+
+    } else {
+      this.resetFileField(field);
+    }
+  }
+
+  resetFileField(field: string) {
+    if (field === 'imagen_perfil') {
+      this.asesorForm.patchValue({ imagen_perfil: null });
+      this.imagenPerlil_Preview = null;
+    }
+  }
+
+
+  generateImagePreview(file: File, field: string) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      if (field === 'imagen_perfil') {
+        this.imagenPerlil_Preview = e.target.result;
+      }
+      this.cdRef.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
