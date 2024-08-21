@@ -21,7 +21,10 @@
                             <span class="text-gray-500">Foto perfil</span>
                           </ng-template>
                         <button class="edit-button">
-                            <i class="fas fa-pencil-alt"></i>
+                            <i class="fas fa-pencil-alt">
+                                <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'logo')"
+                                accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                            </i>
                         </button>
                     </div>
                     <div class=" rounded-lg p-4 h-full w-full">
@@ -123,7 +126,7 @@
                     <div class="w-full">
                         <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5">Dirección</h5>
     
-                        <label for="departamento" class="block mb-2">Ciudad</label>
+                        <label for="departamento" class="block mb-2">Departamento</label>
                         <select id="departamento" name="departamento" formControlName="departamento"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
                             <option value="" disabled selected>Seleccionar Ciudad...</option>
@@ -150,30 +153,30 @@
 
 
         </div>
-    </div>
-    <div class="mb-4 w-full flex md:justify-around justify-center">
-
-        <div class="flex ">
-            <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic" (click)="onCancel()"
-                *ngIf="!blockedInputs" (click)="toggleInputsLock()">
-                Cancelar
-            </button>
-            <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
-                *ngIf="!blockedInputs" (click)="updateEmprendedor()">
-                Guardar cambios
-            </button>
-        </div>
+        <div class="mt-7 w-full flex md:justify-end justify-center">
     
-        <div class="flex mt-0">
-            <div class="flex justify-start">
-                <button id="botonDesactivar"
-                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 mr-3 italic"
-                    *ngIf="blockedInputs" (click)="desactivarEmprendedor()">Desactivar Cuenta
+            <div class="flex ">
+                <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic" (click)="onCancel()"
+                    *ngIf="!blockedInputs" (click)="toggleInputsLock()">
+                    Cancelar
+                </button>
+                <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
+                    *ngIf="!blockedInputs" (click)="updateEmprendedor()">
+                    Guardar cambios
                 </button>
             </div>
-            <button id="boton" class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
-                *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
-            </button>
+        
+            <div class="flex mt-0">
+                <div class="flex justify-start">
+                    <button id="botonDesactivar"
+                        class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 mr-3 italic"
+                        *ngIf="blockedInputs" (click)="desactivarEmprendedor()">Desactivar Cuenta
+                    </button>
+                </div>
+                <button id="boton" class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
+                    *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
+                </button>
+            </div>
         </div>
     </div>
     <!-- Estilo de los botones -->

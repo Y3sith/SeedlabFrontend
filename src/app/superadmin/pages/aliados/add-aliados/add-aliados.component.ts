@@ -60,6 +60,7 @@ export class AddAliadosComponent {
   aliadoForm: FormGroup;
   showFirstSection = true;
   showSecondSection = false;
+
   showThirdSection = false;
   logoPreview: string | ArrayBuffer | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
