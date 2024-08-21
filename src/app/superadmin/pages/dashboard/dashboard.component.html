@@ -4,7 +4,12 @@
     <app-header [title] [subtitle]="'Dashboard SuperAdmin'"></app-header>
   </header>
 
-  <div class=" p-2 sm:p-6 md:p-8 lg:p-12 xl:p-20">
+  <!-- Spinner -->
+  <div class="flex justify-center" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <div class=" p-2 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
       <!-- Super Admins -->
       <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
@@ -191,7 +196,7 @@
       </div>
     </div>
 
-    
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-14 mb-8">
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4">
         <h2 class="text-lg font-semibold mb-4">Registros Mensuales</h2>
@@ -199,11 +204,12 @@
           <div id="echarts-registros" style="width: 100%; height: 100%;"></div>
         </div>
       </div>
-      
+
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4">
         <h2 class="text-lg font-semibold text-gray-700 mb-2">Promedio de Asesorias</h2>
         <label for="yearSelect" class="mr-2 text-sm text-gray-600">Año:</label>
-        <select name="year" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)" class="text-sm py-1 px-2 w-20 border rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select name="year" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)"
+          class="text-sm py-1 px-2 w-20 border rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
         <div class="flex justify-center items-center h-80 sm:h-56 md:h-64 lg:h-72 w-full">
@@ -211,4 +217,26 @@
         </div>
       </div>
     </div>
+
+    <div class="container mx-auto p-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- Card del mapa (ocupa 2/3 en pantallas grandes) -->
+        <div class="lg:col-span-2 bg-white rounded-lg shadow-lg overflow-hidden">
+          <div class="h-[500px] lg:h-[600px]" id="echarts-empXDepar">
+            <!-- Aquí va tu componente de mapa -->
+          </div>
+        </div>
+
+        <!-- Card de la gráfica (ocupa 1/3 en pantallas grandes) -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div class="h-[200px] lg:h-[400px]">
+            <!-- Aquí va tu componente de gráfica -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
   </div>
+</div>

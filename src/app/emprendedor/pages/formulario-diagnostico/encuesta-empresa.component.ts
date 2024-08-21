@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { fa1 } from '@fortawesome/free-solid-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
@@ -41,7 +42,7 @@ export class EncuestaEmpresaComponent {
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
 
-  id_empresa = 1;
+  id_empresa: number | null = null;
   //private originalAttributes: Map<Element, { colspan: string | null, rowspan: string | null }> = new Map();
 
   respuesta1: Respuesta = new Respuesta({});
@@ -180,7 +181,8 @@ export class EncuestaEmpresaComponent {
   constructor(
     private respuestasService: RespuestasService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
 
@@ -188,6 +190,10 @@ export class EncuestaEmpresaComponent {
   ngOnInit() {
     this.updateProgress();
     this.validateToken();
+    this.route.paramMap.subscribe(params => {
+      this.id_empresa = +params.get('id');
+      console.log('id_empresa', this.id_empresa);
+    })
   }
 
   validateToken(): void {
@@ -214,7 +220,7 @@ export class EncuestaEmpresaComponent {
 
   onSubmitSeccion1() {
 
-    let id_empresa = 1;
+    this.id_empresa;
     let respCounter = 0;
     let isValidForm = true;
 
@@ -285,7 +291,7 @@ export class EncuestaEmpresaComponent {
     //pregunta 15
     this.listaRespuestas1.push(this.respuesta23);
 
-    const payload = { respuestas: this.listaRespuestas1, id_empresa: id_empresa };
+    const payload = { respuestas: this.listaRespuestas1, id_empresa: this.id_empresa };
 
 
     for (let i = 0; i < 15; i++) {
@@ -293,7 +299,7 @@ export class EncuestaEmpresaComponent {
       console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas1[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas1[respCounter].id_empresa = id_empresa;
+      this.listaRespuestas1[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas1[respCounter].id_subpregunta = null;
 
       if (currentPregunta.id === 2) {
@@ -374,7 +380,7 @@ export class EncuestaEmpresaComponent {
     //console.log(this.respuesta1);
     let respCounter = 0;
     let isValidForm = true;
-    let id_empresa = 1;
+    this.id_empresa;
     this.listaRespuestas2 = [];
 
     //Pregunta 16 y 17
@@ -551,14 +557,14 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta65);
     }
 
-    const payload = { respuestas: this.listaRespuestas2, id_empresa: id_empresa };
+    const payload = { respuestas: this.listaRespuestas2, id_empresa: this.id_empresa };
 
 
     for (let i = 15; i < 30; i++) {
       //debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas2[respCounter].id_empresa = id_empresa;
+      this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas2[respCounter].id_subpregunta = null;
 
       if (currentPregunta.id === 16) {
@@ -582,7 +588,7 @@ export class EncuestaEmpresaComponent {
             // Asignar valores a la respuesta actual
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_empresa = this.id_empresa;
 
             subPreguntaCounter++;
           }
@@ -621,7 +627,7 @@ export class EncuestaEmpresaComponent {
             // Asignar valores a la respuesta actual
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = this.id_empresa;
 
             subPreguntasCounter++;
           }
@@ -658,7 +664,7 @@ export class EncuestaEmpresaComponent {
             }
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = this.id_empresa;
 
             subPreguntasCounter++;
           }
@@ -693,7 +699,7 @@ export class EncuestaEmpresaComponent {
 
             this.listaRespuestas2[respCounter + 1 + j].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + j].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + j].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + j].id_empresa = this.id_empresa;
 
             subPreguntasCounter++;
           }
@@ -715,7 +721,7 @@ export class EncuestaEmpresaComponent {
           for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
             this.listaRespuestas2[respCounter + j].id_pregunta = currentPregunta.id;
             this.listaRespuestas2[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + j].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + j].id_empresa = this.id_empresa;
           }
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
@@ -763,7 +769,7 @@ export class EncuestaEmpresaComponent {
             }
             this.listaRespuestas2[subPreguntaIndex].id_pregunta = currentPregunta.id;
             this.listaRespuestas2[subPreguntaIndex].id_subpregunta = currentPregunta.subPreguntas[h].id;
-            this.listaRespuestas2[subPreguntaIndex].id_empresa = id_empresa;
+            this.listaRespuestas2[subPreguntaIndex].id_empresa = this.id_empresa;
           }
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
@@ -777,7 +783,7 @@ export class EncuestaEmpresaComponent {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
           return;
-        } 
+        }
         if (this.listaRespuestas2[respCounter].opcion === 'Si') {
           const nextPregunta = PREGUNTAS[i + 1];
           let subPreguntasCounter = 0;
@@ -792,11 +798,11 @@ export class EncuestaEmpresaComponent {
 
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
-            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = id_empresa;
+            this.listaRespuestas2[respCounter + 1 + subPreguntasCounter].id_empresa = this.id_empresa;
             subPreguntasCounter++;
           }
           respCounter += subPreguntasCounter + 1;
-        } 
+        }
         else if (this.listaRespuestas2[respCounter].opcion === 'No') {
           respCounter += 4;
         }
@@ -839,7 +845,7 @@ export class EncuestaEmpresaComponent {
   onSubmitSeccion3() {
     let respCounter = 0;
     let isValidForm = true;
-    let id_empresa = 1;
+    this.id_empresa;
     this.listaRespuestas3 = [];
 
     this.listaRespuestas3.push(this.respuesta66);
@@ -872,7 +878,7 @@ export class EncuestaEmpresaComponent {
       const currentRespuesta = PREGUNTAS[i];
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas3[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas3[respCounter].id_empresa = id_empresa;
+      this.listaRespuestas3[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas3[respCounter].id_subpregunta = null;
       if (currentPregunta.isText) {
         if (!this.listaRespuestas3[respCounter].texto_res || this.listaRespuestas3[respCounter].texto_res === '' && this.listaRespuestas3[respCounter].texto_res !== 'N/A') {
@@ -902,7 +908,7 @@ export class EncuestaEmpresaComponent {
   onSubmitSeccion4() {
     let respCounter = 0;
     let isValidForm = true;
-    let id_empresa = 1;
+    this.id_empresa;
     this.listaRespuestas4 = [];
 
     this.listaRespuestas4.push(this.respuesta78);
@@ -1031,49 +1037,98 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 41; i < 48; i++) {
-      //debugger;
-      const currentRespuesta = PREGUNTAS[i];
-      const currentPregunta = PREGUNTAS[i - 1];
-      this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
-      this.listaRespuestas4[respCounter].id_empresa = id_empresa;
-      this.listaRespuestas4[respCounter].id_subpregunta = null;
+      debugger;
+      const currentPregunta = PREGUNTAS[i];
+      const currentRespuesta = this.listaRespuestas4[respCounter];
 
-      if (currentPregunta.id === 42 || currentPregunta.id === 45 || currentPregunta.id === 47) {
-        for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
-          if (respCounter + j >= this.listaRespuestas4.length) {
-            console.log(`Saliendo del loop de subpreguntas en j=${j} porque respCounter (${respCounter}) + j >= listaRespuestas4.length (${this.listaRespuestas4.length})`);
-            break;
-          }
-          this.listaRespuestas4[respCounter + j].id_pregunta = currentPregunta.id;
-          this.listaRespuestas4[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
-          this.listaRespuestas4[respCounter + j].id_empresa = id_empresa;
-        }
-        respCounter += currentPregunta.subPreguntas.length;
-        continue;
+      // Verifica que la respuesta para la pregunta actual exista en la lista de respuestas
+      if (!currentRespuesta) {
+        this.alertService.errorAlert('Error', `No se encontró respuesta para la pregunta ${currentPregunta.id}.`);
+        isValidForm = false;
+        break;
       }
-      if (currentPregunta.isText) {
-        if (!this.listaRespuestas4[respCounter].texto_res || this.listaRespuestas4[respCounter].texto_res === '') {
-          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
-          isValidForm = false;
-          return;
-        }
-      } else {
-        if (!this.listaRespuestas4[respCounter].opcion || this.listaRespuestas4[respCounter].opcion === '') {
-          this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
-          isValidForm = false;
-          return;
-        }
-      }
+
+      // Validar pregunta afirmativa
       if (currentPregunta.isAffirmativeQuestion) {
-        if (this.listaRespuestas4[respCounter].opcion === 'No') {
-          i += currentPregunta.subPreguntas.length;
-          respCounter++;
+        if (currentRespuesta.opcion === 'No') {
+          // Si la respuesta es 'No', saltar la pregunta actual y todas las subpreguntas
+          if (i + 1 < 48) { // Verifica si hay una pregunta siguiente para saltar
+            const nextPregunta = PREGUNTAS[i + 1];
+            if (nextPregunta.subPreguntas && nextPregunta.subPreguntas.length > 0) {
+              // Saltar también las subpreguntas de la siguiente pregunta si las hay
+              respCounter += nextPregunta.subPreguntas.length;
+            }
+          }
+         
+          // Avanzar al siguiente índice del ciclo
+          i++;
           continue;
         }
       }
-      respCounter++;
+
+      // Si la pregunta tiene subpreguntas, validar subpreguntas
+      if (currentPregunta.subPreguntas && currentPregunta.subPreguntas.length > 0) {
+        let firstEmptySubPreguntaId: number | null = null; // Variable para almacenar el ID de la primera subpregunta vacía
+
+        for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
+          const subPregunta = currentPregunta.subPreguntas[j];
+          const respuestaSubPregunta = this.listaRespuestas4[respCounter + j];
+
+          // Verifica que la respuesta para la subpregunta exista en la lista de respuestas
+          if (!respuestaSubPregunta) {
+            this.alertService.errorAlert('Error', `No se encontró respuesta para la subpregunta ${subPregunta.id}.`);
+            isValidForm = false;
+            break;
+          }
+
+          respuestaSubPregunta.id_pregunta = currentPregunta.id;
+          respuestaSubPregunta.id_subpregunta = subPregunta.id;
+          respuestaSubPregunta.id_empresa = this.id_empresa;
+
+          // Validar respuesta de subpregunta
+          if (!respuestaSubPregunta.opcion || respuestaSubPregunta.opcion === '') {
+            firstEmptySubPreguntaId = subPregunta.id; // Guarda el ID de la primera subpregunta vacía
+            isValidForm = false;
+          }
+
+          // Si se encontró un error en una subpregunta, detener el bucle
+          if (!isValidForm) {
+            break;
+          }
+        }
+
+        // Si se encontró una subpregunta vacía, mostrar un mensaje de error y salir
+        if (!isValidForm && firstEmptySubPreguntaId !== null) {
+          this.alertService.errorAlert('Error', `La subpregunta ${firstEmptySubPreguntaId} está vacía.`);
+          break;
+        }
+        // Aumenta el contador de respuestas por el número de subpreguntas
+        respCounter += currentPregunta.subPreguntas.length;
+      } else {
+        // Validar pregunta sin subpreguntas
+        if (currentPregunta.isText) {
+          if (!currentRespuesta.texto_res || currentRespuesta.texto_res === '') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            break;
+          }
+        } else {
+          if (!currentRespuesta.opcion || currentRespuesta.opcion === '') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            break;
+          }
+        }
+
+
+
+        respCounter++;
+      }
     }
+
     console.log('fuera del ciclo', this.listaRespuestas4);
+
+
   }
 
   enviarRespuestasJson() {
@@ -1120,10 +1175,10 @@ export class EncuestaEmpresaComponent {
 
   updateProgress() {
     let answeredQuestions = 0;
-    const totalQuestions = 126; // Ajuste este número al total real de preguntas
+    const totalQuestions = 100; // Ajuste este número al total real de preguntas
 
     // Verifique cada respuesta
-    for (let i = 1; i <= 126; i++) {
+    for (let i = 1; i <= totalQuestions; i++) {
       const respuesta = this['respuesta' + i] as Respuesta;
       if (respuesta && (respuesta.opcion || respuesta.texto_res)) {
         answeredQuestions++;

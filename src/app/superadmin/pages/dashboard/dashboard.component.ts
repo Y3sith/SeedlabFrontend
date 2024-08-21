@@ -5,6 +5,9 @@ import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
 
+import { data } from 'jquery';
+import { response } from 'express';
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -26,8 +29,10 @@ export class DashboardComponent implements AfterViewInit {
   doughnutChartOption: echarts.EChartsOption;
   registrosEchartsOptions: echarts.EChartsOption;
   promedioAsesoriasEchartsOptions: echarts.EChartsOption;
+  emprenDeparEchartsOptions: echarts.EChartsOption;
   years: number[] = [];
   selectedYear: number;
+  isLoading: boolean = false;
 
   constructor(
     private superAdminService: SuperadminService,
@@ -44,6 +49,7 @@ export class DashboardComponent implements AfterViewInit {
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
     this.selectedYear = currentYear;
     this.promedioAsesoriasMesAnio(this.selectedYear);
+    this.emprendedorPorDepartamento();
   }
 
   ngAfterViewInit() {
@@ -93,7 +99,7 @@ export class DashboardComponent implements AfterViewInit {
 
         const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
-        
+
         this.promedioAsesoriasEchartsOptions = {
           tooltip: {
             trigger: 'axis',
@@ -139,9 +145,10 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
- 
+
 
   getDatosDashboard(): void {
+    this.isLoading = true;
     this.superAdminService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
@@ -205,6 +212,9 @@ export class DashboardComponent implements AfterViewInit {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.isLoading = false;
       }
     );
   }
@@ -459,6 +469,114 @@ export class DashboardComponent implements AfterViewInit {
     return monthNames[monthNumber - 1];
   }
 
+
+  emprendedorPorDepartamento() {
+    this.superAdminService.emprendedoresPorDepartamento(this.token).subscribe(
+      (data: { departamento: string; total_emprendedores: number }[]) => {
+        console.log('data departamentos', data);  
+        fetch('assets/data/COL1.geo.json')
+          .then(response => response.json())
+          .then(colJson => {
+            echarts.registerMap('Colombia', colJson);
+
+            const mappedData = data.map(item => ({
+              name: this.normalizeName(item.departamento),
+              value: Number(item.total_emprendedores) || 0
+            }));
+
+            colJson.features.forEach(feature => {
+              feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
+            });
+            
+            //console.log('Datos mapeados:', mappedData);  
+
+            const maxValue = Math.max(...data.map(item => item.total_emprendedores));
+
+            this.emprenDeparEchartsOptions = {
+              title: {
+                text: 'Emprendedores por Departamento',
+                left: 'center'
+              },
+              tooltip: {
+                trigger: 'item',
+                formatter: function(params) {
+                  return `
+                    Departamento: ${params.name}<br>
+                    Valor: ${isNaN(params.value) ? 0 : params.value}<br>
+                  `;
+                }
+              },
+              visualMap: {
+                min: 0,
+                max: maxValue,
+                left: 'left',
+                top: 'bottom',
+                text: ['Alta', 'Baja'],
+                calculable: true
+              },
+              series: [
+                {
+                  name: 'Emprendedores',
+                  type: 'map',
+                  map: 'Colombia',
+                  roam: true,
+                  data: mappedData,                
+                  nameProperty: 'NOMBRE_DPT', 
+                  emphasis: {
+                    label: {
+                      show: true
+                    },
+                    itemStyle: {
+                      areaColor: '#eee'
+                    }
+                  },
+                  select: {
+                    label: {
+                      show: true
+                    },
+                    itemStyle: {
+                      color: 'rgb(255, 215, 0)'
+                    }
+                  }
+                }
+              ]
+            };
+
+            this.initEchartsEmprendedorXDepartamento();
+          })
+          .catch(error => console.error('Error al cargar el mapa:', error));
+      },
+      error => console.error('Error al obtener datos de emprendedores:', error)
+    );
+  }
+
+
+
+  initEchartsEmprendedorXDepartamento(): void {
+    const chartDom = document.getElementById('echarts-empXDepar');
+    if (chartDom) {
+      const myChart = echarts.init(chartDom);
+      myChart.setOption(this.emprenDeparEchartsOptions);
+
+      // Manejar el cambio de tamaño
+      window.addEventListener('resize', () => {
+        myChart.resize();
+      });
+    } else {
+      console.error('No se pudo encontrar el elemento con id "echarts-empXDepar"');
+    }
+  }
+
+  normalizeName(name: string): string {
+    return name.toUpperCase()
+      .replace(/Á/g, 'A')
+      .replace(/É/g, 'E')
+      .replace(/Í/g, 'I')
+      .replace(/Ó/g, 'O')
+      .replace(/Ú/g, 'U')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
 
 
 }
