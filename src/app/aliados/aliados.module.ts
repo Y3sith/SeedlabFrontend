@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+  import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListAsesoresComponent } from './pages/list-asesores/list-asesores.component';
 import { AsesoriaAliadoComponent } from './pages/list-asesorias/asesoria-aliado.component';
@@ -18,6 +18,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { NgChartsModule } from 'ng2-charts';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
+import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
 
 
 
@@ -33,6 +34,7 @@ import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
     AsignarAsesorModalComponent,
     FanPageComponent,
     DashboardComponent,
+    PerfilAliadoComponent,
     
   ],
   imports: [
