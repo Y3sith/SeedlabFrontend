@@ -171,11 +171,11 @@
             </div>
 
             <div class="-mt-6" *ngSwitchCase="'3'">
-              <label class="text-xl font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center" for="nombre">Imagen
+              <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center" for="nombre">Imagen
                 <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
                   (change)="onFileSelecteds($event, 'ruta_multi')">
                 <span (click)="triggerFileInput()"
-                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-full inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
                   Subir Imagen
                   <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                 </span>
@@ -192,17 +192,20 @@
             </div>
 
             <div class="-mt-6" *ngSwitchCase="'4'">
-              <label class="text-xl font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center" for="nombre">PDF
+              <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center" for="nombre">PDF
                 <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
                   (change)="onFileSelecteds($event, 'ruta_documento')">
                 <span (click)="triggerFileInput()"
-                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-full inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
                   Subir PDF
                   <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                 </span>
               </label>
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
                 Este campo es obligatorio.
+              </div>
+              <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
+                Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
               </div>
             </div>
 
