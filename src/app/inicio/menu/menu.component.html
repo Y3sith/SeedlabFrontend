@@ -4,7 +4,7 @@
     [style.backgroundColor]="(!isMobile || isExpanded) ? colorPrincipal : 'white'">
     <header class="relative">
         <div class="toggle absolute top-[20px] lg:left-[calc(100%-50px)] left-[calc(100%-40px)] transform -translate-y-1/2 h-[40px] w-[40px] flex items-center justify-center rounded-r-xl text-white text-xl transition-all duration-300"
-            (click)="toggleSidebar()">
+            (click)="onToggleClick($event)">
             <ng-container *ngIf="isExpanded; else burgerIcon">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width: 25px; height: 25px;" fill="#FFFFFF"
                     viewBox="0 0 320 512">
@@ -17,7 +17,7 @@
         <ng-template #burgerIcon>
             <svg xmlns="http://www.w3.org/2000/svg"
                 style="width: 25px; height: 25px; display: flex; justify-content: center; margin-right: 10;" [attr.fill]="getIconColor()"
-                viewBox="0 0 448 512">
+                 viewBox="0 0 448 512">
                 <path
                     d="M16 132h416c8.8 0 16-7.2 16-16V116c0-8.8-7.2-16-16-16H16c-8.8 0-16 7.2-16 16v4c0 8.8 7.2 16 16 16zm0 128h416c8.8 0 16-7.2 16-16v-4c0-8.8-7.2-16-16-16H16c-8.8 0-16 7.2-16 16v4c0 8.8 7.2 16 16 16zm416 112H16c-8.8 0-16 7.2-16 16v4c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16v-4c0-8.8-7.2-16-16-16z" />
             </svg>
@@ -26,7 +26,7 @@
     </header>
     <div class="flex flex-col md:justify-around justify-around h-[calc(90%-50px)] xl:mt-24 mt-28 containerItems">
         <div class="menu">
-            <div
+            <div 
                 class="relative overflow-y-auto overflow-x-hidden max-h-[245.9px] md:max-h-full custom-scrollbar xl:mt-12">
                 <ul class="p-0 space-y-2">
                     <!-- Inicio -->
@@ -74,7 +74,7 @@
                         class="text-center group-hover:text-white text-xl min-w-[60px] transition duration-200"
                         fill="currentColor" viewBox="0 0 512 512">
                         <path
-                            d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
+                            d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9C362.9 96 371.5 99.5 377.9 105.9zM32 64c0-17.7 14.3-32 32-32h160c17.7 0 32 14.3 32 32S241.7 96 224 96H96V416h128c17.7 0 32 14.3 32 32s-14.3 32-32 32H64c-17.7 0-32-14.3-32-32V64z" />
                     </svg>
                     <span class="mr-16 text-base text nav-text">Cerrar Sesión</span>
                 </a>

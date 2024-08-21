@@ -48,7 +48,12 @@
     </div>
   </div>
 
-  <ng-container *ngIf="showFalse">
+  <!-- Spinner -->
+  <div class="flex justify-center" *ngIf="isLoading">
+    <div class="spinner"></div>
+  </div>
+
+  <ng-container *ngIf="showFalse && !isLoading">
     <div *ngIf="asesoriasSinHorario.length === 0" class="text-center text-gray-500 mt-6">
       No tienes asesorias pendientes por asignar.
     </div>
@@ -87,7 +92,7 @@
   </ng-container>
 
 
-  <ng-container *ngIf="showTrue">
+  <ng-container *ngIf="showTrue && !isLoading">
     <div *ngIf="asesoriasConHorario.length === 0" class="text-center text-gray-500 mt-6">
       Aun no asignas aliado a ninguna asesoria.
     </div>
