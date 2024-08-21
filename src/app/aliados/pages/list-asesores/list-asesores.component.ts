@@ -68,6 +68,7 @@ export class ListAsesoresComponent implements OnInit {
       this.isLoading = true;
       this.aliadoService.getinfoAsesor(this.token, this.user.id, this.userFilter.estado).subscribe(
         (data) => {
+          //console.log('qqqqqqqqq: ',data);
           this.listaAsesores = data;
           this.isLoading = false;
         },

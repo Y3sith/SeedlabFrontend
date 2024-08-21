@@ -7,6 +7,10 @@ import { AsesorService } from '../../../servicios/asesor.service';
 import { User } from '../../../Modelos/user.model';
 import { Asesor } from '../../../Modelos/asesor.model';
 import { AlertService } from '../../../servicios/alert.service';
+import { AuthService } from '../../../servicios/auth.service';
+import { EmprendedorService } from '../../../servicios/emprendedor.service';
+import { DepartamentoService } from '../../../servicios/departamento.service';
+import { MunicipioService } from '../../../servicios/municipio.service';
 
 
 
@@ -35,11 +39,17 @@ export class ModalAddAsesoresComponent implements OnInit {
   nombreAliado: string | null = null;
   tiempoEspera = 1800;
   falupa = faCircleQuestion;
+  /////
+  listTipoDocumento: []= [];
+  listDepartamentos: any[] = [];
+  listMunicipios: any[] = [];
+  
 
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
     documento: ['', Validators.required],
+    id_tipo_documento: ['', Validators.required],
     imagen_perfil: [null],
     genero: ['', Validators.required],
     fecha_nac: ['', Validators.required],
@@ -59,6 +69,9 @@ export class ModalAddAsesoresComponent implements OnInit {
     private asesorService: AsesorService,
     private aliadoService: AliadoService,
     private alerService: AlertService,
+    private emprendedorService: EmprendedorService,
+    private departamentoService: DepartamentoService,
+    private municipioService: MunicipioService,
 
   ) {
     this.asesorId = data.asesorId;
@@ -68,6 +81,8 @@ export class ModalAddAsesoresComponent implements OnInit {
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
+    this.tipodato();
+    this.cargarDepartamentos();
     /*para ver si lo estan editando salga la palabra editar */
     if (this.asesorId != null) {
       this.isEditing = true;
@@ -105,15 +120,67 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
   }
 
+  tipodato():void{
+    if (this.token) {
+      this.emprendedorService.tipoDato().subscribe(
+        data => {
+          this.listTipoDocumento = data;
+          //console.log('datos tipo de documento: ',data)
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
+  cargarDepartamentos(): void {
+    this.departamentoService.getDepartamento().subscribe(
+      (data: any[]) => {
+        this.listDepartamentos = data;
+        //console.log('Departamentos cargados:', JSON.stringify(data));
+        //console.log('zzzzzzzzzzz: ',this.listDepartamentos);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  onDepartamentoSeleccionado(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const selectedDepartamento = target.value;
+
+    // Guarda el departamento seleccionado en el localStorage
+    localStorage.setItem('departamento', selectedDepartamento);
+
+    // Llama a cargarMunicipios si es necesario
+    this.cargarMunicipios(selectedDepartamento);
+  }
+
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
+      data => {
+        this.listMunicipios = data;
+        //console.log('Municipios cargados:', JSON.stringify(data));
+      },
+      err => {
+        console.log('Error al cargar los municipios:', err);
+      }
+    );
+  }
+
   /* Trae la informacion del asesor cuando el asesorId no sea nulo */
   verEditar(): void {
     if (this.asesorId != null) {
       this.aliadoService.getAsesorAliado(this.token, this.asesorId).subscribe(
         data => {
+          console.log('datossssss: ', data);
           this.asesorForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
             documento: data.documento,
+            id_tipo_documento: data.id_tipo_documento,
             imagen_perfil: data.imagen_perfil,
             genero: data.genero,
             fecha_nac: data.fecha_nac,
@@ -125,20 +192,35 @@ export class ModalAddAsesoresComponent implements OnInit {
             password: '',
             estado: data.estado
           });
+  
           this.isActive = data.estado === 'Activo';
-
           setTimeout(() => {
             this.asesorForm.get('estado')?.setValue(this.isActive);
           });
-          console.log('wwwwwwwwww: ',this.user)
+  
+          // Cargar los departamentos y municipios
+          this.cargarDepartamentos();
+  
+          setTimeout(() => {
+            // Establecer el departamento seleccionado
+            this.asesorForm.patchValue({ id_municipio: data.id_departamentos});
+  
+            // Cargar los municipios de ese departamento
+            this.cargarMunicipios(data.id_departamento);
+  
+            setTimeout(() => {
+              // Establecer el municipio seleccionado
+              this.asesorForm.patchValue({ id_municipio: data.id_municipio });
+            }, 500);
+          }, 500);
         },
         error => {
           console.log(error);
         }
-      )
+      );
     }
   }
-
+  
   /* Crear asesor o actualiza dependendiendo del asesorId */
   addAsesor(): void {
     this.submitted = true;
@@ -148,10 +230,14 @@ export class ModalAddAsesoresComponent implements OnInit {
     const asesor: Asesor = {
       nombre: this.asesorForm.get('nombre')?.value,
       apellido: this.asesorForm.get('apellido')?.value,
+      documento: this.asesorForm.get('documento')?.value,
+      id_tipo_documento: this.asesorForm.get('id_tipo_documento')?.value,
       imagen_perfil: this.asesorForm.get('')?.value,
       genero: this.asesorForm.get('genero')?.value,
+      fecha_nac: this.asesorForm.get('')?.value,
       direccion:this.asesorForm.get('direccion')?.value,
       celular: this.asesorForm.get('celular')?.value,
+      id_municipio: this.asesorForm.get('')?.value,
       aliado: this.nombreAliado,
       email: this.asesorForm.get('email')?.value,
       password: this.asesorForm.get('password')?.value,
