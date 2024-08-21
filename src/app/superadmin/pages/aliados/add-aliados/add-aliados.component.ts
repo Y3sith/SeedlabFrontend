@@ -60,6 +60,7 @@ export class AddAliadosComponent {
   aliadoForm: FormGroup;
   showFirstSection = true;
   showSecondSection = false;
+
   showThirdSection = false;
   logoPreview: string | ArrayBuffer | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
@@ -100,7 +101,7 @@ export class AddAliadosComponent {
 
     this.bannerForm = this.formBuilder.group({
       urlImagen: [Validators.required],
-      estadobanner: ['Activo'],
+      estadobanner: [1],
     });
     this.isActive = true;
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');

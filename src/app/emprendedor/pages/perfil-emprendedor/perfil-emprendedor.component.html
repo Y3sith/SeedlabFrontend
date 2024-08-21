@@ -1,82 +1,85 @@
 <form [formGroup]="emprendedorForm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <div class="container mx-auto px-4 py-6 md:py-12">
+    <div class="container mx-auto py-6 md:py-12 ">
         <!-- Encabezado -->
-        <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+        <header class="flex md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
             <app-header [title] [subtitle]="'Perfil'"></app-header>
         </header>
 
-        <div class="w-full  bg-[#FAFAFA] md:py-12 md:px-16">
+        <div class="w-full rounded-lg bg-[#FAFAFA] max-md:mt-20 max-[600px]:px-2 max-[600px]:py-2 min-[851px]:py-12 min-[851px]:px-16">
 
             <!-- Contenido -->
-            <div class="md:flex gap-4 items-center w-full">
+            <div class="min-[860px]:flex items-center w-full">
 
-                <div class=" md:max-w-[25rem]">
-
-                    <div class="absolute max-[800px]:translate-x-1/2 max-[1281px]:translate-x-16 min-[1282px]:translate-x-20 transform  -translate-y-1/2">
-                        <img src="../../../assets/images/perfilimg.webp" alt="Imagen"
-                            class="w-44 h-44 rounded-full border-[5px] border-amber-500" loading="lazy" />
-                        <button class="absolute bottom-0 left-[70%] bg-white rounded-full p-2 text-gray-500 shadow">
-                            <i class="fas fa-pencil-alt"></i>
+                <div class=" bg-[#e6e6e6] rounded-lg relative max-[860px]:w-full  min-[860px]:max-w-[45rem]">
+                <div class="w-full">
+                    <div class="image-container">
+                        <ng-container *ngIf="imagenPreview || emprendedorForm.get('imagen_perfil')?.value; else noImage">
+                            <img [src]="imagenPreview || emprendedorForm.get('imagen_perfil')?.value" class="profile-image">
+                          </ng-container>
+                          <ng-template #noImage>
+                            <span class="text-gray-500">Foto perfil</span>
+                          </ng-template>
+                        <button class="edit-button">
+                            <i class="fas fa-pencil-alt">
+                                <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'logo')"
+                                accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                            </i>
                         </button>
                     </div>
-
-                  
-
-                    <div class="bg-[#e6e6e6]  rounded-lg p-4 h-full md:max-w-[45rem]">
+                    <div class=" rounded-lg p-4 h-full w-full">
+                        <div class="w-full">
+                            <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center">Información Básica</h5>
     
-                        <!-- Estilo de la imagen -->
+                            <label for="nombre" class="block mt-4 mb-2">Nombre(s)</label>
+                            <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
+                                class="p-2 h-12 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+        
+                            <label for="apellido" class="block mb-2 mt-4">Apellido(s)</label>
+                            <input type="text" id="apellido" formControlName="apellido" [readonly]="blockedInputs"
+                                class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+        
+                            <div class="min-[860px]:flex gap-4 mt-4">
+                                <div class="">
     
-                        <h5 class="text-xl font-bold mt-20 text-center">Información Básica</h5>
+                                    <label for="tipodocumento" class="block mb-4 md:w-20 ">Tipo de Documento</label>
+                                    
+                                        <select id="tipodocumento" formControlName="nombretipodoc"
+                                        class="p-2 h-12 w-full mt-[-10%] border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                        <option value="" disabled selected>Seleccionar tipo de documento...</option>
+                                        <option value="1">Cédula ciudadanía</option>
+                                        <option value="2">Pasaporte</option>
+                                        <option value="3">Carnet de Extranjería</option>
+                                    </select>
+                                </div>
+                                <div class="">
+                                    <label for="documento" class="block mb-4 max-md:mt-4">Número de Documento</label>
+                                    <input type="number" id="documento" formControlName="documento" [readonly]="blockedInputs"
+                                        class="p-2 h-12 w-full mt-[-10%] border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                </div>
     
-                        <label for="nombre" class="block mt-4 mb-2">Nombre(s)</label>
-                        <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
-                            class="p-2 h-12 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-    
-                        <label for="apellido" class="block mb-2 mt-4">Apellido(s)</label>
-                        <input type="text" id="apellido" formControlName="apellido" [readonly]="blockedInputs"
-                            class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-    
-                        <div class="md:flex gap-4 mt-4">
-                            <div class="">
-
-                                <label for="tipodocumento" class="block mb-4 md:w-20 ">Tipo de Documento</label>
                                 
-                                    <select id="tipodocumento" formControlName="nombretipodoc"
-                                    class="p-2 h-12 w-full mt-[-10%] border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
-                                    <option value="" disabled selected>Seleccionar tipo de documento...</option>
-                                    <option value="1">Cédula ciudadanía</option>
-                                    <option value="2">Pasaporte</option>
-                                    <option value="3">Carnet de Extranjería</option>
-                                </select>
+                                
                             </div>
-                            <div class="">
-                                <label for="documento" class="block mb-4 max-md:mt-4">Número de Documento</label>
-                                <input type="number" id="documento" formControlName="documento" [readonly]="blockedInputs"
-                                    class="p-2 h-12 w-full mt-[-10%] border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                            </div>
-
-                            
-                            
+                            <label for="genero" class="block mb-2 mt-4">Género</label>
+                            <select id="genero" formControlName="genero"
+                                class="p-2 h-12 w-full md:mb-4 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                <option value="" disabled selected>Seleccionar Género...</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Otro">Otro</option>
+                            </select>
                         </div>
-    
-                        <label for="genero" class="block mb-2 mt-4">Género</label>
-                        <select id="genero" formControlName="genero"
-                            class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
-                            <option value="" disabled selected>Seleccionar Género...</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
-                            <option value="Otro">Otro</option>
-                        </select>
                     </div>
                 </div>
 
-                <div class="max-md:hidden w-10"></div>
-
+                    
+                </div>
+                <div class="max-[860px]:hidden w-10"></div>
                 <!-- Primera Columna -->
 
-                <div class="md:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
-                    <div class="w-full">
+                <div class="min-[860px]:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
+                    <div class="w-full mt-0 pt-0">
                     
                         <h5 class="text-xl font-bold mb-4 text-center">Información de Personal</h5>
     
@@ -123,7 +126,7 @@
                     <div class="w-full">
                         <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5">Dirección</h5>
     
-                        <label for="departamento" class="block mb-2">Ciudad</label>
+                        <label for="departamento" class="block mb-2">Departamento</label>
                         <select id="departamento" name="departamento" formControlName="departamento"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
                             <option value="" disabled selected>Seleccionar Ciudad...</option>
@@ -150,30 +153,30 @@
 
 
         </div>
-    </div>
-    <div class="mb-8 w-full flex md:justify-around justify-center">
-
-        <div class="flex ">
-            <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic" (click)="onCancel()"
-                *ngIf="!blockedInputs" (click)="toggleInputsLock()">
-                Cancelar
-            </button>
-            <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
-                *ngIf="!blockedInputs" (click)="updateEmprendedor()">
-                Guardar cambios
-            </button>
-        </div>
+        <div class="mt-7 w-full flex md:justify-end justify-center">
     
-        <div class="flex mt-0">
-            <div class="flex justify-start">
-                <button id="botonDesactivar"
-                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 mr-3 italic"
-                    *ngIf="blockedInputs" (click)="desactivarEmprendedor()">Desactivar Cuenta
+            <div class="flex ">
+                <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic" (click)="onCancel()"
+                    *ngIf="!blockedInputs" (click)="toggleInputsLock()">
+                    Cancelar
+                </button>
+                <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
+                    *ngIf="!blockedInputs" (click)="updateEmprendedor()">
+                    Guardar cambios
                 </button>
             </div>
-            <button id="boton" class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
-                *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
-            </button>
+        
+            <div class="flex mt-0">
+                <div class="flex justify-start">
+                    <button id="botonDesactivar"
+                        class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 mr-3 italic"
+                        *ngIf="blockedInputs" (click)="desactivarEmprendedor()">Desactivar Cuenta
+                    </button>
+                </div>
+                <button id="boton" class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
+                    *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
+                </button>
+            </div>
         </div>
     </div>
     <!-- Estilo de los botones -->

@@ -226,6 +226,7 @@ export class RegistroComponent implements OnInit {
       this.f.nombretipodoc.value,
       this.f.nombre.value,
       this.f.apellido.value,
+      //this.f.imagen_perfil.value,
       this.f.celular.value,
       this.f.email.value,
       this.f.password.value,
