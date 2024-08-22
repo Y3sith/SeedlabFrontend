@@ -33,7 +33,7 @@ export class ListOrientadorComponent implements OnInit {
   id: number | null = null;
   selectedOrientadorId: number | null = null;
   boton: boolean;
-  isLoading: boolean = false; // Define the property isLoading
+  isLoading: boolean = true; // Define the property isLoading
 
   private ESTADO_MAP: { [key: string]: string } = {
     "true": 'Activo',

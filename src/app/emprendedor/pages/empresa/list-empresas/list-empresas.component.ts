@@ -70,7 +70,6 @@ export class ListEmpresasComponent implements OnInit {
   }
 
   cargarEmpresas(): void {
-    this.isLoading = true;
     if (this.token) {
       this.emprendedorService.getEmpresas(this.token, this.documento).subscribe(
         (data) => {

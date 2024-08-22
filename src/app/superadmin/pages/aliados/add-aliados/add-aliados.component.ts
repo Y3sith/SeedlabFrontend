@@ -60,6 +60,7 @@ export class AddAliadosComponent {
   aliadoForm: FormGroup;
   showFirstSection = true;
   showSecondSection = false;
+
   showThirdSection = false;
   logoPreview: string | ArrayBuffer | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
@@ -100,7 +101,7 @@ export class AddAliadosComponent {
 
     this.bannerForm = this.formBuilder.group({
       urlImagen: [Validators.required],
-      estadobanner: ['Activo'],
+      estadobanner: [1],
     });
     this.isActive = true;
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');
@@ -164,6 +165,20 @@ export class AddAliadosComponent {
 
   triggerFileInput() {
     this.fileInput.nativeElement.click();
+  }
+
+  eliminarBanner(id_aliado: number): void {
+    this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
+      data=>{
+        this.alertService.successAlert('Exito', data.message);
+        //console.log("eliminaaa", data)
+        location.reload();
+      },
+      error => {
+       // console.error(error);
+        this.alertService.successAlert('Error', error.error.message);
+      }
+    )
   }
 
   verEditarBanners():void {
@@ -295,6 +310,8 @@ export class AddAliadosComponent {
       },
       error => {
         console.error(error);
+        this.alertService.successAlert('Error', error.error.message);
+
       }
     )
       

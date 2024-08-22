@@ -265,7 +265,7 @@ export const PREGUNTAS: Preguntas[] = [
         nombre: '¿Su producto y/o servicio presenta en la actualidad ventas?',
         puntaje: 0,
         id_seccion: 2,
-        isAffirmativeQuestion: true,
+        isAffirmativeQuestion: false,
         isText: false,
         subPreguntas: []
     },

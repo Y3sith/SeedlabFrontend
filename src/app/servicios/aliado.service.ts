@@ -44,7 +44,12 @@ export class AliadoService {
 
   getBannerxid(access_token: any, id: any): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(`${this.url}/traeraliadoxid/${id}`, options);
+    return this.http.get(`${this.url}/bannerxid/${id}`, options);
+  }
+
+  crearBanner(access_token: string, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}/crearbannerr`, formData, options);
   }
 
   getBannerxAliado(access_token: any, idAliado: any): Observable<any> {
@@ -52,8 +57,19 @@ export class AliadoService {
     return this.http.get(`${this.url}/banner/${idAliado}`, options);
   }
 
+  editarBanner(access_token: string, id:number, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}/editarbanner/${id}`, formData, options);
+  }
+
+  
+  EliminarBanner(access_token: string, id:number): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.delete(`${this.url}/eliminarbanner/${id}`, options);
+  }
+
   getbanner(): Observable<any> {
-    const url = `${environment.apiUrl}banner/activo`;
+    const url = `${environment.apiUrl}banner/1`;
     return this.http.get(url);
   }
 
@@ -98,10 +114,7 @@ export class AliadoService {
     return this.http.get(this.url + "/" + 1);
   }
 
-  getDashboard(access_token: any, idAsesor: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}/dashboardAliado/${idAsesor}`, options);
-  }
+  
   /////////////////////////////////////////////////////////////
 
   crearActividad(access_token: any, aliado: any): Observable<any> {
@@ -125,10 +138,7 @@ export class AliadoService {
   }
 
 
-  graficaDatosGeneros(access_token: string): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url + "/generoAliado", options)
-  }
+  
 
   // mostrarRutas(access_token: any, id: number): Observable<any> {
   //   const options = { headers: this.CreacionHeaders(access_token)};

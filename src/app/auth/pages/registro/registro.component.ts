@@ -34,6 +34,7 @@ export class RegistroComponent implements OnInit {
   submitted = false;
   errorMessage: string | null = null;
   email: string;
+  listTipoDocumento: any[] = [];
 
   currentIndex = 0;
   progressWidth = 0;
@@ -50,12 +51,14 @@ export class RegistroComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private registroService: AuthService,
+    
     private router: Router,
     private alertService: AlertService,
   ) { }
 
   ngOnInit(): void {
     this.cargarDepartamentos();
+    this.tipoDocumento();
     this.registerForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator]],
       nombretipodoc: ['', Validators.required],
@@ -213,6 +216,20 @@ export class RegistroComponent implements OnInit {
     );
   }
 
+  tipoDocumento():void{
+      this.registroService.tipoDato().subscribe(
+        data => {
+          this.listTipoDocumento = data;
+
+          console.log(this.listTipoDocumento);
+          //console.log('datos tipo de documento: ',data)
+        },
+        error => {
+          console.log(error);
+        }
+      )
+  }
+
   registro(): void {
     this.submitted = true;
 
@@ -226,6 +243,7 @@ export class RegistroComponent implements OnInit {
       this.f.nombretipodoc.value,
       this.f.nombre.value,
       this.f.apellido.value,
+      //this.f.imagen_perfil.value,
       this.f.celular.value,
       this.f.email.value,
       this.f.password.value,

@@ -23,7 +23,7 @@ export class VerAsesoriasComponent implements OnInit {
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
   showAsignadasFlag: boolean = false; // Flag to indicate which list is being shown
-  isLoading: boolean = false;
+
   fullHeightIndices: number[] = [];
 
   page: number = 1; // Inicializa la página actual
@@ -61,29 +61,23 @@ export class VerAsesoriasComponent implements OnInit {
   }
 
   loadAsesorias(pendiente: boolean): void {
-    this.isLoading = true; // Inicia la carga
-  
     this.asesoriaService.postAsesoriasOrientador(this.token, pendiente).subscribe(
       data => {
         if (pendiente) {
           this.asesoriasSinAsesor = data;
           this.sinAsignarCount = this.asesoriasSinAsesor.length;
+          this.totalAsesorias = data.length; // Actualiza el total de asesorias
         } else {
           this.asesoriasConAsesor = data;
           this.asignadasCount = this.asesoriasConAsesor.length;
+          this.totalAsesorias = data.length; // Actualiza el total de asesorias
         }
-        // Total de asesorías siempre es la suma de ambos
-        this.totalAsesorias = this.asesoriasSinAsesor.length + this.asesoriasConAsesor.length;
-  
-        this.isLoading = false; // Finaliza la carga
       },
       error => {
-        console.error('Error al obtener las asesorías:', error);
-        this.isLoading = false; // Finaliza la carga incluso si hay error
+        console.error('Error al obtener las asesorías orientador:', error);
       }
     );
   }
-  
 
   // Código para la paginación
   changePage(pageNumber: number | string): void {

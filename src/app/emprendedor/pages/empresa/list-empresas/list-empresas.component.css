@@ -1,18 +1,32 @@
-.spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 56px;
-    height: 56px;
+#contenedor{ 
+    display: grid;
+    place-content: center;
+    height: auto;
+    color: #000;
+  }
+  .cargando{ 
+    position: relative; 
+    color: rgb(0, 0, 0);
+    margin-top: 2em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase
+  }
+  
+  .rueda {
+    border: 10px solid rgba(56 189 248);
     border-radius: 50%;
-    background: radial-gradient(farthest-side,#FA7D00 94%,#0000) top/9px 9px no-repeat,
-           conic-gradient(#0000 30%,#FA7D00);
-    -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
-    animation: spinner-c7wet2 1s infinite linear;
- }
- 
- @keyframes spinner-c7wet2 {
-    100% {
-       transform: rotate(1turn);
+    border-left-color: transparent;
+    width: 80px;
+    height: 80px;
+    animation: giro 1s linear infinite;
+  }
+  
+  @keyframes giro {
+    0% {
+      transform: rotate(0deg);
     }
- }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+  }
