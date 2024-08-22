@@ -12,6 +12,7 @@ export class Asesor {
     celular: string;
     aliado: string;
     email:string;
+    
     password:string;
     estado:boolean;
 
