@@ -64,6 +64,7 @@ export class PerfilSuperadminComponent {
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
+    this.cargarDepartamentos();
   }
 
   /* Valida el token del login, se usa del localstorage el id del usuario logueado */
@@ -208,7 +209,7 @@ export class PerfilSuperadminComponent {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
         this.listMunicipios = data;
-        //console.log('Municipios cargados:', JSON.stringify(data));
+        console.log('Municipios cargados:', JSON.stringify(data));
       },
       err => {
         console.log('Error al cargar los municipios:', err);
