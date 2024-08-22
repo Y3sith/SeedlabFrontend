@@ -71,7 +71,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     private asesorService: AsesorService,
     private aliadoService: AliadoService,
     private alerService: AlertService,
-    private emprendedorService: EmprendedorService,
+    private authService: AuthService,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private alertService: AlertService,
@@ -126,7 +126,7 @@ export class ModalAddAsesoresComponent implements OnInit {
 
   tipodato(): void {
     if (this.token) {
-      this.emprendedorService.tipoDato().subscribe(
+      this.authService.tipoDato().subscribe(
         data => {
           this.listTipoDocumento = data;
           //console.log('datos tipo de documento: ',data)
