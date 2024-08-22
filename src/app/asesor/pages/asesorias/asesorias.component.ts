@@ -22,7 +22,6 @@ export class AsesoriasComponent implements OnInit {
   user: any = null;
   filteredAsesorias: Asesoria[] = [];
   currentRolId: number;
-  isLoading: boolean = false;
 
   userFilter: any = { Nombre_sol: ''};
   Nombre_sol: string | null = null;
@@ -78,34 +77,29 @@ export class AsesoriasComponent implements OnInit {
   }
 
   loadAsesoriasFalse(): void {
-    this.isLoading = true; 
-
+ 
     const idAsesor = this.user.id; // Obtener el ID del asesor del objeto de usuario
     const horario = false; // Cambia esto según sea necesario
     this.asesorService.mostrarAsesoriasAsesor(this.token, idAsesor, horario).subscribe(
       response => {
         this.asesoriasSinHorario = response;
-        this.isLoading = false; 
       },
       error => {
         console.error('Error al cargar asesorías:', error);
-        this.isLoading = false; 
       }
     );
   }
 
   loadAsesoriasTrue(): void {
-    this.isLoading = true; 
+   
     const idAsesor = this.user.id; // Obtener el ID del asesor del objeto de usuario
     const horario = true; // Cambia esto según sea necesario
     this.asesorService.mostrarAsesoriasAsesor(this.token, idAsesor, horario).subscribe(
       response => {
         this.asesoriasConHorario = response;
-        this.isLoading = false; 
       },
       error => {
         console.error('Error al cargar asesorías:', error);
-        this.isLoading = false; 
       }
     );
   }
