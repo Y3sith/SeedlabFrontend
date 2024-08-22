@@ -49,10 +49,23 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.mostrarBanners();
   }
 
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId) && this.listAliados.length > 0) {
-      this.initSwipers();
-    }
+  // ngAfterViewInit(): void {
+  //   if (isPlatformBrowser(this.platformId) && this.listAliados.length > 0) {
+  //     this.initSwipers();
+  //   }
+  // }
+
+  ngAfterViewInit() {
+    const swiper = new Swiper('.banner-swiper-container', {
+      modules: [Navigation],
+      slidesPerView: 1,
+      spaceBetween: 0,
+      loop: true,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
   }
 
   mostrarAliados(): void {
@@ -128,6 +141,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.bannerSwiper = new Swiper('.banner-swiper-container', {
       modules: [Navigation, Autoplay, Pagination],
       slidesPerView: 1,
+      spaceBetween: 0,
       loop: true,
       autoplay: {
         delay: 5000,
@@ -176,13 +190,41 @@ export class BodyComponent implements OnInit, AfterViewInit {
     return lines;
   }
 
+  // onImageLoad(event: Event): void {
+  //   const img = event.target as HTMLImageElement;
+  //   const container = img.closest('.banner-image-container') as HTMLElement;
+  //   if (container) {
+  //     const aspectRatio = img.naturalHeight / img.naturalWidth;
+  //     container.style.paddingTop = `${aspectRatio * 100}%`;
+  //   }
+  //   this.cdr.detectChanges();
+  //   this.initBannerSwiper();
+  // }
+
   onImageLoad(event: Event): void {
     const img = event.target as HTMLImageElement;
     const container = img.closest('.banner-image-container') as HTMLElement;
+    
     if (container) {
-      const aspectRatio = img.naturalHeight / img.naturalWidth;
+      // Establecer el tamaño fijo
+      const fixedWidth = 1840;
+      const fixedHeight = 684;
+      
+      // Calcular el aspect ratio basado en las dimensiones fijas
+      const aspectRatio = fixedHeight / fixedWidth;
+      
+      // Establecer el padding-top para mantener el aspect ratio
       container.style.paddingTop = `${aspectRatio * 100}%`;
+      
+      // Establecer el ancho fijo del contenedor
+      container.style.width = `${fixedWidth}px`;
+      
+      // Asegurar que la imagen llene el contenedor
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
     }
+    
     this.cdr.detectChanges();
     this.initBannerSwiper();
   }
