@@ -94,7 +94,7 @@ export class AddBannerComponent {
       },
       error => {
         console.error(error);
-        this.alertService.errorAlert('Error', error.error.message);
+        //this.alertService.errorAlert('Error', error.error.message);
       }
     )
   }
@@ -130,7 +130,7 @@ export class AddBannerComponent {
         },
         error => {
           console.error(error);
-          this.alertService.errorAlert('Error', error.error.message);
+          //this.alertService.errorAlert('Error', error.error.message);
         }
       )
 
@@ -142,7 +142,7 @@ export class AddBannerComponent {
           this.dialogRef.close();
         },
         error => {
-          this.alertService.errorAlert('Error', error.error.message);
+          //this.alertService.errorAlert('Error', error.error.message);
 
 
           console.error(error);
