@@ -105,6 +105,7 @@ export class PerfilAsesorComponent implements OnInit {
       genero: this.asesorForm.get('genero')?.value,
       fecha_nac: this.asesorForm.get('')?.value,
       direccion: this.asesorForm.get('direccion')?.value,
+      municipio: this.asesorForm.get('')?.value,
       celular: this.asesorForm.get('celular')?.value,
       aliado: this.asesorForm.get('aliado')?.value,
       email: this.asesorForm.get('email')?.value,

@@ -57,7 +57,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     fecha_nac: ['', Validators.required],
     direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
-    id_municipio: ['', Validators.required],
+    municipio: ['',Validators.required],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -190,7 +190,7 @@ export class ModalAddAsesoresComponent implements OnInit {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             celular: data.celular,
-            id_municipio: data.id_municipio,
+            municipio: data.municipio,
             aliado: data.id,
             email: data.email,
             password: '',
@@ -207,14 +207,14 @@ export class ModalAddAsesoresComponent implements OnInit {
 
           setTimeout(() => {
             // Establecer el departamento seleccionado
-            this.asesorForm.patchValue({ id_municipio: data.id_departamentos });
+            this.asesorForm.patchValue({ municipio: data.id_departamentos });
 
             // Cargar los municipios de ese departamento
             this.cargarMunicipios(data.id_departamento);
 
             setTimeout(() => {
               // Establecer el municipio seleccionado
-              this.asesorForm.patchValue({ id_municipio: data.id_municipio });
+              this.asesorForm.patchValue({ municipio: data.id_municipio });
             }, 500);
           }, 500);
         },
@@ -241,7 +241,7 @@ export class ModalAddAsesoresComponent implements OnInit {
       fecha_nac: this.asesorForm.get('')?.value,
       direccion: this.asesorForm.get('direccion')?.value,
       celular: this.asesorForm.get('celular')?.value,
-      id_municipio: +this.asesorForm.get('id_municipio')?.value,
+      municipio: +this.asesorForm.get('municipio')?.value,
       aliado: this.nombreAliado,
       email: this.asesorForm.get('email')?.value,
       password: this.asesorForm.get('password')?.value,
@@ -260,8 +260,9 @@ export class ModalAddAsesoresComponent implements OnInit {
               this.alerService.successAlert('Exito', data.message);
             },
             error => {
-              this.alerService.errorAlert('Error', error.error.message);
-              console.error('Error', error.error.message);
+              //this.alerService.errorAlert('Error', error.error.message);
+              //console.error('Error', error.error.message);
+              console.log('error: ',error)
             }
           );
         }
