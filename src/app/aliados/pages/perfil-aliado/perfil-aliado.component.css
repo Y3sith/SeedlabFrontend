@@ -27,6 +27,10 @@
   .basic-info {
     margin-top: 75px; /* Ajusta este valor según sea necesario */
   }
+
+  /* .banners{
+    height: 65vh;
+  } */
   
   /* @media (max-width: 769px) {
     .image-container {

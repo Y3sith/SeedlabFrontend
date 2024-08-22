@@ -6,7 +6,7 @@ import { Ruta } from '../../../Modelos/ruta.modelo';
 @Component({
   selector: 'app-ruta-emprendedor',
   templateUrl: './ruta-emprendedor.component.html',
-  styleUrl: './ruta-emprendedor.component.css'
+  styleUrls: ['./ruta-emprendedor.component.css']
 })
 export class RutaEmprendedorComponent implements OnInit {
   token: string | null = null;
