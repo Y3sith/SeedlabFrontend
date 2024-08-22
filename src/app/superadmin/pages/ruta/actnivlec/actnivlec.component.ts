@@ -347,6 +347,7 @@ export class ActnivlecComponent implements OnInit {
     this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, contLeccion).subscribe(
       (data: any) => {
         console.log('datos recibidos: ', data);
+        location.reload();
         //this.currentIndex = 2;
        // this.currentIndex = 3;
       },
