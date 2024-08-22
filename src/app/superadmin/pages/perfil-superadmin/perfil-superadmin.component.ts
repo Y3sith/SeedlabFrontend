@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
 import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { DepartamentoService } from '../../../servicios/departamento.service';
+import { MunicipioService } from '../../../servicios/municipio.service';
 
 
 @Component({
@@ -25,10 +27,24 @@ export class PerfilSuperadminComponent {
   id: number;
   boton: boolean;
   hide = true
+  listDepartamentos: any[] = [];
+  listMunicipios: any[] = [];
+  imagenPreview: string | ArrayBuffer | null = null;
+  selectedImagen_perfil: File | null = null;
+  submitted = false;
+  bloqueado = true;
+  errorMessage: string | null = null;
 
   perfiladminForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
+    documento:'',
+    imagen_perfil: [null, Validators.required],
+    celular:['', Validators.required],
+    genero: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
+    direccion:['', Validators.required],
+    nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
     estado: true,
@@ -39,6 +55,9 @@ export class PerfilSuperadminComponent {
     private fb: FormBuilder,
     private alertService: AlertService,
     private router: Router,
+    private departamentoService: DepartamentoService,
+    private municipioService: MunicipioService,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   /* Inicializa con esas funciones al cargar la pagina */
@@ -93,9 +112,15 @@ export class PerfilSuperadminComponent {
     const perfil: Superadmin = {
       nombre: this.perfiladminForm.get('nombre')?.value,
       apellido: this.perfiladminForm.get('apellido')?.value,
-      email: this.perfiladminForm.get('email')?.value, 
+      documento: this.perfiladminForm.get('documento')?.value,
+      celular: this.perfiladminForm.get('celular')?.value,
+      genero: this.perfiladminForm.get('genero')?.value,
+      direccion: this.perfiladminForm.get('direccion')?.value,
+      id_tipo_documento: this.perfiladminForm.get('nombretipodoc')?.value,
+      email: this.perfiladminForm.get('email')?.value,
       password: this.perfiladminForm.get('password')?.value,
-      estado: this.perfiladminForm.get('estado')?.value,
+      fecha_nac: this.perfiladminForm.get('fecha_nac')?.value,
+      id_municipio: this.perfiladminForm.get('municipio')?.value,
     }
     this.superadminService.updateAdmin(perfil, this.token, this.id).subscribe(
       (data) => {
@@ -105,6 +130,10 @@ export class PerfilSuperadminComponent {
         console.log(err);
       }
     )
+  }
+
+  get f() {
+    return this.perfiladminForm.controls;
   }
 
   /* Validaciones la contraseña */
@@ -142,5 +171,112 @@ export class PerfilSuperadminComponent {
   /* Muesta el boton de guardar cambios */
   mostrarGuardarCambios(): void {
     this.boton = false;
+  }
+
+  //Funcion para cargar los departamentos
+  cargarDepartamentos(): void {
+    this.departamentoService.getDepartamento().subscribe(
+      (data: any[]) => {
+        this.listDepartamentos = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
+  }
+
+  onDepartamentoSeleccionado(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const selectedDepartamento = target.value;
+
+    // Guarda el departamento seleccionado en el localStorage
+    localStorage.setItem('departamento', selectedDepartamento);
+
+    // Llama a cargarMunicipios si es necesario
+    this.cargarMunicipios(selectedDepartamento);
+  }
+
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
+      data => {
+        this.listMunicipios = data;
+        //console.log('Municipios cargados:', JSON.stringify(data));
+      },
+      err => {
+        console.log('Error al cargar los municipios:', err);
+      }
+    );
+  }
+
+  resetFileField(field: string) {
+    if (field === 'imagen_perfil') {
+      this.perfiladminForm.patchValue({ imagen_perfil: null });
+      this.selectedImagen_perfil = null;
+      this.imagenPreview = null;
+    }
+  }
+
+  onFileSelecteds(event: any, field: string) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+
+      let maxSize = 0;
+
+      if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
+        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+      } else if (field === 'ruta_documento') {
+        maxSize = 18 * 1024 * 1024; // 20MB para documentos
+      }
+
+      if (file.size > maxSize) {
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.resetFileField(field);
+
+        ////Limpia el archivo seleccionado y resetea la previsualización
+        event.target.value = ''; // Borra la selección del input
+
+        // Resetea el campo correspondiente en el formulario y la previsualización
+        if (field === 'imagen_perfil') {
+          this.perfiladminForm.patchValue({ imagen_perfil: null });
+          this.selectedImagen_perfil = null;
+          this.imagenPreview = null; // Resetea la previsualización
+        }
+        this.resetFileField(field);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.perfiladminForm.patchValue({ imagen_perfil: previewUrl });
+          this.imagenPreview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
+
+      if (field === 'imagen_perfil') {
+        this.selectedImagen_perfil = file;
+        this.perfiladminForm.patchValue({ imagen_perfil: file });
+      }
+
+    } else {
+      this.resetFileField(field);
+    }
+  }
+
+  generateImagePreview(file: File, field: string) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      if (field === 'imagen_perfil') {
+        this.imagenPreview = e.target.result;
+      }
+      this.cdRef.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 }
