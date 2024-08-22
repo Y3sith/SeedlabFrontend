@@ -61,7 +61,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
-    imagen_perfil: [null ,Validators.required],
+    imagen_perfil: [null, Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
     genero: ['', Validators.required],
@@ -71,7 +71,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     municipio: ['', Validators.required],
     estado: true,
   });
-  
+
   registerForm: FormGroup; //ahorita quitarlo
   listEmprendedor: PerfilEmprendedor[] = [];
   originalData: any;
@@ -128,7 +128,7 @@ export class PerfilEmprendedorComponent implements OnInit {
             documento: data.documento,
             nombre: data.nombre,
             apellido: data.apellido,
-            imagen_perfil:data.imagen_perfil,
+            imagen_perfil: data.imagen_perfil,
             celular: data.celular,
             email: data.email,
             password: data.password,
@@ -140,7 +140,7 @@ export class PerfilEmprendedorComponent implements OnInit {
           });
           this.isActive = data.estado === 'Activo'; // Asegura que el estado booleano es correcto
           console.log("Estado inicial:", this.isActive); // Verifica el estado inicial en la consola
-          console.log('wwwwwwwwwwwwwwwwww: ',data);
+          console.log('wwwwwwwwwwwwwwwwww: ', data);
 
           // Forzar cambio de detección de Angular
           setTimeout(() => {
@@ -160,75 +160,75 @@ export class PerfilEmprendedorComponent implements OnInit {
 
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
-     this.emprendedorForm.patchValue({ imagen_perfil: null });
-     this.selectedImagen_perfil = null;
-     this.imagenPreview = null;
-   } 
- }
+      this.emprendedorForm.patchValue({ imagen_perfil: null });
+      this.selectedImagen_perfil = null;
+      this.imagenPreview = null;
+    }
+  }
 
- onFileSelecteds(event: any, field: string) {
-   if (event.target.files && event.target.files.length > 0) {
-     const file = event.target.files[0];
-     
-     let maxSize = 0;
- 
-     if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
-       maxSize = 5 * 1024 * 1024; // 5MB para imágenes
-     } else if (field === 'ruta_documento') {
-       maxSize = 18 * 1024 * 1024; // 20MB para documentos
-     }
- 
-     if (file.size > maxSize) {
-       const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
-       this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
-       this.resetFileField(field);
- 
-       ////Limpia el archivo seleccionado y resetea la previsualización
-       event.target.value = ''; // Borra la selección del input
- 
-       // Resetea el campo correspondiente en el formulario y la previsualización
-       if (field === 'imagen_perfil') {
-         this.emprendedorForm.patchValue({ imagen_perfil: null });
-         this.selectedImagen_perfil = null;
-         this.imagenPreview = null; // Resetea la previsualización
-       } 
-       this.resetFileField(field);
-       return;
-     }
+  onFileSelecteds(event: any, field: string) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
 
-     const reader = new FileReader();
-   reader.onload = (e: any) => {
-     const previewUrl = e.target.result;
+      let maxSize = 0;
+
+      if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
+        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+      } else if (field === 'ruta_documento') {
+        maxSize = 18 * 1024 * 1024; // 20MB para documentos
+      }
+
+      if (file.size > maxSize) {
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.resetFileField(field);
+
+        ////Limpia el archivo seleccionado y resetea la previsualización
+        event.target.value = ''; // Borra la selección del input
+
+        // Resetea el campo correspondiente en el formulario y la previsualización
+        if (field === 'imagen_perfil') {
+          this.emprendedorForm.patchValue({ imagen_perfil: null });
+          this.selectedImagen_perfil = null;
+          this.imagenPreview = null; // Resetea la previsualización
+        }
+        this.resetFileField(field);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.emprendedorForm.patchValue({ imagen_perfil: previewUrl });
+          this.imagenPreview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
+
       if (field === 'imagen_perfil') {
-       this.emprendedorForm.patchValue({ imagen_perfil: previewUrl });
-       this.imagenPreview = previewUrl;
-     } 
-   };
-   reader.readAsDataURL(file);
- 
-     // Genera la previsualización solo si el archivo es de tamaño permitido
-     this.generateImagePreview(file, field);
+        this.selectedImagen_perfil = file;
+        this.emprendedorForm.patchValue({ imagen_perfil: file });
+      }
 
-     if (field === 'imagen_perfil') {
-       this.selectedImagen_perfil = file;
-       this.emprendedorForm.patchValue({ imagen_perfil: file });
-     }
-     
- } else {
-   this.resetFileField(field);
- }
- }
+    } else {
+      this.resetFileField(field);
+    }
+  }
 
- generateImagePreview(file: File, field: string) {
-   const reader = new FileReader();
-   reader.onload = (e: any) => {
-     if (field === 'imagen_perfil') {
-       this.imagenPreview = e.target.result;
-     } 
-     this.cdRef.detectChanges();
-   };
-   reader.readAsDataURL(file);
- }
+  generateImagePreview(file: File, field: string) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      if (field === 'imagen_perfil') {
+        this.imagenPreview = e.target.result;
+      }
+      this.cdRef.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
 
 
   updateEmprendedor(): void {
@@ -270,21 +270,21 @@ export class PerfilEmprendedorComponent implements OnInit {
     //   : "¿Estás seguro de desactivar tu cuenta?";
     if (this.token) {
       this.alerService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
-      "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momnento de iniciar sección!", 'warning').then((result) => {
-        if (result.isConfirmed) {
-          this.emprendedorService.destroy(this.token, this.documento).subscribe(
-            (data) => {
-              console.log("desactivar", data);
-              this.isAuthenticated = false;
-              localStorage.clear();
-              location.reload();
-            },
-            (err) => {
-              console.log(err);
-            }
-          );
-        }
-      });
+        "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momnento de iniciar sección!", 'warning').then((result) => {
+          if (result.isConfirmed) {
+            this.emprendedorService.destroy(this.token, this.documento).subscribe(
+              (data) => {
+                console.log("desactivar", data);
+                this.isAuthenticated = false;
+                localStorage.clear();
+                location.reload();
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
+          }
+        });
     }
   }
 
@@ -320,16 +320,22 @@ export class PerfilEmprendedorComponent implements OnInit {
     )
   }
 
-  //Funcion para traer el nombre del departamento seleccionado
-  onDepartamentoSeleccionado(nombreDepartamento: string): void {
-    this.cargarMunicipios(nombreDepartamento);
+  onDepartamentoSeleccionado(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const selectedDepartamento = target.value;
+
+    // Guarda el departamento seleccionado en el localStorage
+    localStorage.setItem('departamento', selectedDepartamento);
+
+    // Llama a cargarMunicipios si es necesario
+    this.cargarMunicipios(selectedDepartamento);
   }
 
-  //Funcion para cargar los municipios
-  cargarMunicipios(nombreDepartamento: string): void {
-    this.municipioService.getMunicipios(nombreDepartamento).subscribe(
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
         this.listMunicipios = data;
+        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       err => {
         console.log('Error al cargar los municipios:', err);

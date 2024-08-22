@@ -28,49 +28,6 @@
                     </div>
                 </div>
 
-                <!-- tipo de documento Field -->
-                <div>
-                    <label for="id_tipo_documento" class="block text-sm font-medium text-gray-700">Tipo de
-                        Documento</label>
-                    <select id="id_tipo_documento" formControlName="id_tipo_documento"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                        <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                        <option *ngFor="let tipo of listTipoDocumento" >{{ tipo.nombre }}</option>
-                    </select>
-                </div>
-
-                <!-- documento Field -->
-                <div>
-                    <label for="documento" class="block text-sm font-medium text-gray-700">Documento</label>
-                    <input type="text" id="documento" formControlName="documento"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                    <div *ngIf="submitted && f['documento'].invalid"
-                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                        <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
-                    <select id="genero" formControlName="genero"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                        <option value="" disabled selected>Seleccionar Género...</option>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-
-
-                <div>
-                    <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700">Fecha de
-                        Nacimiento</label>
-                    <input type="date" id="fecha_nac" formControlName="fecha_nac"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-
-                </div>
-
-
                 <!-- Email Field -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Correo</label>
@@ -81,6 +38,19 @@
                         class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                         <span *ngIf="f['email'].errors?.['required']">Este campo es requerido *</span>
                         <span *ngIf="f['email'].errors?.['email']">Correo no válido *</span>
+                    </div>
+                </div>
+
+                <!-- Número de Celular Field -->
+                <div>
+                    <label for="celular" class="block text-sm font-medium text-gray-700">Número de Celular</label>
+                    <input type="number" id="celular" formControlName="celular"
+                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                    <div *ngIf="submitted && f['celular'].invalid"
+                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                        <span *ngIf="f['celular'].errors?.['required']">Este campo es requerido *</span>
+                        <span *ngIf="f['celular'].errors?.['maxlength']">Número de celular no puede exceder 10 dígitos
+                            *</span>
                     </div>
                 </div>
 
@@ -104,57 +74,6 @@
                         <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8 caracteres *</span>
                     </div>
                 </div>
-
-                <!-- Número de Celular Field -->
-                <div>
-                    <label for="celular" class="block text-sm font-medium text-gray-700">Número de Celular</label>
-                    <input type="number" id="celular" formControlName="celular"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                    <div *ngIf="submitted && f['celular'].invalid"
-                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                        <span *ngIf="f['celular'].errors?.['required']">Este campo es requerido *</span>
-                        <span *ngIf="f['celular'].errors?.['maxlength']">Número de celular no puede exceder 10 dígitos
-                            *</span>
-                    </div>
-                </div>
-
-                <!-- direccion Field -->
-                <div>
-                    <label for="direccion" class="block text-sm font-medium text-gray-700">Direccion</label>
-                    <input type="text" id="direccion" formControlName="direccion"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                    <div *ngIf="submitted && f['direccion'].invalid"
-                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                        <span *ngIf="f['direccion'].errors?.['required']">Este campo es requerido *</span>
-                    </div>
-                </div>
-
-                <!-- departamento -->
-                <div>
-                    <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
-                    <select id="departamento" (change)="onDepartamentoSeleccionado($event)"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                        <option value="" disabled selected>Seleccionar Departamento...</option>
-                        <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
-                            {{ departamento.name }}
-                        </option>
-                    </select>
-                </div>
-
-                <!-- municipios -->
-                <div>
-                    <label for="municipio" class="block text-sm font-medium text-gray-700">Municipio</label>
-                    <select id="municipio" formControlName="id_municipio"
-                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                        <option value="" disabled selected>Seleccionar Municipio...</option>
-                        <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
-                            {{ municipio.nombre }}
-                        </option>
-                    </select>
-                </div>
-
-
-
 
                 <!-- Toggle Field -->
                 <div *ngIf="isEditing">

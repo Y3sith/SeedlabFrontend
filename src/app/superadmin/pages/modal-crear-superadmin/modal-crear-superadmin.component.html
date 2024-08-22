@@ -26,7 +26,72 @@
                         <span *ngIf="f['apellido'].errors?.['required']">Este campo es requerido *</span>
                     </div>
                 </div>
-                <div class="md:col-span-2">
+                <!-- <div>
+                    <label for="id_tipo_documento" class="block truncate">Tipo de Documento:</label>
+                    <select id="id_tipo_documento" formControlName="nombretipodoc"
+                        class="mt-2 p-2 block w-full rounded-md border-0 py-1.5 text-[#000] shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] focus:outline-none sm:text-sm sm:leading-6"> 
+                        <option value="" disabled selected>Seleccionar tipo de
+                            documento...</option>
+                        <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.nombre">{{ tipo.nombre }}</option>
+                    </select>
+                </div> -->
+                <div class="">
+                    <label for="apellidos" class="block text-sm font-medium text-gray-700">Documento</label>
+                    <input type="text" id="apellido" formControlName="documento" name="documento" required
+                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                    <div *ngIf="submitted && f['documento'].invalid"
+                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                        <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
+                    </div>
+                </div>
+                <div class="">
+                    <label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
+                    <input type="text" id="celular" formControlName="celular" name="celular" required
+                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                    <div *ngIf="submitted && f['celular'].invalid"
+                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                        <span *ngIf="f['celular'].errors?.['required']">Este campo es requerido *</span>
+                    </div>
+                </div>
+                <div>
+                    <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
+                    <select id="genero" formControlName="genero"
+                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                        <option value="" disabled selected>Seleccionar Género...</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="">
+                    <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                    <input type="text" id="direccion" formControlName="direccion" name="direccion" required
+                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                    <div *ngIf="submitted && f['direccion'].invalid"
+                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                        <span *ngIf="f['direccion'].errors?.['required']">Este campo es requerido *</span>
+                    </div>
+                </div>
+                <div>
+                    <label for="departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
+                    <select id="departamento" name="departamento" formControlName="departamento"
+                        (change)="onDepartamentoSeleccionado($event)"
+                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                        <option value="" disabled selected>Seleccionar Departamento...</option>
+                        <option *ngFor="let nameDepartamento of listDepartamentos" [value]="nameDepartamento.id">
+                            {{nameDepartamento.name}}</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="municipio" class="block text-sm font-medium text-gray-700">Municipio</label>
+                    <select id="municipio" name="municipio" formControlName="municipio"
+                        class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 ">
+                        <option value="" disabled selected>Seleccionar Municipio...</option>
+                        <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">{{municipio.nombre}}
+                        </option>
+                    </select>
+                </div>
+                <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">Correo</label>
                     <input type="email" id="email" name="email" formControlName="email" required email
                         class="mt-1 block w-full p-2 rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
@@ -63,11 +128,9 @@
             <!-- Toggle Field -->
             <div *ngIf="isEditing">
                 <div class="mt-4 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
-                        <fa-icon [icon]="falupa" 
-                        class="text-sm right-2 transform mt-2 ml-1" 
-                        mat-raised-button matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo " 
-                        matTooltipPosition="right"
-                        style="color: #adb7c7;"></fa-icon>
+                    <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
+                        matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
+                        matTooltipPosition="right" style="color: #adb7c7;"></fa-icon>
                 </div>
                 <label class="inline-flex items-center cursor-pointer md:mt-6">
                     <input type="checkbox" class="sr-only peer" [checked]="isActive" (change)="toggleActive()"
@@ -90,8 +153,7 @@
                     class="w-full md:w-auto bg-gray-500 text-white py-2 px-4 rounded">
                     Cancelar
                 </button>
-                <button  type="submit"
-                    class="w-full md:w-auto bg-sky-400 text-white py-2 px-4 rounded">
+                <button type="submit" class="w-full md:w-auto bg-sky-400 text-white py-2 px-4 rounded">
                     Confirmar
                 </button>
             </div>

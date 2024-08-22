@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
-import { SuperadminService } from '../../../servicios/superadmin.service';
 import * as echarts from 'echarts';
+import { DashboardsService } from '../../../servicios/dashboards.service';
 
 
 
@@ -29,12 +29,12 @@ export class DashboardComponent {
   doughnutChartOption: echarts.EChartsOption;
   pendientesFinalizadasLabels: string[] = ['Pendientes', 'Finalizadas', 'Sin Asignar', 'Asignadas'];
   pendientesFinalizadasData: { data: number[] }[] = [{ data: [0, 0, 0, 0] }];
-  isLoading: boolean = false;
+  barAsesoriasTotales: echarts.EChartsOption;
 
- 
+
 
   constructor(
-    private superAdminService: SuperadminService,
+    private dashboardService: DashboardsService,
     private aliadoService: AliadoService,
     private router: Router,
   ) { }
@@ -43,12 +43,10 @@ export class DashboardComponent {
     this.validateToken();
     this.getDatosDashboard();
     this.getDatosGenerosGrafica();
+    this.asesoriasTotales();
     this.loadChartData();
   };
 
-
-  ngAfterViewInit() {
-  }
 
   /* Valida el token del login */
   validateToken(): void {
@@ -60,6 +58,7 @@ export class DashboardComponent {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.id = this.user.id;
+        console.log(this.id);
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 3) {
           this.router.navigate(['home']);
@@ -72,8 +71,7 @@ export class DashboardComponent {
   }
 
   getDatosDashboard(): void {
-    this.isLoading = true;
-    this.superAdminService.dashboardAdmin(this.token).subscribe(
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
         this.totalSuperAdmin = data.superadmin;
@@ -83,8 +81,7 @@ export class DashboardComponent {
         this.totalEmprendedores = data.emprendedor;
         this.topAliados = data.topAliados;
 
-        // Configuración para la gráfica de Top Aliados
-        this.initEChartsBar();
+        
 
         // Configuración para la gráfica de Asesorías
         this.pieChartOption = {
@@ -131,82 +128,93 @@ export class DashboardComponent {
       },
       error => {
         console.log(error);
-      },
-      () => {
-        this.isLoading = false;
       }
     );
   }
 
-  initEChartsBar(): void {
-    const chartDom = document.getElementById('echarts-bar');
+  initEChartsBarAsesoriasTotales(): void {
+    const chartDom = document.getElementById('echarts-barAsesorias');
     if (chartDom) {
       const myChart = echarts.init(chartDom);
-      const option = {
-        title: {},
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: ['Top Aliados']
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            dataView: { show: true, readOnly: false },
-            magicType: { show: true, type: ['line', 'bar'] },
-            restore: { show: true },
-            saveAsImage: { show: true }
-          }
-        },
-        xAxis: [
-          {
-            type: 'category',
-            data: this.topAliados.map(aliado => aliado.nombre),
-            axisLabel: {
-              interval: 0, // Muestra todas las etiquetas
-              rotate: 30,  // Rota las etiquetas para mejor legibilidad
-              formatter: function (value: string) {
-                return value.length > 10 ? value.substring(0, 10) + '...' : value;
-              }
-            }
-          }
-        ],
-        yAxis: [
-          {
-            type: 'value'
-          }
-        ],
-        series: [
-          {
-            name: 'Top Aliados',
-            type: 'bar',
-            data: this.topAliados.map((aliado, index) => ({
-              value: aliado.asesorias,
-              itemStyle: {
-                color: this.getColorForIndex(index)
-              }
-            })),
-            label: {
-              show: true,
-              position: 'top',
-              color: '#000',
-              formatter: '{c}', // Muestra el valor de la barra
-              fontSize: 12
-            },
-            markLine: {
-              data: [{ type: 'average', name: 'Avg' }]
-            },
-            barGap: '10%' // Ajusta el espacio entre las barras
-          }
-        ]
-      };
-
-      myChart.setOption(option);
+      myChart.setOption(this.barAsesoriasTotales);
     } else {
-      console.error('No se pudo encontrar el elemento con id "echarts-bar"');
+      console.error('No se pudo encontrar el elemento con id "echarts-doughnut"');
     }
   }
+
+  asesoriasTotales(): void {
+    this.dashboardService.asesoriasXMesAliados(this.token, this.id).subscribe(
+      data => {
+        console.log('asesorias totales', data);
+        const meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const totals = new Array(12).fill(0);
+
+        data.forEach(item => {
+          // `item.mes` debe ser un número entre 1 y 12
+          // Ajustamos el índice para que sea 0-based
+          if (item.mes >= 1 && item.mes <= 12) {
+              totals[item.mes - 1] = item.total;
+          }
+      });
+
+        this.barAsesoriasTotales = {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            data: ['Asesorias'],
+            left: 'left',
+            top: '5%'
+          },
+          toolbox: {
+            show: true,
+            feature: {
+              dataView: { show: true, readOnly: false },
+              magicType: { show: true, type: ['line', 'bar'] },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
+          calculable: true,
+          xAxis: [
+            {
+              type: 'category',
+              data: meses
+            },
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ],
+          series:[
+            {
+              name:'Asesorias',
+              type: 'bar',
+              data: totals
+            }
+          ],
+          markPoint:{
+            data: [
+              { type:'max', name: 'Max' },
+              { type:'min', name: 'Min' },
+            ],
+          },
+          markLine: {
+            data: [
+              { type: 'average', name: 'Avg' }
+            ]
+          }
+        };
+        this.initEChartsBarAsesoriasTotales();
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
+
 
   getColorForIndex(index: number): string {
     // Lista de colores que se asignarán a las barras
@@ -216,7 +224,7 @@ export class DashboardComponent {
 
 
   getDatosGenerosGrafica(): void {
-    this.aliadoService.graficaDatosGeneros(this.token).subscribe(
+    this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
         console.log('data generos', data);
         const dataGenero = data.map(item => item.total);
@@ -275,7 +283,7 @@ export class DashboardComponent {
   }
 
   loadChartData() {
-    this.aliadoService.getDashboard(this.token, this.id).subscribe(
+    this.dashboardService.getDashboard(this.token, this.id).subscribe(
       data => {
         console.log(data);
         this.pendientesFinalizadasData[0].data = [
@@ -342,5 +350,5 @@ export class DashboardComponent {
   }
 
 
-  
+
 }

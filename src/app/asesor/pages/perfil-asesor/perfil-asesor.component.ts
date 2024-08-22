@@ -99,11 +99,8 @@ export class PerfilAsesorComponent implements OnInit {
     const asesor: Asesor = {
       nombre: this.asesorForm.get('nombre')?.value,
       apellido: this.asesorForm.get('apellido')?.value,
-      documento: this.asesorForm.get('documento')?.value,
-      id_tipo_documento:this.asesorForm.get('id_tipo_documento')?.value,
       imagen_perfil: this.asesorForm.get('')?.value,
       genero: this.asesorForm.get('genero')?.value,
-      fecha_nac: this.asesorForm.get('')?.value,
       direccion: this.asesorForm.get('direccion')?.value,
       celular: this.asesorForm.get('celular')?.value,
       aliado: this.asesorForm.get('aliado')?.value,

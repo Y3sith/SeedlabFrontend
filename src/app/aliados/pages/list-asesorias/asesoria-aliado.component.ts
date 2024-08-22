@@ -27,8 +27,6 @@ export class AsesoriaAliadoComponent implements OnInit {
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
   tiempoEspera = 1800;
-  isLoading: boolean = false;
-
 
   page: number = 1; // Inicializa la página actual
   totalAsesorias: number = 0; // variable para almacenar el total de asesorias
@@ -72,25 +70,22 @@ export class AsesoriaAliadoComponent implements OnInit {
   }
 
   loadAsesorias(rol: number, estados: number[]): void {
-    this.isLoading = true;
     this.asesorias = []; // Reiniciar las asesorías
-  
+
     estados.forEach(estado => {
-      this.asesoriaService.getAsesoriasPorRolYEstado(this.token, rol, estado).subscribe(
-        data => {
-          this.asesorias = this.asesorias.concat(data); // Combinar resultados
-          this.separarAsesorias();
-          this.showSinAsignar(); // Mostrar asesorías "Sin asignar" por defecto
-          this.totalAsesorias = this.asesorias.length; // Actualiza el total de asesorías
-          this.isLoading = false; // Asegúrate de que isLoading se establece en false
-        },
-        error => {
-          console.error('Error al obtener las asesorías:', error);
-          this.isLoading = false; // Asegúrate de que isLoading se establece en false en caso de error
-        }
-      );
+        this.asesoriaService.getAsesoriasPorRolYEstado(this.token, rol, estado).subscribe(
+            data => {
+                this.asesorias = this.asesorias.concat(data); // Combinar resultados
+                this.separarAsesorias();
+                this.showSinAsignar(); // Mostrar asesorías "Sin asignar" por defecto
+                this.totalAsesorias = this.asesorias.length; // Actualiza el total de asesorías
+            },
+            error => {
+                console.error('Error al obtener las asesorías:', error);
+            }
+        );
     });
-  }
+}
 
    // Código para la paginación
    changePage(pageNumber: number | string): void {

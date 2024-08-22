@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { EmprendedorService } from '../../../../servicios/emprendedor.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
 import { EmpresaService } from '../../../../servicios/empresa.service';
@@ -19,7 +18,6 @@ import { User } from '../../../../Modelos/user.model';
 export class AddEmpresaComponent {
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  listTipoDocumento: []= [];
   departamentoPredeterminado = '';
   submitted = false;
   token = '';
@@ -39,8 +37,6 @@ export class AddEmpresaComponent {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private alertService: AlertService,
-    private emprendedorService: EmprendedorService,
-    
 
   ) {
 
@@ -50,7 +46,7 @@ export class AddEmpresaComponent {
   ngOnInit(): void {
     this.validateToken();
     this.cargarDepartamentos();
-    this.tipodato();
+
   }
 
   /* Valida el token del login */
@@ -102,18 +98,6 @@ export class AddEmpresaComponent {
         console.log('Error al cargar los municipios:', err);
       }
     );
-  }
-  
-  tipodato():void{
-      this.emprendedorService.tipoDato().subscribe(
-        data => {
-          this.listTipoDocumento = data;
-          //console.log('datos tipo de documento: ',data)
-        },
-        error => {
-          console.log(error);
-        }
-      )
   }
 
   addEmpresaForm = this.fb.group({
