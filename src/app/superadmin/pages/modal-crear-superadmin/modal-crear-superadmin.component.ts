@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
+import { EmprendedorService } from '../../../servicios/emprendedor.service';
 
 @Component({
   selector: 'app-modal-crear-superadmin',
@@ -56,6 +57,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private superadminService: SuperadminService,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
+    
   ) {
     this.adminId = data.adminId;
    
@@ -74,6 +76,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
 
     this.superadminForm.get('password')?.updateValueAndValidity();
+    this.cargarDepartamentos();
   }
 
   get f() { return this.superadminForm.controls; } /* Validaciones */
@@ -124,6 +127,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
       )
     }
   }
+
 
   /* Crear super admin o actualiza dependendiendo del adminId */
   addSuperadmin(): void {
