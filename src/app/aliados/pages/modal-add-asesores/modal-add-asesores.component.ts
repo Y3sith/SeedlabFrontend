@@ -7,6 +7,10 @@ import { AsesorService } from '../../../servicios/asesor.service';
 import { User } from '../../../Modelos/user.model';
 import { Asesor } from '../../../Modelos/asesor.model';
 import { AlertService } from '../../../servicios/alert.service';
+import { AuthService } from '../../../servicios/auth.service';
+import { EmprendedorService } from '../../../servicios/emprendedor.service';
+import { DepartamentoService } from '../../../servicios/departamento.service';
+import { MunicipioService } from '../../../servicios/municipio.service';
 
 
 
@@ -46,6 +50,12 @@ export class ModalAddAsesoresComponent implements OnInit {
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
+    documento: ['', Validators.required],
+    id_tipo_documento: ['', Validators.required],
+    imagen_perfil: [null],
+    genero: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
+    direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
     municipio: ['',Validators.required],
     aliado: ['', Validators.required],
@@ -75,6 +85,8 @@ export class ModalAddAsesoresComponent implements OnInit {
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
+    this.tipodato();
+    this.cargarDepartamentos();
     /*para ver si lo estan editando salga la palabra editar */
     if (this.asesorId != null) {
       this.isEditing = true;
@@ -167,9 +179,16 @@ export class ModalAddAsesoresComponent implements OnInit {
     if (this.asesorId != null) {
       this.aliadoService.getAsesorAliado(this.token, this.asesorId).subscribe(
         data => {
+          console.log('datossssss: ', data);
           this.asesorForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
+            documento: data.documento,
+            id_tipo_documento: data.id_tipo_documento,
+            imagen_perfil: data.imagen_perfil,
+            genero: data.genero,
+            fecha_nac: data.fecha_nac,
+            direccion: data.direccion,
             celular: data.celular,
             municipio: data.municipio,
             aliado: data.id,
@@ -179,7 +198,6 @@ export class ModalAddAsesoresComponent implements OnInit {
           });
 
           this.isActive = data.estado === 'Activo';
-
           setTimeout(() => {
             this.asesorForm.get('estado')?.setValue(this.isActive);
           });
@@ -203,7 +221,7 @@ export class ModalAddAsesoresComponent implements OnInit {
         error => {
           console.log(error);
         }
-      )
+      );
     }
   }
 
@@ -216,6 +234,8 @@ export class ModalAddAsesoresComponent implements OnInit {
     const asesor: Asesor = {
       nombre: this.asesorForm.get('nombre')?.value,
       apellido: this.asesorForm.get('apellido')?.value,
+      documento: this.asesorForm.get('documento')?.value,
+      id_tipo_documento: this.asesorForm.get('id_tipo_documento')?.value,
       imagen_perfil: this.asesorForm.get('')?.value,
       genero: this.asesorForm.get('genero')?.value,
       fecha_nac: this.asesorForm.get('')?.value,
