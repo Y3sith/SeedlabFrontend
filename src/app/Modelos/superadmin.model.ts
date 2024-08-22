@@ -12,7 +12,7 @@ export class Superadmin {
     password?: string | null;
     estado?: boolean | null;
     id_tipo_documento: string | null;
-    id_municipio: string | null;
+    id_municipio?: string | null;
     
 
     constructor(id: number, nombre: string, apellido: string, documento:string, imagen_perfil:string, celular:string, genero:string, fecha_nac:string, direccion:string,  email: string, estado: boolean, id_tipo_documento:string, password?: string,  ) {

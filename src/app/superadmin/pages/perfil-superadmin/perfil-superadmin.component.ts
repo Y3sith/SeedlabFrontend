@@ -92,10 +92,18 @@ export class PerfilSuperadminComponent {
       this.superadminService.getInfoAdmin(this.token, this.id).subscribe(
         (data) => {
           this.perfiladminForm.patchValue({
+            documento: data.documento,
             nombre: data.nombre,
             apellido: data.apellido,
+            imagen_perfil: data.imagen_perfil,
+            celular: data.celular,
             email: data.email,
-            password: data.password
+            password: data.password,
+            genero: data.genero,
+            fecha_nac: data.fecha_nac,
+            direccion: data.direccion,
+            nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
+            estado: data.estado
           });
           console.log(data);
 

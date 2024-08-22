@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
@@ -7,6 +7,8 @@ import { User } from '../../../Modelos/user.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
+import { DepartamentoService } from '../../../servicios/departamento.service';
+import { MunicipioService } from '../../../servicios/municipio.service';
 
 @Component({
   selector: 'app-modal-crear-superadmin',
@@ -26,14 +28,23 @@ export class ModalCrearSuperadminComponent implements OnInit {
   estado: boolean;
   isActive: boolean = true;
   boton = true;
+  listDepartamentos: any[] = [];
+  listMunicipios: any[] = [];
   
   
 
   superadminForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    documento:'',
+    imagen_perfil: [null, Validators.required],
+    celular:['', Validators.required],
+    genero: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
+    direccion:['', Validators.required],
+    nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required),
+    email: ['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
     estado: true,
   })
 
@@ -42,8 +53,12 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private alertService: AlertService,
-    private superadminService: SuperadminService) {
+    private superadminService: SuperadminService,
+    private departamentoService: DepartamentoService,
+    private municipioService: MunicipioService,
+  ) {
     this.adminId = data.adminId;
+   
   }
 
   /* Inicializa con esas funciones al cargar la pagina, 
@@ -70,6 +85,19 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
     if (!this.token) {
       this.router.navigate(['home']);
+    }
+  }
+
+  /* Validaciones la contraseña */
+  passwordValidator(control: AbstractControl) {
+    const value = control.value;
+    const hasUpperCase = /[A-Z]+/.test(value);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+
+    if (hasUpperCase && hasSpecialChar) {
+      return null;
+    } else {
+      return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
     }
   }
 
@@ -103,9 +131,16 @@ export class ModalCrearSuperadminComponent implements OnInit {
     const superadmin: Superadmin = {
       nombre: this.superadminForm.value.nombre,
       apellido: this.superadminForm.value.apellido,
+      documento: this.superadminForm.value.documento,
+      celular: this.superadminForm.value.celular,
+      genero: this.superadminForm.value.genero,
+      direccion: this.superadminForm.value.direccion,
+      fecha_nac: this.superadminForm.value.fecha_nac,
       email: this.superadminForm.value.email,
       password: this.superadminForm.value.password,
       estado: this.superadminForm.value.estado,
+      id_tipo_documento: this.superadminForm.value.nombretipodoc,
+
     };
     /* Actualiza superadmin */
     if (this.adminId != null) {
@@ -170,7 +205,40 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  
+  //Funcion para cargar los departamentos
+  cargarDepartamentos(): void {
+    this.departamentoService.getDepartamento().subscribe(
+      (data: any[]) => {
+        this.listDepartamentos = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
+  }
+
+  onDepartamentoSeleccionado(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const selectedDepartamento = target.value;
+
+    // Guarda el departamento seleccionado en el localStorage
+    localStorage.setItem('departamento', selectedDepartamento);
+
+    // Llama a cargarMunicipios si es necesario
+    this.cargarMunicipios(selectedDepartamento);
+  }
+
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
+      data => {
+        this.listMunicipios = data;
+        //console.log('Municipios cargados:', JSON.stringify(data));
+      },
+      err => {
+        console.log('Error al cargar los municipios:', err);
+      }
+    );
+  }
   
 
 }
