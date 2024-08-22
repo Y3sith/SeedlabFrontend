@@ -52,14 +52,14 @@ export class RegistroComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private registroService: AuthService,
-    private emprendedorService: EmprendedorService,
+    
     private router: Router,
     private alertService: AlertService,
   ) { }
 
   ngOnInit(): void {
     this.cargarDepartamentos();
-    this.tipodato();
+    this.tipoDocumento();
     this.registerForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator]],
       nombretipodoc: ['', Validators.required],
@@ -217,8 +217,8 @@ export class RegistroComponent implements OnInit {
     );
   }
 
-  tipodato():void{
-      this.emprendedorService.tipoDato().subscribe(
+  tipoDocumento():void{
+      this.registroService.tipoDato().subscribe(
         data => {
           this.listTipoDocumento = data;
 

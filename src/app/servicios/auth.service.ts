@@ -44,6 +44,8 @@ export class AuthService {
   }
 
   
-  
+  tipoDato(): Observable<any>{
+    return this.http.get(environment.apiUrl+"tipo_documento");
+  }
   
 }
