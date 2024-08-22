@@ -12,7 +12,10 @@
   width: 160px;
   justify-content: center;
   align-items: center;
+
 }
+
+
 
 .main-timeline-container .timeline::after {
   content: '';
@@ -35,8 +38,6 @@
   border-bottom: 25px solid transparent;
   border-left: 30px solid;
   background-color: white;
-
-
 }
 
 .main-timeline-container .timeline-content {
@@ -88,7 +89,7 @@
   width: 160px;
   height: 300px;
   border-radius: 0 300px 300px 0;
-  border: 50px solid #8cc63f;
+  border: 50px solid #80981A;
   border-left: none;
   background-color: transparent;
   margin-bottom: 0;
@@ -102,7 +103,7 @@
   margin-left: -15px;
   left: 0;
   border-left: none;
-  border-right: 30px solid #8cc63f;
+  border-right: 30px solid #80981A;
   background-color: white;
 }
 
@@ -186,7 +187,7 @@
 .main-timeline-container .timeline-7::after {
   left: 0;
   border-left: none;
-  border-right: 30px solid #e63946;
+  border-right: 30px solid;
   background-color: white;
 }
 
@@ -195,7 +196,7 @@
   height: 300px;
   border-radius: 300px 0 0 300px;
   /* This changes the curve direction */
-  border: 50px solid #ff006e;
+  border: 50px solid #00BF9E;
   border-right: none;
   background-color: transparent !important;
   margin-bottom: 0;
@@ -212,7 +213,7 @@
   border-top: 25px solid transparent;
   border-bottom: 25px solid transparent;
   color: white;
-  background-color: #ff006e;
+  background-color: #00BF9E;
   border-right: 30px solid #ffffff;
   border-left: white;
   width: 30px;
@@ -222,7 +223,7 @@
 .main-timeline-container .timeline-8::before {
   margin-top: 200px;
   margin-right: -25px;
-  color: #ff006e;
+  color: #00BF9E;
 }
 
 .main-timeline-container .timeline-8 .timeline-year {
@@ -335,123 +336,124 @@
 
 /* Campo 1 */
 .main-timeline-container .timeline-1 {
-  background-color: #e63946;
+  background-color: #F4384B;
+
   /* Rojo */
 }
 
 .main-timeline-container .timeline-1::before {
-  border-left-color: #e63946;
+  border-left-color: #F4384B;
   /* Rojo */
 }
 
 .main-timeline-container .timeline-1 .timeline-year {
-  color: #e63946;
+  color: #F4384B;
   ;
 }
 
 /* Campo 2 */
 .main-timeline-container .timeline-2 {
-  background-color: #f77f00;
+  background-color: #FFA300;
   /* Naranja */
 }
 
 .main-timeline-container .timeline-2::before {
-  border-left-color: #f77f00;
+  border-left-color: #FFA300;
   /* Naranja */
 }
 
 .main-timeline-container .timeline-2 .timeline-year {
-  color: #f77f00;
+  color: #FFA300;
 }
 
 /* Campo 3 */
 .main-timeline-container .timeline-3 {
-  background-color: #ffba08;
+  background-color: #00CED1;
   /* Amarillo */
 }
 
 .main-timeline-container .timeline-3::before {
-  border-left-color: #ffba08;
+  border-left-color: #00CED1;
   /* Amarillo */
 }
 
 .main-timeline-container .timeline-3 .timeline-year {
-  color: #ffba08;
+  color: #00CED1;
 }
 
 /* Campo 4 */
 
 
 .main-timeline-container .timeline-4 .timeline-year {
-  color: #8cc63f;
+  color: #80981A;
   ;
 }
 
 /* Campo 5 */
 .main-timeline-container .timeline-5 {
-  background-color: #48cae4;
+  background-color: #683466;
   /* Azul Claro */
 }
 
 .main-timeline-container .timeline-5::before {
   color: white;
-  background-color: #48cae4;
+  background-color: #683466;
 
 }
 
 .main-timeline-container .timeline-5::after {
-  border-right-color: #48cae4;
+  border-right-color: #683466;
   /* Azul Claro */
 }
 
 .main-timeline-container .timeline-5 .timeline-year {
-  color: #48cae4;
+  color: #683466;
 }
 
 /* Campo 6 */
 .main-timeline-container .timeline-6 {
-  background-color: #023e8a;
+  background-color: #F42CCF;
   /* Azul Oscuro */
 }
 
 .main-timeline-container .timeline-6::before {
   color: white;
-  background-color: #023e8a;
+  background-color: #F42CCF;
 
 }
 
 .main-timeline-container .timeline-6::after {
-  border-right-color: #023e8a;
+  border-right-color: #F42CCF;
   /* Azul Oscuro */
 }
 
 .main-timeline-container .timeline-6 .timeline-year {
-  color: #023e8a;
+  color: #F42CCF;
 }
 
 /* Campo 7 */
 .main-timeline-container .timeline-7 {
-  background-color: #9d4edd;
+  background-color: #FFCE00;
   /* Púrpura */
 }
 
 .main-timeline-container .timeline-7::before {
   color: white;
-  background-color: #9d4edd;
+  background-color: #FFCE00;
 }
 
 .main-timeline-container .timeline-7::after {
-  border-right-color: #9d4edd;
+  border-right-color: #FFCE00;
   /* Púrpura */
 }
 
 .main-timeline-container .timeline-7 .timeline-year {
-  color: #9d4edd;
+  color: #FFCE00;
 }
 
 /* Campo 8 */
 .main-timeline-container .timeline-8 {
-  background-color: #ff006e;
+  background-color: #00BF9E;
   /* Rosa */
 }
 
@@ -462,36 +464,36 @@
 }
 
 .main-timeline-container .timeline-8 .timeline-year {
-  color: #ff006e;
+  color: #00BF9E;
 }
 
 .main-timeline-container .timeline-9 {
-  background-color: #56e639;
+  background-color: #FF5F27;
   /* Rojo */
 }
 
 .main-timeline-container .timeline-9::before {
-  border-left-color: #56e639;
+  border-left-color: #FF5F27;
   /* Rojo */
 }
 
 .main-timeline-container .timeline-9 .timeline-year {
-  color: #56e639;
+  color: #FF5F27;
   ;
 }
 
 .main-timeline-container .timeline-10 {
-  background-color: #fffb00ea;
+  background-color: #0E54A8;
   /* Rojo */
 }
 
 .main-timeline-container .timeline-10::before {
-  border-left-color: #fffb00ea;
+  border-left-color: #0E54A8;
   /* Rojo */
 }
 
 .main-timeline-container .timeline-10 .timeline-year {
-  color: #fffb00ea;
+  color: #0E54A8;
   ;
 }
 
@@ -514,6 +516,7 @@
   color: #ff0000;
   ;
 }
+
 
 
 
