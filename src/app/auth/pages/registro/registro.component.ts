@@ -50,12 +50,14 @@ export class RegistroComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private registroService: AuthService,
+    
     private router: Router,
     private alertService: AlertService,
   ) { }
 
   ngOnInit(): void {
     this.cargarDepartamentos();
+    this.tipoDocumento();
     this.registerForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator]],
       nombretipodoc: ['', Validators.required],
@@ -211,6 +213,20 @@ export class RegistroComponent implements OnInit {
         console.log('Error al cargar los municipios:', err);
       }
     );
+  }
+
+  tipoDocumento():void{
+      this.registroService.tipoDato().subscribe(
+        data => {
+          this.listTipoDocumento = data;
+
+          console.log(data);
+          //console.log('datos tipo de documento: ',data)
+        },
+        error => {
+          console.log(error);
+        }
+      )
   }
 
   registro(): void {
