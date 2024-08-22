@@ -68,11 +68,12 @@ export class PerfilEmprendedorComponent implements OnInit {
     fecha_nac: ['', Validators.required],
     direccion: ['', Validators.required],
     nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required), // Aquí se deshabilita el campo
+    departamento: ['', Validators.required],
     municipio: ['', Validators.required],
     estado: true,
   });
-  
-  registerForm: FormGroup; //ahorita quitarlo
+
+  registerForm: FormGroup; //ahorita quitarlo 
   listEmprendedor: PerfilEmprendedor[] = [];
   originalData: any;
   perfil: '';
@@ -93,8 +94,8 @@ export class PerfilEmprendedorComponent implements OnInit {
   ngOnInit(): void {
     this.validateToken();
     this.isAuthenticated = this.authServices.isAuthenticated();
-    this.verEditar();
-    this.cargarDepartamentos();
+    this.cargarDepartamentos(); 
+    this.verEditar(); 
     this.isEditing = true;
   }
 
@@ -124,29 +125,34 @@ export class PerfilEmprendedorComponent implements OnInit {
     if (this.token) {
       this.emprendedorService.getInfoEmprendedor(this.token, this.documento).subscribe(
         (data) => {
+          // Cargar el departamento primero
+          this.emprendedorForm.patchValue({
+            departamento: data.id_departamento,
+          });
+          this.isActive = data.estado === 'Activo';
+  
+          // Cargar municipios después de cargar el departamento
+          if (data.id_departamento) {
+            this.cargarMunicipios(data.id_departamento);
+          }
+          console.log('trae la info',data);
+          // Rellenar el formulario con los datos del emprendedor
           this.emprendedorForm.patchValue({
             documento: data.documento,
             nombre: data.nombre,
             apellido: data.apellido,
-            imagen_perfil:data.imagen_perfil,
+            imagen_perfil: data.imagen_perfil,
             celular: data.celular,
             email: data.email,
             password: data.password,
             genero: data.genero,
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
+            departamento: data.id_departamento.toString(),
+            municipio: data.id_municipio.toString(), 
             nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
             estado: data.estado
           });
-          this.isActive = data.estado === 'Activo'; // Asegura que el estado booleano es correcto
-          console.log("Estado inicial:", this.isActive); // Verifica el estado inicial en la consola
-          console.log('wwwwwwwwwwwwwwwwww: ',data);
-
-          // Forzar cambio de detección de Angular
-          setTimeout(() => {
-            this.emprendedorForm.get('estado')?.setValue(this.isActive);
-          })
-
         },
         (err) => {
           console.log(err);
@@ -231,37 +237,35 @@ export class PerfilEmprendedorComponent implements OnInit {
  }
 
 
-  updateEmprendedor(): void {
-    const perfil: PerfilEmprendedor = {
-      documento: this.emprendedorForm.get('documento')?.value,
-      id_tipo_documento: this.emprendedorForm.get('nombretipodoc')?.value,
-      nombre: this.emprendedorForm.get('nombre')?.value,
-      apellido: this.emprendedorForm.get('apellido')?.value,
-      celular: this.emprendedorForm.get('celular')?.value,
-      email: this.emprendedorForm.get('email')?.value,
-      password: this.emprendedorForm.get('password')?.value,
-      genero: this.emprendedorForm.get('genero')?.value,
-      fecha_nac: this.emprendedorForm.get('fecha_nac')?.value,
-      direccion: this.emprendedorForm.get('direccion')?.value,
-      id_municipio: this.emprendedorForm.get('municipio')?.value,
-    }
-    // let confirmationText = this.isActive
-    //   ? "¿Estas seguro de guardar los cambios?"
-    //   : "¿Estas seguro de guardar los cambios?";
-
-    this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question',).then((result) => {
-      if (result.isConfirmed) {
-        this.emprendedorService.updateEmprendedor(perfil, this.token, this.documento).subscribe(
-          (data) => {
-            location.reload();
-          },
-          (err) => {
-            console.log(err);
-          }
-        );
-      }
-    })
+ updateEmprendedor(): void {
+  const perfil: PerfilEmprendedor = {
+    documento: this.emprendedorForm.get('documento')?.value,
+    id_tipo_documento: this.emprendedorForm.get('nombretipodoc')?.value,
+    nombre: this.emprendedorForm.get('nombre')?.value,
+    apellido: this.emprendedorForm.get('apellido')?.value,
+    celular: this.emprendedorForm.get('celular')?.value,
+    email: this.emprendedorForm.get('email')?.value,
+    password: this.emprendedorForm.get('password')?.value,
+    genero: this.emprendedorForm.get('genero')?.value,
+    fecha_nac: this.emprendedorForm.get('fecha_nac')?.value,
+    direccion: this.emprendedorForm.get('direccion')?.value,  // Cambiado a 'direccion'
+    id_departamento: this.emprendedorForm.get('departamento')?.value,
+    id_municipio: this.emprendedorForm.get('municipio')?.value,
   }
+  console.log(perfil);
+  this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question',).then((result) => {
+    if (result.isConfirmed) {
+      this.emprendedorService.updateEmprendedor(perfil, this.token, this.documento).subscribe(
+        (data) => {
+          location.reload();
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    }
+  })
+}
 
 
   desactivarEmprendedor(): void {
@@ -313,6 +317,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
+        this.cdRef.detectChanges(); // Forzar la detección de cambios
       },
       (err) => {
         console.log(err);
@@ -320,21 +325,29 @@ export class PerfilEmprendedorComponent implements OnInit {
     )
   }
 
-  //Funcion para traer el nombre del departamento seleccionado
-  onDepartamentoSeleccionado(nombreDepartamento: string): void {
-    this.cargarMunicipios(nombreDepartamento);
+  onDepartamentoSeleccionado(departamentoId: string): void {
+    this.cargarMunicipios(departamentoId);
   }
 
-  //Funcion para cargar los municipios
-  cargarMunicipios(nombreDepartamento: string): void {
-    this.municipioService.getMunicipios(nombreDepartamento).subscribe(
-      data => {
+  cargarMunicipios(departamentoId: string): void {
+    this.municipioService.getMunicipios(departamentoId).subscribe(
+      (data) => {
         this.listMunicipios = data;
+  
+        // Establecer el municipio actual en el select después de cargar los municipios
+        const municipioId = this.emprendedorForm.get('id_municipio')?.value;
+        if (municipioId) {
+          this.emprendedorForm.patchValue({ municipio: municipioId });
+        }
       },
-      err => {
+      (err) => {
         console.log('Error al cargar los municipios:', err);
       }
     );
+  }
+  
+  trackById(index: number, item: any): number {
+    return item.id;
   }
 
   //para que no me deje editar el nombre del tipo del documento
