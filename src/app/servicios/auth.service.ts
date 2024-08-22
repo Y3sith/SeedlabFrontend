@@ -42,7 +42,7 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
   }
-  
+
   
   tipoDato(): Observable<any>{
     return this.http.get(environment.apiUrl+"tipo_documento");

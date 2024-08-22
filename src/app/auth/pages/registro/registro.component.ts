@@ -7,6 +7,7 @@ import { faEnvelope, faEye, faIdCard, faLandmarkFlag, faMountainCity, faPhone, f
 import { Emprendedor } from '../../../Modelos/emprendedor.model';
 import { AlertService } from '../../../servicios/alert.service';
 import { AuthService } from '../../../servicios/auth.service';
+import { EmprendedorService } from '../../../servicios/emprendedor.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 
@@ -29,6 +30,7 @@ export class RegistroComponent implements OnInit {
   hide = true;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
+  listTipoDocumento: []= [];
   departamentoPredeterminado = '';
   registerForm: FormGroup;
   submitted = false;
