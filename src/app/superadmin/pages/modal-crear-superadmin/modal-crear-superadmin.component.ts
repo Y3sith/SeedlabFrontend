@@ -10,6 +10,7 @@ import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { EmprendedorService } from '../../../servicios/emprendedor.service';
+import { AuthService } from '../../../servicios/auth.service';
 
 @Component({
   selector: 'app-modal-crear-superadmin',
@@ -31,23 +32,24 @@ export class ModalCrearSuperadminComponent implements OnInit {
   boton = true;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  
-  
+  listTipoDocumento: any[] = [];
+
 
   superadminForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
-    documento:'',
+    documento: '',
     imagen_perfil: [null, Validators.required],
-    celular:['', Validators.required],
+    celular: ['', Validators.required],
     genero: ['', Validators.required],
     fecha_nac: ['', Validators.required],
-    direccion:['', Validators.required],
-    nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required),
+    direccion: ['', Validators.required],
+    nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
+    municipio:['', Validators.required],
     estado: true,
-  })
+  });
 
   constructor(public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -57,10 +59,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private superadminService: SuperadminService,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
-    
+    private authService: AuthService
   ) {
     this.adminId = data.adminId;
-   
+
   }
 
   /* Inicializa con esas funciones al cargar la pagina, 
@@ -77,6 +79,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
     this.superadminForm.get('password')?.updateValueAndValidity();
     this.cargarDepartamentos();
+    this.tipoDocumento();
   }
 
   get f() { return this.superadminForm.controls; } /* Validaciones */
@@ -90,6 +93,8 @@ export class ModalCrearSuperadminComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
+
+ 
 
   /* Validaciones la contraseña */
   passwordValidator(control: AbstractControl) {
@@ -132,6 +137,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   /* Crear super admin o actualiza dependendiendo del adminId */
   addSuperadmin(): void {
     this.submitted = true;
+    console.log('Valor de municipio:', this.superadminForm.value.municipio);
     const superadmin: Superadmin = {
       nombre: this.superadminForm.value.nombre,
       apellido: this.superadminForm.value.apellido,
@@ -144,8 +150,9 @@ export class ModalCrearSuperadminComponent implements OnInit {
       password: this.superadminForm.value.password,
       estado: this.superadminForm.value.estado,
       id_tipo_documento: this.superadminForm.value.nombretipodoc,
-
+      id_municipio:this.superadminForm.value.municipio
     };
+    console.log('Superadmin Data:', superadmin);
     /* Actualiza superadmin */
     if (this.adminId != null) {
       let confirmationText = this.isActive
@@ -158,7 +165,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
             data => {
               location.reload();
               console.log(data);
-              this.alertService.successAlert('Exito','Actualizacion exitosa')
+              this.alertService.successAlert('Exito', 'Actualizacion exitosa')
             },
             error => {
               console.error(error);
@@ -184,7 +191,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
           }
 
         }
-        
+
       );
     }
   }
@@ -243,6 +250,19 @@ export class ModalCrearSuperadminComponent implements OnInit {
       }
     );
   }
-  
+
+  tipoDocumento(): void {
+    this.authService.tipoDato().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+
+        console.log('tipos de documentos', this.listTipoDocumento);
+        //console.log('datos tipo de documento: ',data)
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
 
 }

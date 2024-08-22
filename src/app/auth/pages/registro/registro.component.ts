@@ -34,6 +34,7 @@ export class RegistroComponent implements OnInit {
   submitted = false;
   errorMessage: string | null = null;
   email: string;
+  listTipoDocumento: any[] = [];
 
   currentIndex = 0;
   progressWidth = 0;
@@ -220,7 +221,7 @@ export class RegistroComponent implements OnInit {
         data => {
           this.listTipoDocumento = data;
 
-          console.log(data);
+          console.log(this.listTipoDocumento);
           //console.log('datos tipo de documento: ',data)
         },
         error => {
