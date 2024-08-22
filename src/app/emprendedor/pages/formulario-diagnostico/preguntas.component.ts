@@ -484,7 +484,7 @@ export const PREGUNTAS: Preguntas[] = [
         nombre: '¿Tiene definidas las necesidades de su producto y/o servicio?',
         puntaje: 0,
         id_seccion: 4,
-        isAffirmativeQuestion: false,
+        isAffirmativeQuestion: true,
         isText: false,
         subPreguntas: []
     },
@@ -510,7 +510,7 @@ export const PREGUNTAS: Preguntas[] = [
         nombre: '¿Tiene definidas las necesidades de su emprendimiento (organizacional)?',
         puntaje: 0,
         id_seccion: 4,
-        isAffirmativeQuestion: false,
+        isAffirmativeQuestion: true,
         isText: false,
         subPreguntas: []
     },

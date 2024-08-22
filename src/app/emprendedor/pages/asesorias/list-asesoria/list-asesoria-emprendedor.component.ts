@@ -31,6 +31,7 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
 
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
+  isLoading: boolean = false;
   
   page: number = 1; // Inicializa la página actual
   totalAsesorias: number = 0; // variable para almacenar el total de asesorias
@@ -72,43 +73,59 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
   }
 
 
-  listarAsesorias() {
+  listarAsesorias(): void {
     if (this.documento && this.token) {
+      this.isLoading = true; // Empieza a cargar
+  
       const bodyTrue = {
         documento: this.documento,
         asignacion: true
       };
-
+  
       const bodyFalse = {
         documento: this.documento,
         asignacion: false
       };
-
+  
+      // Solicitud para asesorías asignadas
       this.asesoriaService.getMisAsesorias(this.token, bodyTrue).subscribe(
         response => {
           this.asesoriasTrue = response;
           this.asignadasCount = this.asesoriasTrue.length; // Actualiza el contador
-          this.totalAsesorias = response.length; // Actualiza el total de asesorias
+          this.totalAsesorias = this.asesoriasTrue.length + (this.asesoriasFalse?.length || 0); // Actualiza el total de asesorías
+          this.checkLoadingComplete();
         },
         error => {
-          console.error(error);
+          console.error('Error al obtener asesorías asignadas:', error);
+          this.checkLoadingComplete();
         }
       );
-
+  
+      // Solicitud para asesorías sin asignar
       this.asesoriaService.getMisAsesorias(this.token, bodyFalse).subscribe(
         response => {
           this.asesoriasFalse = response;
           this.sinAsignarCount = this.asesoriasFalse.length; // Actualiza el contador
-          this.totalAsesorias = response.length; // Actualiza el total de asesorias
+          this.totalAsesorias = this.asesoriasTrue?.length + this.asesoriasFalse.length; // Actualiza el total de asesorías
+          this.checkLoadingComplete();
         },
         error => {
-          console.error(error);
+          console.error('Error al obtener asesorías sin asignar:', error);
+          this.checkLoadingComplete();
         }
       );
     } else {
       console.error('Documento o token no encontrado en el localStorage');
     }
   }
+  
+  // Método para comprobar si ambos datos están cargados
+  checkLoadingComplete(): void {
+    if (this.asesoriasTrue !== undefined && this.asesoriasFalse !== undefined) {
+      this.isLoading = false; // Termina la carga cuando ambos datos están disponibles
+    }
+  }
+  
 
   // Código para la paginación
   changePage(pageNumber: number | string): void {

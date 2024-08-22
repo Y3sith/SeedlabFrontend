@@ -17,7 +17,7 @@ const routes: Routes = [
     path: '',
     children: [
       {path: 'list-asesoria', component: ListAsesoriaEmprendedorComponent, data: {title: 'Asesorias', showInMenu:true, icon:'fa-solid fa-comments', isLeft:true}},
-      {path: 'encuesta', component: EncuestaEmpresaComponent, data:{title: 'Encuesta', showInMenu:true, icon:'fa-solid fa-square-poll-vertical'}},
+      {path: 'encuesta/:id', component: EncuestaEmpresaComponent, data:{title: 'Encuesta', showInMenu:false, icon:'fa-solid fa-square-poll-vertical'}},
       {path: 'list-empresa', component: ListEmpresasComponent, data:{title: 'Empresa', showInMenu:true, icon:'fa-solid fa-building'}},
       {path: 'ruta', component: CursorutasComponent, data:{title: 'Ruta', showInMenu:false, icon:'fa-solid fa-location-arrow'}},
       {path: 'modal', component: ModalActividadComponent, data:{title: 'modal', showInMenu:false, icon:'fa-solid fa-location-arrow'}}, //Agregado para ver la modal por la ruta

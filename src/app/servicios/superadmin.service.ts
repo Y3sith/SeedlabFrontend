@@ -125,6 +125,11 @@ export class SuperadminService {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options);
   }
+
+  emprendedoresPorDepartamento(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url+"emprendedor_departamento",options)
+  }
   
 //////////////////////////
   pdfEmpenrededorMunicipio(access_token:any):Observable<any>{
