@@ -35,6 +35,13 @@ export class ModalCrearOrientadorComponent implements OnInit {
     celular: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
+    documento: ['', Validators.required],
+    genero: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
+    direccion: ['', Validators.required],
+    id_tipo_documento: ['', Validators.required],
+    id_municipio: ['', Validators.required],
+    imagen_perfil: [null, Validators.required],
     estado: true,
   });
 
@@ -119,6 +126,11 @@ export class ModalCrearOrientadorComponent implements OnInit {
       email: this.orientadorForm.value.email,
       password: this.orientadorForm.value.password ? this.orientadorForm.value.password : null,
       estado: this.orientadorForm.value.estado,
+      documento: this.orientadorForm.value.documento,
+      genero: this.orientadorForm.value.genero,
+      fecha_nac: this.orientadorForm.value.fecha_nac,
+      direccion: this.orientadorForm.value.direccion,
+      id_tipo_documento: this.orientadorForm.value.id_tipo_documento,
     };
     if (this.orientadorId != null) {
       // Check if the status is changing and show the confirmation dialog

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { OrientadorService } from '../../../servicios/orientador.service';
@@ -38,7 +38,13 @@ export class PerfilOrientadorComponent {
     celular: ['', Validators.required],
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
-    estado: [true],
+    documento:'',
+    imagen_perfil: [null, Validators.required],
+    genero: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
+    direccion:['', Validators.required],
+    nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required),
+    estado: [true]
   });
 
   constructor(
@@ -86,6 +92,13 @@ export class PerfilOrientadorComponent {
             celular: data.celular,
             email: data.email,
             password: data.password,
+            genero: data.genero,
+            fecha_nac: data.fecha_nac,
+            direccion: data.direccion,
+            nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
+            imagen_perfil: data.imagen_perfil,
+            documento: data.documento,
+            estado: data.estado
           });
         },
         (err) => {
@@ -103,7 +116,13 @@ export class PerfilOrientadorComponent {
       celular: this.perfilorientadorForm.get('celular')?.value,
       email: this.perfilorientadorForm.get('email')?.value,
       password: this.perfilorientadorForm.get('password')?.value,
-      estado: true,
+      documento: this.perfilorientadorForm.get('documento')?.value,
+      genero: this.perfilorientadorForm.get('genero')?.value,
+      fecha_nac: this.perfilorientadorForm.get('fecha_nac')?.value,
+      direccion: this.perfilorientadorForm.get('direccion')?.value,
+      id_tipo_documento: this.perfilorientadorForm.get('nombretipodoc')?.value,
+      id_municipio: this.perfilorientadorForm.get('municipio')?.value,
+
     }
     this.orientadorService.updateOrientador(this.token, this.id, perfil).subscribe(
       (data) => {
