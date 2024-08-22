@@ -76,7 +76,6 @@ export class ListRutasComponent implements OnInit {
 
 
   cargarRutas(): void {
-    this.isLoading = true;
     if (this.token) {
       this.isLoading = true;
       this.rutaService.getAllRutas(this.token, this.userFilter.estado).subscribe(

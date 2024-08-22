@@ -7,7 +7,6 @@ import { faEnvelope, faEye, faIdCard, faLandmarkFlag, faMountainCity, faPhone, f
 import { Emprendedor } from '../../../Modelos/emprendedor.model';
 import { AlertService } from '../../../servicios/alert.service';
 import { AuthService } from '../../../servicios/auth.service';
-import { EmprendedorService } from '../../../servicios/emprendedor.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 
@@ -30,12 +29,12 @@ export class RegistroComponent implements OnInit {
   hide = true;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  listTipoDocumento: []= [];
   departamentoPredeterminado = '';
   registerForm: FormGroup;
   submitted = false;
   errorMessage: string | null = null;
   email: string;
+  listTipoDocumento: any[] = [];
 
   currentIndex = 0;
   progressWidth = 0;
@@ -52,14 +51,14 @@ export class RegistroComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private registroService: AuthService,
-    private emprendedorService: EmprendedorService,
+    
     private router: Router,
     private alertService: AlertService,
   ) { }
 
   ngOnInit(): void {
     this.cargarDepartamentos();
-    this.tipodato();
+    this.tipoDocumento();
     this.registerForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator]],
       nombretipodoc: ['', Validators.required],
@@ -217,12 +216,12 @@ export class RegistroComponent implements OnInit {
     );
   }
 
-  tipodato():void{
-      this.emprendedorService.tipoDato().subscribe(
+  tipoDocumento():void{
+      this.registroService.tipoDato().subscribe(
         data => {
           this.listTipoDocumento = data;
 
-          console.log(data);
+          console.log(this.listTipoDocumento);
           //console.log('datos tipo de documento: ',data)
         },
         error => {

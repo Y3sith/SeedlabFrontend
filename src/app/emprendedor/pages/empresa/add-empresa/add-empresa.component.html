@@ -68,9 +68,12 @@
                       <label for="tipodocumento" class="text-lg font-normal">Tipo de Documento:</label>
                       <select id="tipoDocumento" formControlName="id_tipo_documento"
                         class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
-                        <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                        <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
-                    </select>
+                        <option value="" disabled selected>Seleccionar tipo de documento...</option>
+                        <option value="1">Cédula ciudadanía</option>
+                        <option value="2">Pasaporte</option>
+                        <option value="3">Carnet de Extranjería</option>
+                        <option value="4">NIT</option>
+                      </select>
                       <div *ngIf="submitted && f.id_tipo_documento.errors"
                         class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
                         <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
@@ -291,9 +294,15 @@
                   <label for="tipodocumento" class="text-lg font-normal">Tipo de Documento:</label>
                   <select id="tipoDocumento" formControlName="id_tipo_documento"
                     class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                    <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                        <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
-                    </select>
+                    <option value="" disabled selected>
+                      Seleccionar tipo de documento..
+                    </option>
+                    h-10
+                    <option value="1">Cédula ciudadanía</option>
+                    <option value="2">Pasaporte</option>
+                    <option value="3">Carnet de Extranjería</option>
+                    <option value="4">NIT</option>
+                  </select>
                   <div *ngIf="submitted && f.id_tipo_documento.errors"
                     class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
                     <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
@@ -342,6 +351,12 @@
                   <label for="fijo" class="text-lg font-normal">Telefono:</label>
                   <input formControlName="telefono"
                     class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                </div>
+                <div class="flex items-center ">
+                  <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900;">Agregar Apoyo</span>
+                  <button [routerLink]="'#'" class="flex items-center justify-center w-16 h-8 text-white rounded-lg bg-amber-500">
+                    <span class="text-3xl font-semibold leading-none ">+</span>
+                  </button>
                 </div>
               </div>
             </form>

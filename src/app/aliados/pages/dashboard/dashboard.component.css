@@ -9,30 +9,3 @@ h1 {
     color: #333;
 }
 
-.spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: radial-gradient(farthest-side,#FA7D00 94%,#0000) top/9px 9px no-repeat,
-           conic-gradient(#0000 30%,#FA7D00);
-    -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
-    animation: spinner-c7wet2 1s infinite linear;
-  }
-  
-  @keyframes spinner-c7wet2 {
-    100% {
-       transform: rotate(1turn);
-    }
-  }
-  
-  /* Puedes añadir este estilo para asegurar que el spinner esté sobre los otros contenidos */
-  .spinner-container {
-    position: fixed; /* O absolute si prefieres que se ajuste a un contenedor específico */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000; /* Asegúrate de que esté sobre otros contenidos */
-  }

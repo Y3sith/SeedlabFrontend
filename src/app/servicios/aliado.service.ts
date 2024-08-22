@@ -49,7 +49,7 @@ export class AliadoService {
 
   crearBanner(access_token: string, formData: FormData): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
-    return this.http.post(`${this.url}/crearbanner`, formData, options);
+    return this.http.post(`${this.url}/crearbannerr`, formData, options);
   }
 
   getBannerxAliado(access_token: any, idAliado: any): Observable<any> {
@@ -69,7 +69,7 @@ export class AliadoService {
   }
 
   getbanner(): Observable<any> {
-    const url = `${environment.apiUrl}banner/activo`;
+    const url = `${environment.apiUrl}banner/1`;
     return this.http.get(url);
   }
 
@@ -114,10 +114,7 @@ export class AliadoService {
     return this.http.get(this.url + "/" + 1);
   }
 
-  getDashboard(access_token: any, idAsesor: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}/dashboardAliado/${idAsesor}`, options);
-  }
+  
   /////////////////////////////////////////////////////////////
 
   crearActividad(access_token: any, aliado: any): Observable<any> {
@@ -141,10 +138,7 @@ export class AliadoService {
   }
 
 
-  graficaDatosGeneros(access_token: string): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url + "/generoAliado", options)
-  }
+  
 
   // mostrarRutas(access_token: any, id: number): Observable<any> {
   //   const options = { headers: this.CreacionHeaders(access_token)};
