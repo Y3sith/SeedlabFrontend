@@ -80,7 +80,7 @@ export class EncuestaEmpresaComponent {
   respuesta32: Respuesta = new Respuesta({});//Subpregunta 17-18 -bien
   respuesta33: Respuesta = new Respuesta({});//pregunta 18
   respuesta34: Respuesta = new Respuesta({});//Subpregunta 19-19
-  respuesta35: Respuesta = new Respuesta({});//Subpregunta 19-20156
+  respuesta35: Respuesta = new Respuesta({});//Subpregunta 19-20
   respuesta36: Respuesta = new Respuesta({});//Subpregunta 19-21
   respuesta37: Respuesta = new Respuesta({});//Subpregunta 19-22
   respuesta38: Respuesta = new Respuesta({});//Subpregunta 19-23
@@ -384,16 +384,16 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas2 = [];
 
     //Pregunta 16 y 17
-    this.listaRespuestas2.push(this.respuesta24);
+    this.listaRespuestas2.push(this.respuesta24);//0
     if (this.respuesta24.opcion === 'Si') {
-      this.listaRespuestas2.push(this.respuesta25);
-      this.listaRespuestas2.push(this.respuesta26);
-      this.listaRespuestas2.push(this.respuesta27);
-      this.listaRespuestas2.push(this.respuesta28);
-      this.listaRespuestas2.push(this.respuesta29);
-      this.listaRespuestas2.push(this.respuesta30);
-      this.listaRespuestas2.push(this.respuesta31);
-      this.listaRespuestas2.push(this.respuesta32);
+      this.listaRespuestas2.push(this.respuesta25);//1
+      this.listaRespuestas2.push(this.respuesta26);//2
+      this.listaRespuestas2.push(this.respuesta27);//3
+      this.listaRespuestas2.push(this.respuesta28);//4
+      this.listaRespuestas2.push(this.respuesta29);//5
+      this.listaRespuestas2.push(this.respuesta30);//6
+      this.listaRespuestas2.push(this.respuesta31);//7
+      this.listaRespuestas2.push(this.respuesta32);//8
     } else {
       this.respuesta25.texto_res = 'N/A';
       this.respuesta25.id_pregunta = 17;
@@ -429,7 +429,9 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta32);
     }
     //pregunta 18 y 19
-    this.listaRespuestas2.push(this.respuesta33);
+
+    this.listaRespuestas2.push(this.respuesta33);//9
+    debugger;
     if (this.respuesta33.opcion === 'Si') {
       this.listaRespuestas2.push(this.respuesta34);
       this.listaRespuestas2.push(this.respuesta35);
@@ -598,9 +600,10 @@ export class EncuestaEmpresaComponent {
         else if (this.listaRespuestas2[respCounter].opcion === 'No') {
           respCounter += nextPregunta.subPreguntas.length + 1;
         }
-        respCounter++;
+        //respCounter++;
         //continue;
       }
+
 
       // if (currentPregunta.id === 18) {
       //   // Validar la respuesta de la pregunta principal
@@ -729,29 +732,29 @@ export class EncuestaEmpresaComponent {
         continue;
       }
 
-      // if (currentPregunta.id === 25) {
-      //   if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
-      //     this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
-      //     isValidForm = false;
-      //     return;
-      //   } else if (this.listaRespuestas2[respCounter].opcion === 'No') {
-      //     i += 1;
-      //     respCounter += 1;
+      if (currentPregunta.id === 25) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        } else if (this.listaRespuestas2[respCounter].opcion === 'No') {
+          i += 1;
+          respCounter += 1;
 
-      //   } else if (this.listaRespuestas2[respCounter].opcion === 'Si') {
-      //     respCounter++;
-      //     continue;
-      //   }
-      // }
-      // if (currentPregunta.id === 26) {
-      //   if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
-      //     this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
-      //     isValidForm = false;
-      //     return;
-      //   }
-      //   respCounter++;
-      //   continue;
-      // }
+        } else if (this.listaRespuestas2[respCounter].opcion === 'Si') {
+          respCounter++;
+          continue;
+        }
+      }
+      if (currentPregunta.id === 26) {
+        if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return;
+        }
+        respCounter++;
+        continue;
+      }
 
 
       if (currentPregunta.id === 27) {
