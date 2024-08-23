@@ -6,7 +6,7 @@ import { DarAliadoAsesoriaModalComponent } from './pages/asesorias/dar-aliado-as
 import { PerfilOrientadorComponent } from './pages/perfil-orientador/perfil-orientador.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
 import { OrientadorRoutingModule } from './orientador-routing.module';
-
+import { FilterPipeModule } from 'ngx-filter-pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from '../shared.module';
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
@@ -28,6 +28,7 @@ import { NgChartsModule } from 'ng2-charts';
     OrientadorRoutingModule,
     FontAwesomeModule,
     SharedModule,
+    FilterPipeModule,
     ReactiveFormsModule,
     FormsModule,
     NgChartsModule

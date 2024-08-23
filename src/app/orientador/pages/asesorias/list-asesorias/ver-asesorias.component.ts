@@ -20,17 +20,12 @@ export class VerAsesoriasComponent implements OnInit {
   currentRolId: number;
   sinAsignarCount: number = 0;
   asignadasCount: number = 0;
+  userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
   showAsignadasFlag: boolean = false; // Flag to indicate which list is being shown
-  filteredAsesorias: Asesoria[] = [];
+  isLoading: boolean = false;
   fullHeightIndices: number[] = [];
-  
-  allAsesoriasSinAsesor: Asesoria[] = [];
-  allAsesoriasConAsesor: Asesoria[] = [];
-  searchTerm: string = '';
-  
-  userFilter: any = { nombre_sol: '' };
-  
+
   page: number = 1; // Inicializa la página actual
   totalAsesorias: number = 0; // variable para almacenar el total de asesorias
   itemsPerPage: number = 6; // Número de asesorias por página
@@ -65,44 +60,30 @@ export class VerAsesoriasComponent implements OnInit {
     }
   }
 
-  filterBy(items: any[], filter: any): any[] {
-    return items.filter(item => {
-      for (let key in filter) {
-        if (filter[key] && item[key] && item[key].toLowerCase().indexOf(filter[key].toLowerCase()) === -1) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }
-
   loadAsesorias(pendiente: boolean): void {
+    this.isLoading = true; // Inicia la carga
+  
     this.asesoriaService.postAsesoriasOrientador(this.token, pendiente).subscribe(
       data => {
         if (pendiente) {
           this.asesoriasSinAsesor = data;
           this.sinAsignarCount = this.asesoriasSinAsesor.length;
-          this.totalAsesorias = data.length; // Actualiza el total de asesorias
         } else {
           this.asesoriasConAsesor = data;
           this.asignadasCount = this.asesoriasConAsesor.length;
-          this.totalAsesorias = data.length; // Actualiza el total de asesorias
         }
-       
+        // Total de asesorías siempre es la suma de ambos
+        this.totalAsesorias = this.asesoriasSinAsesor.length + this.asesoriasConAsesor.length;
+  
+        this.isLoading = false; // Finaliza la carga
       },
       error => {
-        console.error('Error al obtener las asesorías orientador:', error);
+        console.error('Error al obtener las asesorías:', error);
+        this.isLoading = false; // Finaliza la carga incluso si hay error
       }
     );
   }
-
-  loadCurrentPage(): void {
-    if (this.showAsignadasFlag) {
-      this.loadAsignadas(); // Carga asesorías asignadas
-    } else {
-      this.loadSinAsignar(); // Carga asesorías sin asignar
-    }
-  }
+  
 
   // Código para la paginación
   changePage(pageNumber: number | string): void {
@@ -139,6 +120,14 @@ export class VerAsesoriasComponent implements OnInit {
     return this.page < this.getTotalPages();
   }
 
+  loadCurrentPage(): void {
+    if (this.showAsignadasFlag) {
+      this.loadAsignadas(); // Carga asesorías asignadas
+    } else {
+      this.loadSinAsignar(); // Carga asesorías sin asignar
+    }
+  }
+
   openModal(asesoria: Asesoria): void {
     const dialogRef = this.dialog.open(DarAliadoAsesoriaModalComponent, {
       width: '400px',
@@ -162,6 +151,4 @@ export class VerAsesoriasComponent implements OnInit {
     this.showAsignadasFlag = true;
     this.loadAsesorias(false);
   }
-
-
 }
