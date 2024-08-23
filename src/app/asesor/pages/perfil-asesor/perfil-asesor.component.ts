@@ -41,6 +41,9 @@ export class PerfilAsesorComponent implements OnInit {
   listMunicipios: any[]= [];
   nombreAliado: string | null = null;
   listTipoDocumento: [] = [];
+  /////
+  selectedImagen_Perfil: File | null = null;
+  asesorId: any;
 
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -130,23 +133,48 @@ export class PerfilAsesorComponent implements OnInit {
 
   /* Actualiza los datos del asesor */
   editAsesor(): void {
-    const asesor: Asesor = {
-      nombre: this.asesorForm.get('nombre')?.value,
-      apellido: this.asesorForm.get('apellido')?.value,
-      documento: this.asesorForm.get('documento')?.value,
-      id_tipo_documento: this.asesorForm.get('id_tipo_documento')?.value,
-      imagen_perfil: this.asesorForm.get('')?.value,
-      genero: this.asesorForm.get('genero')?.value,
-      fecha_nac: this.asesorForm.get('')?.value,
-      direccion: this.asesorForm.get('direccion')?.value,
-      celular: this.asesorForm.get('celular')?.value,
-      municipio: +this.asesorForm.get('municipio')?.value,
-      aliado: this.nombreAliado,
-      email: this.asesorForm.get('email')?.value,
-      password: this.asesorForm.get('password')?.value,
-      estado: this.asesorForm.get('estado')?.value,
-    };
-    this.asesorService.updateAsesor(this.token, this.id, asesor).subscribe(
+    const formData = new FormData();
+    let estadoValue: string;
+    if (this.asesorId == null) {
+      // Es un nuevo aliado, forzar el estado a 'true'
+      estadoValue = 'true';
+    } else {
+      // Es una edición, usar el valor del formulario
+      estadoValue = this.asesorForm.get('estado')?.value ? 'true' : 'false';
+    }
+
+    formData.append('nombre', this.asesorForm.get('nombre')?.value);
+    formData.append('apellido', this.asesorForm.get('apellido')?.value);
+    formData.append('documento', this.asesorForm.get('documento')?.value);
+    formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
+    formData.append('genero', this.asesorForm.get('genero')?.value);
+    formData.append('direccion', this.asesorForm.get('direccion')?.value);
+    formData.append('celular', this.asesorForm.get('celular')?.value);
+    formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
+    formData.append('aliado', this.nombreAliado);
+    formData.append('email', this.asesorForm.get('email')?.value);
+    formData.append('password', this.asesorForm.get('password')?.value);
+    formData.append('estado', estadoValue);
+    
+    
+    Object.keys(this.asesorForm.controls).forEach(key => {
+      const control = this.asesorForm.get(key);
+      if (control?.value !== null && control?.value !== undefined) {
+        if (key === 'fecha_nac') {
+          const date = new Date(control.value);
+          formData.append(key, date.toISOString().split('T')[0]);
+        } else if (key !== 'imagen_perfil') {
+          formData.append(key, control.value);
+        }
+      }
+    });
+
+
+    // Agregar la imagen de perfil si se ha seleccionado una nueva
+    if (this.selectedImagen_Perfil) {
+      formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
+    }
+    this.asesorService.updateAsesor(this.token, this.id, formData).subscribe(
       data => {
         location.reload();
       },

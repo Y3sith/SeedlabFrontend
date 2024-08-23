@@ -32,7 +32,7 @@
                                 <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center">Información Básica</h5>
                                 <label for="nombre" class="block mt-4 mb-2 font-bold ">Nombre(s)</label>
                                 <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
-                                    class="p-2 h-12 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                    class="p-2 h-12 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"/>
 
                                 <label for="apellido" class="block mb-2 mt-4 font-bold">Apellido(s)</label>
                                 <input type="text" id="apellido" formControlName="apellido" [readonly]="blockedInputs"
@@ -128,8 +128,8 @@
                                 {{nameDepartamento.name}}</option>
                         </select>
 
-                        <label for="municipio" class="block mb-2 mt-4 font-bold ">Municipio</label>
-                        <select id="municipio" name="municipio" formControlName="municipio"
+                        <label for="id_municipio" class="block mb-2 mt-4 font-bold ">Municipio</label>
+                        <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
                             <option value="" disabled selected>Seleccionar Municipio...</option>
                             <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">{{municipio.nombre}}
