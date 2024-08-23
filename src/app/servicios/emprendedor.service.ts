@@ -47,6 +47,7 @@ export class EmprendedorService {
   tipoDato(): Observable<any>{
     return this.http.get(environment.apiUrl+"tipo_documento");
   }
+  
 
 
 }

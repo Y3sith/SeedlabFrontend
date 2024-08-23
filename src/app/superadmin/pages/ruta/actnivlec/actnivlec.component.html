@@ -1,7 +1,7 @@
 <div class="container mx-auto p-0 pt-2 ">
     <!-- Encabezado -->
     <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4">
-      <app-header [title] [subtitle]="'Dashboard SuperAdmin'"></app-header>
+      <app-header [title] [subtitle]="'Actividad'"></app-header>
     </header>
     <div class="pt-4 divide-y divide-light-blue-400 ml-12 mr-4">
         
@@ -260,6 +260,13 @@
                                         </div>
                                     </div>
                                     <input type="hidden" id="id_nivel" formControlName="id_nivel">
+                                    
+                                    <div class="flex justify-center h-10 mt-4">
+                                        <button type="submit"
+                                            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">Siguiente
+                                        </button>
+                                    </div>
+
                                 </form>
     
                                 <form [formGroup]="contenidoLeccionForm" (ngSubmit)="addContenidoLeccionSuperAdmin()"

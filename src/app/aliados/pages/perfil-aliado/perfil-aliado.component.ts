@@ -7,6 +7,10 @@ import { Aliado } from '../../../Modelos/aliado.model';
 import { AlertService } from '../../../servicios/alert.service';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { Actividad } from '../../../Modelos/actividad.model';
+import { ActividadService } from '../../../servicios/actividad.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { AddBannerComponent } from '../add-banner/add-banner.component';
 
 @Component({
   selector: 'app-perfil-aliado',
@@ -22,6 +26,7 @@ export class PerfilAliadoComponent implements OnInit {
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   blockedInputs = true;
+  activeField: string = '';
   token: string;
   user: User | null = null;
   aliado: Aliado;
@@ -34,9 +39,15 @@ export class PerfilAliadoComponent implements OnInit {
   selectedruta: File | null = null;
   selectdVideo: string | null = null;
   hide = true;
+  tipoDeDato: Actividad[] = [];
   bloqueado = true;
   @ViewChild('fileInput') fileInput: ElementRef;
   faImages = faImage;
+  showVideo: boolean = false;
+  showImagen: boolean = false;
+  showPDF: boolean = false;
+  showTexto: boolean = false;
+  Number = Number;
 
 
   constructor(
@@ -45,6 +56,8 @@ export class PerfilAliadoComponent implements OnInit {
     private formBuilder: FormBuilder,
     private aliadoService: AliadoService,
     private cdRef: ChangeDetectorRef,
+    private actividadService: ActividadService,
+    public dialog: MatDialog,
   ) {
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -69,6 +82,15 @@ export class PerfilAliadoComponent implements OnInit {
     this.validateToken();
     this.verEditar();
     this.verEditarBanners();
+    this.tipoDato();
+    this.obtenerValorBaseDatos();
+
+    console.log('Tipos de dato disponibles:', this.tipoDeDato);
+    this.aliadoForm.get('id_tipo_dato')?.valueChanges.subscribe(() => {
+      if (this.aliadoForm.get('id_tipo_dato')?.value) {
+        this.onTipoDatoChange();
+      }
+    });
   }
 
   validateToken(): void {
@@ -93,9 +115,111 @@ export class PerfilAliadoComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
+  
+  openModal(id:number | null): void{
+    let dialogRef: MatDialogRef<AddBannerComponent>;
+
+    dialogRef = this.dialog.open(AddBannerComponent, {
+      data: { id: id },
+    });
+   // console.log("aliado", idAliado);
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.verEditarBanners();
+    });
+  }
+
+  eliminarBanner(id_aliado: number): void {
+    this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
+      data=>{
+        this.alertService.successAlert('Exito', data.message);
+        //console.log("eliminaaa", data)
+        location.reload();
+      },
+      error => {
+       // console.error(error);
+        this.alertService.successAlert('Error', error.error.message);
+      }
+    )
+  }
+
+
 
   get f() { return this.aliadoForm.controls; }
 
+  tipoDato(): void {
+    if (this.token) {
+      this.actividadService.getTipoDato(this.token).subscribe(
+        data => {
+          this.tipoDeDato = data;
+          console.log("DATO",data);
+          this.obtenerValorBaseDatos();
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
+  obtenerValorBaseDatos(): void {
+    if (this.idAliado) {
+      this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
+        data => {
+          if (data && data.id_tipo_dato) {
+            this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
+            this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
+          }
+        },
+        error => {
+          console.log('Error al obtener el valor de la base de datos:', error);
+        }
+      );
+    }
+  }
+
+  onTipoDatoChange(): void {
+    const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
+    
+    this.aliadoForm.get('ruta_multi').clearValidators();
+    this.aliadoForm.get('Video')?.clearValidators();
+    this.aliadoForm.get('Imagen')?.clearValidators();
+    this.aliadoForm.get('PDF')?.clearValidators();
+    this.aliadoForm.get('Texto')?.clearValidators();
+
+    const tipoDatoIdNumber = Number(tipoDatoId);
+  
+    // Establecer el validador y mostrar el campo correspondiente según la selección
+    switch (tipoDatoIdNumber) {
+      case 1: // Video
+        this.showVideo = true;
+        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+        console.log('Mostrando Video');
+        break;
+      case 3: // Imagen
+        this.showImagen = true;
+        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+        console.log('Mostrando Imagen');
+        break;
+      case 4: // PDF
+        this.showPDF = true;
+        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+        console.log('Mostrando PDF');
+        break;
+      case 5: // Texto
+        this.showTexto = true;
+        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+        console.log('Mostrando Texto');
+        break;
+      default:
+        console.log('Caso no manejado:', tipoDatoId);
+        break;
+    }
+    // Actualizar la validez del campo ruta_multi
+    this.aliadoForm.get('ruta_multi').updateValueAndValidity();
+    // Forzar la detección de cambios
+    this.cdRef.detectChanges();
+  }
 
   verEditar():void{
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
@@ -104,18 +228,34 @@ export class PerfilAliadoComponent implements OnInit {
           nombre: data.nombre,
           descripcion: data.descripcion,
           logo: data.logo,
-          //ruta_multi: data.ruta_multi,
+          ruta_multi: data.ruta_multi,
           id_tipo_dato: data.id_tipo_dato,
           email: data.email,
           password: '',
           estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
         console.log("aaaa",data);
+        this.onTipoDatoChange();
       },
       error => {
         console.log(error);
       }
     );
+  }
+
+  toggleInputsLock(): void {
+    this.blockedInputs = !this.blockedInputs;
+    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'email', 'password', 'genero', 'fecha_nac', 'direccion', 'municipio'];
+    fieldsToToggle.forEach(field => {
+      const control = this.aliadoForm.get(field);
+      if (control && field !== 'nombretipodoc') {
+        if (this.blockedInputs) {
+          control.disable();
+        } else {
+          control.enable();
+        }
+      }
+    });
   }
 
   verEditarBanners():void {
@@ -130,7 +270,7 @@ export class PerfilAliadoComponent implements OnInit {
     )
   }
 
-  addAliado(): void {
+  upadateAliado(): void {
     if (this.idAliado == null){
       if (this.aliadoForm.invalid || this.bannerForm.invalid) {
         // Mostrar alert si algún formulario es inválido
@@ -188,6 +328,7 @@ export class PerfilAliadoComponent implements OnInit {
       data =>{
         console.log("ACTUALIZAAAAAA", data);
         this.alertService.successAlert('Exito', data.message);
+        location.reload();
       },
       error => {
         console.error(error);

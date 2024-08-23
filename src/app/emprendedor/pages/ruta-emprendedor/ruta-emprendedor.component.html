@@ -1,18 +1,23 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <div class="main-timeline">
-        <div *ngFor="let ruta of rutaList">
-          <div *ngFor="let actividad of ruta.actividades; let i = index" class="timeline">
-            <a href="#" class="timeline-content">
-              <span class="timeline-year">{{ i + 1 }}</span>
-              <div class="content">
-                <h3>{{ actividad.nombre }}</h3>
-              </div>
-            </a>
+<div class="container mx-auto p-0 pt-2">
+  <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+    <app-header [title] [subtitle]="'Ruta de actividades'"></app-header>
+  </header>
+
+  <div class="container">
+    <div class="row">
+      <div class="main-timeline-container">
+        <div *ngFor="let ruta of rutaList; let i = index">
+          <div *ngFor="let actividad of ruta.actividades; let j = index">
+            <div class="timeline" [ngClass]="'timeline-' + (i * ruta.actividades.length + j + 1)">
+              <a href="#" class="timeline-content">
+                <span class="timeline-year">{{ i * ruta.actividades.length + j + 1 }}</span>
+                <div class="content">
+                  <h3>{{ actividad.nombre }}</h3>
+                </div>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
