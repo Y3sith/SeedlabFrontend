@@ -668,7 +668,7 @@ export class EncuestaEmpresaComponent {
         continue;
       }
 
-      
+
       if (currentPregunta.isText) {
         if (currentPregunta.isText) {
           if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '' || this.listaRespuestas1[respCounter].texto_res !== 'N/A') {
@@ -890,17 +890,11 @@ export class EncuestaEmpresaComponent {
     }
 
 
-    for (let i = 41; i < 48; i++) {
+    for (let i = 41; i < 47; i++) {
       debugger;
       const currentPregunta = PREGUNTAS[i];
       const currentRespuesta = this.listaRespuestas4[respCounter];
 
-      // Verifica que la respuesta para la pregunta actual exista en la lista de respuestas
-      if (!currentRespuesta) {
-        this.alertService.errorAlert('Error', `No se encontró respuesta para la pregunta ${currentPregunta.id}.`);
-        isValidForm = false;
-        break;
-      }
 
       // Validar pregunta afirmativa
       if (currentPregunta.isAffirmativeQuestion) {
@@ -919,6 +913,9 @@ export class EncuestaEmpresaComponent {
           continue;
         }
       }
+      this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
+      this.listaRespuestas4[respCounter].id_empresa = this.id_empresa;
+      this.listaRespuestas4[respCounter].id_subpregunta = null;
 
       // Si la pregunta tiene subpreguntas, validar subpreguntas
       if (currentPregunta.subPreguntas && currentPregunta.subPreguntas.length > 0) {
