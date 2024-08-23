@@ -16,6 +16,7 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterModule } from '@angular/router';
 import { ModalActividadComponent } from './pages/modal-actividad/modal-actividad.component';
+import { ReportesComponent } from './pages/reportes/reportes.component';
 
 
 
@@ -37,6 +38,7 @@ import { ModalActividadComponent } from './pages/modal-actividad/modal-actividad
     RutaEmprendedorComponent,
     PerfilEmprendedorComponent,
     ModalActividadComponent,
+    ReportesComponent,
   ],
   imports: [
     CommonModule,
