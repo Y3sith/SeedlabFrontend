@@ -19,9 +19,9 @@ import { NgChartsModule } from 'ng2-charts';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
 import { AddBannerComponent } from './pages/add-banner/add-banner.component';
-=========
+
 import { ReportesComponent } from './pages/reportes/reportes.component';
->>>>>>>>> Temporary merge branch 2
+
 
 
 
@@ -39,7 +39,6 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
     PerfilAliadoComponent,
     AddBannerComponent,
     ReportesComponent,
->>>>>>>>> Temporary merge branch 2
     
   ],
   imports: [
