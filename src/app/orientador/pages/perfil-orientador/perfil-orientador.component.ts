@@ -96,27 +96,27 @@ export class PerfilOrientadorComponent {
   }
 
   /* Actualiza la informacion del orientador */
-  updateOrientador(): void {
-    const perfil: Orientador = {
-      nombre: this.perfilorientadorForm.get('nombre')?.value,
-      apellido: this.perfilorientadorForm.get('apellido')?.value,
-      celular: this.perfilorientadorForm.get('celular')?.value,
-      email: this.perfilorientadorForm.get('email')?.value,
-      password: this.perfilorientadorForm.get('password')?.value,
-      estado: true,
-    }
-    this.orientadorService.updateOrientador(this.token, this.id, perfil).subscribe(
-      (data) => {
-        location.reload();
-      },
-      error => { 
-        console.error(error);
-        if (error.status === 402) {
-          this.alertService.errorAlert('Error',error.error.message);
-        }
-      }
-    )
-  }
+  // updateOrientador(): void {
+  //   const perfil: Orientador = {
+  //     nombre: this.perfilorientadorForm.get('nombre')?.value,
+  //     apellido: this.perfilorientadorForm.get('apellido')?.value,
+  //     celular: this.perfilorientadorForm.get('celular')?.value,
+  //     email: this.perfilorientadorForm.get('email')?.value,
+  //     password: this.perfilorientadorForm.get('password')?.value,
+  //     estado: true,
+  //   }
+  //   this.orientadorService.updateOrientador(this.token, this.id, perfil).subscribe(
+  //     (data) => {
+  //       location.reload();
+  //     },
+  //     error => { 
+  //       console.error(error);
+  //       if (error.status === 402) {
+  //         this.alertService.errorAlert('Error',error.error.message);
+  //       }
+  //     }
+  //   )
+  // }
 
   /* Validaciones la contraseña */
   passwordValidator(control: AbstractControl) {

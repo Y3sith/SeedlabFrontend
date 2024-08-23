@@ -18,8 +18,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgChartsModule } from 'ng2-charts';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
-import { ReportesComponent } from './pages/reportes/reportes.component';
 import { AddBannerComponent } from './pages/add-banner/add-banner.component';
+=========
+import { ReportesComponent } from './pages/reportes/reportes.component';
+>>>>>>>>> Temporary merge branch 2
 
 
 
@@ -35,8 +37,10 @@ import { AddBannerComponent } from './pages/add-banner/add-banner.component';
     AsignarAsesorModalComponent,
     DashboardComponent,
     PerfilAliadoComponent,
+    AddBannerComponent,
     ReportesComponent,
-    AddBannerComponent
+>>>>>>>>> Temporary merge branch 2
+    
   ],
   imports: [
     CommonModule,

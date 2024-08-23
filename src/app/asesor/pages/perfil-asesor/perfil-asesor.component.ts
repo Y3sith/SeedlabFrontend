@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,11 @@ import { AsesorService } from '../../../servicios/asesor.service';
 
 import { Asesor } from '../../../Modelos/asesor.model';
 import { User } from '../../../Modelos/user.model';
+import { AlertService } from '../../../servicios/alert.service';
+import { DepartamentoService } from '../../../servicios/departamento.service';
+import { MunicipioService } from '../../../servicios/municipio.service';
+import { EmprendedorService } from '../../../servicios/emprendedor.service';
+import { AuthService } from '../../../servicios/auth.service';
 
 @Component({
   selector: 'app-perfil-asesor',
@@ -29,14 +34,28 @@ export class PerfilAsesorComponent implements OnInit {
   boton: boolean;
   hide = true;
   bloqueado = true;
+  imagenPreview: string | ArrayBuffer | null = null;
+  selectedImagen_perfil: File | null = null;
+  submitted = false;
+  listDepartamentos: any[]= [];
+  listMunicipios: any[]= [];
+  nombreAliado: string | null = null;
+  listTipoDocumento: [] = [];
+  /////
+  selectedImagen_Perfil: File | null = null;
+  asesorId: any;
 
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
-    imagen_perfil: ['', Validators.required],
-    genero: ['',Validators.required],
-    direccion: ['',Validators.required],
+    documento: ['', Validators.required],
+    id_tipo_documento: ['', Validators.required],
+    imagen_perfil: [null],
+    genero: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
+    direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
+    municipio: ['',Validators.required],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -45,12 +64,22 @@ export class PerfilAsesorComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private router: Router,
-    private asesorService: AsesorService) { }
+    private asesorService: AsesorService,
+    private alertService: AlertService,
+    private cdRef: ChangeDetectorRef,
+    private departamentoService: DepartamentoService,
+    private municipioService: MunicipioService,
+    private authService: AuthService,
+  ) { }
 
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
+    this.tipodatoDocumento();
+    this.cargarDepartamentos();
+    
+    
   }
 
   /* Valida el token del login */
@@ -80,13 +109,21 @@ export class PerfilAsesorComponent implements OnInit {
       data => {
         this.asesorForm.patchValue({
           nombre: data.nombre,
-          apellido: data.apellido,
-          imagen_perfil: data.imagen_perfil,
-          genero: data.genero,
-          direccion: data.direccion,
-          celular: data.celular,
-          email: data.email,
+            apellido: data.apellido,
+            documento: data.documento,
+            id_tipo_documento: data.id_tipo_documento,
+            imagen_perfil: data.imagen_perfil,
+            genero: data.genero,
+            fecha_nac: data.fecha_nac,
+            direccion: data.direccion,
+            celular: data.celular,
+            municipio: data.municipio,
+            aliado: data.id,
+            email: data.email,
+            password: '',
+            estado: data.estado
         });
+        console.log('xxxxxx: ',data);
       },
       error => {
         console.log(error);
@@ -96,23 +133,48 @@ export class PerfilAsesorComponent implements OnInit {
 
   /* Actualiza los datos del asesor */
   editAsesor(): void {
-    const asesor: Asesor = {
-      nombre: this.asesorForm.get('nombre')?.value,
-      apellido: this.asesorForm.get('apellido')?.value,
-      documento: this.asesorForm.get('documento')?.value,
-      id_tipo_documento:this.asesorForm.get('id_tipo_documento')?.value,
-      imagen_perfil: this.asesorForm.get('')?.value,
-      genero: this.asesorForm.get('genero')?.value,
-      fecha_nac: this.asesorForm.get('')?.value,
-      direccion: this.asesorForm.get('direccion')?.value,
-      municipio: this.asesorForm.get('')?.value,
-      celular: this.asesorForm.get('celular')?.value,
-      aliado: this.asesorForm.get('aliado')?.value,
-      email: this.asesorForm.get('email')?.value,
-      password: this.asesorForm.get('password')?.value,
-      estado: this.asesorForm.get('estado')?.value,
-    };
-    this.asesorService.updateAsesor(this.token, this.id, asesor).subscribe(
+    const formData = new FormData();
+    let estadoValue: string;
+    if (this.asesorId == null) {
+      // Es un nuevo aliado, forzar el estado a 'true'
+      estadoValue = 'true';
+    } else {
+      // Es una edición, usar el valor del formulario
+      estadoValue = this.asesorForm.get('estado')?.value ? 'true' : 'false';
+    }
+
+    formData.append('nombre', this.asesorForm.get('nombre')?.value);
+    formData.append('apellido', this.asesorForm.get('apellido')?.value);
+    formData.append('documento', this.asesorForm.get('documento')?.value);
+    formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
+    formData.append('genero', this.asesorForm.get('genero')?.value);
+    formData.append('direccion', this.asesorForm.get('direccion')?.value);
+    formData.append('celular', this.asesorForm.get('celular')?.value);
+    formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
+    formData.append('aliado', this.nombreAliado);
+    formData.append('email', this.asesorForm.get('email')?.value);
+    formData.append('password', this.asesorForm.get('password')?.value);
+    formData.append('estado', estadoValue);
+    
+    
+    Object.keys(this.asesorForm.controls).forEach(key => {
+      const control = this.asesorForm.get(key);
+      if (control?.value !== null && control?.value !== undefined) {
+        if (key === 'fecha_nac') {
+          const date = new Date(control.value);
+          formData.append(key, date.toISOString().split('T')[0]);
+        } else if (key !== 'imagen_perfil') {
+          formData.append(key, control.value);
+        }
+      }
+    });
+
+
+    // Agregar la imagen de perfil si se ha seleccionado una nueva
+    if (this.selectedImagen_Perfil) {
+      formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
+    }
+    this.asesorService.updateAsesor(this.token, this.id, formData).subscribe(
       data => {
         location.reload();
       },
@@ -145,4 +207,130 @@ export class PerfilAsesorComponent implements OnInit {
   mostrarGuardarCambios(): void {
     this.boton = false;
   }
+
+  onFileSelecteds(event: any, field: string) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+
+      let maxSize = 0;
+
+      if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
+        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+      } else if (field === 'ruta_documento') {
+        maxSize = 18 * 1024 * 1024; // 20MB para documentos
+      }
+
+      if (file.size > maxSize) {
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.resetFileField(field);
+
+        ////Limpia el archivo seleccionado y resetea la previsualización
+        event.target.value = ''; // Borra la selección del input
+
+        // Resetea el campo correspondiente en el formulario y la previsualización
+        if (field === 'imagen_perfil') {
+          this.asesorForm.patchValue({ imagen_perfil: null });
+          this.selectedImagen_perfil = null;
+          this.imagenPreview = null; // Resetea la previsualización
+        }
+        this.resetFileField(field);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.asesorForm.patchValue({ imagen_perfil: previewUrl });
+          this.imagenPreview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
+
+      if (field === 'imagen_perfil') {
+        this.selectedImagen_perfil = file;
+        this.asesorForm.patchValue({ imagen_perfil: file });
+      }
+
+    } else {
+      this.resetFileField(field);
+    }
+  }
+
+  generateImagePreview(file: File, field: string) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      if (field === 'imagen_perfil') {
+        this.imagenPreview = e.target.result;
+      }
+      this.cdRef.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  resetFileField(field: string) {
+    if (field === 'imagen_perfil') {
+      this.asesorForm.patchValue({ imagen_perfil: null });
+      this.selectedImagen_perfil = null;
+      this.imagenPreview = null;
+    }
+  }
+  
+  get f() {
+    return this.asesorForm.controls;
+  }
+
+
+  cargarDepartamentos(): void {
+    this.departamentoService.getDepartamento().subscribe(
+      (data: any[]) => {
+        this.listDepartamentos = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
+  }
+
+  onDepartamentoSeleccionado(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const selectedDepartamento = target.value;
+
+    // Guarda el departamento seleccionado en el localStorage
+    localStorage.setItem('departamento', selectedDepartamento);
+
+    // Llama a cargarMunicipios si es necesario
+    this.cargarMunicipios(selectedDepartamento);
+  }
+
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
+      data => {
+        this.listMunicipios = data;
+        console.log('Municipios cargados:', JSON.stringify(data));
+      },
+      err => {
+        console.log('Error al cargar los municipios:', err);
+      }
+    );
+  }
+
+  tipodatoDocumento(): void {
+    if (this.token) {
+      this.authService.tipoDato().subscribe(
+        data => {
+          this.listTipoDocumento = data;
+          //console.log('datos tipo de documento: ',data)
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
+
 }

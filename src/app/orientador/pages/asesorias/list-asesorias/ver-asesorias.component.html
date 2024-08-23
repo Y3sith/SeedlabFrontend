@@ -2,18 +2,22 @@
 <div class="container mx-auto p-0 pt-2 ">
 
   <!-- Encabezado -->
-  <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+  <header class="flex flex-col md:flex-row justify-between items-center mb-6">
     <app-header [title] [subtitle]="'Asesorias Orientador'"></app-header>
 
     <!-- Barra de búsqueda -->
-    <div
-      class="relative flex-grow max-w-full md:max-w-[40%] border rounded-full h-[25%] mx-4 md:mr-[89px] mt-4 md:mt-0">
-      <span
-        class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-[#00B3ED] rounded-full w-8 h-8 flex items-center justify-center">
-        <i class="fas fa-search text-[18px]"></i>
-      </span>
-      <input type="text" [(ngModel)]="userFilter.Nombre_sol"
-        class="w-full h-[40px] pl-4 pr-12 rounded-full outline-none transition duration-200">
+    <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">
+  
+      <input type="text" [(ngModel)]="userFilter.Nombre_sol" 
+        class="w-full max-md:w-full h-10 max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray"
+        placeholder="Buscar..." required />
+      <button class="absolute md:right-3 right-1 top-1.5 bg-sky-500 p-1.5 rounded-2xl">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
     </div>
   </header>
 
@@ -69,7 +73,7 @@
 
       <!-- Contenedor de las tarjetas -->
       <div class="flex flex-wrap rounded-lg overflow-hidden w-full m-4 bg-[#FAFAFA] ">
-        <div *ngFor="let asesoria of (showAsignadasFlag ? asesoriasConAsesor : asesoriasSinAsesor)"
+        <div *ngFor="let asesoria of (showAsignadasFlag ? asesoriasConAsesor : asesoriasSinAsesor) | filterBy:userFilter"
           class="relative w-full md:w-[25%] m-4">
 
           <!-- Contenedor de la tarjeta con el efecto de recorte -->
