@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <div class="container mx-auto p-0 pt-2 ">
 
   <!-- Encabezado -->
@@ -50,9 +50,13 @@
       </div>
     </div>
 
-    <!-- Sección de tarjetas -->
-    <div class="flex flex-wrap justify-center mt-6 px-2">
+    <!-- Spinner -->
+    <div class="flex justify-center" *ngIf="isLoading">
+      <div class="spinner"></div>
+    </div>
 
+    <!-- Sección de tarjetas -->
+    <div class="flex flex-wrap justify-center mt-6 px-2" *ngIf="!isLoading">
       <!-- Mensaje cuando no hay asesorias sin asignar -->
       <div *ngIf="asesoriasSinAsesor.length === 0 && !showAsignadasFlag" class="text-center text-gray-500 mt-6">
         No tienes asesorias pendientes por asignar
@@ -73,72 +77,76 @@
 
             <!-- Contenido de la tarjeta -->
             <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{ asesoria.Nombre_sol }}</h2>
-            <p class="italic text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong> {{ asesoria.fecha.slice(0, 10) }}</p>
+            <p class="italic text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong> {{ asesoria.fecha.slice(0, 10) }}
+            </p>
             <div
               class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 ml-[4%]"
               title="{{ asesoria.notas }}">{{ asesoria.notas }}
             </div>
             <p class="italic text-sm text-black mb-2 ml-[4%]"><strong>Emprendedor: </strong>{{ asesoria.nombres }}</p>
             <p class="italic text-sm text-black mb-2 ml-[4%]"><strong>Correo: </strong>{{ asesoria.email }}</p>
-            <p *ngIf="asesoria.aliado_redirigido" class="text-sm text-black mb-2 ml-[4%]"><strong>Aliado: </strong>{{ asesoria.aliado_redirigido }}</p>
+            <p *ngIf="asesoria.aliado_redirigido" class="text-sm text-black mb-2 ml-[4%]"><strong>Aliado: </strong>{{
+              asesoria.aliado_redirigido }}</p>
           </div>
+
           <!-- Círculo en la esquina superior derecha -->
-          <div class="cursor-pointer absolute top-[5px] right-[-37px] sm:top-[-5px] sm:right-[-25px] sm:h-12  w-16 h-16 z-10" 
+          <div
+            class="cursor-pointer absolute top-[5px] right-[-37px] sm:top-[-5px] sm:right-[-25px] sm:h-12  w-16 h-16 z-10"
             (click)="openModal(asesoria)">
             <!-- Dentro del círculo -->
-            <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center" [ngClass]="{'bg-green-500': showAsignadasFlag, 'bg-red-500': !showAsignadasFlag}">
+            <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center"
+              [ngClass]="{'bg-green-500': showAsignadasFlag, 'bg-red-500': !showAsignadasFlag}">
               <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
             </div>
           </div>
 
           <!-- Recorte circular de la esquina -->
-          <div class="absolute top-0 right-0 w-[22%] h-[22%] z-0 bg-[#FAFAFA] rounded-full transform translate-x-[28%] translate-y-[-10%]"></div>
+          <div
+            class="absolute top-0 right-0 w-[22%] h-[22%] z-0 bg-[#FAFAFA] rounded-full transform translate-x-[28%] translate-y-[-10%]">
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Contenedor de la paginación -->
-  <div class="text-center">
-    <nav aria-label="Page navigation example">
-      <ul class="inline-flex space-x-2 text-sm">
-        <li>
-          <a href="javascript:void(0)"
-            class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
-            (click)="changePage('previous')" [class.opacity-50]="!canGoPrevious()"
-            [class.cursor-not-allowed]="!canGoPrevious()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white mr-1 ml-2"
-              fill="currentColor">
-              <path
-                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
-            </svg>
-          </a>
-        </li>
-
-        <ng-container *ngFor="let pageNumber of getPages()">
-          <a class="no-underline text-white" href="javascript:void(0)" (click)="changePage(pageNumber)"
-            [class.active]="page === pageNumber">
-            <li
-              class="items-center justify-center w-6 h-6 bg-amber-500 rounded-md hover:bg-gray-300 focus:outline-none ">
-              {{ pageNumber }}
+      <!-- Contenedor de la paginación -->
+      <div class="text-center">
+        <nav aria-label="Page navigation example">
+          <ul class="inline-flex space-x-2 text-sm">
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
+                (click)="changePage('previous')" [class.opacity-50]="!canGoPrevious()"
+                [class.cursor-not-allowed]="!canGoPrevious()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white mr-1 ml-2"
+                  fill="currentColor">
+                  <path
+                    d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
+                </svg>
+              </a>
             </li>
-          </a>
-        </ng-container>
 
-        <li>
-          <a href="javascript:void(0)"
-            class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
-            (click)="changePage('next')" [class.opacity-50]="!canGoNext()" [class.cursor-not-allowed]="!canGoNext()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white ml-1 p-0 "
-              fill="currentColor">
-              <path
-                d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
-            </svg>
-          </a>
-        </li>
+            <ng-container *ngFor="let pageNumber of getPages()">
+              <a class="no-underline text-white" href="javascript:void(0)" (click)="changePage(pageNumber)"
+                [class.active]="page === pageNumber">
+                <li
+                  class="items-center justify-center w-6 h-6 bg-amber-500 rounded-md hover:bg-gray-300 focus:outline-none ">
+                  {{ pageNumber }}
+                </li>
+              </a>
+            </ng-container>
 
-      </ul>
-    </nav>
-  </div>
-
-  </div>
-</div>
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
+                (click)="changePage('next')" [class.opacity-50]="!canGoNext()"
+                [class.cursor-not-allowed]="!canGoNext()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white ml-1 p-0 "
+                  fill="currentColor">
+                  <path
+                    d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
