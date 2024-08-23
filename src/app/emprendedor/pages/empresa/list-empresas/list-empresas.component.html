@@ -1,6 +1,16 @@
 <div class="container p-4 pt-2 mx-auto">
-  <header class="flex flex-col items-center justify-between mt-2 mb-6 md:flex-row md:pl-4">
+  <header class="flex flex-col md:flex-row justify-between items-center mb-6">
     <app-header [title] [subtitle]="'Empresas'"></app-header>
+    <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">         
+      <input type="text" [(ngModel)]="userFilter.nombre" 
+      class="w-full h-10 max-md:w-full max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray" placeholder="Buscar..." required />
+      <button class="absolute md:right-3 right-1 top-1.5 bg-sky-500 p-1.5 rounded-2xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+      </button>
+  </div>
+
   </header>
   
     <div class="flex items-center justify-end mb-4">
