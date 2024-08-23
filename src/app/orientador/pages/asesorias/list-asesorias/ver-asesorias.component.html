@@ -69,7 +69,7 @@
 
       <!-- Contenedor de las tarjetas -->
       <div class="flex flex-wrap rounded-lg overflow-hidden w-full m-4 bg-[#FAFAFA] ">
-        <div *ngFor="let asesoria of (showAsignadasFlag ? asesoriasConAsesor : asesoriasSinAsesor) | filterBy:userFilter"
+        <div *ngFor="let asesoria of (showAsignadasFlag ? asesoriasConAsesor : asesoriasSinAsesor)"
           class="relative w-full md:w-[25%] m-4">
 
           <!-- Contenedor de la tarjeta con el efecto de recorte -->
