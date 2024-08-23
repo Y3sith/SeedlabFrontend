@@ -10,13 +10,6 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 const routes: Routes = [
 
-
-
-
-  
-
-
-
   {
     path: '',
     children: [

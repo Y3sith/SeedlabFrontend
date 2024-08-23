@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { User } from '../../Modelos/user.model';
@@ -31,7 +31,8 @@ export class MenuComponent {
   constructor(private router: Router,
               private authservices: AuthService,
               private menuService: MenuService,
-              private personalizacionService: SuperadminService) { }
+              private personalizacionService: SuperadminService,
+              private eRef: ElementRef) { }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -136,6 +137,18 @@ export class MenuComponent {
     this.isAuthenticated = false;
     this.router.navigate(['/home']);
   }
-  
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const clickedInside = this.eRef.nativeElement.contains(event.target);
+    if (!clickedInside && this.isExpanded) {
+      this.isExpanded = false;
+    }
+  }
+
+  onToggleClick(event: Event) {
+    event.stopPropagation();
+    this.toggleSidebar();
+  }
   
 }
