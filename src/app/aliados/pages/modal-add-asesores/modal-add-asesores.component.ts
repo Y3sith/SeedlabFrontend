@@ -236,7 +236,7 @@ export class ModalAddAsesoresComponent implements OnInit {
       // Es una edición, usar el valor del formulario
       //estadoValue = this.asesorForm.get('estado')?.value ? 'true' : 'false';
     }
-    formData.append('nombre', this.asesorForm.get('nombre')?.value);  
+    formData.append('nombre', this.asesorForm.get('nombre')?.value);
     formData.append('apellido', this.asesorForm.get('apellido')?.value);
     formData.append('documento', this.asesorForm.get('documento')?.value);
     formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
@@ -260,7 +260,7 @@ export class ModalAddAsesoresComponent implements OnInit {
             }
           }
         }
-         else if (key === 'estado') {
+        else if (key === 'estado') {
           // Convertir el valor booleano a 1 o 0
           formData.append(key, control.value ? '1' : '0');
         } else if (key !== 'imagen_perfil') {

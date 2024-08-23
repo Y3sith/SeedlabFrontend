@@ -62,6 +62,7 @@
                         <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
                     </div>
                 </div>
+                <!-- genero -->
                 <div>
                     <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
                     <select id="genero" formControlName="genero"
@@ -76,6 +77,8 @@
                         <span *ngIf="f['genero'].errors?.['required']">Este campo es requerido *</span>
                     </div>
                 </div>
+
+                <!-- fecha nacimiento -->
                 <div>
                     <label for="fechaNacimiento" class="block text-sm font-medium text-gray-700">Fecha de
                         Nacimiento</label>
