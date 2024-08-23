@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
@@ -133,6 +133,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
+
   /* Crear super admin o actualiza dependendiendo del adminId */
   addSuperadmin(): void {
     this.submitted = true;
@@ -140,6 +141,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
     const superadmin: Superadmin = {
       nombre: this.superadminForm.value.nombre,
       apellido: this.superadminForm.value.apellido,
+      documento: this.superadminForm.value.documento,
+      celular: this.superadminForm.value.celular,
+      genero: this.superadminForm.value.genero,
+      direccion: this.superadminForm.value.direccion,
+      fecha_nac: this.superadminForm.value.fecha_nac,
       email: this.superadminForm.value.email,
       password: this.superadminForm.value.password,
       estado: this.superadminForm.value.estado,

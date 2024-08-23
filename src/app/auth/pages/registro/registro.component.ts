@@ -36,7 +36,7 @@ export class RegistroComponent implements OnInit {
   submitted = false;
   errorMessage: string | null = null;
   email: string;
-  listTipoDocumento: any[] = [];
+
 
   currentIndex = 0;
   progressWidth = 0;
