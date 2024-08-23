@@ -36,7 +36,7 @@ export class OrientadorService {
   updateOrientador( access_token: any, orientadorId:number, orientador: Orientador):Observable<any>{
     const options={headers: this.CreacionHeaders(access_token)};
     const url = `${environment.apiUrl}orientador/editarOrientador/${orientadorId}`;
-    return this.http.put(url, orientador, options);
+    return this.http.post(url, orientador, options);
     }
 
 
