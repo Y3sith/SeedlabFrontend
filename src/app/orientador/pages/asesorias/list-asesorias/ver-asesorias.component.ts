@@ -21,6 +21,7 @@ export class VerAsesoriasComponent implements OnInit {
   sinAsignarCount: number = 0;
   asignadasCount: number = 0;
   Nombre_sol: string | null = null;
+  nombre_sol: string | null = null;
   showAsignadasFlag: boolean = false; // Flag to indicate which list is being shown
   filteredAsesorias: Asesoria[] = [];
   fullHeightIndices: number[] = [];
@@ -29,7 +30,7 @@ export class VerAsesoriasComponent implements OnInit {
   allAsesoriasConAsesor: Asesoria[] = [];
   searchTerm: string = '';
   
-  userFilter: any = { nombre_sol: '' };
+  userFilter: any = { Nombre_sol: '' };
   
   page: number = 1; // Inicializa la página actual
   totalAsesorias: number = 0; // variable para almacenar el total de asesorias
@@ -65,17 +66,6 @@ export class VerAsesoriasComponent implements OnInit {
     }
   }
 
-  filterBy(items: any[], filter: any): any[] {
-    return items.filter(item => {
-      for (let key in filter) {
-        if (filter[key] && item[key] && item[key].toLowerCase().indexOf(filter[key].toLowerCase()) === -1) {
-          return false;
-        }
-      }
-      return true;
-    });
-  }
-
   loadAsesorias(pendiente: boolean): void {
     this.asesoriaService.postAsesoriasOrientador(this.token, pendiente).subscribe(
       data => {
@@ -88,7 +78,6 @@ export class VerAsesoriasComponent implements OnInit {
           this.asignadasCount = this.asesoriasConAsesor.length;
           this.totalAsesorias = data.length; // Actualiza el total de asesorias
         }
-       
       },
       error => {
         console.error('Error al obtener las asesorías orientador:', error);
