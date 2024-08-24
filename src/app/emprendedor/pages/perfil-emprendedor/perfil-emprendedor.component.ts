@@ -73,7 +73,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     estado: true,
   });
 
-  registerForm: FormGroup; //ahorita quitarlo 
+  registerForm: FormGroup;  
   listEmprendedor: PerfilEmprendedor[] = [];
   originalData: any;
   perfil: '';
@@ -85,7 +85,6 @@ export class PerfilEmprendedorComponent implements OnInit {
     private municipioService: MunicipioService,
     private emprendedorService: EmprendedorService,
     private authServices: AuthService,
-    private alerService: AlertService,
     private router: Router,
     private alertService: AlertService,
     private cdRef: ChangeDetectorRef,
@@ -253,7 +252,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     id_municipio: this.emprendedorForm.get('municipio')?.value,
   }
   console.log(perfil);
-  this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question',).then((result) => {
+  this.alertService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question',).then((result) => {
     if (result.isConfirmed) {
       this.emprendedorService.updateEmprendedor(perfil, this.token, this.documento).subscribe(
         (data) => {
@@ -273,7 +272,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     //   ? "¿Estás seguro de desactivar tu cuenta?"
     //   : "¿Estás seguro de desactivar tu cuenta?";
     if (this.token) {
-      this.alerService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
+      this.alertService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
       "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momnento de iniciar sección!", 'warning').then((result) => {
         if (result.isConfirmed) {
           this.emprendedorService.destroy(this.token, this.documento).subscribe(

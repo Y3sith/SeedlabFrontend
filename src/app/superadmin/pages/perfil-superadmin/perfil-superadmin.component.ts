@@ -44,6 +44,8 @@ export class PerfilSuperadminComponent {
     genero: ['', Validators.required],
     fecha_nac: ['', Validators.required],
     direccion:['', Validators.required],
+    municipio: ['', Validators.required],
+    departamento: ['', Validators.required],
     nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
@@ -93,6 +95,12 @@ export class PerfilSuperadminComponent {
       this.superadminService.getInfoAdmin(this.token, this.id).subscribe(
         (data) => {
           this.perfiladminForm.patchValue({
+            departamento: data.id_departamento
+          })
+          if(data.id_departamento){
+            this.cargarMunicipios(data.id_departamento);
+          }
+          this.perfiladminForm.patchValue({
             documento: data.documento,
             nombre: data.nombre,
             apellido: data.apellido,
@@ -104,9 +112,11 @@ export class PerfilSuperadminComponent {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
-            estado: data.estado
+            departamento: data.id_departamento? data.id_departamento.toString() : '',
+            municipio: data.id_municipio.toString(),
+            
           });
-          console.log(data);
+          console.log('ver editar perfil',data);
 
         },
         (err) => {
@@ -129,6 +139,7 @@ export class PerfilSuperadminComponent {
       email: this.perfiladminForm.get('email')?.value,
       password: this.perfiladminForm.get('password')?.value,
       fecha_nac: this.perfiladminForm.get('fecha_nac')?.value,
+      id_departamento: this.perfiladminForm.get('departamento')?.value,
       id_municipio: this.perfiladminForm.get('municipio')?.value,
     }
     this.superadminService.updateAdmin(perfil, this.token, this.id).subscribe(
@@ -209,7 +220,7 @@ export class PerfilSuperadminComponent {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
         this.listMunicipios = data;
-        console.log('Municipios cargados:', JSON.stringify(data));
+        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       err => {
         console.log('Error al cargar los municipios:', err);

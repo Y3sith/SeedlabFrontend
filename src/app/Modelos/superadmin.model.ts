@@ -12,6 +12,7 @@ export class Superadmin {
     password?: string | null;
     estado?: boolean | null;
     id_tipo_documento: string | null;
+    id_departamento: string | null;
     id_municipio: string | null;
     
 
