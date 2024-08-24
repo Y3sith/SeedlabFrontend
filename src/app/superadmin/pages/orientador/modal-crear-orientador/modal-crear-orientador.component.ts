@@ -121,6 +121,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
+        //console.log('zzzzzzzzzzz: ',this.listDepartamentos);
       },
       (err) => {
         console.log(err);
@@ -154,7 +155,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     if (this.orientadorId != null) {
       this.orientadorServices.getinformacionOrientador(this.token, this.orientadorId).subscribe(
         data => {
-
+          console.log('datossssss: ', data);
           this.orientadorForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
