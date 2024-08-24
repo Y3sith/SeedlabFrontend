@@ -315,6 +315,9 @@ export class PerfilAliadoComponent implements OnInit {
     if (this.selectedLogo) {
       formData.append('logo', this.selectedLogo, this.selectedLogo.name);
     }
+
+
+    
     if (this.selectedruta) {
       formData.append('ruta_multi', this.selectedruta, this.selectedruta.name);
     } else{
