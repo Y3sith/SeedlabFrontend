@@ -80,7 +80,7 @@ export class EncuestaEmpresaComponent {
   respuesta32: Respuesta = new Respuesta({});//Subpregunta 17-18 -bien
   respuesta33: Respuesta = new Respuesta({});//pregunta 18
   respuesta34: Respuesta = new Respuesta({});//Subpregunta 19-19
-  respuesta35: Respuesta = new Respuesta({});//Subpregunta 19-20
+  respuesta35: Respuesta = new Respuesta({});//Subpregunta 19-20156
   respuesta36: Respuesta = new Respuesta({});//Subpregunta 19-21
   respuesta37: Respuesta = new Respuesta({});//Subpregunta 19-22
   respuesta38: Respuesta = new Respuesta({});//Subpregunta 19-23
@@ -384,16 +384,16 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas2 = [];
 
     //Pregunta 16 y 17
-    this.listaRespuestas2.push(this.respuesta24);//0
+    this.listaRespuestas2.push(this.respuesta24);
     if (this.respuesta24.opcion === 'Si') {
-      this.listaRespuestas2.push(this.respuesta25);//1
-      this.listaRespuestas2.push(this.respuesta26);//2
-      this.listaRespuestas2.push(this.respuesta27);//3
-      this.listaRespuestas2.push(this.respuesta28);//4
-      this.listaRespuestas2.push(this.respuesta29);//5
-      this.listaRespuestas2.push(this.respuesta30);//6
-      this.listaRespuestas2.push(this.respuesta31);//7
-      this.listaRespuestas2.push(this.respuesta32);//8
+      this.listaRespuestas2.push(this.respuesta25);
+      this.listaRespuestas2.push(this.respuesta26);
+      this.listaRespuestas2.push(this.respuesta27);
+      this.listaRespuestas2.push(this.respuesta28);
+      this.listaRespuestas2.push(this.respuesta29);
+      this.listaRespuestas2.push(this.respuesta30);
+      this.listaRespuestas2.push(this.respuesta31);
+      this.listaRespuestas2.push(this.respuesta32);
     } else {
       this.respuesta25.texto_res = 'N/A';
       this.respuesta25.id_pregunta = 17;
@@ -429,9 +429,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta32);
     }
     //pregunta 18 y 19
-
-    this.listaRespuestas2.push(this.respuesta33);//9
-    debugger;
+    this.listaRespuestas2.push(this.respuesta33);
     if (this.respuesta33.opcion === 'Si') {
       this.listaRespuestas2.push(this.respuesta34);
       this.listaRespuestas2.push(this.respuesta35);
@@ -455,7 +453,7 @@ export class EncuestaEmpresaComponent {
       this.respuesta37.id_pregunta = 19;
       this.respuesta37.id_subpregunta = 22;
       this.listaRespuestas2.push(this.respuesta37);
-      this.respuesta38.opcion = 'N/A';
+      this.respuesta38.texto_res = 'N/A';
       this.respuesta38.id_pregunta = 19;
       this.respuesta38.id_subpregunta = 23;
       this.listaRespuestas2.push(this.respuesta38);
@@ -563,20 +561,20 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 15; i < 30; i++) {
-      debugger
+      //debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas2[respCounter].id_subpregunta = null;
 
-      if (currentPregunta.isAffirmativeQuestion) {
+      if (currentPregunta.id === 16) {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
           return;
         }
-        const nextPregunta = PREGUNTAS[i + 1];
         if (this.listaRespuestas2[respCounter].opcion === 'Si') {
+          const nextPregunta = PREGUNTAS[i + 1];
           let subPreguntaCounter = 0; // Contador para las subpreguntas
 
           for (let j = 0; j < nextPregunta.subPreguntas.length; j++) {
@@ -598,10 +596,10 @@ export class EncuestaEmpresaComponent {
           respCounter += subPreguntaCounter + 1;
         }
         else if (this.listaRespuestas2[respCounter].opcion === 'No') {
-          respCounter += nextPregunta.subPreguntas.length + 1;
+          respCounter += 8;
         }
-        //respCounter++;
-        //continue;
+        respCounter++;
+        continue;
       }
 
 
@@ -621,7 +619,6 @@ export class EncuestaEmpresaComponent {
         respCounter++;
         continue;
       }
-
       if (currentPregunta.id === 25) {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
@@ -671,16 +668,16 @@ export class EncuestaEmpresaComponent {
         continue;
       }
 
-      
+
       if (currentPregunta.isText) {
         if (currentPregunta.isText) {
-          if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas2[respCounter].texto_res.trim() === '' || this.listaRespuestas2[respCounter].texto_res !== 'N/A') {
+          if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '' || this.listaRespuestas1[respCounter].texto_res !== 'N/A') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
             return;
           }
         } else {
-          if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
+          if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
             return;
@@ -893,17 +890,11 @@ export class EncuestaEmpresaComponent {
     }
 
 
-    for (let i = 41; i < 48; i++) {
+    for (let i = 41; i < 47; i++) {
       debugger;
       const currentPregunta = PREGUNTAS[i];
       const currentRespuesta = this.listaRespuestas4[respCounter];
 
-      // Verifica que la respuesta para la pregunta actual exista en la lista de respuestas
-      if (!currentRespuesta) {
-        this.alertService.errorAlert('Error', `No se encontró respuesta para la pregunta ${currentPregunta.id}.`);
-        isValidForm = false;
-        break;
-      }
 
       // Validar pregunta afirmativa
       if (currentPregunta.isAffirmativeQuestion) {
@@ -922,6 +913,9 @@ export class EncuestaEmpresaComponent {
           continue;
         }
       }
+      this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
+      this.listaRespuestas4[respCounter].id_empresa = this.id_empresa;
+      this.listaRespuestas4[respCounter].id_subpregunta = null;
 
       // Si la pregunta tiene subpreguntas, validar subpreguntas
       if (currentPregunta.subPreguntas && currentPregunta.subPreguntas.length > 0) {

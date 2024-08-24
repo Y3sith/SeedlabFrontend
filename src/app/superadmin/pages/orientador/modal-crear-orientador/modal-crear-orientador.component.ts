@@ -107,7 +107,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
   tipodato(): void {
     if (this.token) {
-      this.authService.tipoDato().subscribe(
+      this.authService.tipoDocumento().subscribe(
         data => {
           this.listTipoDocumento = data;
         },

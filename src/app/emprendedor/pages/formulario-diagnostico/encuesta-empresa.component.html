@@ -733,7 +733,7 @@
                                                 }}</label>
                                             <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                                                 <input type="text" id="respuesta-otro" name="respuesta-otro"
-                                                    [(ngModel)]="respuesta38.opcion" 
+                                                    [(ngModel)]="respuesta38.texto_res" 
                                                     class="mt-1 block w-full md:w-36 px-2 py-1 border-0  rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                                             </div>
                                         </div>
@@ -892,7 +892,7 @@
                                             <label class="text-sm text-gray-400">{{ preguntas[22].subPreguntas[3].texto
                                                 }}</label>
                                             <input type="text" id="respuesta-otro" name="respuesta-otro"
-                                                [(ngModel)]="respuesta48.opcion"
+                                                [(ngModel)]="respuesta48.texto_res"
                                                 class="mt-1 block w-full md:w-36 px-2 py-1 border  rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                                         </div>
                                     </div>
@@ -1088,7 +1088,7 @@
                                     <div
                                         class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 w-full md:w-64">
                                         <input type="text" id="respuesta-otro" name="respuesta-otro"
-                                            [(ngModel)]="respuesta60.opcion" (input)="updateProgress()"
+                                            [(ngModel)]="respuesta60.texto_res" (input)="updateProgress()"
                                             class="md:w-36 block w-full px-2 py-1 border-0  rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                                     </div>
                                 </div>
@@ -2198,13 +2198,13 @@
                                         </select>
                                     </div>
                                     <!-- Subpregunta 96 -->
-                                    <!-- <div class="flex flex-col space-y-2 md:space-y-4">
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
                                         <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[8].texto
                                             }}</label>
                                         <input type="text" id="respuesta-otro" name="respuesta-otro"
                                             [(ngModel)]="respuesta127.opcion" (input)="updateProgress()"
                                             class="md:w-36 block w-full px-2 py-1 border  rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2214,6 +2214,11 @@
                             class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
                             (click)="previous()">
                             Anterior
+                        </button>
+                        <button
+                            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300"
+                            (click)="onSubmitSeccion4()">
+                            Guardar
                         </button>
                         <button
                             class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300"

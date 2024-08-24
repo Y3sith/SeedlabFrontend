@@ -11,6 +11,7 @@ export class PerfilEmprendedor {
     direccion: string | null;
     id_tipo_documento: string | null;
     estado?: boolean;
+    id_departamento: string | null;
     id_municipio: string | null;
 
     constructor(
@@ -25,6 +26,7 @@ export class PerfilEmprendedor {
         fecha_nac: string | null,
         direccion: string | null,
         estado: boolean,
+        id_departamento: string | null,
         id_municipio: string | null,
     ) {
         this.documento = documento;
@@ -38,6 +40,7 @@ export class PerfilEmprendedor {
         this.fecha_nac = fecha_nac;
         this.direccion = direccion;
         this.estado = estado;
+        this.id_departamento = id_departamento;
         this.id_municipio = id_municipio;
     }
 }

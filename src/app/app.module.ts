@@ -57,6 +57,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     SafeUrlPipe,
     CargaComponent,
     AddLevelComponent,
+    
   ],
   imports: [
     AngularMaterialModule,
@@ -84,6 +85,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     EmprendedorModule,
     SuperadminModule,
     OrientadorModule,
+    
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     })

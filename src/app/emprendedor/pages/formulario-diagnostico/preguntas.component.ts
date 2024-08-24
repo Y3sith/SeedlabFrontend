@@ -265,7 +265,7 @@ export const PREGUNTAS: Preguntas[] = [
         nombre: '¿Su producto y/o servicio presenta en la actualidad ventas?',
         puntaje: 0,
         id_seccion: 2,
-        isAffirmativeQuestion: false,
+        isAffirmativeQuestion: true,
         isText: false,
         subPreguntas: []
     },
@@ -530,7 +530,7 @@ export const PREGUNTAS: Preguntas[] = [
             { id: 93, sub_id:6,texto: 'Aumento de clientes', puntaje: 0, id_pregunta: 47 },
             { id: 94, sub_id:7,texto: 'Bajar costos y/o gastos', puntaje: 0, id_pregunta: 47 },
             { id: 95, sub_id:8,texto: 'Mejorar ventas', puntaje: 0, id_pregunta: 47 },
-            //{ id: 96, sub_id:9,texto: 'Otros, ¿Cual?', puntaje: 0, id_pregunta: 47 },
+            { id: 96, sub_id:9,texto: 'Otros, ¿Cual?', puntaje: 0, id_pregunta: 47 },
         ]
     }
 ];
