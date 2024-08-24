@@ -7,6 +7,7 @@ import { DepartamentoService } from '../../../../servicios/departamento.service'
 import { EmpresaService } from '../../../../servicios/empresa.service';
 import { MunicipioService } from '../../../../servicios/municipio.service';
 import { User } from '../../../../Modelos/user.model';
+import { AuthService } from '../../../../servicios/auth.service';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class AddEmpresaComponent {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private alertService: AlertService,
-    private emprendedorService: EmprendedorService,
+    private authService:AuthService
     
 
   ) {
@@ -105,7 +106,7 @@ export class AddEmpresaComponent {
   }
   
   tipodato():void{
-      this.emprendedorService.tipoDato().subscribe(
+      this.authService.tipoDocumento().subscribe(
         data => {
           this.listTipoDocumento = data;
           //console.log('datos tipo de documento: ',data)
