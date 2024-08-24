@@ -49,9 +49,9 @@ export class PerfilEmprendedorComponent implements OnInit {
   emprendedorId: any;
   estado: boolean;
   isAuthenticated: boolean = true;
-  //////
   imagenPreview: string | ArrayBuffer | null = null;
   selectedImagen_perfil: File | null = null;
+  listTipoDocumento: any[] = [];
 
 
 
@@ -131,8 +131,9 @@ export class PerfilEmprendedorComponent implements OnInit {
           this.isActive = data.estado === 'Activo';
   
           // Cargar municipios después de cargar el departamento
-          if (data.id_departamento) {
+          if (data.id_departamento || data.id_tipo_documento) {
             this.cargarMunicipios(data.id_departamento);
+            this.tipoDocumento();
           }
           console.log('trae la info',data);
           // Rellenar el formulario con los datos del emprendedor
@@ -160,7 +161,19 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+  tipoDocumento(): void {
+    this.authServices.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
 
+        console.log('tipos de documentos', this.listTipoDocumento);
+        //console.log('datos tipo de documento: ',data)
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
 
 
   resetFileField(field: string) {

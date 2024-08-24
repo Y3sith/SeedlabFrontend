@@ -8,6 +8,7 @@ import { User } from '../../../Modelos/user.model';
 import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
+import { AuthService } from '../../../servicios/auth.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class PerfilSuperadminComponent {
   submitted = false;
   bloqueado = true;
   errorMessage: string | null = null;
+  listTipoDocumento: any[] = [];
 
   perfiladminForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -46,7 +48,7 @@ export class PerfilSuperadminComponent {
     direccion:['', Validators.required],
     municipio: ['', Validators.required],
     departamento: ['', Validators.required],
-    nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required),
+    nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
     estado: true,
@@ -59,6 +61,7 @@ export class PerfilSuperadminComponent {
     private router: Router,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
+    private authService:AuthService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
@@ -97,8 +100,9 @@ export class PerfilSuperadminComponent {
           this.perfiladminForm.patchValue({
             departamento: data.id_departamento
           })
-          if(data.id_departamento){
+          if(data.id_departamento || data.id_tipo_documento){
             this.cargarMunicipios(data.id_departamento);
+            this.tipoDocumento();
           }
           this.perfiladminForm.patchValue({
             documento: data.documento,
@@ -298,5 +302,19 @@ export class PerfilSuperadminComponent {
       this.cdRef.detectChanges();
     };
     reader.readAsDataURL(file);
+  }
+
+  tipoDocumento(): void {
+    this.authService.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+
+        console.log('tipos de documentos', this.listTipoDocumento);
+        //console.log('datos tipo de documento: ',data)
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 }

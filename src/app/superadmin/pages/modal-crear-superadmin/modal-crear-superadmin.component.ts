@@ -257,7 +257,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   }
 
   tipoDocumento(): void {
-    this.authService.tipoDato().subscribe(
+    this.authService.tipoDocumento().subscribe(
       data => {
         this.listTipoDocumento = data;
 

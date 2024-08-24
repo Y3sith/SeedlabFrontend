@@ -219,7 +219,7 @@ export class RegistroComponent implements OnInit {
   }
 
   tipoDocumento():void{
-      this.registroService.tipoDato().subscribe(
+      this.registroService.tipoDocumento().subscribe(
         data => {
           this.listTipoDocumento = data;
 
