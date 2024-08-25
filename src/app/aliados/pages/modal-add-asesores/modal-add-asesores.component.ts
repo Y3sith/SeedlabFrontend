@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { AliadoService } from '../../../servicios/aliado.service';
@@ -58,6 +58,8 @@ export class ModalAddAsesoresComponent implements OnInit {
     fecha_nac: ['', Validators.required],
     direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
+    nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
+    id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
@@ -85,9 +87,9 @@ export class ModalAddAsesoresComponent implements OnInit {
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
+    this.cargarDepartamentos();
     this.verEditar();
     this.tipodato();
-    this.cargarDepartamentos();
     /*para ver si lo estan editando salga la palabra editar */
     if (this.asesorId != null) {
       this.isEditing = true;
@@ -191,6 +193,7 @@ export class ModalAddAsesoresComponent implements OnInit {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             celular: data.celular,
+            id_departamento: data.id_departamento,
             id_municipio: data.id_municipio,
             aliado: data.id,
             email: data.email,
@@ -243,6 +246,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     formData.append('genero', this.asesorForm.get('genero')?.value);
     formData.append('direccion', this.asesorForm.get('direccion')?.value);
     formData.append('celular', this.asesorForm.get('celular')?.value);
+    formData.append('id_departamento', this.asesorForm.get('id_departamento')?.value);
     formData.append('id_municipio', this.asesorForm.get('id_municipio')?.value);
     formData.append('aliado', this.nombreAliado);
     formData.append('email', this.asesorForm.get('email')?.value);

@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Inject } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Component, OnInit, Input, Inject, ChangeDetectorRef} from '@angular/core';
+import { AbstractControl, FormGroup, FormBuilder, FormControl, Validators, ValidationErrors } from '@angular/forms';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
@@ -33,12 +33,16 @@ export class ModalCrearSuperadminComponent implements OnInit {
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
   listTipoDocumento: any[] = [];
+  imagenPerfil_Preview: string | ArrayBuffer | null = null;
+  selectedImagen_Perfil: File | null = null;
+  formSubmitted = false;
 
 
   superadminForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
-    documento: '',
+    documento: ['', Validators.required],
+    id_tipo_documento: ['', Validators.required],
     imagen_perfil: [null, Validators.required],
     celular: ['', Validators.required],
     genero: ['', Validators.required],
@@ -47,8 +51,8 @@ export class ModalCrearSuperadminComponent implements OnInit {
     nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
-    departamento:['', Validators.required],
-    municipio:['', Validators.required],
+    id_departamento:['', Validators.required],
+    id_municipio:['', Validators.required],
     estado: true,
   });
 
@@ -60,7 +64,9 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private superadminService: SuperadminService,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdRef: ChangeDetectorRef,
+
   ) {
     this.adminId = data.adminId;
 
@@ -73,13 +79,13 @@ export class ModalCrearSuperadminComponent implements OnInit {
     if (this.adminId != null) {
       this.isEditing = true;
       this.superadminForm.get('password')?.setValidators([Validators.minLength(8)]);
+      this.cargarDepartamentos();
       this.verEditar();
     } else {
       this.superadminForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
 
     this.superadminForm.get('password')?.updateValueAndValidity();
-    this.cargarDepartamentos();
     this.tipoDocumento();
   }
 
@@ -115,33 +121,56 @@ export class ModalCrearSuperadminComponent implements OnInit {
     if (this.adminId != null) {
       this.superadminService.getInfoAdminxlista(this.token, this.adminId).subscribe(
         data => {
+          console.log("hola data",data)
           this.superadminForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
+            documento: data.documento,
+            id_tipo_documento: data.id_tipo_documento,
+            imagen_perfil: data.imagen_perfil,
+            genero: data.genero,
+            fecha_nac: data.fecha_nac,
+            direccion: data.direccion,
+            celular: data.celular,
+            id_departamento: data.id_departamento ? data.id_departamento.toString() : '',
+            id_municipio: data.id_municipio.toString(),
             email: data.email,
             password: '',
             estado: data.estado,
-            genero: data.genero,
-            departamento: data.departamento,
-            municipio:data.municipio
           });
           this.isActive = data.estado === 'Activo';
           setTimeout(() => {
             this.superadminForm.get('estado')?.setValue(this.isActive);
           });
-        },
-        error => {
-          console.error(error);
-        }
-      )
-    }
+          
+        // Cargar los departamentos y municipios
+        this.cargarDepartamentos();
+
+        setTimeout(() => {
+          // Establecer el departamento seleccionado
+          this.superadminForm.patchValue({ id_municipio: data.id_departamentos });
+
+          // Cargar los municipios de ese departamento
+          this.cargarMunicipios(data.id_departamento);
+
+          setTimeout(() => {
+            // Establecer el municipio seleccionado
+            this.superadminForm.patchValue({ id_municipio: data.id_municipio });
+          }, 500);
+        }, 500);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
+}
 
 
   /* Crear super admin o actualiza dependendiendo del adminId */
   addSuperadmin(): void {
     this.submitted = true;
-    console.log('Valor de municipio:', this.superadminForm.value.municipio);
+    console.log('Valor de municipio:', this.superadminForm.value.id_municipio);
     const superadmin: Superadmin = {
       nombre: this.superadminForm.value.nombre,
       apellido: this.superadminForm.value.apellido,
@@ -154,8 +183,8 @@ export class ModalCrearSuperadminComponent implements OnInit {
       password: this.superadminForm.value.password,
       estado: this.superadminForm.value.estado,
       id_tipo_documento: this.superadminForm.value.nombretipodoc,
-      id_departamento:this.superadminForm.value.departamento,
-      id_municipio:this.superadminForm.value.municipio
+      id_departamento:this.superadminForm.value.id_departamento,
+      id_municipio:this.superadminForm.value.id_municipio
     };
     console.log('Superadmin Data:', superadmin);
     /* Actualiza superadmin */
@@ -214,6 +243,83 @@ export class ModalCrearSuperadminComponent implements OnInit {
       this.boton = false;
     }
     this.boton = true;
+  }
+
+  onFileSelecteds(event: any, field: string) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+
+      let maxSize = 0;
+
+      if (field === 'imagen_perfil') {
+        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+      }
+
+      if (file.size > maxSize) {
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.resetFileField(field);
+
+        ////Limpia el archivo seleccionado y resetea la previsualización
+        event.target.value = ''; // Borra la selección del input
+
+        // Resetea el campo correspondiente en el formulario y la previsualización
+        if (field === 'imagen_perfil') {
+          this.superadminForm.patchValue({ imagen_perfil: null });
+          this.imagenPerfil_Preview = null; // Resetea la previsualización
+        }
+        this.resetFileField(field);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.superadminForm.patchValue({ imagen_perfil: previewUrl });
+          this.imagenPerfil_Preview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
+
+      if (field === 'imagen_perfil') {
+        this.selectedImagen_Perfil = file;
+        this.superadminForm.patchValue({ imagen_perfil: file });
+      }
+
+    } else {
+      this.resetFileField(field);
+    }
+  }
+  resetFileField(field: string) {
+    if (field === 'imagen_perfil') {
+      this.superadminForm.patchValue({ imagen_perfil: null });
+      this.imagenPerfil_Preview = null;
+    }
+  }
+  generateImagePreview(file: File, field: string) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      if (field === 'imagen_perfil') {
+        this.imagenPerfil_Preview = e.target.result;
+      }
+      this.cdRef.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  getFormValidationErrors(form: FormGroup) {
+    const result: any = {};
+    Object.keys(form.controls).forEach(key => {
+      const controlErrors: ValidationErrors | null = form.get(key)?.errors;
+      if (controlErrors) {
+        result[key] = controlErrors;
+      }
+    });
+    return result;
   }
 
   /* Cerrar el modal */
