@@ -39,6 +39,9 @@ export class ModalCrearOrientadorComponent implements OnInit {
   imagenPerlil_Preview: string | ArrayBuffer | null = null;
   selectedImagen_Perfil: File | null = null;
   formSubmitted = false;
+  currentIndex: number = 0;
+  currentSubSectionIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
   /////
   tiempoEspera = 1800;
 
@@ -58,8 +61,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     estado: true,
   });
 
-  constructor(public dialogRef: MatDialogRef<ModalCrearOrientadorComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(
     private fb: FormBuilder,
     private orientadorServices: OrientadorService,
     private router: Router,
@@ -71,7 +73,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
 
   ) {
-    this.orientadorId = data.orientadorId;
+    //this.orientadorId = data.orientadorId;
   }
 
   ngOnInit(): void {
@@ -92,10 +94,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
 
   get f() { return this.orientadorForm.controls; } //aquii
 
-  cancelarCrearOrientador() {
-    this.dialogRef.close();
-
-  }
 
   validateToken(): void {
     if (!this.token) {
@@ -105,6 +103,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
+
   tipodato(): void {
     if (this.token) {
       this.authService.tipoDocumento().subscribe(
@@ -117,6 +116,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       )
     }
   }
+
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
@@ -128,6 +128,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       }
     );
   }
+
   onDepartamentoSeleccionado(event: Event): void {
     const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
     const selectedDepartamento = target.value;
@@ -265,9 +266,10 @@ export class ModalCrearOrientadorComponent implements OnInit {
       console.log('Hola');
       this.orientadorServices.createOrientador(this.token, formData).subscribe(
         data => {
-          setTimeout(function () {
-            location.reload();
-          }, this.tiempoEspera);
+          console.log(data); // Verifica el mensaje de éxito
+          this.alerService.successAlert('Exito', data.message);
+          
+            this.router.navigate(['/list-orientador']);
           this.alerService.successAlert('Exito', data.message);
         },
         error => {
@@ -276,10 +278,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
           console.log(error);
         });
     }
-  }
-
-  cancelarModal() {
-    this.dialogRef.close();
   }
 
   toggleActive() {
@@ -372,5 +370,29 @@ export class ModalCrearOrientadorComponent implements OnInit {
       }
     });
     return result;
+  }
+
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 }
