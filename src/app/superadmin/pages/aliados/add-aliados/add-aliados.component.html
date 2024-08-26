@@ -108,9 +108,9 @@
 
 
       <!-- Botón Siguiente -->
-      <div class="flex justify-center h-10 mt-4">
+      <div class="flex justify-center h-auto mt-4 ">
         <button
-          class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300"
+          class="py-2 px-4 mb-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300"
           (click)="next()">
           Siguiente
         </button>
@@ -232,18 +232,18 @@
       <!-- Botones Anterior y Siguiente -->
       <div class="flex justify-center h-10 gap-2">
         <button
-          class="inline-block py-2 px-[10vw] sm:px-16 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+          class=" py-2 px-4 sm:px-16 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
           (click)="previous()">
           Anterior
         </button>
         <button
-          class="inline-block py-2 px-[10vw] sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300"
+          class="py-2 px-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300"
           (click)="next()">
           Siguiente
         </button>
         <button type="submit" *ngIf="idAliado"
-          class="inline-block py-2 px-[10vw] sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
-          Guardar datos del Aliado
+          class="py-2 px-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
+          Guardar
         </button>
       </div>
     </div>
@@ -337,14 +337,14 @@
 
         <!-- Botones Anterior y Crear -->
       </div>
-      <div class="flex justify-center h-10 gap-2">
+      <div class="flex justify-center h-auto gap-2">
         <button
-          class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
-          (click)="previous()">
+        class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+        (click)="previous()">
           Anterior
         </button>
         <button type="submit" *ngIf="!idAliado"
-          class="inline-block py-2 px-[10vw] sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
+          class="py-2 px-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
           Crear Aliado
         </button>
       </div>
