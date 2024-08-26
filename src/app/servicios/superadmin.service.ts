@@ -1,3 +1,6 @@
+
+
+
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -6,10 +9,12 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environment/env';
 
 import { Superadmin } from '../Modelos/superadmin.model';
+import { Personalizaciones } from '../Modelos/personalizaciones.model';
 import { Actividad } from '../Modelos/actividad.model';
 import { Nivel } from '../Modelos/nivel.model';
 import { Leccion } from '../Modelos/leccion.model';
 import { Contenido_Leccion } from '../Modelos/contenido-leccion.model';
+import { access } from 'fs';
 
 @Injectable({
   providedIn: 'root'
@@ -106,7 +111,26 @@ export class SuperadminService {
     return this.http.post(this.url + "restaurarPersonalizacion/"+ id,{}, options);
   }
 
-   
+  dashboardAdmin(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+"contar-usuarios",options)
+  }
+
+  contarRegistrosMensual(access_token:any):Observable<any>{
+    const options = { headers:this.CreacionHeaders(access_token) };
+    return this.http.get(this.url+"listRegistrosAnioMes",options)
+  }
+
+  promedioAsesorias(access_token:any, year:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options);
+  }
+
+  emprendedoresPorDepartamento(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url+"emprendedor_departamento",options)
+  }
+  
 //////////////////////////
   pdfEmpenrededorMunicipio(access_token:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token) };

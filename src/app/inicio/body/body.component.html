@@ -27,9 +27,9 @@
       <div class="swiper-wrapper">
         <ng-container *ngFor="let banner of listBanner">
           <div *ngIf="banner.urlImagen"
-            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
+            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide banner-swiper-slide swiper-slide"
             style="width: 100% !important;">
-            <img [src]="banner.urlImagen" class="w-full">
+            <img [src]="banner.urlImagen" class="" [alt]="banner.descripcion || 'Banner image'">
             <!-- <p>fffffff</p> -->
           </div>
         </ng-container>

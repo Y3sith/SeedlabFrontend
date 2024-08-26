@@ -4,7 +4,6 @@ import { ListAsesoresComponent } from './pages/list-asesores/list-asesores.compo
 import { AsesoriaAliadoComponent } from './pages/list-asesorias/asesoria-aliado.component';
 import { ModalAddAsesoresComponent } from './pages/modal-add-asesores/modal-add-asesores.component';
 import { AsignarAsesorModalComponent } from './pages/asignar-asesor-modal/asignar-asesor-modal.component';
-import { FanPageComponent } from './pages/fan-page/fan-page.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SharedModule } from '../shared.module';
 import { AliadosRoutingModule } from './aliados-routing.module';
@@ -21,6 +20,9 @@ import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
 import { AddBannerComponent } from './pages/add-banner/add-banner.component';
 
+import { ReportesComponent } from './pages/reportes/reportes.component';
+
+
 
 
 
@@ -33,10 +35,10 @@ import { AddBannerComponent } from './pages/add-banner/add-banner.component';
     AsesoriaAliadoComponent,
     ModalAddAsesoresComponent,
     AsignarAsesorModalComponent,
-    FanPageComponent,
     DashboardComponent,
     PerfilAliadoComponent,
     AddBannerComponent,
+    ReportesComponent,
     
   ],
   imports: [

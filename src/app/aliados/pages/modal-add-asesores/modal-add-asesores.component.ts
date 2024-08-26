@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { AliadoService } from '../../../servicios/aliado.service';
@@ -46,18 +46,19 @@ export class ModalAddAsesoresComponent implements OnInit {
   /////
   imagenPerlil_Preview: string | ArrayBuffer | null = null;
   selectedImagen_Perfil: File | null = null;
+  formSubmitted = false;
 
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
     documento: ['', Validators.required],
     id_tipo_documento: ['', Validators.required],
-    imagen_perfil: [null],
+    imagen_perfil: [null, Validators.required],
     genero: ['', Validators.required],
     fecha_nac: ['', Validators.required],
     direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
-    municipio: ['',Validators.required],
+    id_municipio: ['', Validators.required],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -71,7 +72,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     private asesorService: AsesorService,
     private aliadoService: AliadoService,
     private alerService: AlertService,
-    private emprendedorService: EmprendedorService,
+    private authService: AuthService,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private alertService: AlertService,
@@ -126,7 +127,7 @@ export class ModalAddAsesoresComponent implements OnInit {
 
   tipodato(): void {
     if (this.token) {
-      this.emprendedorService.tipoDato().subscribe(
+      this.authService.tipoDocumento().subscribe(
         data => {
           this.listTipoDocumento = data;
           //console.log('datos tipo de documento: ',data)
@@ -190,7 +191,7 @@ export class ModalAddAsesoresComponent implements OnInit {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             celular: data.celular,
-            municipio: data.municipio,
+            id_municipio: data.id_municipio,
             aliado: data.id,
             email: data.email,
             password: '',
@@ -207,14 +208,14 @@ export class ModalAddAsesoresComponent implements OnInit {
 
           setTimeout(() => {
             // Establecer el departamento seleccionado
-            this.asesorForm.patchValue({ municipio: data.id_departamentos });
+            this.asesorForm.patchValue({ id_municipio: data.id_departamentos });
 
             // Cargar los municipios de ese departamento
             this.cargarMunicipios(data.id_departamento);
 
             setTimeout(() => {
               // Establecer el municipio seleccionado
-              this.asesorForm.patchValue({ municipio: data.id_municipio });
+              this.asesorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
         },
@@ -224,35 +225,58 @@ export class ModalAddAsesoresComponent implements OnInit {
       );
     }
   }
-
   /* Crear asesor o actualiza dependendiendo del asesorId */
   addAsesor(): void {
-    this.submitted = true;
-    if (this.asesorForm.invalid) {
-      return;
+    const formData = new FormData();
+    let estadoValue: string;
+    if (this.asesorId == null) {
+      // Es un nuevo aliado, forzar el estado a 'true'
+      estadoValue = '1';
+    } else {
+      // Es una edición, usar el valor del formulario
+      //estadoValue = this.asesorForm.get('estado')?.value ? 'true' : 'false';
     }
-    const asesor: Asesor = {
-      nombre: this.asesorForm.get('nombre')?.value,
-      apellido: this.asesorForm.get('apellido')?.value,
-      documento: this.asesorForm.get('documento')?.value,
-      id_tipo_documento: this.asesorForm.get('id_tipo_documento')?.value,
-      imagen_perfil: this.asesorForm.get('')?.value,
-      genero: this.asesorForm.get('genero')?.value,
-      fecha_nac: this.asesorForm.get('')?.value,
-      direccion: this.asesorForm.get('direccion')?.value,
-      celular: this.asesorForm.get('celular')?.value,
-      municipio: +this.asesorForm.get('municipio')?.value,
-      aliado: this.nombreAliado,
-      email: this.asesorForm.get('email')?.value,
-      password: this.asesorForm.get('password')?.value,
-      estado: this.asesorForm.get('estado')?.value,
-    };
-    console.log('Asesor:', asesor);
+    formData.append('nombre', this.asesorForm.get('nombre')?.value);
+    formData.append('apellido', this.asesorForm.get('apellido')?.value);
+    formData.append('documento', this.asesorForm.get('documento')?.value);
+    formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
+    formData.append('genero', this.asesorForm.get('genero')?.value);
+    formData.append('direccion', this.asesorForm.get('direccion')?.value);
+    formData.append('celular', this.asesorForm.get('celular')?.value);
+    formData.append('id_municipio', this.asesorForm.get('id_municipio')?.value);
+    formData.append('aliado', this.nombreAliado);
+    formData.append('email', this.asesorForm.get('email')?.value);
+    formData.append('password', this.asesorForm.get('password')?.value);
+
+    Object.keys(this.asesorForm.controls).forEach(key => {
+      const control = this.asesorForm.get(key);
+
+      if (control?.value !== null && control?.value !== undefined) {
+        if (key === 'fecha_nac') {
+          if (control.value) {
+            const date = new Date(control.value);
+            if (!isNaN(date.getTime())) {
+              formData.append(key, date.toISOString().split('T')[0]);
+            }
+          }
+        }
+        else if (key === 'estado') {
+          // Convertir el valor booleano a 1 o 0
+          formData.append(key, control.value ? '1' : '0');
+        } else if (key !== 'imagen_perfil') {
+          formData.append(key, control.value);
+        }
+      }
+    });
+    // Agregar la imagen de perfil si se ha seleccionado una nueva
+    if (this.selectedImagen_Perfil) {
+      formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
+    }
     /* Actualiza asesor */
     if (this.asesorId != null) {
       this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
         if (result.isConfirmed) {
-          this.asesorService.updateAsesor(this.token, this.asesorId, asesor).subscribe(
+          this.asesorService.updateAsesor(this.token, this.asesorId, formData).subscribe(
             data => {
               setTimeout(function () {
                 location.reload();
@@ -260,16 +284,17 @@ export class ModalAddAsesoresComponent implements OnInit {
               this.alerService.successAlert('Exito', data.message);
             },
             error => {
-              //this.alerService.errorAlert('Error', error.error.message);
-              //console.error('Error', error.error.message);
-              console.log('error: ',error)
+              this.alerService.errorAlert('Error', error.error.message);
+              console.error('Error', error.error.message);
+              //console.log('error: ', error)
             }
           );
         }
       });
       /* Crea asesor */
     } else {
-      this.asesorService.createAsesor(this.token, asesor).subscribe(  
+      console.log('Hola');
+      this.asesorService.createAsesor(this.token, formData).subscribe(
         data => {
           setTimeout(function () {
             location.reload();
@@ -278,7 +303,7 @@ export class ModalAddAsesoresComponent implements OnInit {
         },
         error => {
           console.error('Error al crear el asesor:', error);
-          //this.alerService.errorAlert('Error', error.error.message);
+          this.alerService.errorAlert('Error', error.error.message);
         });
     }
   }
@@ -352,15 +377,12 @@ export class ModalAddAsesoresComponent implements OnInit {
       this.resetFileField(field);
     }
   }
-
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.asesorForm.patchValue({ imagen_perfil: null });
       this.imagenPerlil_Preview = null;
     }
   }
-
-
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -371,5 +393,18 @@ export class ModalAddAsesoresComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
+
+  getFormValidationErrors(form: FormGroup) {
+    const result: any = {};
+    Object.keys(form.controls).forEach(key => {
+      const controlErrors: ValidationErrors | null = form.get(key)?.errors;
+      if (controlErrors) {
+        result[key] = controlErrors;
+      }
+    });
+    return result;
+  }
+
+
 
 }

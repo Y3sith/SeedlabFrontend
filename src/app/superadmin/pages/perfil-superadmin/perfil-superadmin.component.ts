@@ -8,6 +8,7 @@ import { User } from '../../../Modelos/user.model';
 import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
+import { AuthService } from '../../../servicios/auth.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class PerfilSuperadminComponent {
   submitted = false;
   bloqueado = true;
   errorMessage: string | null = null;
+  listTipoDocumento: any[] = [];
 
   perfiladminForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -44,7 +46,9 @@ export class PerfilSuperadminComponent {
     genero: ['', Validators.required],
     fecha_nac: ['', Validators.required],
     direccion:['', Validators.required],
-    nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required),
+    municipio: ['', Validators.required],
+    departamento: ['', Validators.required],
+    nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
     estado: true,
@@ -57,6 +61,7 @@ export class PerfilSuperadminComponent {
     private router: Router,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
+    private authService:AuthService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
@@ -93,6 +98,13 @@ export class PerfilSuperadminComponent {
       this.superadminService.getInfoAdmin(this.token, this.id).subscribe(
         (data) => {
           this.perfiladminForm.patchValue({
+            departamento: data.id_departamento
+          })
+          if(data.id_departamento || data.id_tipo_documento){
+            this.cargarMunicipios(data.id_departamento);
+            this.tipoDocumento();
+          }
+          this.perfiladminForm.patchValue({
             documento: data.documento,
             nombre: data.nombre,
             apellido: data.apellido,
@@ -104,9 +116,11 @@ export class PerfilSuperadminComponent {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
-            estado: data.estado
+            departamento: data.id_departamento? data.id_departamento.toString() : '',
+            municipio: data.id_municipio.toString(),
+            
           });
-          console.log(data);
+          console.log('ver editar perfil',data);
 
         },
         (err) => {
@@ -129,6 +143,7 @@ export class PerfilSuperadminComponent {
       email: this.perfiladminForm.get('email')?.value,
       password: this.perfiladminForm.get('password')?.value,
       fecha_nac: this.perfiladminForm.get('fecha_nac')?.value,
+      id_departamento: this.perfiladminForm.get('departamento')?.value,
       id_municipio: this.perfiladminForm.get('municipio')?.value,
     }
     this.superadminService.updateAdmin(perfil, this.token, this.id).subscribe(
@@ -209,7 +224,7 @@ export class PerfilSuperadminComponent {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
         this.listMunicipios = data;
-        console.log('Municipios cargados:', JSON.stringify(data));
+        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       err => {
         console.log('Error al cargar los municipios:', err);
@@ -287,5 +302,19 @@ export class PerfilSuperadminComponent {
       this.cdRef.detectChanges();
     };
     reader.readAsDataURL(file);
+  }
+
+  tipoDocumento(): void {
+    this.authService.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+
+        console.log('tipos de documentos', this.listTipoDocumento);
+        //console.log('datos tipo de documento: ',data)
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 }

@@ -22,12 +22,19 @@ export class AsesorService {
 
   }
 
+  private CreacionHeaderss(access_token: any): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': 'Bearer ' + access_token
+    });
+
+  }
+
   url = environment.apiUrl + 'asesor/'
 
 
-  createAsesor(access_token: any, asesor: Asesor,): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.post(`${this.url}asesor`, asesor, options);
+  createAsesor(access_token: any, formData: FormData,): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}asesor`, formData, options);
   }
 
   getAsesorID(access_token: any, asesorId: number): Observable<any> {
@@ -35,9 +42,9 @@ export class AsesorService {
     return this.http.get(`${this.url}userProfileAsesor/${asesorId}`, options);
   }
 
-  updateAsesor(access_token: any, asesorId: number, asesor: Asesor): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.put(`${this.url}asesor/${asesorId}`, asesor, options);
+  updateAsesor(access_token: any, asesorId: number, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}editarAsesor/${asesorId}`, formData, options);
   }
 
   mostrarAsesoriasAsesor(access_token: any, idAsesor: number, conHorario: boolean): Observable<any> {

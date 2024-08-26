@@ -2,16 +2,16 @@
 <div class="container mx-auto p-0 pt-2">
 
   <!-- Encabezado -->
-  <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+  <header class="flex flex-col md:flex-row justify-between items-center mb-6">
     <app-header [title] [subtitle]="'Asesorias Orientador'"></app-header>
 
     <!-- Barra de búsqueda -->
-    <div class="relative flex-grow max-w-full md:max-w-[40%] border rounded-full h-[25%] mx-4 md:mr-[89px] mt-4 md:mt-0">
+    <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">
       <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-[#00B3ED] rounded-full w-8 h-8 flex items-center justify-center">
         <i class="fas fa-search text-[18px]"></i>
       </span>
-      <input type="text" [(ngModel)]="userFilter.Nombre_sol"
-        class="w-full h-[40px] pl-4 pr-12 rounded-full outline-none transition duration-200">
+      <input type="text" [(ngModel)]="userFilter.Nombre_sol"  placeholder="Buscar..."
+        class="w-full max-md:w-full h-10 max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray">
     </div>
   </header>
 
@@ -28,7 +28,8 @@
         <button id="sinAsignar"
           class="flex items-center md:px-4 px-2 py-2 text-gray-800 ease-in-out listado-aseorias italic"
           (click)="showSinAsignar()">
-          <span class="text-red-700 bg-white border border-red-700 rounded-lg w-6 h-6 flex items-center justify-center mr-2">
+          <span
+            class="text-red-700 bg-white border border-red-700 rounded-lg w-6 h-6 flex items-center justify-center mr-2">
             {{ sinAsignarCount }}
           </span>
           <span>Sin asignar</span>
@@ -38,7 +39,8 @@
         <button id="Asignadas"
           class="btn-color flex items-center md:px-4 px-2 py-2 text-gray-800 ease-in-out listado-aseorias italic"
           (click)="showAsignadas()">
-          <span class="border border-green-500 text-green-500 bg-white rounded-lg w-6 h-6 flex items-center justify-center mr-2">
+          <span
+            class="border border-green-500 text-green-500 bg-white rounded-lg w-6 h-6 flex items-center justify-center mr-2">
             {{ asignadasCount }}
           </span>
           <span>Asignadas</span>
@@ -49,13 +51,19 @@
     <!-- Botón de Agregar -->
     <div class="flex justify-end md:justify-start mt-[38px] md:mt-[-38px] ml-0 md:ml-[60rem] items-center">
       <span class="mr-3 text-amber-500 text-[25px] italic mb-1" style="font-weight: 900;">Agregar</span>
-      <button (click)="openCrearAsesoriaModal()" class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center">
+      <button (click)="openCrearAsesoriaModal()"
+        class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center">
         <span class="text-3xl font-semibold leading-none">+</span>
       </button>
     </div>
 
+    <!-- Spinner -->
+    <div class="flex justify-center" *ngIf="isLoading">
+      <div class="spinner"></div>
+    </div>
+
     <!-- Sección de tarjetas -->
-    <div *ngIf="showTrue || showFalse" class="flex flex-wrap justify-center mt-6 px-2 ">
+    <div *ngIf="!isLoading && (showTrue || showFalse)" class="flex flex-wrap justify-center mt-6 px-2">
 
       <!-- Mensaje para asesorías asignadas -->
       <div *ngIf="showTrue && asesoriasTrue.length === 0" class="text-center text-gray-500 mt-6">
@@ -71,75 +79,81 @@
       <div class="flex flex-wrap rounded-lg overflow-hidden w-full m-4 bg-[#FAFAFA]">
         <div *ngFor="let asesoria of (showTrue ? asesoriasTrue : asesoriasFalse) | filterBy:userFilter"
           class="relative w-full md:w-[25%] m-4">
-      
+
           <!-- Contenedor de la tarjeta con el efecto de recorte -->
           <div class="relative bg-[#e6e6e6] rounded-lg overflow-hidden p-4 py-3 mt-[20px]">
-            
+
             <!-- Contenido de la tarjeta -->
             <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{ asesoria.Nombre_sol }}</h2>
-            <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Fecha inicio: </strong> {{ asesoria.fecha_solicitud.slice(0, 10) }}</p>
-            <p class="italic text-sm text-black mb-2 mt-[15px] ml-[4%]"><strong>Aliado: </strong>{{ asesoria.nombre }}</p>
-            <div class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
+            <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Fecha inicio: </strong> {{
+              asesoria.fecha_solicitud.slice(0, 10) }}</p>
+            <p class="italic text-sm text-black mb-2 mt-[15px] ml-[4%]"><strong>Aliado: </strong>{{ asesoria.nombre }}
+            </p>
+            <div
+              class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
               title="{{ asesoria.notas }}">{{ asesoria.notas }}
             </div>
           </div>
-      
+
           <!-- Círculo en la esquina superior derecha -->
           <div class="absolute top-[5px] right-[-37px] sm:top-[-5px] sm:right-[-25px] sm:h-12  w-16 h-16 z-10">
             <!-- Dentro del círculo -->
-            <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center" [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
+            <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center"
+              [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
               <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
             </div>
           </div>
 
           <!-- Recorte circular de la esquina -->
-          <div class="absolute top-0 right-0 w-[22%] h-[22%] z-0 bg-[#FAFAFA] rounded-full transform translate-x-[28%] translate-y-[-10%]"></div>
+          <div
+            class="absolute top-0 right-0 w-[22%] h-[22%] z-0 bg-[#FAFAFA] rounded-full transform translate-x-[28%] translate-y-[-10%]">
+          </div>
         </div>
+      </div>
+      <!-- Contenedor de la paginación -->
+      <div class="text-center">
+        <nav aria-label="Page navigation example">
+          <ul class="inline-flex space-x-2 text-sm">
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
+                (click)="changePage('previous')" [class.opacity-50]="!canGoPrevious()"
+                [class.cursor-not-allowed]="!canGoPrevious()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white mr-1 ml-2"
+                  fill="currentColor">
+                  <path
+                    d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
+                </svg>
+              </a>
+            </li>
+    
+            <ng-container *ngFor="let pageNumber of getPages()">
+              <a class="no-underline text-white" href="javascript:void(0)" (click)="changePage(pageNumber)"
+                [class.active]="page === pageNumber">
+                <li
+                  class="items-center justify-center w-6 h-6 bg-amber-500 rounded-md hover:bg-gray-300 focus:outline-none ">
+                  {{ pageNumber }}
+                </li>
+              </a>
+            </ng-container>
+    
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
+                (click)="changePage('next')" [class.opacity-50]="!canGoNext()" [class.cursor-not-allowed]="!canGoNext()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white ml-1 p-0 "
+                  fill="currentColor">
+                  <path
+                    d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                </svg>
+              </a>
+            </li>
+    
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
 
-  <!-- Contenedor de la paginación -->
-  <div class="text-center">
-    <nav aria-label="Page navigation example">
-      <ul class="inline-flex space-x-2 text-sm">
-        <li>
-          <a href="javascript:void(0)"
-            class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
-            (click)="changePage('previous')" [class.opacity-50]="!canGoPrevious()"
-            [class.cursor-not-allowed]="!canGoPrevious()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white mr-1 ml-2"
-              fill="currentColor">
-              <path
-                d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
-            </svg>
-          </a>
-        </li>
 
-        <ng-container *ngFor="let pageNumber of getPages()">
-          <a class="no-underline text-white" href="javascript:void(0)" (click)="changePage(pageNumber)"
-            [class.active]="page === pageNumber">
-            <li
-              class="items-center justify-center w-6 h-6 bg-amber-500 rounded-md hover:bg-gray-300 focus:outline-none ">
-              {{ pageNumber }}
-            </li>
-          </a>
-        </ng-container>
-
-        <li>
-          <a href="javascript:void(0)"
-            class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
-            (click)="changePage('next')" [class.opacity-50]="!canGoNext()" [class.cursor-not-allowed]="!canGoNext()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white ml-1 p-0 "
-              fill="currentColor">
-              <path
-                d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
-            </svg>
-          </a>
-        </li>
-
-      </ul>
-    </nav>
-  </div>
-  
 </div>

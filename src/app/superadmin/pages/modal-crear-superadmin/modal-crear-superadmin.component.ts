@@ -47,6 +47,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
+    departamento:['', Validators.required],
     municipio:['', Validators.required],
     estado: true,
   });
@@ -119,7 +120,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
             apellido: data.apellido,
             email: data.email,
             password: '',
-            estado: data.estado
+            estado: data.estado,
+            genero: data.genero,
+            departamento: data.departamento,
+            municipio:data.municipio
           });
           this.isActive = data.estado === 'Activo';
           setTimeout(() => {
@@ -150,6 +154,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
       password: this.superadminForm.value.password,
       estado: this.superadminForm.value.estado,
       id_tipo_documento: this.superadminForm.value.nombretipodoc,
+      id_departamento:this.superadminForm.value.departamento,
       id_municipio:this.superadminForm.value.municipio
     };
     console.log('Superadmin Data:', superadmin);
@@ -252,7 +257,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   }
 
   tipoDocumento(): void {
-    this.authService.tipoDato().subscribe(
+    this.authService.tipoDocumento().subscribe(
       data => {
         this.listTipoDocumento = data;
 

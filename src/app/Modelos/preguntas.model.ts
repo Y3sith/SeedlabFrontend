@@ -6,6 +6,7 @@ export interface OpcionesRespuesta {
 
 export interface SubPreguntas {
     id: number;
+    sub_id: number;
     texto: string;
     puntaje: number;
     id_pregunta: number;
