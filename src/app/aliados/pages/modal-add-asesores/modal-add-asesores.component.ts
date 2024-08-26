@@ -127,7 +127,7 @@ export class ModalAddAsesoresComponent implements OnInit {
 
   tipodato(): void {
     if (this.token) {
-      this.authService.tipoDato().subscribe(
+      this.authService.tipoDocumento().subscribe(
         data => {
           this.listTipoDocumento = data;
           //console.log('datos tipo de documento: ',data)
