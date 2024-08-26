@@ -76,10 +76,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
   con los validator verificando cuando es editando y cuando es creando para que no salga error el campo vacio */
   ngOnInit(): void {
     this.validateToken();
+    this.cargarDepartamentos();
     if (this.adminId != null) {
       this.isEditing = true;
       this.superadminForm.get('password')?.setValidators([Validators.minLength(8)]);
-      this.cargarDepartamentos();
       this.verEditar();
     } else {
       this.superadminForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
@@ -132,7 +132,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             celular: data.celular,
-            id_departamento: data.id_departamento ? data.id_departamento.toString() : '',
+            id_departamento: data.id_departamento,
             id_municipio: data.id_municipio.toString(),
             email: data.email,
             password: '',
@@ -182,7 +182,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
       email: this.superadminForm.value.email,
       password: this.superadminForm.value.password,
       estado: this.superadminForm.value.estado,
-      id_tipo_documento: this.superadminForm.value.nombretipodoc,
+      id_tipo_documento: this.superadminForm.value.id_tipo_documento,
       id_departamento:this.superadminForm.value.id_departamento,
       id_municipio:this.superadminForm.value.id_municipio
     };

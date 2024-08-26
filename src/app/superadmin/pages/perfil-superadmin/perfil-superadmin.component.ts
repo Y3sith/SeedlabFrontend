@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators, } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
@@ -36,6 +36,8 @@ export class PerfilSuperadminComponent {
   bloqueado = true;
   errorMessage: string | null = null;
   listTipoDocumento: any[] = [];
+  isActive: boolean = true;
+  estado: boolean;
 
   perfiladminForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -100,6 +102,8 @@ export class PerfilSuperadminComponent {
           this.perfiladminForm.patchValue({
             departamento: data.id_departamento
           })
+          this.isActive = data.estado === 'Activo';
+
           if(data.id_departamento || data.id_tipo_documento){
             this.cargarMunicipios(data.id_departamento);
             this.tipoDocumento();
@@ -118,6 +122,7 @@ export class PerfilSuperadminComponent {
             nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
             departamento: data.id_departamento? data.id_departamento.toString() : '',
             municipio: data.id_municipio.toString(),
+            estado: data.estado
             
           });
           console.log('ver editar perfil',data);

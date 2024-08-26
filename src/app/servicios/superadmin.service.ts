@@ -46,7 +46,7 @@ export class SuperadminService {
 
   updateAdmin(admin: Superadmin, access_token: any, id: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.put(this.url + "editarAdmin/" + id, admin, options);
+    return this.http.post(this.url + "editarAdmin/" + id, admin, options);
   }
 
   getInfoAdmin(access_token: any, id: number): Observable<any> {
