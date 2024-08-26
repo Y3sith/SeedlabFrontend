@@ -7,6 +7,7 @@ import * as echarts from 'echarts';
 
 import { data } from 'jquery';
 import { response } from 'express';
+import { DashboardsService } from '../../../servicios/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,6 +38,7 @@ export class DashboardComponent implements AfterViewInit {
   constructor(
     private superAdminService: SuperadminService,
     private aliadoService: AliadoService,
+    private dashboardService: DashboardsService,
     private router: Router,
   ) { }
 
@@ -93,7 +95,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   promedioAsesoriasMesAnio(year: number): void {
-    this.superAdminService.promedioAsesorias(this.token, this.selectedYear).subscribe(
+    this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
       data => {
         console.log('Promedio de asesorías:', data);
 
@@ -149,7 +151,7 @@ export class DashboardComponent implements AfterViewInit {
 
   getDatosDashboard(): void {
     this.isLoading = true;
-    this.superAdminService.dashboardAdmin(this.token).subscribe(
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
         this.totalSuperAdmin = data.superadmin;
@@ -309,7 +311,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   getDatosGenerosGrafica(): void {
-    this.aliadoService.graficaDatosGeneros(this.token).subscribe(
+    this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
         console.log('data generos', data);
         const dataGenero = data.map(item => item.total);
@@ -378,7 +380,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   getRegistrosMensuales(): void {
-    this.superAdminService.contarRegistrosMensual(this.token).subscribe(
+    this.dashboardService.contarRegistrosMensual(this.token).subscribe(
       data => {
         console.log('data meses', data);
 
@@ -471,7 +473,7 @@ export class DashboardComponent implements AfterViewInit {
 
 
   emprendedorPorDepartamento() {
-    this.superAdminService.emprendedoresPorDepartamento(this.token).subscribe(
+    this.dashboardService.emprendedoresPorDepartamento(this.token).subscribe(
       (data: { departamento: string; total_emprendedores: number }[]) => {
         console.log('data departamentos', data);  
         fetch('assets/data/COL1.geo.json')
