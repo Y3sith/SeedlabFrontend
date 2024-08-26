@@ -48,6 +48,9 @@ export class DashboardComponent {
 
 
   ngAfterViewInit() {
+    this.getDatosDashboard();
+    this.getDatosGenerosGrafica();
+    this.loadChartData();
   }
 
   /* Valida el token del login */
