@@ -11,7 +11,7 @@ export class Emprendedor {
     direccion: string | null;
     nombretipodoc: string | null;
     estado:boolean;
-    municipio: string | null;
+    id_municipio: number | null;
 
     constructor(
         documento: string | null,
@@ -26,7 +26,7 @@ export class Emprendedor {
         fecha_nacimiento: Date | null,
         direccion: string | null,
         estado:boolean,
-        municipio: string | null
+        id_municipio: number | null
     ) {
         this.documento = documento;
         this.nombretipodoc = nombretipodoc;
@@ -40,6 +40,6 @@ export class Emprendedor {
         this.fecha_nacimiento = fecha_nacimiento;
         this.direccion = direccion;
         this.estado = estado;
-        this.municipio = municipio;
+        this.id_municipio = id_municipio;
     }
 }

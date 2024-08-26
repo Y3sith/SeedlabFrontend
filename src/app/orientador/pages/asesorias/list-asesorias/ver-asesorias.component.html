@@ -81,10 +81,10 @@
 
             <!-- Contenido de la tarjeta -->
             <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{ asesoria.Nombre_sol }}</h2>
-            <p class="italic text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong> {{ asesoria.fecha.slice(0, 10) }}
+            <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong> {{ asesoria.fecha.slice(0, 10) }}
             </p>
             <div
-              class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 ml-[4%]"
+              class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
               title="{{ asesoria.notas }}">{{ asesoria.notas }}
             </div>
             <p class="italic text-sm text-black mb-2 ml-[4%]"><strong>Emprendedor: </strong>{{ asesoria.nombres }}</p>
@@ -95,7 +95,7 @@
 
           <!-- Círculo en la esquina superior derecha -->
           <div
-            class="cursor-pointer absolute top-[5px] right-[-37px] sm:top-[-5px] sm:right-[-25px] sm:h-12  w-16 h-16 z-10"
+            class="absolute top-[5px] right-[-37px] sm:top-[-5px] sm:right-[-25px] sm:h-12  w-16 h-16 z-10"
             (click)="openModal(asesoria)">
             <!-- Dentro del círculo -->
             <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center"

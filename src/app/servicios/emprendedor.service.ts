@@ -30,7 +30,7 @@ export class EmprendedorService {
 
   updateEmprendedor(emprendedor: PerfilEmprendedor, access_token: any, documento: string): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.put(this.url + "/emprendedor/" + documento, emprendedor, options);
+    return this.http.post(this.url + "/editarEmprededor/" + documento, emprendedor, options);
     
   }
 

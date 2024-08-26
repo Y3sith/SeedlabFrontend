@@ -1,53 +1,39 @@
-.card {
-  position: relative;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transform: translateY(-5px);
-}
-
-.card h2, .card div.content {
-  height: 1.6rem; /* Ajusta según necesites */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: height 0.3s ease;
-}
-
-.card div.content {
-  height: 2.7rem; /* Ajusta según necesites */
-}
-
-.card:hover h2, .card:hover div.content {
-  height: auto;
-}
-
-.spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: radial-gradient(farthest-side,#FA7D00 94%,#0000) top/9px 9px no-repeat,
-         conic-gradient(#0000 30%,#FA7D00);
-  -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
-  animation: spinner-c7wet2 1s infinite linear;
-}
-
-@keyframes spinner-c7wet2 {
-  100% {
-     transform: rotate(1turn);
+div.block {
+    display: block;
+    line-height: 1.2rem;
+    max-height: 3.8rem;
+    padding-right: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-wrap; /* Allow wrapping */
+    word-wrap: break-word; /* Ensure long words are broken */
   }
-}
 
-/* Puedes añadir este estilo para asegurar que el spinner esté sobre los otros contenidos */
-.spinner-container {
-  position: fixed; /* O absolute si prefieres que se ajuste a un contenedor específico */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000; /* Asegúrate de que esté sobre otros contenidos */
-}
-
+  .spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: radial-gradient(farthest-side,#FA7D00 94%,#0000) top/9px 9px no-repeat,
+           conic-gradient(#0000 30%,#FA7D00);
+    -webkit-mask: radial-gradient(farthest-side,#0000 calc(100% - 9px),#000 0);
+    animation: spinner-c7wet2 1s infinite linear;
+  }
+  
+  @keyframes spinner-c7wet2 {
+    100% {
+       transform: rotate(1turn);
+    }
+  }
+  
+  /* Puedes añadir este estilo para asegurar que el spinner esté sobre los otros contenidos */
+  .spinner-container {
+    position: fixed; /* O absolute si prefieres que se ajuste a un contenedor específico */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000; /* Asegúrate de que esté sobre otros contenidos */
+  }
+  
