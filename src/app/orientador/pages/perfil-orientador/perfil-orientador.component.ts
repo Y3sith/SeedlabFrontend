@@ -61,7 +61,7 @@ export class PerfilOrientadorComponent {
     genero: ['', Validators.required],
     fecha_nac: ['', Validators.required],
     direccion: ['', Validators.required],
-    departamento: ['', Validators.required],
+    id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     id_tipo_documento: ['', Validators.required],
     estado: true,
@@ -125,7 +125,7 @@ export class PerfilOrientadorComponent {
             genero: data.genero,
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
-            departamento: data.id_departamento,
+            id_departamento: data.id_departamento,
             id_municipio: data.id_municipio,
             estado: data.estado,
             id_tipo_documento: data.id_tipo_documento,
@@ -174,15 +174,13 @@ export class PerfilOrientadorComponent {
   }
   
   updateOrientador(): void {
-    try {
-      if (this.perfilorientadorForm.valid) {
-        const itemslocal = localStorage.getItem('identity');
-        if (!itemslocal) {
-          console.error("No se encontró 'identity' en el almacenamiento local.");
-          return;
-        }
+    const formData = new FormData();
+    let estadoValue: string;
+    if (this.orientadorId == null) {
+      estadoValue = '1';
+    } else {
+    }
 
-          const formData = new FormData();
           formData.append('nombre', this.perfilorientadorForm.get('nombre')?.value);
           formData.append('apellido', this.perfilorientadorForm.get('apellido')?.value);
           formData.append('documento', this.perfilorientadorForm.get('documento')?.value);
@@ -194,7 +192,7 @@ export class PerfilOrientadorComponent {
           formData.append('direccion', this.perfilorientadorForm.get('direccion')?.value);
           formData.append('id_tipo_documento', this.perfilorientadorForm.get('id_tipo_documento')?.value);
           formData.append('id_municipio', this.perfilorientadorForm.get('id_municipio')?.value);
-          formData.append('id_departamento', this.perfilorientadorForm.get('departamento')?.value);
+          formData.append('id_departamento', this.perfilorientadorForm.get('id_departamento')?.value);
           formData.append('estado', this.perfilorientadorForm.get('estado')?.value.toString());
         
           Object.keys(this.perfilorientadorForm.controls).forEach(key => {
@@ -238,16 +236,7 @@ export class PerfilOrientadorComponent {
               console.error("no funciona", error);
             }
           );
-        } else {
-          console.error("El formulario no es válido");
-          console.log(this.perfilorientadorForm);
-          this.logFormErrors();
-  
         }
-      } catch (error) {
-        console.error("Ocurrió un error:", error);
-      }
-    }
   
 
     logFormErrors(): void {
