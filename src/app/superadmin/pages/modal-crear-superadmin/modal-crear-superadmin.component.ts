@@ -28,6 +28,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   hide = true;
   falupa = faCircleQuestion;
   estado: boolean;
+  tiempoEspera = 1800;
   isActive: boolean = true;
   boton = true;
   listDepartamentos: any[] = [];
@@ -169,63 +170,99 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
   /* Crear super admin o actualiza dependendiendo del adminId */
   addSuperadmin(): void {
-    this.submitted = true;
-    console.log('Valor de municipio:', this.superadminForm.value.id_municipio);
-    const superadmin: Superadmin = {
-      nombre: this.superadminForm.value.nombre,
-      apellido: this.superadminForm.value.apellido,
-      documento: this.superadminForm.value.documento,
-      celular: this.superadminForm.value.celular,
-      genero: this.superadminForm.value.genero,
-      direccion: this.superadminForm.value.direccion,
-      fecha_nac: this.superadminForm.value.fecha_nac,
-      email: this.superadminForm.value.email,
-      password: this.superadminForm.value.password,
-      estado: this.superadminForm.value.estado,
-      id_tipo_documento: this.superadminForm.value.id_tipo_documento,
-      id_departamento:this.superadminForm.value.id_departamento,
-      id_municipio:this.superadminForm.value.id_municipio
-    };
-    console.log('Superadmin Data:', superadmin);
+    const formData = new FormData();
+    let estadoValue: string;
+    if (this.adminId == null) {
+      estadoValue = '1';
+    } else {
+    }
+    formData.append('nombre', this.superadminForm.get('nombre')?.value);
+    formData.append('apellido', this.superadminForm.get('apellido')?.value);
+    formData.append('documento', this.superadminForm.get('documento')?.value);
+    formData.append('celular', this.superadminForm.get('celular')?.value);
+    formData.append('genero', this.superadminForm.get('genero')?.value);
+    if (this.superadminForm.get('direccion')?.value) {
+      formData.append('direccion', this.superadminForm.get('direccion')?.value);
+      } else {}
+    //formData.append('direccion', this.asesorForm.get('direccion')?.value);
+    formData.append('id_tipo_documento', this.superadminForm.get('id_tipo_documento')?.value);
+    formData.append('departamento',this.superadminForm.get('id_departamento')?.value);
+    formData.append('municipio', this.superadminForm.get('id_municipio')?.value);
+    formData.append('email', this.superadminForm.get('email')?.value);  
+    formData.append('password', this.superadminForm.get('password')?.value);
+
+    Object.keys(this.superadminForm.controls).forEach((key) => {
+      const control = this.superadminForm.get(key);
+      if (control?.value !== null && control?.value !== undefined) {
+        if (key === 'fecha_nac') {
+          if (control.value) {
+            const date = new Date(control.value);
+            if (!isNaN(date.getTime())) {
+              formData.append(key, date.toISOString().split('T')[0]);
+            }
+          }
+        } else if (key === 'estado') {
+          // Convertir el valor booleano a 1 o 0
+          formData.append(key, control.value ? '1' : '0');
+        } else if (key !== 'imagen_perfil') {
+          formData.append(key, control.value);
+        } 
+      }
+    });
+    // Agregar la imagen de perfil si se ha seleccionado una nueva
+    if (this.selectedImagen_Perfil) {
+      formData.append(
+        'imagen_perfil',
+        this.selectedImagen_Perfil,
+        this.selectedImagen_Perfil.name
+      );
+    }
+    // Alternativa para imprimir los valores del FormData
+    // console.log('Datos enviados en el FormData:');
+    // formData.forEach((value, key) => {
+    // console.log(`${key}: ${value}`);
+    // });
+
+    console.log('Datos del formulario:', this.superadminForm.value);
     /* Actualiza superadmin */
     if (this.adminId != null) {
-      let confirmationText = this.isActive
-        ? "¿Estas seguro de guardar los cambios"
-        : "¿Estas seguro de guardar los cambios?";
-
-      this.alertService.alertaActivarDesactivar(confirmationText, 'question').then((result) => {
-        if (result.isConfirmed) {
-          this.superadminService.updateAdmin(superadmin, this.token, this.adminId).subscribe(
-            data => {
-              location.reload();
-              console.log(data);
-              this.alertService.successAlert('Exito', 'Actualizacion exitosa')
-            },
-            error => {
-              console.error(error);
-              if (error.status === 400) {
-                this.alertService.errorAlert('Error', error.error.message)
-              }
-            }
-          )
-        }
-      });
-      /* Crea superadmin */
+      this.alertService
+        .alertaActivarDesactivar(
+          '¿Estas seguro de guardar los cambios?',
+          'question'
+        )
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.superadminService
+              .updateAdmin(this.token, this.adminId, formData)
+              .subscribe(
+                (data) => {
+                  setTimeout(function () {
+                    location.reload();
+                  }, this.tiempoEspera);
+                  this.alertService.successAlert('Exito', data.message);
+                },
+                (error) => {
+                  this.alertService.errorAlert('Error', error.error.message);
+                  console.error('Error', error.error.message);
+                  //console.log('error: ', error)
+                }
+              );
+          }
+        });
+      /* Crea asesor */
     } else {
-      this.superadminService.createSuperadmin(this.token, superadmin).subscribe(
-        data => {
-          location.reload();
-          console.log(data);
+      this.superadminService.createSuperadmin(this.token, formData).subscribe(
+        (data) => {
+          setTimeout(function () {
+            location.reload();
+          }, this.tiempoEspera);
           this.alertService.successAlert('Exito', data.message);
         },
-        error => {
-          console.error(error);
-          if (error.status === 400) {
-            this.alertService.errorAlert('Error', error.error.message)
-          }
-
+        (error) => {
+          console.error('Error al crear el asesor:', error);
+          //this.alerService.errorAlert('Error', error.error.message);
         }
-
       );
     }
   }

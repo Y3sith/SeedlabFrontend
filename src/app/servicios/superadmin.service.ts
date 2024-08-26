@@ -39,14 +39,14 @@ export class SuperadminService {
     });
   }
 
-  createSuperadmin(access_token: any, superadmin: Superadmin,): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.post(this.url + "crearSuperAdmin", superadmin, options);
+  createSuperadmin(access_token: any,  formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}crearSuperAdmin`, formData , options);
   }
 
-  updateAdmin(admin: Superadmin, access_token: any, id: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.post(this.url + "editarAdmin/" + id, admin, options);
+  updateAdmin(access_token: any, id: number, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(this.url + "editarAdmin/" + id, formData, options);
   }
 
   getInfoAdmin(access_token: any, id: number): Observable<any> {

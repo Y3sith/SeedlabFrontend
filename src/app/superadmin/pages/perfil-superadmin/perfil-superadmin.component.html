@@ -47,7 +47,7 @@
 
                                         <label for="tipodocumento" class="block mb-4 md:w-20 font-bold">Tipo de Documento</label>
 
-                                        <select id="id_tipo_documento" formControlName="nombretipodoc"
+                                        <select id="id_tipo_documento" formControlName="id_tipo_documento"
                                             class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"> 
                                             <option value="" disabled selected>Seleccionar tipo de documento...</option>
                                             <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{
@@ -128,8 +128,8 @@
                     <div class="w-full">
                         <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5 font-bold ">Dirección</h5>
 
-                        <label for="departamento" class="block mb-2 font-bold ">Departamento</label>
-                        <select id="departamento" name="departamento" formControlName="departamento"
+                        <label for="id_departamento" class="block mb-2 font-bold ">Departamento</label>
+                        <select id="id_departamento" name="id_departamento" formControlName="id_departamento"
                             (change)="onDepartamentoSeleccionado($event)"
                             class="mt-2 p-2 block w-full rounded-md border-0 py-1.5 text-[#000] shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] focus:outline-none sm:text-sm sm:leading-6">
                             <option value="" disabled selected>Seleccionar Departamento...</option>
@@ -137,8 +137,8 @@
                                 {{nameDepartamento.name}}</option>
                         </select>
 
-                        <label for="municipio" class="block mb-2 mt-4 font-bold ">Municipio</label>
-                        <select id="municipio" name="municipio" formControlName="municipio"
+                        <label for="id_municipio" class="block mb-2 mt-4 font-bold ">Municipio</label>
+                        <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
                             <option value="" disabled selected>Seleccionar Municipio...</option>
                             <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">{{municipio.nombre}}
