@@ -8,6 +8,7 @@ export class Orientador {
     genero: string;
     fecha_nac: Date;
     direccion: string;
+    id_departamento: number;
     id_municipio: number;
     celular: string | null;
     email: string | null;
@@ -15,7 +16,7 @@ export class Orientador {
     estado: boolean | null;
 
     constructor(id: number, nombre: string, apellido: string, documento: string,id_tipo_documento: string, imagen_perfil:File,
-        genero:string, fecha_nac: Date ,direccion:string,id_municipio:number, celular: string, id_auth: number, email: string, estado: boolean, password?: string) {
+        genero:string, fecha_nac: Date ,direccion:string,id_departamento: number,id_municipio:number, celular: string, id_auth: number, email: string, estado: boolean, password?: string) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -25,6 +26,7 @@ export class Orientador {
         this.genero = genero;
         this.fecha_nac = fecha_nac;
         this.direccion = direccion;
+        this.id_departamento = id_departamento;
         this.id_municipio = id_municipio;
         this.celular = celular;
         this.email = email;

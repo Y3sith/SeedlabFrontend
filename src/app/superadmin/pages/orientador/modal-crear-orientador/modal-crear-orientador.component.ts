@@ -48,11 +48,13 @@ export class ModalCrearOrientadorComponent implements OnInit {
     documento: ['', Validators.required],
     id_tipo_documento: ['', Validators.required],
     imagen_perfil: [null, Validators.required],
-    genero: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    direccion: ['', Validators.required],
-    id_municipio: ['', Validators.required],
     celular: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10)]],
+    genero: ['', Validators.required],
+    //direccion: ['', Validators.required ],
+    direccion: [],
+    id_departamento: ['', Validators.required],
+    id_municipio: ['', Validators.required],
+    fecha_nac: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
@@ -165,6 +167,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
             genero: data.genero,
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
+            id_departamento: data.id_departamento,
             id_municipio: data.id_municipio,
             celular: data.celular,
             email: data.email,
@@ -215,9 +218,14 @@ export class ModalCrearOrientadorComponent implements OnInit {
     formData.append('documento', this.orientadorForm.get('documento')?.value);
     formData.append('id_tipo_documento', this.orientadorForm.get('id_tipo_documento')?.value);
     formData.append('genero', this.orientadorForm.get('genero')?.value);
-    formData.append('direccion', this.orientadorForm.get('direccion')?.value);
+    const direccion = this.orientadorForm.get('direccion')?.value;
+    if (direccion) {
+      formData.append('direccion', direccion);
+    }
+    //formData.append('direccion', this.orientadorForm.get('direccion')?.value);
     formData.append('celular', this.orientadorForm.get('celular')?.value);
-    formData.append('id_municipio', this.orientadorForm.get('id_municipio')?.value);
+    formData.append('departamento', this.orientadorForm.get('id_departamento')?.value);
+    formData.append('municipio', this.orientadorForm.get('id_municipio')?.value);
     formData.append('email', this.orientadorForm.get('email')?.value);
     formData.append('password', this.orientadorForm.get('password')?.value);
 
@@ -240,9 +248,13 @@ export class ModalCrearOrientadorComponent implements OnInit {
         }
       }
     });
+
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
+
+    console.log('Datos del formulario:', this.orientadorForm.value);
+
     if (this.orientadorId != null) {
       this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
         if (result.isConfirmed) {
@@ -262,7 +274,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
         }
       });
     } else {
-      console.log('Hola');
       this.orientadorServices.createOrientador(this.token, formData).subscribe(
         data => {
           setTimeout(function () {
@@ -271,8 +282,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
           this.alerService.successAlert('Exito', data.message);
         },
         error => {
-          this.alerService.errorAlert('Error', error.error.message);
-          console.error('Error', error.error.message);
+          //this.alerService.errorAlert('Error', error.error.message);
+          //console.error('Error', error.error.message);
           console.log(error);
         });
     }
