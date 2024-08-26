@@ -68,7 +68,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     imagen_perfil: [null, Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
     genero: ['', Validators.required],
-    direccion: [ ],
+    direccion: [],
     aliado: ['', Validators.required],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
@@ -260,13 +260,13 @@ export class ModalAddAsesoresComponent implements OnInit {
     formData.append('genero', this.asesorForm.get('genero')?.value);
     if (this.asesorForm.get('direccion')?.value) {
       formData.append('direccion', this.asesorForm.get('direccion')?.value);
-      } else {}
+    } else { }
     //formData.append('direccion', this.asesorForm.get('direccion')?.value);
     formData.append('aliado', this.nombreAliado);
     formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
-    formData.append('departamento',this.asesorForm.get('id_departamento')?.value);
+    formData.append('departamento', this.asesorForm.get('id_departamento')?.value);
     formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
-    formData.append('email', this.asesorForm.get('email')?.value);  
+    formData.append('email', this.asesorForm.get('email')?.value);
     formData.append('password', this.asesorForm.get('password')?.value);
 
     Object.keys(this.asesorForm.controls).forEach((key) => {
@@ -284,7 +284,7 @@ export class ModalAddAsesoresComponent implements OnInit {
           formData.append(key, control.value ? '1' : '0');
         } else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
-        } 
+        }
       }
     });
     // Agregar la imagen de perfil si se ha seleccionado una nueva

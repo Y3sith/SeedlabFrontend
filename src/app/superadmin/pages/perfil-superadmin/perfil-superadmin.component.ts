@@ -136,6 +136,7 @@ export class PerfilSuperadminComponent {
       nombre: this.perfiladminForm.get('nombre')?.value,
       apellido: this.perfiladminForm.get('apellido')?.value,
       documento: this.perfiladminForm.get('documento')?.value,
+      imagen_perfil: this.selectedImagen_perfil,
       celular: this.perfiladminForm.get('celular')?.value,
       genero: this.perfiladminForm.get('genero')?.value,
       direccion: this.perfiladminForm.get('direccion')?.value,
@@ -146,14 +147,14 @@ export class PerfilSuperadminComponent {
       id_departamento: this.perfiladminForm.get('departamento')?.value,
       id_municipio: this.perfiladminForm.get('municipio')?.value,
     }
-    this.superadminService.updateAdmin(perfil, this.token, this.id).subscribe(
-      (data) => {
-        location.reload();
-      },
-      (err) => {
-        console.log(err);
-      }
-    )
+    // this.superadminService.updateAdmin(perfil, this.token, this.id).subscribe(
+    //   (data) => {
+    //     location.reload();
+    //   },
+    //   (err) => {
+    //     console.log(err);
+    //   }
+    // )
   }
 
   get f() {

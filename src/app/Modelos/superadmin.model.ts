@@ -3,7 +3,7 @@ export class Superadmin {
     nombre: string | null;
     apellido: string | null;
     documento: string | null;
-    //imagen_perfil: string | null;
+    imagen_perfil: File;
     celular: string | null;
     genero: string | null;
     fecha_nac: string | null;
@@ -16,12 +16,12 @@ export class Superadmin {
     id_municipio: string | null;
     
 
-    constructor(id: number, nombre: string, apellido: string, documento:string, imagen_perfil:string, celular:string, genero:string, fecha_nac:string, direccion:string,  email: string, estado: boolean, id_tipo_documento:string, password?: string,  ) {
+    constructor(id: number, nombre: string, apellido: string, documento:string, imagen_perfil:File, celular:string, genero:string, fecha_nac:string, direccion:string,  email: string, estado: boolean, id_tipo_documento:string, password?: string,  ) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.documento = documento;
-        //this.imagen_perfil = imagen_perfil;
+        this.imagen_perfil = imagen_perfil;
         this.celular = celular;
         this.genero = genero;
         this.fecha_nac = fecha_nac;

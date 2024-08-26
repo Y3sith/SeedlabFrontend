@@ -39,14 +39,14 @@ export class SuperadminService {
     });
   }
 
-  createSuperadmin(access_token: any, superadmin: Superadmin,): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.post(this.url + "crearSuperAdmin", superadmin, options);
+  createSuperadmin(access_token: any, formData: FormData,): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(this.url + "crearSuperAdmin", formData, options);
   }
 
-  updateAdmin(admin: Superadmin, access_token: any, id: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.put(this.url + "editarAdmin/" + id, admin, options);
+  updateAdmin(access_token: any, idSuperadmin: number, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(this.url + "editarAdmin/" + idSuperadmin, formData, options);
   }
 
   getInfoAdmin(access_token: any, id: number): Observable<any> {
@@ -61,9 +61,9 @@ export class SuperadminService {
     return this.http.get<any>(this.url + "mostrarSuperAdmins/", options);
   }
 
-  getInfoAdminxlista(access_token: any, adminId: number): Observable<any> {
+  getsuperadmin(access_token: any, adminId: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url + "perfilAdmin/" + adminId, options);
+    return this.http.get<any>(this.url + "userProfileAdmin/" + adminId, options);
   }
 
   asesorConAliado(access_token:any):Observable<any>{
