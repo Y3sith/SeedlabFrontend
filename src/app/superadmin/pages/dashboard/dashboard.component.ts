@@ -5,8 +5,6 @@ import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
 
-import { data } from 'jquery';
-import { response } from 'express';
 import { DashboardsService } from '../../../servicios/dashboard.service';
 
 @Component({
@@ -55,6 +53,11 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.getDatosDashboard();
+    this.getDatosGenerosGrafica();
+    this.getRegistrosMensuales();
+    this.promedioAsesoriasMesAnio(this.selectedYear);
+    this.emprendedorPorDepartamento();
   }
 
   validateToken(): void {
