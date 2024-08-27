@@ -34,6 +34,8 @@ export class ListOrientadorComponent implements OnInit {
   selectedOrientadorId: number | null = null;
   boton: boolean;
   isLoading: boolean = false; // Define the property isLoading
+  //
+  idOrientador: number = null;
 
   private ESTADO_MAP: { [key: string]: string } = {
     "true": 'Activo',
@@ -154,7 +156,7 @@ export class ListOrientadorComponent implements OnInit {
     }
   }
 
-  updatePaginatedAdmins(): void {
+  updatePaginatedOrientador(): void {
     this.page = 1; // Reset to first page on search or filter change
   }
 

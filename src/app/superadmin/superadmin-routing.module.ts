@@ -29,6 +29,7 @@ const routes: Routes = [
       { path: 'perfil-admin', component: PerfilSuperadminComponent, data: { title: 'Perfil', icon: 'fa-solid fa-circle-user', showInMenu: true } },
       { path: 'add-aliados', component: AddAliadosComponent, data: { showInMenu: false } },
       { path: 'add-orientador', component: ModalCrearOrientadorComponent, data:{  showInMenu: false } },
+      { path: 'edit-orientador/:id', component: ModalCrearOrientadorComponent, data:{  showInMenu: false } },
       { path: 'add-superAdmin', component: ModalCrearSuperadminComponent, data:{  showInMenu: false } },
       { path: 'edit-superAdmin/:id', component: ModalCrearSuperadminComponent, data:{  showInMenu: false } },
       { path: 'edit-aliados/:id', component: AddAliadosComponent, data: { showInMenu: false } },
