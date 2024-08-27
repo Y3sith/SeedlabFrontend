@@ -6,6 +6,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'poppins': ['Poppins', 'sans-serif'],
+      },
       backgroundImage: {
         'hero-pattern': "url('./assets/images/fondoRegister.jpg')",
         'fondo-login': "url('./assets/images/fondoLogin.jpg')"
