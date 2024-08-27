@@ -11,7 +11,7 @@ import { ListRutasComponent } from './pages/ruta/list-ruta/list-rutas.component'
 import { ModalAddRutaComponent } from './pages/ruta/modal-add-ruta/modal-add-ruta.component';
 import { AddActividadComponent } from './pages/ruta/add-actividad/add-actividad.component';
 import { SuperadminRoutingModule } from './superadmin-routing.module';
-import { ModalCrearOrientadorComponent } from './pages/orientador/modal-crear-orientador/modal-crear-orientador.component';
+import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
 
 
@@ -23,13 +23,12 @@ import { SharedModule } from '../shared.module';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 
 import { NgChartsModule } from 'ng2-charts';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
-import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule} from '@angular/material/tooltip';
 import { ReportesAdmComponent } from './reportes-adm/reportes-adm.component';
 import { AddBannerModalComponent } from './pages/aliados/add-banner-modal/add-banner-modal.component';
 

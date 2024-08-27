@@ -111,25 +111,10 @@ export class SuperadminService {
     return this.http.post(this.url + "restaurarPersonalizacion/"+ id,{}, options);
   }
 
-  dashboardAdmin(access_token:any):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.get(this.url+"contar-usuarios",options)
-  }
+ 
 
-  contarRegistrosMensual(access_token:any):Observable<any>{
-    const options = { headers:this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"listRegistrosAnioMes",options)
-  }
+  
 
-  promedioAsesorias(access_token:any, year:number):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options);
-  }
-
-  emprendedoresPorDepartamento(access_token:any):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"emprendedor_departamento",options)
-  }
   
 //////////////////////////
   pdfEmpenrededorMunicipio(access_token:any):Observable<any>{

@@ -312,9 +312,32 @@ export class EncuestaEmpresaComponent {
           }
           if (respuestaActual.opcion !== 'Si') {
             respuestaActual.texto_res = '0';
+            respuestaActual.valor = 0;
+          }else{
+            const numeroPersonas = parseInt(respuestaActual.texto_res, 10);
+            switch (numeroPersonas) {
+              case 1:
+                respuestaActual.valor = 0.5;
+                break;
+              case 2:
+                respuestaActual.valor = 1.5;
+                break;
+              case 3:
+                respuestaActual.valor = 3.5;
+                break;
+              case 4:
+                respuestaActual.valor = 4.5;
+                break;
+              case 5:
+                respuestaActual.valor = 5.0;
+                break;
+              default:
+                respuestaActual.valor = 0;
+            }
           }
           respuestaActual.id_pregunta = currentPregunta.id;
           respuestaActual.id_subpregunta = currentPregunta.subPreguntas[j].id;
+          
         }
         respCounter += currentPregunta.subPreguntas.length;
         continue;
