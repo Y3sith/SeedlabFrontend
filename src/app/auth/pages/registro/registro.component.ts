@@ -43,9 +43,9 @@ export class RegistroComponent implements OnInit {
   totalFields = 12;
 
   sections = [
-    { title: 'Información Personal', fieldNames: ['nombre', 'apellido', 'nombretipodoc', 'documento'] },
+    { title: 'Información Personal', fieldNames: ['nombre', 'apellido', 'id_tipo_documento', 'documento'] },
     { title: 'Información Adicional', fieldNames: ['fecha_nacimiento', 'genero', 'password', 'email'] },
-    { title: 'Ubicación', fieldNames: ['celular', 'departamento', 'municipio', 'direccion'] }
+    { title: 'Ubicación', fieldNames: ['celular', 'id_departamento', 'id_municipio', 'direccion'] }
   ];
 
   constructor(
@@ -63,18 +63,18 @@ export class RegistroComponent implements OnInit {
     this.tipoDocumento();
     this.registerForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator]],
-      nombretipodoc: ['', Validators.required],
+      id_tipo_documento: [Validators.required],
       nombre: ['', [Validators.required, this.noNumbersValidator]],
       apellido: ['', [Validators.required, this.noNumbersValidator]],
       celular: ['', [Validators.required, Validators.maxLength(10)]],
       genero: ['', Validators.required],
       fecha_nacimiento: ['', [Validators.required, this.dateRangeValidator]],
-      municipio: ['', Validators.required],
+      id_municipio: [Validators.required],
       direccion: ['', Validators.required],
       email: ['', [Validators.required, Validators.email, this.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(8), this.passwordValidator]],
       estado: '1',
-      departamento: ['', Validators.required] // Añadir el campo departamento al formulario
+      id_departamento: [Validators.required] // Añadir el campo departamento al formulario
     });
   }
 
@@ -242,7 +242,7 @@ export class RegistroComponent implements OnInit {
 
     const emprendedor = new Emprendedor(
       this.f.documento.value,
-      this.f.nombretipodoc.value,
+      this.f.id_tipo_documento.value,
       this.f.nombre.value,
       this.f.apellido.value,
       //this.f.imagen_perfil.value,
@@ -253,9 +253,11 @@ export class RegistroComponent implements OnInit {
       this.f.fecha_nacimiento.value,
       this.f.direccion.value,
       this.f.estado.value,
-      this.f.municipio.value
-    );
+      this.f.id_municipio.value,
+      this.f.id_departamento.value
 
+    );
+console.log(emprendedor);
     this.registroService.registrar(emprendedor).subscribe(
       (response: any) => {
         this.alertService.successAlert('Registro exitoso', response.message);
@@ -263,6 +265,7 @@ export class RegistroComponent implements OnInit {
         this.router.navigate(['/verification'], { queryParams: { email: this.email } });
       },
       (error) => {
+        console.error('Error al registrar:', error);
         if (error.status === 400) {
           const errorMessage = error.error.message;
 
