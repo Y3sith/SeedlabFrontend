@@ -1,0 +1,299 @@
+<div class="container mx-auto p-0 pt-2 ">
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+        <app-header [title] [subtitle]="'Agregar Orientador'"></app-header>
+    </header>
+
+    <!-- transicion basada en el estado -->
+    <div class="w-full flex items-center justify-center px-4">
+        <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
+            <div *ngFor="let contenedor of [1, 2]; let i = index" class="contenedor mb-2 sm:mb-0"
+                [class.active]="i === currentIndex">
+                <div class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto text-base md:text-xl"
+                    [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
+                    {{ i + 1 }}
+                </div>
+                <ng-container *ngIf="i === 0">
+                    <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
+                        class=" text-base md:text-xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate">
+                        Información Personal
+                    </h2>
+                </ng-container>
+                <ng-container *ngIf="i === 1">
+                    <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
+                        class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
+                        Ubicación y Datos ingreso
+                    </h2>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="currentIndex === 0">
+        <div *ngIf="currentSubSectionIndex === 0">
+            <div class="space-y-8 max-w-full md:px-8">
+                <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+                    
+                        <form action="" [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+
+                                <div class="sm:col-span-2 flex flex-col items-center mb-4 sm:mb-6">
+                                    <label for="profilePicture" class="cursor-pointer text-center">
+                                        <div
+                                            class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
+                                            <ng-container
+                                                *ngIf="imagenPerlil_Preview || orientadorForm.get('imagen_perfil')?.value; else noImage">
+                                                <img [src]="imagenPerlil_Preview || orientadorForm.get('imagen_perfil')?.value"
+                                                    class="object-cover w-full h-full">
+                                            </ng-container>
+                                            <ng-template #noImage>
+                                                <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                            </ng-template>
+                                        </div>
+                                        <span class="text-xs sm:text-sm text-gray-600">Imagen de perfil</span>
+                                        <input type="file" id="profilePicture" name="profilePicture" class="hidden"
+                                            (change)="onFileSelecteds($event, 'imagen_perfil')" accept="image/*">
+                                    </label>
+                                </div>
+
+                                <!-- Nombre -->
+                                <div>
+                                    <label for="nombre"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                                    <input type="text" id="nombre" name="nombre" formControlName="nombre"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    <div *ngIf="submitted && orientadorForm.controls['nombre'].invalid"
+                                        class="text-xs sm:text-sm text-red-500 mt-1" role="alert">
+                                        <span *ngIf="orientadorForm.controls['nombre'].errors?.['required']">Este campo
+                                            es
+                                            requerido*</span>
+                                    </div>
+                                </div>
+
+                                <!-- Apellidos -->
+                                <div>
+                                    <label for="apellido"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Apellidos</label>
+                                    <input type="text" id="apellido" formControlName="apellido"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    <div *ngIf="submitted && orientadorForm.controls['apellido'].invalid"
+                                        class="text-sm text-red-500 mt-1" role="alert">
+                                        <span *ngIf="orientadorForm.controls['apellido'].errors?.['required']">Este
+                                            campo es
+                                            requerido*</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tipo documento -->
+                                <div>
+                                    <label for="id_tipo_documento"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tipo de
+                                        Documento</label>
+                                    <select id="id_tipo_documento" formControlName="id_tipo_documento"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        <option value="" disabled selected>Selecciona el tipo de documento...</option>
+                                        <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre
+                                            }}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="submitted && f['id_tipo_documento'].invalid"
+                                        class="text-sm text-red-500 mt-1" role="alert">
+                                        <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es
+                                            requerido
+                                            *</span>
+                                    </div>
+                                </div>
+
+
+                                <!-- Documento -->
+                                <div>
+                                    <label for="documento"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Documento</label>
+                                    <input type="number" id="documento" formControlName="documento"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    <div *ngIf="submitted && f['documento'].invalid" class="text-sm text-red-500 mt-1"
+                                        role="alert">
+                                        <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                    </div>
+                                </div>
+
+                                <!-- Genero -->
+                                <div>
+                                    <label for="genero"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Género</label>
+                                    <select id="genero" formControlName="genero"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        <option value="" disabled selected>Seleccionar Género...</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Femenino">Femenino</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                    <div *ngIf="submitted && f['genero'].invalid" class="text-sm text-red-500 mt-1"
+                                        role="alert">
+                                        <span *ngIf="f['genero'].errors?.['required']">Este campo es requerido *</span>
+                                    </div>
+                                </div>
+
+                                <!-- Fecha de nacimiento -->
+                                <div>
+                                    <label for="fecha_nac"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Fecha de
+                                        Nacimiento</label>
+                                    <input type="date" id="fecha_nac" formControlName="fecha_nac"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm" />
+                                    <div *ngIf="submitted && f['fecha_nac'].invalid" class="text-sm text-red-500 mt-1"
+                                        role="alert">
+                                        <span *ngIf="f['fecha_nac'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    
+                </div>
+                <div class="flex justify-center h-10 space-x-4">
+                    <button type="button" (click)="next()"
+                        class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+                        <span class="px-2">Siguiente</span>
+                        <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="currentIndex === 1">
+        <div *ngIf="currentSubSectionIndex === 0">
+            <div class="space-y-8 max-w-full md:px-8">
+                <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+                    <div class="container mx-auto px-4 py-12">
+                        <form action="" [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <!-- Departamento -->
+                                <div>
+                                    <label for="departamento"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
+                                    <select id="departamento" (change)="onDepartamentoSeleccionado($event)"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        <option value="" disabled selected>Seleccionar Departamento...</option>
+                                        <option *ngFor="let departamento of listDepartamentos"
+                                            [value]="departamento.id">
+                                            {{ departamento.name }}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="submitted && f['id_municipio'].invalid"
+                                        class="text-sm text-red-500 mt-1" role="alert">
+                                        <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                    </div>
+                                </div>
+
+                                <!-- Municipio -->
+                                <div>
+                                    <label for="municipio"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Municipio</label>
+                                    <select id="municipio" formControlName="id_municipio"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        <option value="" disabled selected>Seleccionar Municipio...</option>
+                                        <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
+                                            {{ municipio.nombre }}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="submitted && f['id_municipio'].invalid"
+                                        class="text-sm text-red-500 mt-1" role="alert">
+                                        <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                    </div>
+                                </div>
+
+                                <!-- Direccion -->
+                                <div>
+                                    <label for="direccion"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                                    <input type="text" id="direccion" formControlName="direccion"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    <div *ngIf="submitted && f['direccion'].invalid" class="text-sm text-red-500 mt-1"
+                                        role="alert">
+                                        <span *ngIf="f['direccion'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                    </div>
+                                </div>
+
+                                <!-- Numero celular -->
+                                <div>
+                                    <label for="celular"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Número de
+                                        Celular</label>
+                                    <input type="text" id="celular" formControlName="celular"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    <div *ngIf="submitted && orientadorForm.controls['celular'].invalid"
+                                        class="text-sm text-red-500 mt-1" role="alert">
+                                        <span *ngIf="orientadorForm.controls['celular'].errors?.['required']">Este campo
+                                            es
+                                            requerido*</span>
+                                    </div>
+                                </div>
+
+                                <!-- Correo -->
+                                <div>
+                                    <label for="email"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Correo</label>
+                                    <input type="email" id="email" formControlName="email"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        placeholder="user@gmail.com">
+                                    <div *ngIf="submitted && orientadorForm.controls['email'].invalid"
+                                        class="text-sm text-red-500 mt-1" role="alert">
+                                        <span *ngIf="orientadorForm.controls['email'].errors?.['required']">Este campo
+                                            es
+                                            requerido*</span>
+                                    </div>
+                                </div>
+
+                                <!-- Contraseña -->
+                                <div>
+                                    <label for="password"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                                    <div class="relative">
+                                        <input [type]="hide ? 'password' : 'text'" id="password"
+                                            formControlName="password"
+                                            class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        <button type="button"
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500"
+                                            (click)="hide = !hide">
+                                            <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500"></i>
+                                            <i *ngIf="!hide" class="fa fa-eye text-cyan-500"></i>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="submitted && f['password'].invalid" class="text-sm text-red-500 mt-1"
+                                        role="alert">
+                                        <span *ngIf="f['password'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                        <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8
+                                            caracteres
+                                            *</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="flex justify-center h-10 space-x-4">
+                    <button
+                        class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+                        (click)="previous()">
+                        Anterior
+                    </button>
+                    <button (click)="addOrientador()"
+                        class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
