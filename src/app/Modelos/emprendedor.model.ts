@@ -9,13 +9,14 @@ export class Emprendedor {
     genero: string | null;
     fecha_nacimiento: Date | null;
     direccion: string | null;
-    nombretipodoc: string | null;
+    id_tipo_documento: number | null;
     estado:boolean;
-    municipio: string | null;
+    id_municipio: number | null;
+    id_departamento: number | null;
 
     constructor(
         documento: string | null,
-        nombretipodoc: string | null,
+        id_tipo_documento: number | null,
         nombre: string | null,
         apellido: string | null,
         //imagen_perfil: File | null,
@@ -26,10 +27,12 @@ export class Emprendedor {
         fecha_nacimiento: Date | null,
         direccion: string | null,
         estado:boolean,
-        municipio: string | null
+        id_municipio: number | null,
+        id_departamento: number | null
+
     ) {
         this.documento = documento;
-        this.nombretipodoc = nombretipodoc;
+        this.id_tipo_documento = id_tipo_documento;
         this.nombre = nombre;
         this.apellido = apellido;
         //this.imagen_perfil= imagen_perfil;
@@ -40,6 +43,7 @@ export class Emprendedor {
         this.fecha_nacimiento = fecha_nacimiento;
         this.direccion = direccion;
         this.estado = estado;
-        this.municipio = municipio;
+        this.id_municipio = id_municipio;
+        this.id_departamento = id_departamento;
     }
 }

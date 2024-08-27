@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, Inject, ChangeDetectorRef} from '@angular/core';
-import { AbstractControl, FormGroup, FormBuilder, FormControl, Validators, ValidationErrors } from '@angular/forms';
+import { Component, OnInit, Input, Inject, ChangeDetectorRef } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
@@ -28,37 +28,42 @@ export class ModalCrearSuperadminComponent implements OnInit {
   hide = true;
   falupa = faCircleQuestion;
   estado: boolean;
-  tiempoEspera = 1800;
   isActive: boolean = true;
   boton = true;
+  tiempoEspera = 1800;
+  ////
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
   listTipoDocumento: any[] = [];
-  imagenPerfil_Preview: string | ArrayBuffer | null = null;
+  ///
+  imagenPerlil_Preview: string | ArrayBuffer | null = null;
   selectedImagen_Perfil: File | null = null;
   formSubmitted = false;
+  currentIndex: number = 0;
+  currentSubSectionIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
+  idSuperAdmin: number = null;
 
 
   superadminForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
     documento: ['', Validators.required],
-    id_tipo_documento: ['', Validators.required],
     imagen_perfil: [null, Validators.required],
     celular: ['', Validators.required],
     genero: ['', Validators.required],
+    direccion: [],
+    id_tipo_documento: ['', Validators.required],
+    id_departamento: ['', Validators.required],
+    id_municipio: ['', Validators.required],
     fecha_nac: ['', Validators.required],
-    direccion: ['', Validators.required],
-    nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
     email: ['', Validators.required],
-    password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
-    id_departamento:['', Validators.required],
-    id_municipio:['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });
 
-  constructor(public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(//public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
+    //@Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private router: Router,
     private alertService: AlertService,
@@ -67,9 +72,9 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private municipioService: MunicipioService,
     private authService: AuthService,
     private cdRef: ChangeDetectorRef,
-
+    private route: ActivatedRoute
   ) {
-    this.adminId = data.adminId;
+    //this.adminId = data.adminId;
 
   }
 
@@ -77,7 +82,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
   con los validator verificando cuando es editando y cuando es creando para que no salga error el campo vacio */
   ngOnInit(): void {
     this.validateToken();
-    this.cargarDepartamentos();
     if (this.adminId != null) {
       this.isEditing = true;
       this.superadminForm.get('password')?.setValidators([Validators.minLength(8)]);
@@ -86,7 +90,13 @@ export class ModalCrearSuperadminComponent implements OnInit {
       this.superadminForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
 
+    this.route.paramMap.subscribe(params => {
+      this.idSuperAdmin = +params.get('id');
+      console.log('id_superAdmin', this.idSuperAdmin);
+    });
+
     this.superadminForm.get('password')?.updateValueAndValidity();
+    this.cargarDepartamentos();
     this.tipoDocumento();
   }
 
@@ -102,7 +112,55 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
- 
+  tipoDocumento(): void {
+    this.authService.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+
+        console.log('tipos de documentos', this.listTipoDocumento);
+        //console.log('datos tipo de documento: ',data)
+      },
+      error => {
+        console.log(error);
+      }
+    )
+  }
+
+  cargarDepartamentos(): void {
+    this.departamentoService.getDepartamento().subscribe(
+      (data: any[]) => {
+        this.listDepartamentos = data;
+        //console.log('Departamentos cargados:', JSON.stringify(data));
+        //console.log('Departamentos cargados:',this.listDepartamentos);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+
+  onDepartamentoSeleccionado(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const selectedDepartamento = target.value;
+
+    // Guarda el departamento seleccionado en el localStorage
+    localStorage.setItem('departamento', selectedDepartamento);
+
+    // Llama a cargarMunicipios si es necesario
+    this.cargarMunicipios(selectedDepartamento);
+  }
+
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
+      (data) => {
+        this.listMunicipios = data;
+        //console.log('Municipios cargados:', JSON.stringify(data));
+      },
+      (err) => {
+        console.log('Error al cargar los municipios:', err);
+      }
+    );
+  }
 
   /* Validaciones la contraseña */
   passwordValidator(control: AbstractControl) {
@@ -120,9 +178,8 @@ export class ModalCrearSuperadminComponent implements OnInit {
   /* Trae la informacion del admin cuando el adminId no sea nulo */
   verEditar(): void {
     if (this.adminId != null) {
-      this.superadminService.getInfoAdminxlista(this.token, this.adminId).subscribe(
+      this.superadminService.getsuperadmin(this.token, this.adminId).subscribe(
         data => {
-          console.log("hola data",data)
           this.superadminForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
@@ -130,42 +187,42 @@ export class ModalCrearSuperadminComponent implements OnInit {
             id_tipo_documento: data.id_tipo_documento,
             imagen_perfil: data.imagen_perfil,
             genero: data.genero,
-            fecha_nac: data.fecha_nac,
             direccion: data.direccion,
+            fecha_nac: data.fecha_nac,
             celular: data.celular,
             id_departamento: data.id_departamento,
-            id_municipio: data.id_municipio.toString(),
+            id_municipio: data.id_municipio,
             email: data.email,
             password: '',
             estado: data.estado,
           });
+          console.log('datos: ', data)
           this.isActive = data.estado === 'Activo';
           setTimeout(() => {
             this.superadminForm.get('estado')?.setValue(this.isActive);
           });
-          
-        // Cargar los departamentos y municipios
-        this.cargarDepartamentos();
-
-        setTimeout(() => {
-          // Establecer el departamento seleccionado
-          this.superadminForm.patchValue({ id_municipio: data.id_departamentos });
-
-          // Cargar los municipios de ese departamento
-          this.cargarMunicipios(data.id_departamento);
+          // Cargar los departamentos y municipios
+          this.cargarDepartamentos();
 
           setTimeout(() => {
-            // Establecer el municipio seleccionado
-            this.superadminForm.patchValue({ id_municipio: data.id_municipio });
+            // Establecer el departamento seleccionado
+            this.superadminForm.patchValue({ id_municipio: data.id_departamentos });
+
+            // Cargar los municipios de ese departamento
+            this.cargarMunicipios(data.id_departamento);
+
+            setTimeout(() => {
+              // Establecer el municipio seleccionado
+              this.superadminForm.patchValue({ id_municipio: data.id_municipio });
+            }, 500);
           }, 500);
-        }, 500);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+        },
+        error => {
+          console.error(error);
+        }
+      )
+    }
   }
-}
 
 
   /* Crear super admin o actualiza dependendiendo del adminId */
@@ -181,14 +238,16 @@ export class ModalCrearSuperadminComponent implements OnInit {
     formData.append('documento', this.superadminForm.get('documento')?.value);
     formData.append('celular', this.superadminForm.get('celular')?.value);
     formData.append('genero', this.superadminForm.get('genero')?.value);
+
     if (this.superadminForm.get('direccion')?.value) {
       formData.append('direccion', this.superadminForm.get('direccion')?.value);
-      } else {}
-    //formData.append('direccion', this.asesorForm.get('direccion')?.value);
+    } else { }
+
+    //formData.append('direccion', this.superadminForm.get('direccion')?.value);  //toca cambiarlo
     formData.append('id_tipo_documento', this.superadminForm.get('id_tipo_documento')?.value);
-    formData.append('departamento',this.superadminForm.get('id_departamento')?.value);
+    formData.append('departamento', this.superadminForm.get('id_departamento')?.value);
     formData.append('municipio', this.superadminForm.get('id_municipio')?.value);
-    formData.append('email', this.superadminForm.get('email')?.value);  
+    formData.append('email', this.superadminForm.get('email')?.value);
     formData.append('password', this.superadminForm.get('password')?.value);
 
     Object.keys(this.superadminForm.controls).forEach((key) => {
@@ -206,10 +265,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
           formData.append(key, control.value ? '1' : '0');
         } else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
-        } 
+        }
       }
     });
-    // Agregar la imagen de perfil si se ha seleccionado una nueva
+
     if (this.selectedImagen_Perfil) {
       formData.append(
         'imagen_perfil',
@@ -217,52 +276,53 @@ export class ModalCrearSuperadminComponent implements OnInit {
         this.selectedImagen_Perfil.name
       );
     }
-    // Alternativa para imprimir los valores del FormData
-    // console.log('Datos enviados en el FormData:');
-    // formData.forEach((value, key) => {
-    // console.log(`${key}: ${value}`);
-    // });
 
     console.log('Datos del formulario:', this.superadminForm.value);
+
+
+
     /* Actualiza superadmin */
     if (this.adminId != null) {
-      this.alertService
-        .alertaActivarDesactivar(
-          '¿Estas seguro de guardar los cambios?',
-          'question'
-        )
-        .then((result) => {
-          if (result.isConfirmed) {
-            this.superadminService
-              .updateAdmin(this.token, this.adminId, formData)
-              .subscribe(
-                (data) => {
-                  setTimeout(function () {
-                    location.reload();
-                  }, this.tiempoEspera);
-                  this.alertService.successAlert('Exito', data.message);
-                },
-                (error) => {
-                  this.alertService.errorAlert('Error', error.error.message);
-                  console.error('Error', error.error.message);
-                  //console.log('error: ', error)
-                }
-              );
-          }
-        });
-      /* Crea asesor */
+      let confirmationText = this.isActive
+        ? "¿Estas seguro de guardar los cambios"
+        : "¿Estas seguro de guardar los cambios?";
+
+      this.alertService.alertaActivarDesactivar(confirmationText, 'question').then((result) => {
+        if (result.isConfirmed) {
+          this.superadminService.updateAdmin(this.token, this.adminId, formData).subscribe(
+            (data) => {
+              setTimeout(function (){
+                location.reload();
+              }, this.tiempoEspera);
+              this.alertService.successAlert('Exito', data.message)
+             
+            },
+            error => {
+              console.error(error);
+              if (error.status === 400) {
+                this.alertService.errorAlert('Error', error.error.message)
+              }
+            }
+          )
+        }
+      });
+      /* Crea superadmin */
     } else {
       this.superadminService.createSuperadmin(this.token, formData).subscribe(
-        (data) => {
+        data => {
           setTimeout(function () {
             location.reload();
-          }, this.tiempoEspera);
+          },this.tiempoEspera);
           this.alertService.successAlert('Exito', data.message);
         },
-        (error) => {
-          console.error('Error al crear el asesor:', error);
-          //this.alerService.errorAlert('Error', error.error.message);
+        error => {
+          console.error(error);
+          if (error.status === 400) {
+            this.alertService.errorAlert('Error', error.error.message)
+          }
+
         }
+
       );
     }
   }
@@ -282,6 +342,14 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.boton = true;
   }
 
+  // /* Cerrar el modal */
+  // cancelarcrerSuperadmin() {
+  //   this.dialogRef.close();
+  // }
+
+
+  
+
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -294,7 +362,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
-        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.alertService.errorAlert(
+          'Error',
+          `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`
+        );
         this.resetFileField(field);
 
         ////Limpia el archivo seleccionado y resetea la previsualización
@@ -303,7 +374,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
         // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'imagen_perfil') {
           this.superadminForm.patchValue({ imagen_perfil: null });
-          this.imagenPerfil_Preview = null; // Resetea la previsualización
+          this.imagenPerlil_Preview = null; // Resetea la previsualización
         }
         this.resetFileField(field);
         return;
@@ -314,7 +385,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
         const previewUrl = e.target.result;
         if (field === 'imagen_perfil') {
           this.superadminForm.patchValue({ imagen_perfil: previewUrl });
-          this.imagenPerfil_Preview = previewUrl;
+          this.imagenPerlil_Preview = previewUrl;
         }
       };
       reader.readAsDataURL(file);
@@ -326,91 +397,51 @@ export class ModalCrearSuperadminComponent implements OnInit {
         this.selectedImagen_Perfil = file;
         this.superadminForm.patchValue({ imagen_perfil: file });
       }
-
     } else {
       this.resetFileField(field);
     }
   }
+
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.superadminForm.patchValue({ imagen_perfil: null });
-      this.imagenPerfil_Preview = null;
+      this.imagenPerlil_Preview = null;
     }
   }
+
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       if (field === 'imagen_perfil') {
-        this.imagenPerfil_Preview = e.target.result;
+        this.imagenPerlil_Preview = e.target.result;
       }
       this.cdRef.detectChanges();
     };
     reader.readAsDataURL(file);
   }
 
-  getFormValidationErrors(form: FormGroup) {
-    const result: any = {};
-    Object.keys(form.controls).forEach(key => {
-      const controlErrors: ValidationErrors | null = form.get(key)?.errors;
-      if (controlErrors) {
-        result[key] = controlErrors;
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
       }
-    });
-    return result;
+    }
+
   }
 
-  /* Cerrar el modal */
-  cancelarcrerSuperadmin() {
-    this.dialogRef.close();
-  }
-
-  //Funcion para cargar los departamentos
-  cargarDepartamentos(): void {
-    this.departamentoService.getDepartamento().subscribe(
-      (data: any[]) => {
-        this.listDepartamentos = data;
-      },
-      (err) => {
-        console.log(err);
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
       }
-    )
-  }
+    }
 
-  onDepartamentoSeleccionado(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
-    const selectedDepartamento = target.value;
-
-    // Guarda el departamento seleccionado en el localStorage
-    localStorage.setItem('departamento', selectedDepartamento);
-
-    // Llama a cargarMunicipios si es necesario
-    this.cargarMunicipios(selectedDepartamento);
-  }
-
-  cargarMunicipios(idDepartamento: string): void {
-    this.municipioService.getMunicipios(idDepartamento).subscribe(
-      data => {
-        this.listMunicipios = data;
-        //console.log('Municipios cargados:', JSON.stringify(data));
-      },
-      err => {
-        console.log('Error al cargar los municipios:', err);
-      }
-    );
-  }
-
-  tipoDocumento(): void {
-    this.authService.tipoDocumento().subscribe(
-      data => {
-        this.listTipoDocumento = data;
-
-        console.log('tipos de documentos', this.listTipoDocumento);
-        //console.log('datos tipo de documento: ',data)
-      },
-      error => {
-        console.log(error);
-      }
-    )
   }
 
 }

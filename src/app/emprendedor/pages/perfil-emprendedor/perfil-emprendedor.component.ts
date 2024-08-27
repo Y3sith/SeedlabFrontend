@@ -286,7 +286,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     //   : "¿Estás seguro de desactivar tu cuenta?";
     if (this.token) {
       this.alertService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
-      "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momnento de iniciar sección!", 'warning').then((result) => {
+      "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momento de iniciar sección!", 'warning').then((result) => {
         if (result.isConfirmed) {
           this.emprendedorService.destroy(this.token, this.documento).subscribe(
             (data) => {

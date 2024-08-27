@@ -39,14 +39,14 @@ export class SuperadminService {
     });
   }
 
-  createSuperadmin(access_token: any,  formData: FormData): Observable<any> {
+  createSuperadmin(access_token: any, formData: FormData,): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
-    return this.http.post(`${this.url}crearSuperAdmin`, formData , options);
+    return this.http.post(this.url + "crearSuperAdmin", formData, options);
   }
 
-  updateAdmin(access_token: any, id: number, formData: FormData): Observable<any> {
+  updateAdmin(access_token: any, idSuperadmin: number, formData: FormData): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
-    return this.http.post(this.url + "editarAdmin/" + id, formData, options);
+    return this.http.post(this.url + "editarAdmin/" + idSuperadmin, formData, options);
   }
 
   getInfoAdmin(access_token: any, id: number): Observable<any> {
@@ -61,9 +61,9 @@ export class SuperadminService {
     return this.http.get<any>(this.url + "mostrarSuperAdmins/", options);
   }
 
-  getInfoAdminxlista(access_token: any, adminId: number): Observable<any> {
+  getsuperadmin(access_token: any, adminId: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url + "perfilAdmin/" + adminId, options);
+    return this.http.get<any>(this.url + "userProfileAdmin/" + adminId, options);
   }
 
   asesorConAliado(access_token:any):Observable<any>{
@@ -111,25 +111,10 @@ export class SuperadminService {
     return this.http.post(this.url + "restaurarPersonalizacion/"+ id,{}, options);
   }
 
-  dashboardAdmin(access_token:any):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.get(this.url+"contar-usuarios",options)
-  }
+ 
 
-  contarRegistrosMensual(access_token:any):Observable<any>{
-    const options = { headers:this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"listRegistrosAnioMes",options)
-  }
+  
 
-  promedioAsesorias(access_token:any, year:number):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options);
-  }
-
-  emprendedoresPorDepartamento(access_token:any):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"emprendedor_departamento",options)
-  }
   
 //////////////////////////
   pdfEmpenrededorMunicipio(access_token:any):Observable<any>{

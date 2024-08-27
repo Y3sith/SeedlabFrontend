@@ -25,10 +25,10 @@
   <div class="flex justify-end items-center mb-4">
     
     <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900;">Agregar</span>
-    <button (click)="openModalSINId()"
-      class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center">
+    <a [routerLink]="'/add-orientador'"
+      class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
       <span class="text-3xl font-semibold leading-none">+</span>
-    </button>
+  </a>
   </div>
 
   <!-- Spinner -->

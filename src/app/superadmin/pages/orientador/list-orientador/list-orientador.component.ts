@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { faPenToSquare, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faEye, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { ModalCrearOrientadorComponent } from '../modal-crear-orientador/modal-crear-orientador.component';
+import { ModalCrearOrientadorComponent } from '../add-orientador/modal-crear-orientador.component';
 import { OrientadorService } from '../../../../servicios/orientador.service';
 import { Orientador } from '../../../../Modelos/orientador.model';
 import { User } from '../../../../Modelos/user.model';

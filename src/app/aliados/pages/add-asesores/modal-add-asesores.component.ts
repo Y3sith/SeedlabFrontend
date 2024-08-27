@@ -1,24 +1,7 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Inject,
-  Input,
-  OnInit,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
+import {ChangeDetectorRef,Component,Inject,Input,OnInit,} from '@angular/core';
+import {FormBuilder,FormGroup,ValidationErrors,Validators,} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  faMagnifyingGlass,
-  faPenToSquare,
-  faPlus,
-  faXmark,
-  faCircleQuestion,
-} from '@fortawesome/free-solid-svg-icons';
+import {faCircleQuestion,} from '@fortawesome/free-solid-svg-icons';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { AsesorService } from '../../../servicios/asesor.service';
 import { User } from '../../../Modelos/user.model';
@@ -60,6 +43,9 @@ export class ModalAddAsesoresComponent implements OnInit {
   imagenPerlil_Preview: string | ArrayBuffer | null = null;
   selectedImagen_Perfil: File | null = null;
   formSubmitted = false;
+  currentIndex: number = 0;
+  currentSubSectionIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
 
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -68,7 +54,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     imagen_perfil: [null, Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
     genero: ['', Validators.required],
-    direccion: [ ],
+    direccion: [],
     aliado: ['', Validators.required],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
@@ -80,8 +66,8 @@ export class ModalAddAsesoresComponent implements OnInit {
   });
 
   constructor(
-    public dialogRef: MatDialogRef<ModalAddAsesoresComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    //public dialogRef: MatDialogRef<ModalAddAsesoresComponent>,
+    //@Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private asesorService: AsesorService,
     private aliadoService: AliadoService,
@@ -92,7 +78,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     private alertService: AlertService,
     private cdRef: ChangeDetectorRef
   ) {
-    this.asesorId = data.asesorId;
+    //this.asesorId = data.asesorId;
   }
 
   /* Inicializa con esas funciones al cargar la pagina */
@@ -260,13 +246,13 @@ export class ModalAddAsesoresComponent implements OnInit {
     formData.append('genero', this.asesorForm.get('genero')?.value);
     if (this.asesorForm.get('direccion')?.value) {
       formData.append('direccion', this.asesorForm.get('direccion')?.value);
-      } else {}
+    } else { }
     //formData.append('direccion', this.asesorForm.get('direccion')?.value);
     formData.append('aliado', this.nombreAliado);
     formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
-    formData.append('departamento',this.asesorForm.get('id_departamento')?.value);
+    formData.append('departamento', this.asesorForm.get('id_departamento')?.value);
     formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
-    formData.append('email', this.asesorForm.get('email')?.value);  
+    formData.append('email', this.asesorForm.get('email')?.value);
     formData.append('password', this.asesorForm.get('password')?.value);
 
     Object.keys(this.asesorForm.controls).forEach((key) => {
@@ -284,7 +270,7 @@ export class ModalAddAsesoresComponent implements OnInit {
           formData.append(key, control.value ? '1' : '0');
         } else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
-        } 
+        }
       }
     });
     // Agregar la imagen de perfil si se ha seleccionado una nueva
@@ -306,30 +292,24 @@ export class ModalAddAsesoresComponent implements OnInit {
 
     /* Actualiza asesor */
     if (this.asesorId != null) {
-      this.alerService
-        .alertaActivarDesactivar(
-          '¿Estas seguro de guardar los cambios?',
-          'question'
-        )
-        .then((result) => {
-          if (result.isConfirmed) {
-            this.asesorService
-              .updateAsesor(this.token, this.asesorId, formData)
-              .subscribe(
-                (data) => {
-                  setTimeout(function () {
-                    location.reload();
-                  }, this.tiempoEspera);
-                  this.alerService.successAlert('Exito', data.message);
-                },
-                (error) => {
-                  this.alerService.errorAlert('Error', error.error.message);
-                  console.error('Error', error.error.message);
-                  //console.log('error: ', error)
-                }
-              );
-          }
-        });
+
+      this.alerService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+        if (result.isConfirmed) {
+          this.asesorService.updateAsesor(this.token, this.asesorId, formData).subscribe(
+            (data) => {
+              setTimeout(function () {
+                location.reload();
+              }, this.tiempoEspera);
+              this.alerService.successAlert('Exito', data.message);
+            },
+            (error) => {
+              this.alerService.errorAlert('Error', error.error.message);
+              console.error('Error', error.error.message);
+              //console.log('error: ', error)
+            }
+          );
+        }
+      });
       /* Crea asesor */
     } else {
       this.asesorService.createAsesor(this.token, formData).subscribe(
@@ -348,9 +328,9 @@ export class ModalAddAsesoresComponent implements OnInit {
   }
 
   /* Cerrar el modal */
-  cancelarModal() {
-    this.dialogRef.close();
-  }
+  // cancelarModal() {
+  //   this.dialogRef.close();
+  // }
 
   /* Cambia el estado del toggle*/
   toggleActive() {
@@ -444,5 +424,30 @@ export class ModalAddAsesoresComponent implements OnInit {
       }
     });
     return result;
+  }
+
+
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { faEye, faMagnifyingGlass, faPenToSquare, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { ModalAddAsesoresComponent } from '../modal-add-asesores/modal-add-asesores.component';
+import { ModalAddAsesoresComponent } from '../add-asesores/modal-add-asesores.component';
 import { User } from '../../../Modelos/user.model';
 import { Asesor } from '../../../Modelos/asesor.model';
 import { AliadoService } from '../../../servicios/aliado.service';
