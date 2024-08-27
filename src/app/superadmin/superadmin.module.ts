@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.component';
 import { ListAliadosComponent } from './pages/aliados/list-aliados/list-aliados.component';
-import { AddOrientadorComponent } from './pages/orientador/add-orientador/add-orientador.component';
 import { ListOrientadorComponent } from './pages/orientador/list-orientador/list-orientador.component';
 import { ListSuperadminComponent } from './pages/list-superadmin/list-superadmin.component';
 import { ModalCrearSuperadminComponent } from './pages/modal-crear-superadmin/modal-crear-superadmin.component';
@@ -43,7 +42,6 @@ import { AddBannerModalComponent } from './pages/aliados/add-banner-modal/add-ba
   declarations: [
     AddAliadosComponent,
     ListAliadosComponent,
-    AddOrientadorComponent,
     ListOrientadorComponent,
     ListSuperadminComponent,
     ModalCrearSuperadminComponent,

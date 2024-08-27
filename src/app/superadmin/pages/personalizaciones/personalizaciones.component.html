@@ -36,48 +36,51 @@
           <div class="container mx-auto px-4 py-12">
             <form action="" [formGroup]="personalizacionForm" (ngSubmit)="addPersonalizacion()"
               enctype="multipart/form-data">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
                 <!-- input descripcion -->
-                <div class="">
-                  <label for="descripcion_footer" class="text-lg font-normal">Descripción del
-                    Sistema</label>
+                <div class="flex flex-col space-y-1 max-w-xs">
+                  <label for="descripcion_footer" class="text-lg font-medium text-gray-700">
+                    Descripción del Sistema
+                  </label>
                   <input type="text" id="descripcion_footer" name="descripcion_footer"
-                    formControlName="descripcion_footer"
-                    class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                  </div>
+                    formControlName="descripcion_footer" class="p-2 w-full h-10 border border-blue-300 rounded-lg bg-gray-200 
+                           appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 
+                           transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <div class="text-sm text-red-500" role="alert"></div>
                 </div>
 
-                <div class="">
+                <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="paginaWeb" class="text-lg font-normal">Pagina Web</label>
                   <input type="text" id="paginaWeb" name="paginaWeb" formControlName="paginaWeb"
                     class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                   <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                   </div>
                 </div>
-                <div class="">
+
+                <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="email" class="text-lg font-normal">Correo de contacto</label>
                   <input type="text" id="email" name="email" formControlName="email"
                     class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                   <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                   </div>
                 </div>
-                <div class="">
+
+                <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="telefono" class="text-lg font-normal">Telefono</label>
                   <input type="text" id="telefono" name="telefono" formControlName="telefono"
                     class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                   <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                   </div>
                 </div>
-                <div class="">
+                <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="direccion" class="text-lg font-normal">Dirección</label>
                   <input type="text" id="direccion" name="direccion" formControlName="direccion"
                     class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                   <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                   </div>
                 </div>
-                <div class="">
+                <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="ubicacion" class="text-lg font-normal">Ubicación</label>
                   <input type="text" id="ubicacion" name="ubicacion" formControlName="ubicacion"
                     class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
@@ -92,7 +95,6 @@
           <button type="button" (click)="next()"
             class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
             <span class="px-2">Siguiente</span>
-            <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
           </button>
         </div>
       </div>
@@ -106,20 +108,21 @@
           <div class="container mx-auto px-4 py-12">
             <form action="" [formGroup]="personalizacionForm" (ngSubmit)="addPersonalizacion()">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      
+
                 <!-- Nombre de la empresa -->
                 <div class="col-span-1">
                   <label for="nombre" class="text-lg font-normal">Nombre de la empresa</label>
                   <input type="text" id="nombre_sistema" name="nombre_sistema" formControlName="nombre_sistema"
                     class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                 </div>
-      
+
                 <!-- Color Principal -->
                 <div class="col-span-1">
                   <label class="text-lg font-normal">Color Principal - Para Menu lateral</label>
                   <div class="flex content-center mb-2 md:mb-0 w-full">
                     <div class="w-24 h-10 rounded-l" [style.background]="selectedColorPrincipal"
-                      [(colorPicker)]="selectedColorPrincipal" [cpOKButton]="true" (colorPickerChange)="onColorChangePrincipal($event)"
+                      [(colorPicker)]="selectedColorPrincipal" [cpOKButton]="true"
+                      (colorPickerChange)="onColorChangePrincipal($event)"
                       [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
                       [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
                       [cpCancelButtonText]="'Cancelar'"></div>
@@ -129,13 +132,14 @@
                       [value]="selectedColorPrincipal" readonly>
                   </div>
                 </div>
-      
+
                 <!-- Color Secundario -->
                 <div class="col-span-1">
                   <label class="text-lg font-normal">Color Secundario - Linea del menu lateral</label>
                   <div class="flex content-center mb-2 md:mb-0 w-full">
                     <div class="w-24 h-10 rounded-l" [style.background]="selectedColorSecundario"
-                      [(colorPicker)]="selectedColorSecundario" [cpOKButton]="true" (colorPickerChange)="onColorChangeSecundario($event)"
+                      [(colorPicker)]="selectedColorSecundario" [cpOKButton]="true"
+                      (colorPickerChange)="onColorChangeSecundario($event)"
                       [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
                       [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
                       [cpCancelButtonText]="'Cancelar'"></div>
@@ -145,14 +149,14 @@
                       [value]="selectedColorSecundario" readonly>
                   </div>
                 </div>
-      
+
                 <!-- Logo -->
                 <div class="col-span-1">
                   <label class="text-lg font-normal">Logo</label>
                   <div class="bg-white p-4 rounded-lg shadow-lg h-full">
                     <label class="relative cursor-pointer flex flex-row items-center">
                       <input id="imagen_logo" formControlName="imagen_logo" type="file" name="logo" class="hidden"
-                      (change)="onFileSelecteds($event, 'imagen')" />
+                        (change)="onFileSelecteds($event, 'imagen')" />
                       <span
                         class="text-black px-4 py-2 border-2 border-blue-300 rounded-full inline-flex items-center bg-white justify-center hover:bg-blue-100">
                         Subir Imagen
@@ -167,7 +171,7 @@
                     </div>
                   </div>
                 </div>
-      
+
               </div>
             </form>
           </div>
