@@ -4,8 +4,8 @@ import { User } from '../../../Modelos/user.model';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { ModalCrearSuperadminComponent } from '../modal-crear-superadmin/modal-crear-superadmin.component';
-import { Router } from '@angular/router';
+import { ModalCrearSuperadminComponent } from '../add-superadmin/modal-crear-superadmin.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-superadmin',
@@ -32,11 +32,12 @@ export class ListSuperadminComponent implements OnInit {
   public totalItems: number = 0;
   public paginatedAdmins: Superadmin[] = [];
   public isLoading: boolean = false;
+  idSuperAdmin: number = null;
 
   constructor(
     private superAdminService: SuperadminService,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -86,7 +87,7 @@ export class ListSuperadminComponent implements OnInit {
           this.page = 1; // Reinicia la página a 1
           this.updatePaginatedAdmins(); // Actualiza los datos paginados
           this.isLoading = false;
-          //console.log(this.listaAdmins);
+          console.log(this.listaAdmins);
         },
         (error) => {
           console.log(error);

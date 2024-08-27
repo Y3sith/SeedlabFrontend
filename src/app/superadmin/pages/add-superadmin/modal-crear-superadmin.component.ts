@@ -5,7 +5,7 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
@@ -39,6 +39,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
   imagenPerlil_Preview: string | ArrayBuffer | null = null;
   selectedImagen_Perfil: File | null = null;
   formSubmitted = false;
+  currentIndex: number = 0;
+  currentSubSectionIndex: number = 0;
+  subSectionPerSection: number[] = [1, 1, 1];
+  idSuperAdmin: number = null;
 
 
   superadminForm = this.fb.group({
@@ -58,8 +62,8 @@ export class ModalCrearSuperadminComponent implements OnInit {
     estado: true,
   });
 
-  constructor(public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(//public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
+    //@Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private router: Router,
     private alertService: AlertService,
@@ -67,9 +71,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private authService: AuthService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute
   ) {
-    this.adminId = data.adminId;
+    //this.adminId = data.adminId;
 
   }
 
@@ -84,6 +89,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
     } else {
       this.superadminForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
+
+    this.route.paramMap.subscribe(params => {
+      this.idSuperAdmin = +params.get('id');
+      console.log('id_superAdmin', this.idSuperAdmin);
+    });
 
     this.superadminForm.get('password')?.updateValueAndValidity();
     this.cargarDepartamentos();
@@ -100,6 +110,20 @@ export class ModalCrearSuperadminComponent implements OnInit {
     if (!this.token) {
       this.router.navigate(['home']);
     }
+  }
+
+  tipoDocumento(): void {
+    this.authService.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+
+        console.log('tipos de documentos', this.listTipoDocumento);
+        //console.log('datos tipo de documento: ',data)
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
   cargarDepartamentos(): void {
@@ -318,25 +342,13 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.boton = true;
   }
 
-  /* Cerrar el modal */
-  cancelarcrerSuperadmin() {
-    this.dialogRef.close();
-  }
+  // /* Cerrar el modal */
+  // cancelarcrerSuperadmin() {
+  //   this.dialogRef.close();
+  // }
 
 
-  tipoDocumento(): void {
-    this.authService.tipoDocumento().subscribe(
-      data => {
-        this.listTipoDocumento = data;
-
-        //console.log('tipos de documentos', this.listTipoDocumento);
-        //console.log('datos tipo de documento: ',data)
-      },
-      error => {
-        console.log(error);
-      }
-    )
-  }
+  
 
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
@@ -389,12 +401,14 @@ export class ModalCrearSuperadminComponent implements OnInit {
       this.resetFileField(field);
     }
   }
+
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.superadminForm.patchValue({ imagen_perfil: null });
       this.imagenPerlil_Preview = null;
     }
   }
+
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -404,6 +418,30 @@ export class ModalCrearSuperadminComponent implements OnInit {
       this.cdRef.detectChanges();
     };
     reader.readAsDataURL(file);
+  }
+
+  next() {
+    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
+      this.currentSubSectionIndex++;
+    } else {
+      if (this.currentIndex < this.subSectionPerSection.length - 1) {
+        this.currentIndex++;
+        this.currentSubSectionIndex = 0;
+      }
+    }
+
+  }
+
+  previous(): void {
+    if (this.currentSubSectionIndex > 0) {
+      this.currentSubSectionIndex--;
+    } else {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
+      }
+    }
+
   }
 
 }

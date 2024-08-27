@@ -4,7 +4,7 @@ import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.com
 import { ListAliadosComponent } from './pages/aliados/list-aliados/list-aliados.component';
 import { ListOrientadorComponent } from './pages/orientador/list-orientador/list-orientador.component';
 import { ListSuperadminComponent } from './pages/list-superadmin/list-superadmin.component';
-import { ModalCrearSuperadminComponent } from './pages/modal-crear-superadmin/modal-crear-superadmin.component';
+import { ModalCrearSuperadminComponent } from './pages/add-superadmin/modal-crear-superadmin.component';
 import { PerfilSuperadminComponent } from './pages/perfil-superadmin/perfil-superadmin.component';
 import { PersonalizacionesComponent } from './pages/personalizaciones/personalizaciones.component';
 import { ListRutasComponent } from './pages/ruta/list-ruta/list-rutas.component';
