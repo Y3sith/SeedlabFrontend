@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
@@ -25,7 +25,7 @@ export class PerfilSuperadminComponent {
   blockedInputs = true;
   user: User | null = null;
   currentRolId: number;
-  id: number;
+  adminid: number;
   boton: boolean;
   hide = true
   listDepartamentos: any[] = [];
@@ -36,19 +36,24 @@ export class PerfilSuperadminComponent {
   bloqueado = true;
   errorMessage: string | null = null;
   listTipoDocumento: any[] = [];
+  isActive: boolean = true;
+  estado: boolean;
+  ////////
+  selectedImagen_Perfil: File | null = null;
+
 
   perfiladminForm = this.fb.group({
     nombre: ['', Validators.required],
     apellido: ['', Validators.required],
-    documento:'',
+    documento: '',
     imagen_perfil: [null, Validators.required],
-    celular:['', Validators.required],
+    celular: ['', Validators.required],
     genero: ['', Validators.required],
     fecha_nac: ['', Validators.required],
-    direccion:['', Validators.required],
-    municipio: ['', Validators.required],
-    departamento: ['', Validators.required],
-    nombretipodoc: new FormControl({ value: '', disabled: false }, Validators.required),
+    direccion: ['', Validators.required],
+    id_municipio: ['', Validators.required],
+    id_departamento: ['', Validators.required],
+    id_tipo_documento: new FormControl({ value: '', disabled: false }, Validators.required),
     email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
     estado: true,
@@ -61,7 +66,7 @@ export class PerfilSuperadminComponent {
     private router: Router,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
-    private authService:AuthService,
+    private authService: AuthService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
@@ -80,7 +85,7 @@ export class PerfilSuperadminComponent {
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
-        this.id = this.user.id;
+        this.adminid = this.user.id;
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 1) {
           this.router.navigate(['home']);
@@ -95,12 +100,14 @@ export class PerfilSuperadminComponent {
   /* Trae los datos del admin para poder editarlo en el input, de acuerdo al id del usuario logueado */
   verEditar(): void {
     if (this.token) {
-      this.superadminService.getInfoAdmin(this.token, this.id).subscribe(
+      this.superadminService.getInfoAdmin(this.token, this.adminid).subscribe(
         (data) => {
           this.perfiladminForm.patchValue({
-            departamento: data.id_departamento
+            id_departamento: data.id_departamento
           })
-          if(data.id_departamento || data.id_tipo_documento){
+          this.isActive = data.estado === 'Activo';
+
+          if (data.id_departamento || data.id_tipo_documento) {
             this.cargarMunicipios(data.id_departamento);
             this.tipoDocumento();
           }
@@ -115,12 +122,13 @@ export class PerfilSuperadminComponent {
             genero: data.genero,
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
-            nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
-            departamento: data.id_departamento? data.id_departamento.toString() : '',
-            municipio: data.id_municipio.toString(),
-            
+            id_tipo_documento: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
+            id_departamento: data.id_departamento ? data.id_departamento.toString() : '',
+            id_municipio: data.id_municipio.toString(),
+            estado: data.estado
+
           });
-          console.log('ver editar perfil',data);
+          console.log('ver editar perfil', data);
 
         },
         (err) => {
@@ -132,30 +140,103 @@ export class PerfilSuperadminComponent {
 
   /* Actualiza los datos del super admin */
   updateAdministrador(): void {
-    const perfil: Superadmin = {
-      nombre: this.perfiladminForm.get('nombre')?.value,
-      apellido: this.perfiladminForm.get('apellido')?.value,
-      documento: this.perfiladminForm.get('documento')?.value,
-      imagen_perfil: this.selectedImagen_perfil,
-      celular: this.perfiladminForm.get('celular')?.value,
-      genero: this.perfiladminForm.get('genero')?.value,
-      direccion: this.perfiladminForm.get('direccion')?.value,
-      id_tipo_documento: this.perfiladminForm.get('nombretipodoc')?.value,
-      email: this.perfiladminForm.get('email')?.value,
-      password: this.perfiladminForm.get('password')?.value,
-      fecha_nac: this.perfiladminForm.get('fecha_nac')?.value,
-      id_departamento: this.perfiladminForm.get('departamento')?.value,
-      id_municipio: this.perfiladminForm.get('municipio')?.value,
+    
+    const formData = new FormData();
+    let estadoValue: string;
+    if (this.adminid == null) {
+      estadoValue = '1';
+    } else {
     }
-    // this.superadminService.updateAdmin(perfil, this.token, this.id).subscribe(
-    //   (data) => {
-    //     location.reload();
-    //   },
-    //   (err) => {
-    //     console.log(err);
-    //   }
-    // )
-  }
+          formData.append('nombre', this.perfiladminForm.get('nombre')?.value);
+          formData.append('apellido', this.perfiladminForm.get('apellido')?.value);
+          formData.append('documento', this.perfiladminForm.get('documento')?.value);
+          formData.append('celular', this.perfiladminForm.get('celular')?.value);
+          formData.append('email', this.perfiladminForm.get('email')?.value);
+          formData.append('password', this.perfiladminForm.get('password')?.value);
+          formData.append('genero', this.perfiladminForm.get('genero')?.value);
+          formData.append('fecha_nac', this.perfiladminForm.get('fecha_nac')?.value);
+          formData.append('direccion', this.perfiladminForm.get('direccion')?.value);
+          formData.append('id_tipo_documento', this.perfiladminForm.get('id_tipo_documento')?.value);
+          formData.append('id_municipio', this.perfiladminForm.get('id_municipio')?.value);
+          formData.append('id_departamento', this.perfiladminForm.get('departamento')?.value);
+          formData.append('estado', this.perfiladminForm.get('estado')?.value.toString());
+
+          Object.keys(this.perfiladminForm.controls).forEach(key => {
+            const control = this.perfiladminForm.get(key);
+
+            if (control?.value !== null && control?.value !== undefined) {
+              if (key === 'fecha_nac') {
+                if (control.value) {
+                  const date = new Date(control.value);
+                  if (!isNaN(date.getTime())) {
+                    formData.append(key, date.toISOString().split('T')[0]);
+                  }
+                }
+              }
+              else if (key === 'estado') {
+                // Convertir el valor booleano a 1 o 0
+                formData.append(key, control.value ? '1' : '0');
+              } else if (key !== 'imagen_perfil') {
+                formData.append(key, control.value);
+              }
+            }
+          });
+
+          // Si el campo imagen_perfil tiene un archivo seleccionado, lo añadimos
+          if (this.selectedImagen_Perfil) {
+            formData.append('imagen_logo', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
+          }
+
+
+          console.log("Datos a enviar:");
+
+          this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
+            data => {
+              console.log("personalizacion creada", data);
+              // console.log("Imagen en base64:", this.personalizacionForm.value.imagen_Logo);
+              // alert("Imagen en base64:\n");
+
+              location.reload();
+            },
+            error => {
+              console.error("no funciona", error);
+            }
+          );
+        
+    }
+    
+
+    logFormErrors(): void {
+      Object.keys(this.perfiladminForm.controls).forEach(key => {
+        const controlErrors = this.perfiladminForm.get(key)?.errors;
+        if (controlErrors) {
+          console.error(`Error en el control ${key}:`, controlErrors);
+        }
+      });
+    }
+  //   const perfil: Superadmin = {
+  //     nombre: this.perfiladminForm.get('nombre')?.value,
+  //     apellido: this.perfiladminForm.get('apellido')?.value,
+  //     documento: this.perfiladminForm.get('documento')?.value,
+  //     celular: this.perfiladminForm.get('celular')?.value,
+  //     genero: this.perfiladminForm.get('genero')?.value,
+  //     direccion: this.perfiladminForm.get('direccion')?.value,
+  //     id_tipo_documento: this.perfiladminForm.get('nombretipodoc')?.value,
+  //     email: this.perfiladminForm.get('email')?.value,
+  //     password: this.perfiladminForm.get('password')?.value,
+  //     fecha_nac: this.perfiladminForm.get('fecha_nac')?.value,
+  //     id_departamento: this.perfiladminForm.get('departamento')?.value,
+  //     id_municipio: this.perfiladminForm.get('municipio')?.value,
+  //   }
+  //   this.superadminService.updateAdmin(this.token,perfil, this.id).subscribe(
+  //     (data) => {
+  //       location.reload();
+  //     },
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   )
+  // }
 
   get f() {
     return this.perfiladminForm.controls;
