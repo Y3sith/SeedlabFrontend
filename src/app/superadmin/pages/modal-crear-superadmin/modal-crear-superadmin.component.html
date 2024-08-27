@@ -96,6 +96,9 @@
                             <span *ngIf="f['direccion'].errors?.['required']">Este campo es requerido *</span>
                         </div>
                     </div>
+
+
+
                     <div>
                         <label for="id_departamento" class="block text-sm font-medium text-gray-700">Departamento</label>
                         <select id="id_departamento" name="id_departamento" formControlName="id_departamento"
@@ -115,6 +118,10 @@
                             </option>
                         </select>
                     </div>
+
+
+
+                    
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Correo</label>
                         <input type="email" id="email" name="email" formControlName="email" required email
