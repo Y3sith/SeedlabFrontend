@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { RutaService } from '../../../servicios/rutas.service';
 import { Router } from '@angular/router';
 import { Ruta } from '../../../Modelos/ruta.modelo';
+
+
 
 @Component({
   selector: 'app-ruta-emprendedor',
@@ -14,61 +16,57 @@ export class RutaEmprendedorComponent implements OnInit {
   user: any = null;
   currentRolId: number;
   idRuta: number | null; 
-  rutaContenidoList: Ruta []=[];
-  rutaList: Ruta []=[];
-/////////
-  
+  rutaList: Ruta[] = [];
 
   constructor(
     private rutaService: RutaService,
     private router: Router,
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.validateToken();
     this.listarRuta();
-    //this.contenidoDeRuta();
   }
 
   validateToken(): void {
-    if (!this.token) {
-      this.token = localStorage.getItem("token");
-      let identityJSON = localStorage.getItem('identity');
+    this.token = localStorage.getItem("token");
+    let identityJSON = localStorage.getItem('identity');
 
-      if (identityJSON) {
-        let identity = JSON.parse(identityJSON);
-        this.user = identity;
-        this.currentRolId = this.user.id_rol;
-        console.log (this.currentRolId);
+    if (identityJSON) {
+      let identity = JSON.parse(identityJSON);
+      this.user = identity;
+      this.currentRolId = this.user.id_rol;
 
-        if (this.currentRolId != 5) {
-          this.router.navigate(['home']);
-        } else {
-          this.documento = this.user.emprendedor.documento;
-        }
+      if (this.currentRolId != 5) {
+        this.router.navigate(['home']);
+      } else {
+        this.documento = this.user.emprendedor.documento;
       }
     }
+
     if (!this.token) {
       this.router.navigate(['home']);
     }
   }
 
-  listarRuta():void{
-    // if (this.token) {
+  listarRuta(): void {
+    if (this.token) {
+      console.log('Solicitando rutas activas...');
       this.rutaService.rutasActivas(this.token).subscribe(
-        data =>{
+        data => {
           this.rutaList = data;
-          console.log('Rutas:', this.rutaList);
+          console.log('Rutas recibidas:', this.rutaList);
+          console.log('Número de rutas:', this.rutaList.length);
+          if (this.rutaList.length > 0) {
+            console.log('Primera ruta:', this.rutaList[0]);
+          }
         },
         err => {
-          console.log(err);
+          console.error('Error al obtener rutas:', err);
         }
-      )
-    // }
+      );
+    } else {
+      console.log('No hay token disponible');
+    }
   }
-
-  
-  
-}
+}  

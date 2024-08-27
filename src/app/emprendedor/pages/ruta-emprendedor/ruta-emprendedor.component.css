@@ -1,41 +1,35 @@
-.container2 {
+.content-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  background-color: #008080;
-  border-radius: 25px 0 0 25px;
-  padding: 10px 20px;
-  max-width: 300px;
-  position: relative;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-height: 55px;
-  margin-top: 25px;
+  max-width: 800px;
+
+}
+
+.ruta-item {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
 }
 
 .content {
-  flex-grow: 1;
-  padding-right: 60px; /* Espacio para el círculo */
-}
-
-.title {
-  font-weight: bold;
-  color: white;
+  display: flex;
+  align-items: center;
   position: relative;
-  padding-bottom: 10px;
 }
 
-.title::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 150px;
-  height: 2px;
-  background-color: white;
+.right-aligned .content {
+  justify-content: flex-start;
+}
+
+.left-aligned .content {
+  justify-content: flex-end;
 }
 
 .circle {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   background-color: white;
   border: 15px solid #008080;
   border-radius: 50%;
@@ -43,24 +37,76 @@ height: 55px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  right: -45px;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  z-index: 1;
+}
+
+.number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #008080;
 }
 
 .icon {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-.number {
-  font-size: 32px;
+.title-container {
+  background-color: #008080;
+  border-radius: 25px;
+  padding: 10px 20px;
+  max-width: 300px;
+  color: white;
+  margin-left: 15px;
+  margin-right: 15px;
+  text-align: left;
+}
+
+.right-aligned .title-container {
+  margin-left: 15px;
+  margin-right: 0;
+}
+
+.left-aligned .title-container {
+  margin-right: 15px;
+  margin-left: 0;
+}
+
+.title {
   font-weight: bold;
-  color: #008080;
-  line-height: 1;
-  margin-top: -40px
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 12px;
+}
+
+@media screen and (min-width: 768px) {
+  .right-aligned .content {
+    justify-content: flex-start;
+  }
+
+  .left-aligned .content {
+    justify-content: flex-end;
+  }
+
+  .right-aligned .circle {
+    order: 1;
+  }
+
+  .left-aligned .circle {
+    order: 2;
+  }
+
+  .right-aligned .title-container {
+    order: 2;
+  }
+
+  .left-aligned .title-container {
+    order: 1;
+  }
 }

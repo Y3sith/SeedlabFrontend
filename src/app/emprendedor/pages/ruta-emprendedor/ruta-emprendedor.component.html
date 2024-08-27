@@ -2,16 +2,19 @@
   <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
     <app-header [title] [subtitle]="'Ruta de actividades'"></app-header>
   </header>
-  
-  <div class="container2">
-    <div class="content">
-      <div *ngFor="let ruta of rutaList; let i = index">
-        <div *ngFor="let actividad of ruta.actividades; let j = index">
-      <div class="title">{{actividad.nombre}}</div>
-    <div class="circle">
-    <div class="icon"></div>
-    <div class="number">01</div>
+
+  <div class="content-container">
+    <div *ngFor="let ruta of rutaList; let i = index" class="ruta-item" [ngClass]="{'right-aligned': i % 2 === 0, 'left-aligned': i % 2 !== 0}">
+      <div *ngFor="let actividad of ruta.actividades; let j = index" class="content">
+        <div class="circle">
+          <div class="number">{{ i + 1 }}</div>
+          <div class="icon"></div>
+        </div>
+        <div class="title-container">
+          <div class="title">{{ actividad.nombre }}</div>
+          <div class="subtitle">Por favor, escriba la visión para que la empresa avance.</div>
+        </div>
+      </div>
     </div>
   </div>
-
-  </div>
+</div>
