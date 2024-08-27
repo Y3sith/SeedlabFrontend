@@ -11,6 +11,7 @@ import { AuthService } from '../../../servicios/auth.service';
 import { EmprendedorService } from '../../../servicios/emprendedor.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-add-asesores',
@@ -46,6 +47,8 @@ export class ModalAddAsesoresComponent implements OnInit {
   currentIndex: number = 0;
   currentSubSectionIndex: number = 0;
   subSectionPerSection: number[] = [1, 1, 1];
+  /////
+  idAsesor: number = null;
 
   asesorForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -76,7 +79,9 @@ export class ModalAddAsesoresComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private alertService: AlertService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
     //this.asesorId = data.asesorId;
   }
@@ -84,9 +89,16 @@ export class ModalAddAsesoresComponent implements OnInit {
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
-    this.verEditar();
-    this.tipodato();
-    this.cargarDepartamentos();
+    this.route.paramMap.subscribe(params => {
+      this.idAsesor = +params.get('id');
+      if (this.idAsesor) {
+        this.isEditing = true;
+        this.verEditar();
+      } else {
+        this.idAsesor = null;
+        this.isEditing = false;
+      }
+    })
     /*para ver si lo estan editando salga la palabra editar */
     if (this.asesorId != null) {
       this.isEditing = true;
@@ -94,11 +106,13 @@ export class ModalAddAsesoresComponent implements OnInit {
       this.verEditar(); /* Llama a verEditar si estás editando un asesor */
     } else {
       this.asesorForm
-        .get('password')
-        ?.setValidators([Validators.required, Validators.minLength(8)]);
+      .get('password')
+      ?.setValidators([Validators.required, Validators.minLength(8)]);
     }
-
+    
     this.asesorForm.get('password')?.updateValueAndValidity();
+    this.tipoDocumento();
+    this.cargarDepartamentos();
   }
 
   get f() {
@@ -130,7 +144,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
   }
 
-  tipodato(): void {
+  tipoDocumento(): void {
     if (this.token) {
       this.authService.tipoDocumento().subscribe(
         (data) => {
@@ -182,8 +196,8 @@ export class ModalAddAsesoresComponent implements OnInit {
 
   /* Trae la informacion del asesor cuando el asesorId no sea nulo */
   verEditar(): void {
-    if (this.asesorId != null) {
-      this.aliadoService.getAsesorAliado(this.token, this.asesorId).subscribe(
+    if (this.idAsesor != null) {
+      this.aliadoService.getAsesorAliado(this.token, this.idAsesor).subscribe(
         (data) => {
           console.log('datossssss: ', data);
           this.asesorForm.patchValue({
@@ -235,7 +249,7 @@ export class ModalAddAsesoresComponent implements OnInit {
   addAsesor(): void {
     const formData = new FormData();
     let estadoValue: string;
-    if (this.asesorId == null) {
+    if (this.idAsesor == null) {
       estadoValue = '1';
     } else {
     }
@@ -291,15 +305,16 @@ export class ModalAddAsesoresComponent implements OnInit {
 
 
     /* Actualiza asesor */
-    if (this.asesorId != null) {
+    if (this.idAsesor != null) {
 
       this.alerService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
         if (result.isConfirmed) {
-          this.asesorService.updateAsesor(this.token, this.asesorId, formData).subscribe(
+          this.asesorService.updateAsesor(this.token, this.idAsesor, formData).subscribe(
             (data) => {
               setTimeout(function () {
-                location.reload();
+                //location.reload();
               }, this.tiempoEspera);
+              this.router.navigate(['/list-asesores']);
               this.alerService.successAlert('Exito', data.message);
             },
             (error) => {
@@ -315,8 +330,9 @@ export class ModalAddAsesoresComponent implements OnInit {
       this.asesorService.createAsesor(this.token, formData).subscribe(
         (data) => {
           setTimeout(function () {
-            location.reload();
+            //location.reload();
           }, this.tiempoEspera);
+          this.router.navigate(['/list-asesores']);
           this.alerService.successAlert('Exito', data.message);
         },
         (error) => {
