@@ -188,7 +188,7 @@ export class PerfilEmprendedorComponent implements OnInit {
             imagen_perfil: data.imagen_perfil,
             celular: data.celular,
             email: data.email,
-            password: data.password,
+            password: "",
             genero: data.genero,
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
@@ -280,6 +280,17 @@ export class PerfilEmprendedorComponent implements OnInit {
   Object.keys(this.emprendedorForm.controls).forEach((key) => {
     const control = this.emprendedorForm.get(key);
     if (control?.value !== null && control?.value !== undefined) {
+
+      if (key === 'password' && control.value === '') {
+        // No incluir la contraseña si está vacía
+        return;
+      }
+
+      if (key !== 'imagen_perfil') {
+        formData.append(key, control.value);
+      }
+      
+      // Manejar otros campos como antes
       if (key === 'fecha_nac') {
         if (control.value) {
           const date = new Date(control.value);
@@ -288,8 +299,9 @@ export class PerfilEmprendedorComponent implements OnInit {
           }
         }
       } else if (key === 'estado') {
-        // Convertir el valor booleano a 1 o 0
         formData.append(key, control.value ? '1' : '0');
+      } else {
+        formData.append(key, control.value);
       }
     }
   });
@@ -318,7 +330,7 @@ export class PerfilEmprendedorComponent implements OnInit {
           },
           (error) => {
             this.alertService.errorAlert('Error', error.error.message);
-            console.error('Error', error.error.message);
+            console.error(error);
             //console.log('error: ', error)
           }
         );

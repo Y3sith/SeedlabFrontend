@@ -26,7 +26,7 @@
                             <button class="edit-button">
                                 <i class="fas fa-pencil-alt">
                                     <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'imagen_perfil')"
-                                        accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                                    accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 opacity-0 cursor-pointer">
                                 </i>
                             </button>
                         </div>
@@ -130,7 +130,7 @@
                         <label for="id_departamento" class="block mb-2">Departamento</label>
                         <select id="id_departamento" name="id_departamento" formControlName="id_departamento" (change)="onDepartamentoSeleccionado($event)"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
-                            <option *ngFor="let departamento of listDepartamentos; trackBy: trackById"
+                            <option *ngFor="let departamento of listDepartamentos"
                                 [value]="departamento.id">
                                 {{ departamento.name }}
                             </option>
