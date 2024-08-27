@@ -1,6 +1,6 @@
 <div class="container mx-auto p-0 pt-2 ">
     <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
-        <app-header [title] [subtitle]="'Agregar Super Admin'"></app-header>
+        <app-header [title] [subtitle]="'Agregar Asesor'"></app-header>
     </header>
 
     <!-- transicion basada en el estado -->
@@ -32,17 +32,16 @@
         <div *ngIf="currentSubSectionIndex === 0">
             <div class="space-y-8 max-w-full md:px-8">
                 <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-                    <form [formGroup]="superadminForm" (ngSubmit)="addSuperadmin()">
+                    <form [formGroup]="asesorForm" (ngSubmit)="addAsesor()">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-
                             <!-- Imagen -->
                             <div class="sm:col-span-2 flex flex-col items-center mb-4 sm:mb-6">
                                 <label for="profilePicture" class="cursor-pointer text-center">
                                     <div
                                         class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
                                         <ng-container
-                                            *ngIf="imagenPerlil_Preview || superadminForm.get('imagen_perfil')?.value; else noImage">
-                                            <img [src]="imagenPerlil_Preview || superadminForm.get('imagen_perfil')?.value"
+                                            *ngIf="imagenPerlil_Preview || asesorForm.get('imagen_perfil')?.value; else noImage">
+                                            <img [src]="imagenPerlil_Preview || asesorForm.get('imagen_perfil')?.value"
                                                 class="object-cover w-full h-full">
                                         </ng-container>
                                         <ng-template #noImage>
@@ -83,24 +82,24 @@
                                 </div>
                             </div>
 
-                           <!-- Tipo documento -->
-                           <div>
-                            <label for="id_tipo_documento"
-                                class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tipo de
-                                Documento</label>
-                            <select id="id_tipo_documento" formControlName="id_tipo_documento"
-                                class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                                <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{tipo.nombre}}
-                                </option>
-                            </select>
-                            <div *ngIf="submitted && f['id_tipo_documento'].invalid"
-                                class="text-sm text-red-500 mt-1" role="alert">
-                                <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es
-                                    requerido
-                                    *</span>
+                            <!-- Tipo documento -->
+                            <div>
+                                <label for="id_tipo_documento"
+                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tipo de
+                                    Documento</label>
+                                <select id="id_tipo_documento" formControlName="id_tipo_documento"
+                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    <option value="" disabled selected>Selecciona el tipo de documento...</option>
+                                    <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{tipo.nombre}}
+                                    </option>
+                                </select>
+                                <div *ngIf="submitted && f['id_tipo_documento'].invalid"
+                                    class="text-sm text-red-500 mt-1" role="alert">
+                                    <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es
+                                        requerido
+                                        *</span>
+                                </div>
                             </div>
-                        </div>
 
                             <!-- Documento -->
                             <div class="">
@@ -140,13 +139,13 @@
                         </div>
                     </form>
                 </div>
-                <div class="flex justify-center h-10 space-x-4">
-                    <button type="button" (click)="next()"
-                        class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
-                        <span class="px-2">Siguiente</span>
-                        <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
-                    </button>
-                </div>
+            </div>
+            <div class="flex justify-center h-10 space-x-4">
+                <button type="button" (click)="next()"
+                    class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+                    <span class="px-2">Siguiente</span>
+                    <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
+                </button>
             </div>
         </div>
     </ng-container>
@@ -156,7 +155,7 @@
         <div *ngIf="currentSubSectionIndex === 0">
             <div class="space-y-8 max-w-full md:px-8">
                 <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-                    <form [formGroup]="superadminForm" (ngSubmit)="addSuperadmin()">
+                    <form [formGroup]="asesorForm" (ngSubmit)="addAsesor()">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                             <!-- Departamento -->
                             <div>
@@ -253,17 +252,19 @@
                                     <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8 caracteres
                                         *</span>
                                 </div>
-
                             </div>
+
                             <!-- Toggle Field -->
                             <div *ngIf="isEditing">
-                                <div class="mt-4 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
+                                <div class="mt-1 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
                                     <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1"
                                         mat-raised-button
                                         matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
-                                        matTooltipPosition="right" style="color: #adb7c7;"></fa-icon>
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+
                                 </div>
-                                <label class="inline-flex items-center cursor-pointer md:mt-6">
+                                <label class="inline-flex items-center cursor-pointer md:mt-2">
                                     <input type="checkbox" class="sr-only peer" [checked]="isActive"
                                         (change)="toggleActive()" formControlName="estado">
                                     <div
@@ -274,7 +275,6 @@
                                         'Inactivo' }}</span>
                                 </label>
                             </div>
-
                         </div>
                     </form>
                 </div>
@@ -285,7 +285,7 @@
                     (click)="previous()">
                     Anterior
                 </button>
-                <button (click)="addSuperadmin()"
+                <button (click)="addAsesor()"
                     class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
                     Guardar
                 </button>

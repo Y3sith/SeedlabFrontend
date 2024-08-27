@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { ListAsesoresComponent } from './pages/list-asesores/list-asesores.component';
 import { AsesoriaAliadoComponent } from './pages/list-asesorias/asesoria-aliado.component';
-import { ModalAddAsesoresComponent } from './pages/modal-add-asesores/modal-add-asesores.component';
+import { ModalAddAsesoresComponent } from './pages/add-asesores/modal-add-asesores.component';
 import { AsignarAsesorModalComponent } from './pages/asignar-asesor-modal/asignar-asesor-modal.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SharedModule } from '../shared.module';
@@ -14,6 +14,7 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RouterModule } from '@angular/router';
 
 import { NgChartsModule } from 'ng2-charts';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
@@ -40,6 +41,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
     AddBannerComponent,
     ReportesComponent,
     
+    
   ],
   imports: [
     CommonModule,
@@ -53,6 +55,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
     FontAwesomeModule,
     NgChartsModule,
     MatTooltipModule,
+    RouterModule
     
   ]
 })
