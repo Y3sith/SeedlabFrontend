@@ -114,12 +114,6 @@ export class AliadoService {
     return this.http.get(this.url + "/" + 1);
   }
 
-  getDashboard(access_token: any, idAsesor: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}/dashboardAliado/${idAsesor}`, options);
-  }
-  /////////////////////////////////////////////////////////////
-
   crearActividad(access_token: any, aliado: any): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(environment.apiUrl + "actividad/actividad", aliado, options)
@@ -141,10 +135,6 @@ export class AliadoService {
   }
 
 
-  graficaDatosGeneros(access_token: string): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url + "/generoAliado", options)
-  }
 
   // mostrarRutas(access_token: any, id: number): Observable<any> {
   //   const options = { headers: this.CreacionHeaders(access_token)};
