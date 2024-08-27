@@ -269,7 +269,8 @@ export class ModalCrearSuperadminComponent implements OnInit {
               formData.append(key, date.toISOString().split('T')[0]);
             }
           }
-        } else if (key === 'estado') {
+        } 
+        else if (key === 'estado') {
           const estadoValue = control.value ? '1' : '0';
           formData.append(key, estadoValue);
           console.log('Estado enviado:', estadoValue);
@@ -297,6 +298,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
         if (result.isConfirmed) {
           this.superadminService.updateAdmin(this.token, this.idSuperAdmin, formData).subscribe(
             (data) => {
+              console.log('Respuesta del servidor:', data);
               setTimeout(function (){
                 //location.reload();
               }, this.tiempoEspera);
