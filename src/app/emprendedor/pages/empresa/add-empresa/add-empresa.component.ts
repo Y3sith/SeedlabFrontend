@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EmprendedorService } from '../../../../servicios/emprendedor.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
@@ -8,6 +8,7 @@ import { EmpresaService } from '../../../../servicios/empresa.service';
 import { MunicipioService } from '../../../../servicios/municipio.service';
 import { User } from '../../../../Modelos/user.model';
 import { AuthService } from '../../../../servicios/auth.service';
+import { ApoyoEmpresa } from '../../../../Modelos/apoyo-empresa.modelo';
 
 
 @Component({
@@ -20,7 +21,7 @@ import { AuthService } from '../../../../servicios/auth.service';
 export class AddEmpresaComponent {
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  listTipoDocumento: []= [];
+  listTipoDocumento: [] = [];
   departamentoPredeterminado = '';
   submitted = false;
   token = '';
@@ -32,16 +33,19 @@ export class AddEmpresaComponent {
   currentSubSectionIndex: number = 0;
   currentIndex: number = 0;
   subSectionPerSection: number[] = [1, 1, 1];
+  id_empresa: string;
+  apoyo: ApoyoEmpresa;
+  isActive: boolean = true;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private addEmpresaService: EmpresaService,
+    private empresaService: EmpresaService,
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private alertService: AlertService,
-    private authService:AuthService
-    
+    private authService: AuthService,
+    private route: ActivatedRoute,
 
   ) {
 
@@ -52,6 +56,8 @@ export class AddEmpresaComponent {
     this.validateToken();
     this.cargarDepartamentos();
     this.tipodato();
+    this.verEditar();
+
   }
 
   /* Valida el token del login */
@@ -76,6 +82,8 @@ export class AddEmpresaComponent {
       this.router.navigate(['home']);
     }
   }
+
+
   //Funcion para cargar los departamentos
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
@@ -104,17 +112,17 @@ export class AddEmpresaComponent {
       }
     );
   }
-  
-  tipodato():void{
-      this.authService.tipoDocumento().subscribe(
-        data => {
-          this.listTipoDocumento = data;
-          //console.log('datos tipo de documento: ',data)
-        },
-        error => {
-          console.log(error);
-        }
-      )
+
+  tipodato(): void {
+    this.authService.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+        //console.log('datos tipo de documento: ',data)
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
   addEmpresaForm = this.fb.group({
@@ -195,9 +203,12 @@ export class AddEmpresaComponent {
     } : null;
 
     const apoyosList: Array<any> = [];
+    this.id_empresa = empresa.documento;
     if (apoyos) {
       apoyosList.push(apoyos);
     }
+
+
     const payload = {
       empresa: empresa,
       apoyos: apoyosList
@@ -205,17 +216,82 @@ export class AddEmpresaComponent {
 
     console.log('Payload para la API:', payload);
 
-    this.addEmpresaService.addEmpresa(this.token, payload).subscribe(
-      data => {
-        console.log('Respuesta de la API (empresa creada):', data);
-        this.alertService.successAlert('Éxito', 'Registro exitoso');
-        this.router.navigate(['list-empresa']);
-      },
-      error => {
-        this.alertService.errorAlert('Error', error.message);
-        console.log('Respuesta de la API ERROR:', error);
-      }
-    );
+    if(!this.id_empresa){
+      let confirmationText = this.isActive
+        ? "¿Estas seguro de guardar los cambios"
+        : "¿Estas seguro de guardar los cambios?";
+
+        this.alertService.alertaActivarDesactivar(confirmationText, 'question').then((response) => {
+          this.empresaService.updateEmpresas(this.token, this.id_empresa, empresa).subscribe(
+            data => {
+              console.log('Respuesta de la API (empresa actualizada):', data);
+              this.alertService.successAlert('Éxito', 'Registro exitoso');
+              this.router.navigate(['list-empresa']);
+            },
+            error => {
+              this.alertService.errorAlert('Error', error.message);
+              console.log('Respuesta de la API ERROR:', error);
+            }
+          )
+        });
+    }else{
+      this.empresaService.addEmpresa(this.token, payload).subscribe(
+        data => {
+          console.log('Respuesta de la API (empresa creada):', data);
+          this.alertService.successAlert('Éxito', 'Registro exitoso');
+          this.router.navigate(['list-empresa']);
+        },
+        error => {
+          this.alertService.errorAlert('Error', error.message);
+          console.log('Respuesta de la API ERROR:', error);
+        }
+      );
+    }
+
+  }
+
+  verEditar(): void {
+    if(this.id_empresa == null) {
+      this.empresaService.traerEmpresasola(this.token, this.documento, this.id_empresa).subscribe(
+        data => {
+          this.apoyo = data.apoyo;
+          this.addEmpresaForm.patchValue({
+            nombre: data.nombre || '',
+            correo: data.correo || '',
+            id_tipo_documento: data.id_tipo_documento || '',
+            documento: data.documento || '',
+            razonSocial: data.razonSocial || '',
+            id_departamento: data.id_departamento || '',
+            id_municipio: data.id_municipio || '',
+            direccion: data.direccion || '',
+            telefono: data.telefono || '',
+            celular: data.celular || '',
+            url_pagina: data.url_pagina || '',
+            profesion: data.profesion || '',
+            cargo: data.cargo || '',
+            experiencia: data.experiencia || '',
+            funciones: data.funciones || ''
+          });
+
+          if(this.apoyo){
+            this.addApoyoEmpresaForm.patchValue({
+              documento: this.apoyo.documento || '',
+              nombre: this.apoyo.nombre || '',
+              apellido: this.apoyo.apellido || '',
+              cargo: this.apoyo.cargo || '',
+              telefono: this.apoyo.telefono || '',
+              celular: this.apoyo.celular || '',
+              email: this.apoyo.email || '',
+              id_tipo_documento: this.apoyo.id_tipo_documento || ''
+            });
+          }
+          console.log('datos empresa:', data);
+          console.log('datos apoyo:', this.apoyo);
+
+
+        }
+      )
+    }
   }
 
   mostrarOcultarContenido() {
@@ -228,9 +304,9 @@ export class AddEmpresaComponent {
     }
   }
 
-  
 
-  
+
+
   next() {
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;

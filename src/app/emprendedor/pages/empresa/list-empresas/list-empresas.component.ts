@@ -33,18 +33,16 @@ export class ListEmpresasComponent implements OnInit {
   constructor(
     private emprendedorService: EmprendedorService,
     private router: Router,
-    private aRoute: ActivatedRoute,
+    
     
   ) {
-    this.documento = this.aRoute.snapshot.paramMap.get('id');
+    
   }
 
   ngOnInit(): void {
     this.validarToken();
     this.cargarEmpresas();
-    this.aRoute.paramMap.subscribe(params => {
-      this.empresaId = +params.get('id'); // se captura el ID de la empresa
-    });
+    
   }
 
   validarToken(): void {
