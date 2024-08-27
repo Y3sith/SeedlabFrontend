@@ -86,7 +86,7 @@ export class ListSuperadminComponent implements OnInit {
           this.page = 1; // Reinicia la página a 1
           this.updatePaginatedAdmins(); // Actualiza los datos paginados
           this.isLoading = false;
-          console.log(this.listaAdmins);
+          //console.log(this.listaAdmins);
         },
         (error) => {
           console.log(error);
