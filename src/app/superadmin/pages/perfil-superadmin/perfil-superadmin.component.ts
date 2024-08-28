@@ -40,6 +40,11 @@ export class PerfilSuperadminComponent {
   estado: boolean;
   ////////
   selectedImagen_Perfil: File | null = null;
+  perfilPreview: string | ArrayBuffer | null = null;
+  isHidden = true;
+  showEditButton = false;
+  tiempoEspera = 1800;
+
 
 
   perfiladminForm = this.fb.group({
@@ -75,6 +80,7 @@ export class PerfilSuperadminComponent {
     this.validateToken();
     this.verEditar();
     this.cargarDepartamentos();
+    this.initializeFormState();
   }
 
   /* Valida el token del login, se usa del localstorage el id del usuario logueado */
@@ -140,70 +146,92 @@ export class PerfilSuperadminComponent {
 
   /* Actualiza los datos del super admin */
   updateAdministrador(): void {
-    
     const formData = new FormData();
     let estadoValue: string;
-    if (this.adminid == null) {
-      estadoValue = '1';
-    } else {
-    }
-          formData.append('nombre', this.perfiladminForm.get('nombre')?.value);
-          formData.append('apellido', this.perfiladminForm.get('apellido')?.value);
-          formData.append('documento', this.perfiladminForm.get('documento')?.value);
-          formData.append('celular', this.perfiladminForm.get('celular')?.value);
-          formData.append('email', this.perfiladminForm.get('email')?.value);
-          formData.append('password', this.perfiladminForm.get('password')?.value);
-          formData.append('genero', this.perfiladminForm.get('genero')?.value);
-          formData.append('fecha_nac', this.perfiladminForm.get('fecha_nac')?.value);
-          formData.append('direccion', this.perfiladminForm.get('direccion')?.value);
-          formData.append('id_tipo_documento', this.perfiladminForm.get('id_tipo_documento')?.value);
-          formData.append('id_municipio', this.perfiladminForm.get('id_municipio')?.value);
-          formData.append('id_departamento', this.perfiladminForm.get('departamento')?.value);
-          formData.append('estado', this.perfiladminForm.get('estado')?.value.toString());
-
-          Object.keys(this.perfiladminForm.controls).forEach(key => {
-            const control = this.perfiladminForm.get(key);
-
-            if (control?.value !== null && control?.value !== undefined) {
-              if (key === 'fecha_nac') {
-                if (control.value) {
-                  const date = new Date(control.value);
-                  if (!isNaN(date.getTime())) {
-                    formData.append(key, date.toISOString().split('T')[0]);
-                  }
-                }
-              }
-              else if (key === 'estado') {
-                // Convertir el valor booleano a 1 o 0
-                formData.append(key, control.value ? '1' : '0');
-              } else if (key !== 'imagen_perfil') {
-                formData.append(key, control.value);
-              }
-            }
-          });
-
-          // Si el campo imagen_perfil tiene un archivo seleccionado, lo añadimos
-          if (this.selectedImagen_Perfil) {
-            formData.append('imagen_logo', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
+  
+    // First pass: handle special cases and avoid duplication
+    Object.keys(this.perfiladminForm.controls).forEach((key) => {
+      const control = this.perfiladminForm.get(key);
+      if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
+        if (key === 'password') {
+          // Only include password if it's not empty
+          if (control.value.trim() !== '') {
+            formData.append(key, control.value);
           }
-
-
-          console.log("Datos a enviar:");
-
-          this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
-            data => {
-              console.log("personalizacion creada", data);
-              // console.log("Imagen en base64:", this.personalizacionForm.value.imagen_Logo);
-              // alert("Imagen en base64:\n");
-
-              location.reload();
-            },
-            error => {
-              console.error("no funciona", error);
-            }
-          );
-        
+        } else if (key === 'fecha_nac') {
+          const date = new Date(control.value);
+          if (!isNaN(date.getTime())) {
+            formData.append(key, date.toISOString().split('T')[0]);
+          }
+        } else if (key === 'estado') {
+          formData.append(key, control.value ? '1' : '0');
+        } else if (key !== 'imagen_perfil') {
+          formData.append(key, control.value);
+        }
+      }
+    });
+  
+    // Append specific fields (this will overwrite any duplicates from the first pass)
+    const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
+    specificFields.forEach(field => {
+      const value = this.perfiladminForm.get(field)?.value;
+      if (value !== null && value !== undefined && value !== '') {
+        formData.append(field, value);
+      }
+    });
+  
+   
+    if (this.perfiladminForm.get('direccion')?.value) {
+      formData.append('direccion', this.perfiladminForm.get('direccion')?.value);
     }
+  
+    if (this.selectedImagen_perfil) {
+      formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
+    }
+  
+        //   this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
+        //     data => {
+        //       console.log("personalizacion creada", data);
+        //       location.reload();
+        //     },
+        //     error => {
+        //       console.error("no funciona", error);
+        //     }
+        //   );
+        // }
+
+        this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+          if (result.isConfirmed) {
+            this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
+              (data) => {
+                console.log('Response from server:', data);
+                setTimeout(function () {
+                  location.reload();
+                }, this.tiempoEspera);
+                this.alertService.successAlert('Exito', data.message);
+              },
+              (error) => {
+                console.error('Error from server:', error);
+                this.alertService.errorAlert('Error', error.error.message);
+              }
+            );
+          }
+        });
+      }
+
+          // this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
+          //   data => {
+          //     console.log("personalizacion creada", data);
+          //     // console.log("Imagen en base64:", this.personalizacionForm.value.imagen_Logo);
+          //     // alert("Imagen en base64:\n");
+
+          //     location.reload();
+          //   },
+          //   error => {
+          //     console.error("no funciona", error);
+          //   }
+          // );
+        
     
 
     logFormErrors(): void {
@@ -255,35 +283,65 @@ export class PerfilSuperadminComponent {
     }
   }
 
+  initializeFormState(): void {
+    const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
+    fieldsToDisable.forEach(field => {
+      const control = this.perfiladminForm.get(field);
+      if (control) {
+        control.disable();
+      }
+    });
+  }
+
   /* Bloqueo de inputs */
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
-    const fieldsToToggle = ['nombre', 'apellido', 'email', 'password'];
+    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
+    
     fieldsToToggle.forEach(field => {
       const control = this.perfiladminForm.get(field);
-      if (this.blockedInputs) {
-        control.disable();
+      if (control) {
+        if (this.blockedInputs) {
+          control.disable();
+        } else {
+          control.enable();
+        }
+        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
       } else {
-        control.enable();
+        console.warn(`Control for field ${field} not found in form`);
       }
-    })
+    });
+  
+    // Force change detection
+    this.cdRef.detectChanges();
+  
+    // Log the entire form state
+    console.log('Form state after toggling:', this.perfiladminForm);
   }
 
-  /* Restaura los datos originales */
-  onCancel(): void {
-    this.verEditar();
-  }
-
-  /* Muesta el boton de guardar cambios */
-  mostrarGuardarCambios(): void {
-    this.boton = false;
-  }
+    /* Restaura los datos originales */
+    onCancel(): void {
+      location.reload();
+    }
+  
+    /*muestra boton de guardar cambios*/ 
+    mostrarGuardarCambios(): void {
+      this.boton = false;
+    }
+  
+    onEdit() {
+      this.blockedInputs = false;
+      this.showEditButton = true;
+      this.toggleInputsLock();
+    }
 
   //Funcion para cargar los departamentos
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
+        console.log("DEPARTAMENTO",data);
         this.listDepartamentos = data;
+        //this.cdRef.detectChanges(); // Forzar la detección de cambios
       },
       (err) => {
         console.log(err);
@@ -302,17 +360,23 @@ export class PerfilSuperadminComponent {
     this.cargarMunicipios(selectedDepartamento);
   }
 
-  cargarMunicipios(idDepartamento: string): void {
-    this.municipioService.getMunicipios(idDepartamento).subscribe(
-      data => {
+  cargarMunicipios(departamentoId: string): void {
+    this.municipioService.getMunicipios(departamentoId).subscribe(
+      (data) => {
         this.listMunicipios = data;
-        //console.log('Municipios cargados:', JSON.stringify(data));
+      console.log("MUNICIPIOS",data);
+        // Establecer el municipio actual en el select después de cargar los municipios
+        //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
+        // if (municipioId) {
+        //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
+        // }
       },
-      err => {
+      (err) => {
         console.log('Error al cargar los municipios:', err);
       }
     );
   }
+
 
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
@@ -325,43 +389,41 @@ export class PerfilSuperadminComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
+      
       let maxSize = 0;
-
-      if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
+  
+      if (field === 'imagen_perfil') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
-      } else if (field === 'ruta_documento') {
-        maxSize = 18 * 1024 * 1024; // 20MB para documentos
-      }
-
+      } 
+  
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-
-        ////Limpia el archivo seleccionado y resetea la previsualización
+  
+        //Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-
+  
         // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'imagen_perfil') {
           this.perfiladminForm.patchValue({ imagen_perfil: null });
           this.selectedImagen_perfil = null;
-          this.imagenPreview = null; // Resetea la previsualización
+          this.perfilPreview = null; // Resetea la previsualización
         }
         this.resetFileField(field);
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const previewUrl = e.target.result;
-        if (field === 'imagen_perfil') {
-          this.perfiladminForm.patchValue({ imagen_perfil: previewUrl });
-          this.imagenPreview = previewUrl;
-        }
-      };
-      reader.readAsDataURL(file);
-
+    reader.onload = (e: any) => {
+      const previewUrl = e.target.result;
+      if (field === 'imagen_perfil') {
+        this.perfiladminForm.patchValue({ imagen_perfil: previewUrl });
+        this.perfilPreview = previewUrl;
+      }
+    };
+    reader.readAsDataURL(file);
+  
       // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
 
@@ -369,10 +431,10 @@ export class PerfilSuperadminComponent {
         this.selectedImagen_perfil = file;
         this.perfiladminForm.patchValue({ imagen_perfil: file });
       }
-
-    } else {
-      this.resetFileField(field);
-    }
+      
+  } else {
+    this.resetFileField(field);
+  }
   }
 
   generateImagePreview(file: File, field: string) {
