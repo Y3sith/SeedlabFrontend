@@ -16,14 +16,14 @@
                     <div class="w-full">
                         <div class="image-container">
                             <ng-container
-                                *ngIf="bannerPreview || emprendedorForm.get('imagen_perfil')?.value; else defaultImage">
-                                <img [src]="bannerPreview || emprendedorForm.get('imagen_perfil')?.value"
+                                *ngIf="perfilPreview || emprendedorForm.get('imagen_perfil')?.value; else defaultImage">
+                                <img [src]="perfilPreview || emprendedorForm.get('imagen_perfil')?.value"
                                     class="profile-image">
                             </ng-container>
                             <ng-template #defaultImage>
                                 <img src="../../../../assets/images/perfil.png" class="profile-image" alt="">
                             </ng-template>
-                            <button class="edit-button" id="editboton">
+                            <button class="edit-button" [class.hidden]="!showEditButton" id="editboton">
                                 <i class="fas fa-pencil-alt">
                                     <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'imagen_perfil')"
                                     accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 opacity-0 cursor-pointer">
@@ -45,7 +45,7 @@
                                 <div class="min-[860px]:flex gap-4 mt-4">
                                     <div class="">
 
-                                        <label for="tipodocumento" class="block mb-4 md:w-20 ">Tipo de Documento</label>
+                                        <label for="tipodocumento" class="block mb-2 md:w-20 ">Tipo de Documento</label>
                                         <select id="id_tipo_documento" formControlName="id_tipo_documento" [disabled]="blockedInputs"
                                             class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"> 
                                             <option value="" disabled selected>Seleccionar tipo de documento...</option>
@@ -54,11 +54,11 @@
                                         </select>
                                     </div>
                                     <div class="">
-                                        <label for="documento" class="block mb-4 max-md:mt-4">Número de
+                                        <label for="documento" class="block mb-2 max-md:mt-4">Número de
                                             Documento</label>
                                         <input type="number" id="documento" formControlName="documento"
                                         [readonly]="bloqueado"
-                                            class="p-2 h-12 w-full mt-[-10%] border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                            class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
                                     </div>
 
 
@@ -161,7 +161,7 @@
 
             <div class="flex ">
                 <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic"
-                    (click)="onCancel()" *ngIf="!blockedInputs" (click)="toggleInputsLock()">
+                    (click)="onCancel()" *ngIf="!blockedInputs" (click)="toggleInputsLock()" (click)="toggleEditButtonn()">
                     Cancelar
                 </button>
                 <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
@@ -178,7 +178,7 @@
                     </button>
                 </div>
                 <button id="boton"
-                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
+                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic" (click)="onEdit()"
                     *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
                 </button>
             </div>

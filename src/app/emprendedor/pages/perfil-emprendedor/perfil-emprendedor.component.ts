@@ -60,7 +60,9 @@ export class PerfilEmprendedorComponent implements OnInit {
   boton: boolean;
   editboton: boolean;
   selectedImagen_perfil: File | null = null;
-  bannerPreview: string | ArrayBuffer | null = null;
+  perfilPreview: string | ArrayBuffer | null = null;
+  isHidden = true;
+  showEditButton = false;
 
   constructor(
     private fb: FormBuilder,
@@ -241,7 +243,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     if (field === 'imagen_perfil') {
      this.emprendedorForm.patchValue({ imagen_perfil: null });
      this.selectedImagen_perfil = null;
-     this.bannerPreview = null;
+     this.perfilPreview = null;
    } 
  }
 
@@ -249,7 +251,7 @@ export class PerfilEmprendedorComponent implements OnInit {
    const reader = new FileReader();
    reader.onload = (e: any) => {
      if (field === 'imagen_perfil') {
-       this.bannerPreview = e.target.result;
+       this.perfilPreview = e.target.result;
      } 
      this.cdRef.detectChanges();
    };
@@ -347,7 +349,7 @@ export class PerfilEmprendedorComponent implements OnInit {
         if (field === 'imagen_perfil') {
           this.emprendedorForm.patchValue({ imagen_perfil: null });
           this.selectedImagen_perfil = null;
-          this.bannerPreview = null; // Resetea la previsualización
+          this.perfilPreview = null; // Resetea la previsualización
         }
         this.resetFileField(field);
         return;
@@ -358,7 +360,7 @@ export class PerfilEmprendedorComponent implements OnInit {
       const previewUrl = e.target.result;
       if (field === 'imagen_perfil') {
         this.emprendedorForm.patchValue({ imagen_perfil: previewUrl });
-        this.bannerPreview = previewUrl;
+        this.perfilPreview = previewUrl;
       }
     };
     reader.readAsDataURL(file);
@@ -467,14 +469,17 @@ export class PerfilEmprendedorComponent implements OnInit {
 
   // Restaura los datos originales
   onCancel(): void {
-    this.verEditar();
+    location.reload();
   }
 
   mostrarGuardarCambios(): void {
     this.boton = false;
-    this.editboton = true;
   }
 
-
+  onEdit() {
+    this.blockedInputs = false;
+    this.showEditButton = true;
+    this.toggleInputsLock();
+  }
 
 }
