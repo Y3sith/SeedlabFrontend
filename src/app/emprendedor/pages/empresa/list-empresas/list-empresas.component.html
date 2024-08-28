@@ -33,7 +33,7 @@
         <thead>
           <tr>
             <th class="p-2 text-left">Nombre</th>
-            <th class="p-2 text-left">Teléfono</th>
+            <th class="p-2 text-left">Correo</th>
             <th class="hidden p-2 text-left sm:table-cell">Dirección</th>
             <th class="p-2 text-left"></th>
           </tr>
@@ -43,7 +43,7 @@
             *ngFor="let empresa of listaEmpresas | filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index">
             <tr class="my-5 bg-gray-300 rounded-xl">
               <td class="p-2 rounded-s-lg">{{ empresa.nombre }}</td>
-              <td class="p-2">{{ empresa.telefono }}</td>
+              <td class="p-2 max-sm:break-all">{{ empresa.correo }}</td>
               <td class="hidden p-2 sm:table-cell">{{ empresa.direccion }}</td>
               <td class="p-2 text-center rounded-e-lg">
                 <button type="button" (click)="editEmpresa(empresa.id_emprendedor ,empresa.documento)"
