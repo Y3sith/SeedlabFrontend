@@ -29,7 +29,9 @@ export class ListAsesoresComponent implements OnInit {
   listaAsesores: Asesor[] = [];
   selectedAsesorId: number | null = null;
   isLoading: boolean = false;
-
+//////
+  idAsesor: number = null;
+//////
   userFilter: any = { nombre: '', estado: 'Activo' };
 
   constructor(

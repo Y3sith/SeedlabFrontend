@@ -19,6 +19,12 @@ export class EmprendedorService {
     })
   }
 
+  private CreacionHeaderss(access_token: any): HttpHeaders { //para la creacion de los header y que sea autortizado
+    return new HttpHeaders({
+      'Authorization': 'Bearer ' + access_token
+    })
+  }
+
   private url = environment.apiUrl + 'emprendedor';
 
   constructor(private http: HttpClient) { }
@@ -28,9 +34,9 @@ export class EmprendedorService {
     return this.http.get(`${this.url}/emprendedor/${documento}`, options);
   }
 
-  updateEmprendedor(emprendedor: PerfilEmprendedor, access_token: any, documento: string): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.post(this.url + "/editarEmprededor/" + documento, emprendedor, options);
+  updateEmprendedor( access_token: any, formData: FormData, documento: string): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(this.url + "/editarEmprededor/" + documento, formData, options);
     
   }
 

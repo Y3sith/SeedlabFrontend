@@ -188,6 +188,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     if (this.idSuperAdmin != null) {
       this.superadminService.getsuperadmin(this.token,this.idSuperAdmin).subscribe(
         data => {
+          console.log('datosssss: ', data)
           this.superadminForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
@@ -204,7 +205,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
             password: '',
             estado: data.estado,
           });
-          console.log('datos: ', data)
           this.isActive = data.estado === 'Activo';
           setTimeout(() => {
             this.superadminForm.get('estado')?.setValue(this.isActive);
@@ -251,13 +251,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
       formData.append('direccion', this.superadminForm.get('direccion')?.value);
     } else { }
 
-    //formData.append('direccion', this.superadminForm.get('direccion')?.value);  //toca cambiarlo
     formData.append('id_tipo_documento', this.superadminForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.superadminForm.get('id_departamento')?.value);
     formData.append('municipio', this.superadminForm.get('id_municipio')?.value);
     formData.append('email', this.superadminForm.get('email')?.value);
     formData.append('password', this.superadminForm.get('password')?.value);
-    //formData.append('estado', this.superadminForm.get('estado')?.value ? '1' : '0');
 
     Object.keys(this.superadminForm.controls).forEach((key) => {
       const control = this.superadminForm.get(key);
@@ -271,12 +269,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
           }
         } 
         else if (key === 'estado') {
-          const estadoValue = control.value ? '1' : '0';
-          formData.append(key, estadoValue);
-          console.log('Estado enviado:', estadoValue);
+          // const estadoValue = control.value ? '1' : '0';
+          // formData.append(key, estadoValue);
+          // console.log('Estado enviado:', estadoValue);
           // Convertir el valor booleano a 1 o 0
-          //formData.append(key, control.value ? '1' : '0');
-          console.log('Estado enviado:', estadoValue);
+          formData.append(key, control.value ? '1' : '0');
         }
          else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
@@ -290,15 +287,14 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
     /* Actualiza superadmin */
     if (this.idSuperAdmin != null) {
-      let confirmationText = this.isActive
-        ? "¿Estas seguro de guardar los cambios"
-        : "¿Estas seguro de guardar los cambios?";
+      // let confirmationText = this.isActive
+      //   ? "¿Estas seguro de guardar los cambios"
+      //   : "¿Estas seguro de guardar los cambios?";
 
-      this.alertService.alertaActivarDesactivar(confirmationText, 'question').then((result) => {
+      this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
         if (result.isConfirmed) {
           this.superadminService.updateAdmin(this.token, this.idSuperAdmin, formData).subscribe(
             (data) => {
-              console.log('Respuesta del servidor:', data);
               setTimeout(function (){
                 //location.reload();
               }, this.tiempoEspera);
@@ -340,7 +336,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   /* Cambia el estado del toggle*/
   toggleActive() {
     this.isActive = !this.isActive;
-    console.log("Estado después de toggle:", this.isActive);
+    //console.log("Estado después de toggle:", this.isActive);
     this.superadminForm.patchValue({ estado: this.isActive ? true : false });
 
   }
@@ -352,14 +348,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
     this.boton = true;
   }
-
-  // /* Cerrar el modal */
-  // cancelarcrerSuperadmin() {
-  //   this.dialogRef.close();
-  // }
-
-
-  
 
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {

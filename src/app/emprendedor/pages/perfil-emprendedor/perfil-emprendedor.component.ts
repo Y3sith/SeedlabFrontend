@@ -16,6 +16,7 @@ import { MunicipioService } from '../../../servicios/municipio.service';
 import { PerfilEmprendedor } from '../../../Modelos/perfil-emprendedor.model';
 import { User } from '../../../Modelos/user.model';
 import { AlertService } from '../../../servicios/alert.service';
+import { Console } from 'console';
 
 
 @Component({
@@ -49,35 +50,17 @@ export class PerfilEmprendedorComponent implements OnInit {
   emprendedorId: any;
   estado: boolean;
   isAuthenticated: boolean = true;
-  imagenPreview: string | ArrayBuffer | null = null;
-  selectedImagen_perfil: File | null = null;
   listTipoDocumento: any[] = [];
-
-
-
-
-  emprendedorForm = this.fb.group({
-    documento: '',
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    celular: ['', [Validators.required, Validators.maxLength(10)]],
-    imagen_perfil: [null ,Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
-    genero: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    direccion: ['', Validators.required],
-    nombretipodoc: new FormControl({ value: '', disabled: true }, Validators.required), // Aquí se deshabilita el campo
-    departamento: ['', Validators.required],
-    municipio: ['', Validators.required],
-    estado: true,
-  });
-
+  tiempoEspera = 1800;
+  emprendedorForm: FormGroup;
   registerForm: FormGroup;  
   listEmprendedor: PerfilEmprendedor[] = [];
   originalData: any;
   perfil: '';
   boton: boolean;
+  editboton: boolean;
+  selectedImagen_perfil: File | null = null;
+  bannerPreview: string | ArrayBuffer | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -88,14 +71,33 @@ export class PerfilEmprendedorComponent implements OnInit {
     private router: Router,
     private alertService: AlertService,
     private cdRef: ChangeDetectorRef,
-  ) { }
+  ) { 
+    this.emprendedorForm = this.fb.group({
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      documento: ['', Validators.required],
+      imagen_perfil: [Validators.required],
+      celular: ['', [Validators.required, Validators.maxLength(10)]],
+      genero: ['', Validators.required],
+      direccion: [],
+      id_tipo_documento: [Validators.required],
+      id_departamento: [Validators.required],
+      id_municipio: [Validators.required],
+      fecha_nac: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      estado: true,
+    });
+  }
 
   ngOnInit(): void {
     this.validateToken();
     this.isAuthenticated = this.authServices.isAuthenticated();
-    this.cargarDepartamentos(); 
     this.verEditar(); 
+    this.tipoDocumento();
+    this.cargarDepartamentos(); 
     this.isEditing = true;
+    this.initializeFormState();
   }
 
   validateToken(): void {
@@ -120,21 +122,65 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+    //Funcion para cargar los departamentos
+    cargarDepartamentos(): void {
+      this.departamentoService.getDepartamento().subscribe(
+        (data: any[]) => {
+          console.log("DEPARTAMENTO",data);
+          this.listDepartamentos = data;
+          //this.cdRef.detectChanges(); // Forzar la detección de cambios
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
+    }
+  
+    onDepartamentoSeleccionado(event: Event): void {
+      const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+      const selectedDepartamento = target.value;
+  
+      // Guarda el departamento seleccionado en el localStorage
+      localStorage.setItem('departamento', selectedDepartamento);
+  
+      // Llama a cargarMunicipios si es necesario
+      this.cargarMunicipios(selectedDepartamento);
+    }
+  
+    cargarMunicipios(departamentoId: string): void {
+      this.municipioService.getMunicipios(departamentoId).subscribe(
+        (data) => {
+          this.listMunicipios = data;
+        console.log("MUNICIPIOS",data);
+          // Establecer el municipio actual en el select después de cargar los municipios
+          //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
+          // if (municipioId) {
+          //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
+          // }
+        },
+        (err) => {
+          console.log('Error al cargar los municipios:', err);
+        }
+      );
+    }
+  
+    
+
   verEditar(): void {
     if (this.token) {
       this.emprendedorService.getInfoEmprendedor(this.token, this.documento).subscribe(
         (data) => {
           // Cargar el departamento primero
-          this.emprendedorForm.patchValue({
-            departamento: data.id_departamento,
-          });
+          // this.emprendedorForm.patchValue({
+          //   departamento: data.id_departamento,
+          // });
           this.isActive = data.estado === 'Activo';
   
           // Cargar municipios después de cargar el departamento
-          if (data.id_departamento || data.id_tipo_documento) {
-            this.cargarMunicipios(data.id_departamento);
-            this.tipoDocumento();
-          }
+          // if (data.id_departamento || data.id_tipo_documento) {
+          //   this.cargarMunicipios(data.id_departamento);
+          //   this.tipoDocumento();
+          // }
           console.log('trae la info',data);
           // Rellenar el formulario con los datos del emprendedor
           this.emprendedorForm.patchValue({
@@ -144,15 +190,30 @@ export class PerfilEmprendedorComponent implements OnInit {
             imagen_perfil: data.imagen_perfil,
             celular: data.celular,
             email: data.email,
-            password: data.password,
+            password: "",
             genero: data.genero,
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
-            departamento: data.id_departamento.toString(),
-            municipio: data.id_municipio.toString(), 
-            nombretipodoc: data.id_tipo_documento ? data.id_tipo_documento.toString() : '',
+            id_departamento: data.id_departamento,
+            id_municipio: data.id_municipio, 
+            id_tipo_documento: data.id_tipo_documento,
             estado: data.estado
           });
+
+          this.cargarDepartamentos();
+
+          setTimeout(() => {
+            // Establecer el departamento seleccionado
+            this.emprendedorForm.patchValue({ id_municipio: data.id_departamentos });
+
+            // Cargar los municipios de ese departamento
+            this.cargarMunicipios(data.id_departamento);
+
+            setTimeout(() => {
+              // Establecer el municipio seleccionado
+              this.emprendedorForm.patchValue({ id_municipio: data.id_municipio });
+            }, 500);
+          }, 500);
         },
         (err) => {
           console.log(err);
@@ -180,68 +241,15 @@ export class PerfilEmprendedorComponent implements OnInit {
     if (field === 'imagen_perfil') {
      this.emprendedorForm.patchValue({ imagen_perfil: null });
      this.selectedImagen_perfil = null;
-     this.imagenPreview = null;
+     this.bannerPreview = null;
    } 
- }
-
- onFileSelecteds(event: any, field: string) {
-   if (event.target.files && event.target.files.length > 0) {
-     const file = event.target.files[0];
-     
-     let maxSize = 0;
- 
-     if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
-       maxSize = 5 * 1024 * 1024; // 5MB para imágenes
-     } else if (field === 'ruta_documento') {
-       maxSize = 18 * 1024 * 1024; // 20MB para documentos
-     }
- 
-     if (file.size > maxSize) {
-       const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
-       this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
-       this.resetFileField(field);
- 
-       ////Limpia el archivo seleccionado y resetea la previsualización
-       event.target.value = ''; // Borra la selección del input
- 
-       // Resetea el campo correspondiente en el formulario y la previsualización
-       if (field === 'imagen_perfil') {
-         this.emprendedorForm.patchValue({ imagen_perfil: null });
-         this.selectedImagen_perfil = null;
-         this.imagenPreview = null; // Resetea la previsualización
-       } 
-       this.resetFileField(field);
-       return;
-     }
-
-     const reader = new FileReader();
-   reader.onload = (e: any) => {
-     const previewUrl = e.target.result;
-      if (field === 'imagen_perfil') {
-       this.emprendedorForm.patchValue({ imagen_perfil: previewUrl });
-       this.imagenPreview = previewUrl;
-     } 
-   };
-   reader.readAsDataURL(file);
- 
-     // Genera la previsualización solo si el archivo es de tamaño permitido
-     this.generateImagePreview(file, field);
-
-     if (field === 'imagen_perfil') {
-       this.selectedImagen_perfil = file;
-       this.emprendedorForm.patchValue({ imagen_perfil: file });
-     }
-     
- } else {
-   this.resetFileField(field);
- }
  }
 
  generateImagePreview(file: File, field: string) {
    const reader = new FileReader();
    reader.onload = (e: any) => {
      if (field === 'imagen_perfil') {
-       this.imagenPreview = e.target.result;
+       this.bannerPreview = e.target.result;
      } 
      this.cdRef.detectChanges();
    };
@@ -250,34 +258,125 @@ export class PerfilEmprendedorComponent implements OnInit {
 
 
  updateEmprendedor(): void {
-  const perfil: PerfilEmprendedor = {
-    documento: this.emprendedorForm.get('documento')?.value,
-    id_tipo_documento: this.emprendedorForm.get('nombretipodoc')?.value,
-    nombre: this.emprendedorForm.get('nombre')?.value,
-    apellido: this.emprendedorForm.get('apellido')?.value,
-    celular: this.emprendedorForm.get('celular')?.value,
-    email: this.emprendedorForm.get('email')?.value,
-    password: this.emprendedorForm.get('password')?.value,
-    genero: this.emprendedorForm.get('genero')?.value,
-    fecha_nac: this.emprendedorForm.get('fecha_nac')?.value,
-    direccion: this.emprendedorForm.get('direccion')?.value,  // Cambiado a 'direccion'
-    id_departamento: this.emprendedorForm.get('departamento')?.value,
-    id_municipio: this.emprendedorForm.get('municipio')?.value,
+  const formData = new FormData();
+  let estadoValue: string;
+
+  // First pass: handle special cases and avoid duplication
+  Object.keys(this.emprendedorForm.controls).forEach((key) => {
+    const control = this.emprendedorForm.get(key);
+    if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
+      if (key === 'password') {
+        // Only include password if it's not empty
+        if (control.value.trim() !== '') {
+          formData.append(key, control.value);
+        }
+      } else if (key === 'fecha_nac') {
+        const date = new Date(control.value);
+        if (!isNaN(date.getTime())) {
+          formData.append(key, date.toISOString().split('T')[0]);
+        }
+      } else if (key === 'estado') {
+        formData.append(key, control.value ? '1' : '0');
+      } else if (key !== 'imagen_perfil') {
+        formData.append(key, control.value);
+      }
+    }
+  });
+
+  // Append specific fields (this will overwrite any duplicates from the first pass)
+  const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
+  specificFields.forEach(field => {
+    const value = this.emprendedorForm.get(field)?.value;
+    if (value !== null && value !== undefined && value !== '') {
+      formData.append(field, value);
+    }
+  });
+
+ 
+  if (this.emprendedorForm.get('direccion')?.value) {
+    formData.append('direccion', this.emprendedorForm.get('direccion')?.value);
   }
-  console.log(perfil);
-  this.alertService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question',).then((result) => {
+
+  if (this.selectedImagen_perfil) {
+    formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
+  }
+
+  // console.log('Data to be sent:');
+  // formData.forEach((value, key) => {
+  //   console.log(`${key}: ${value}`);
+  // });
+
+  this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
     if (result.isConfirmed) {
-      this.emprendedorService.updateEmprendedor(perfil, this.token, this.documento).subscribe(
+      this.emprendedorService.updateEmprendedor(this.token, formData, this.documento).subscribe(
         (data) => {
-          location.reload();
+          console.log('Response from server:', data);
+          setTimeout(function () {
+            location.reload();
+          }, this.tiempoEspera);
+          this.alertService.successAlert('Exito', data.message);
         },
-        (err) => {
-          console.log(err);
+        (error) => {
+          console.error('Error from server:', error);
+          this.alertService.errorAlert('Error', error.error.message);
         }
       );
     }
-  })
+  });
 }
+
+  onFileSelecteds(event: any, field: string) {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+      
+      let maxSize = 0;
+  
+      if (field === 'imagen_perfil') {
+        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+      } 
+  
+      if (file.size > maxSize) {
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+        this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
+        this.resetFileField(field);
+  
+        //Limpia el archivo seleccionado y resetea la previsualización
+        event.target.value = ''; // Borra la selección del input
+  
+        // Resetea el campo correspondiente en el formulario y la previsualización
+        if (field === 'imagen_perfil') {
+          this.emprendedorForm.patchValue({ imagen_perfil: null });
+          this.selectedImagen_perfil = null;
+          this.bannerPreview = null; // Resetea la previsualización
+        }
+        this.resetFileField(field);
+        return;
+      }
+
+      const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const previewUrl = e.target.result;
+      if (field === 'imagen_perfil') {
+        this.emprendedorForm.patchValue({ imagen_perfil: previewUrl });
+        this.bannerPreview = previewUrl;
+      }
+    };
+    reader.readAsDataURL(file);
+  
+      // Genera la previsualización solo si el archivo es de tamaño permitido
+      this.generateImagePreview(file, field);
+
+      if (field === 'imagen_perfil') {
+        this.selectedImagen_perfil = file;
+        this.emprendedorForm.patchValue({ imagen_perfil: file });
+      }
+      
+  } else {
+    this.resetFileField(field);
+  }
+  }
+ 
+
 
 
   desactivarEmprendedor(): void {
@@ -324,58 +423,46 @@ export class PerfilEmprendedorComponent implements OnInit {
   get f() { return this.registerForm.controls; }
 
 
-  //Funcion para cargar los departamentos
-  cargarDepartamentos(): void {
-    this.departamentoService.getDepartamento().subscribe(
-      (data: any[]) => {
-        this.listDepartamentos = data;
-        this.cdRef.detectChanges(); // Forzar la detección de cambios
-      },
-      (err) => {
-        console.log(err);
-      }
-    )
-  }
 
-  onDepartamentoSeleccionado(departamentoId: string): void {
-    this.cargarMunicipios(departamentoId);
-  }
-
-  cargarMunicipios(departamentoId: string): void {
-    this.municipioService.getMunicipios(departamentoId).subscribe(
-      (data) => {
-        this.listMunicipios = data;
-  
-        // Establecer el municipio actual en el select después de cargar los municipios
-        const municipioId = this.emprendedorForm.get('id_municipio')?.value;
-        if (municipioId) {
-          this.emprendedorForm.patchValue({ municipio: municipioId });
-        }
-      },
-      (err) => {
-        console.log('Error al cargar los municipios:', err);
-      }
-    );
-  }
   
   trackById(index: number, item: any): number {
     return item.id;
   }
 
+  initializeFormState(): void {
+    const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
+    fieldsToDisable.forEach(field => {
+      const control = this.emprendedorForm.get(field);
+      if (control) {
+        control.disable();
+      }
+    });
+  }
+
   //para que no me deje editar el nombre del tipo del documento
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
-    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'email', 'password', 'genero', 'fecha_nac', 'direccion', 'municipio'];
+    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento'];
+    
     fieldsToToggle.forEach(field => {
       const control = this.emprendedorForm.get(field);
-      if (control && field !== 'nombretipodoc') {
+      if (control) {
         if (this.blockedInputs) {
           control.disable();
         } else {
           control.enable();
         }
+        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
+      } else {
+        console.warn(`Control for field ${field} not found in form`);
       }
     });
+  
+    // Force change detection
+    this.cdRef.detectChanges();
+  
+    // Log the entire form state
+    console.log('Form state after toggling:', this.emprendedorForm);
   }
 
   // Restaura los datos originales
@@ -385,6 +472,7 @@ export class PerfilEmprendedorComponent implements OnInit {
 
   mostrarGuardarCambios(): void {
     this.boton = false;
+    this.editboton = true;
   }
 
 
