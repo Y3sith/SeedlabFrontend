@@ -104,53 +104,14 @@
     <div *ngIf="currentSubSectionIndex === 0">
       <div class="space-y-8 max-w-full md:px-8">
         <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-          <div class="container mx-auto px-4 py-12">
+          <div class="container mx-auto px-4 py-4">
             <form action="" [formGroup]="personalizacionForm" (ngSubmit)="addPersonalizacion()">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-
-                <!-- Nombre de la empresa -->
-                <div class="col-span-1">
-                  <label for="nombre" class="text-lg font-normal">Nombre de la empresa</label>
-                  <input type="text" id="nombre_sistema" name="nombre_sistema" formControlName="nombre_sistema"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                </div>
-
-                <!-- Color Principal -->
-                <div class="col-span-1">
-                  <label class="text-lg font-normal">Color Principal - Para Menu lateral</label>
-                  <div class="flex content-center mb-2 md:mb-0 w-full">
-                    <div class="w-24 h-10 rounded-l" [style.background]="selectedColorPrincipal"
-                      [(colorPicker)]="selectedColorPrincipal" [cpOKButton]="true"
-                      (colorPickerChange)="onColorChangePrincipal($event)"
-                      [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
-                      [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
-                      [cpCancelButtonText]="'Cancelar'"></div>
-                    <input type="text"
-                      class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                      id="color_principal" name="color_principal" formControlName="color_principal"
-                      [value]="selectedColorPrincipal" readonly>
-                  </div>
-                </div>
-
-                <!-- Color Secundario -->
-                <div class="col-span-1">
-                  <label class="text-lg font-normal">Color Secundario - Linea del menu lateral</label>
-                  <div class="flex content-center mb-2 md:mb-0 w-full">
-                    <div class="w-24 h-10 rounded-l" [style.background]="selectedColorSecundario"
-                      [(colorPicker)]="selectedColorSecundario" [cpOKButton]="true"
-                      (colorPickerChange)="onColorChangeSecundario($event)"
-                      [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
-                      [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
-                      [cpCancelButtonText]="'Cancelar'"></div>
-                    <input type="text"
-                      class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
-                      id="color_secundario" formControlName="color_secundario" name="color_secundario"
-                      [value]="selectedColorSecundario" readonly>
-                  </div>
-                </div>
-
                 <!-- Logo -->
-                <div class="col-span-1">
+                <div class="col-span-1 max-md:mb-4
+                
+                
+                ">
                   <label class="text-lg font-normal">Logo</label>
                   <div class="bg-white p-4 rounded-lg shadow-lg h-full">
                     <label class="relative cursor-pointer flex flex-row items-center">
@@ -170,31 +131,69 @@
                     </div>
                   </div>
                 </div>
-
+              
+                <!-- Nombre de la empresa -->
+                <div class="col-span-1 mt-12 lg:mt-20">
+                  <label for="nombre" class="text-lg font-normal">Nombre de la empresa</label>
+                  <input type="text" id="nombre_sistema" name="nombre_sistema" formControlName="nombre_sistema"
+                    class="p-2 w-full h-10 mb-6 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  
+                  <!-- Color Principal -->
+                  <label class="text-lg font-normal">Color Principal - Para Menu lateral</label>
+                  <div class="flex content-center mb-2 md:mb-0 w-full">
+                    <div class="w-24 h-10 rounded-l" [style.background]="selectedColorPrincipal"
+                      [(colorPicker)]="selectedColorPrincipal" [cpOKButton]="true"
+                      (colorPickerChange)="onColorChangePrincipal($event)"
+                      [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
+                      [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
+                      [cpCancelButtonText]="'Cancelar'"></div>
+                    <input type="text"
+                      class="p-2 w-full h-10 mb-6 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                      id="color_principal" name="color_principal" formControlName="color_principal"
+                      [value]="selectedColorPrincipal" readonly>
+                  </div>
+              
+                  <!-- Color Secundario -->
+                  <label class="text-lg font-normal">Color Secundario - Linea del menu lateral</label>
+                  <div class="flex content-center mb-6 md:mb-2 w-full">
+                    <div class="w-24 h-10 rounded-l" [style.background]="selectedColorSecundario"
+                      [(colorPicker)]="selectedColorSecundario" [cpOKButton]="true"
+                      (colorPickerChange)="onColorChangeSecundario($event)"
+                      [cpOKButtonClass]="'bg-green-500 rounded-lg text-sm'" [cpOKButtonText]="'Elegir'"
+                      [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
+                      [cpCancelButtonText]="'Cancelar'"></div>
+                    <input type="text"
+                      class="p-2 w-full h-10 mb-6 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                      id="color_secundario" formControlName="color_secundario" name="color_secundario"
+                      [value]="selectedColorSecundario" readonly>
+                  </div>
+                </div>
               </div>
             </form>
           </div>
+          <div class="flex justify-center items-center lg:justify-end">
+            <span class="mr-3 text-[#FA7D00] text-[20px] italic mb-1" style="font-weight: 900;">Restaurar</span>
+            <button type="button" (click)="restorePersonalizacion()"
+              class="flex items-center py-2 px-4 sm:px-16 bg-[#FA7D00] rounded-full transition duration-300">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-5 w-5 sm:h-6 sm:w-6 fill-current text-white">
+                <path
+                  d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z" />
+              </svg>
+            </button>
+          </div>
+          
         </div>
       </div>
       <div class="md:justify-center items-center mb-4 mt-4">
         <div class="flex justify-center md:justify-center mb-4 md:mb-0">
-          <button 
+          <button
             class="mr-2 py-2 px-4 sm:px-16 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
             (click)="previous()">
             Anterior
           </button>
-          <button 
-            (click)="addPersonalizacion()"
+          <button (click)="addPersonalizacion()"
             class="py-2 px-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
             Guardar
-          </button>
-        </div>
-        <div class="flex justify-end md:justify-end max-md:mr-3">
-          <button 
-            type="button" 
-            (click)="restorePersonalizacion()"
-            class="py-2 px-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
-            Restaurar
           </button>
         </div>
       </div>

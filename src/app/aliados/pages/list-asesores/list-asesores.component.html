@@ -37,7 +37,8 @@
         <thead>
           <tr>
             <th class="text-left p-2">Nombre</th>
-            <th class="text-left p-2">Teléfono</th>
+            <th class="text-left p-2">Correo</th>
+            <th class="text-left p-2 hidden sm:table-cell">Celular
             <th class="text-left p-2 hidden sm:table-cell">Estado</th>
             <th class="text-left p-2"></th>
           </tr>
@@ -47,7 +48,8 @@
             *ngFor="let asesor of listaAsesores | filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index">
             <tr class="bg-gray-300 my-5 rounded-xl">
               <td class="p-2 rounded-s-lg">{{ asesor.nombre }} {{ asesor.apellido }}</td>
-              <td class="p-2">{{ asesor.celular }}</td>
+              <td class="p-2">{{ asesor.email }}</td>
+              <td class="p-2 hidden sm:table-cell">{{ asesor.celular }}</td>
               <td class="p-2 hidden sm:table-cell">{{ asesor.estado }}</td>
               <td class="p-2 rounded-e-lg text-center">
                 <a  [routerLink]="['/edit-orientador', asesor.id]" class="text-blue-500">
