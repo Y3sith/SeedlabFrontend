@@ -24,7 +24,7 @@ const routes: Routes = [
       {path: 'reportes-emprendedor', component: ReportesComponent, data:{title: 'Ruta', showInMenu:true, icon:'fa-regular fa-file-lines'}},
       {path: 'perfil-emprendedor', component: PerfilEmprendedorComponent, data:{title: 'Perfil', showInMenu:true, icon:'fa-solid fa-circle-user'}},
       {path: 'add-empresa', component: AddEmpresaComponent, data:{showInMenu: false}},
-      {path: 'edit-empresa/:id_emprendedor/:documento', component:EditEmpresaComponent, data:{showInMenu: false}},
+      {path: 'edit-empresa/:id_empresa', component:AddEmpresaComponent, data:{showInMenu: false}},
 
     ]
   }

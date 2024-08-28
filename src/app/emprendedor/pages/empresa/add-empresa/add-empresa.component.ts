@@ -56,7 +56,16 @@ export class AddEmpresaComponent {
     this.validateToken();
     this.cargarDepartamentos();
     this.tipodato();
-    this.verEditar();
+    this.id_empresa = this.route.snapshot.paramMap.get('id_empresa');
+    console.log('ID de la empresa desde la URL:', this.id_empresa);
+
+    if (this.id_empresa) {
+      this.verEditar();  // Llama al método para editar si tienes un id_empresa válido
+    } else {
+      console.log('ID de la empresa no encontrado en la URL');
+    }
+
+
 
   }
 
@@ -216,25 +225,25 @@ export class AddEmpresaComponent {
 
     console.log('Payload para la API:', payload);
 
-    if(!this.id_empresa){
+    if (!this.id_empresa) {
       let confirmationText = this.isActive
         ? "¿Estas seguro de guardar los cambios"
         : "¿Estas seguro de guardar los cambios?";
 
-        this.alertService.alertaActivarDesactivar(confirmationText, 'question').then((response) => {
-          this.empresaService.updateEmpresas(this.token, this.id_empresa, empresa).subscribe(
-            data => {
-              console.log('Respuesta de la API (empresa actualizada):', data);
-              this.alertService.successAlert('Éxito', 'Registro exitoso');
-              this.router.navigate(['list-empresa']);
-            },
-            error => {
-              this.alertService.errorAlert('Error', error.message);
-              console.log('Respuesta de la API ERROR:', error);
-            }
-          )
-        });
-    }else{
+      this.alertService.alertaActivarDesactivar(confirmationText, 'question').then((response) => {
+        this.empresaService.updateEmpresas(this.token, this.id_empresa, empresa).subscribe(
+          data => {
+            console.log('Respuesta de la API (empresa actualizada):', data);
+            this.alertService.successAlert('Éxito', 'Registro exitoso');
+            this.router.navigate(['list-empresa']);
+          },
+          error => {
+            this.alertService.errorAlert('Error', error.message);
+            console.log('Respuesta de la API ERROR:', error);
+          }
+        )
+      });
+    } else {
       this.empresaService.addEmpresa(this.token, payload).subscribe(
         data => {
           console.log('Respuesta de la API (empresa creada):', data);
@@ -251,7 +260,8 @@ export class AddEmpresaComponent {
   }
 
   verEditar(): void {
-    if(this.id_empresa == null) {
+    if (this.id_empresa !== null) {
+      console.log("id_empresa en ver editar", this.id_empresa);
       this.empresaService.traerEmpresasola(this.token, this.documento, this.id_empresa).subscribe(
         data => {
           this.apoyo = data.apoyo;
@@ -273,7 +283,7 @@ export class AddEmpresaComponent {
             funciones: data.funciones || ''
           });
 
-          if(this.apoyo){
+          if (this.apoyo) {
             this.addApoyoEmpresaForm.patchValue({
               documento: this.apoyo.documento || '',
               nombre: this.apoyo.nombre || '',
