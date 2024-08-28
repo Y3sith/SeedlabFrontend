@@ -59,8 +59,8 @@ export class PerfilAsesorComponent implements OnInit {
     fecha_nac: ['', Validators.required],
     direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
-    id_departamento: [Validators.required],
-    id_municipio: [Validators.required],
+    id_departamento: ['',Validators.required],
+    id_municipio: ['',Validators.required],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -121,14 +121,29 @@ export class PerfilAsesorComponent implements OnInit {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             celular: data.celular,
-            id_municipio: data.id_municipio,
             id_departamento: data.id_departamento,
+            id_municipio: data.id_municipio,
             aliado: data.id,
             email: data.email,
             password: '',
             estado: data.estado
         });
         console.log('xxxxxx: ',data);
+        this.cargarDepartamentos();
+
+        setTimeout(() => {
+          // Establecer el departamento seleccionado
+          this.asesorForm.patchValue({ id_municipio: data.id_departamentos });
+
+          // Cargar los municipios de ese departamento
+          this.cargarMunicipios(data.id_departamento);
+
+          setTimeout(() => {
+            // Establecer el municipio seleccionado
+            this.asesorForm.patchValue({ id_municipio: data.id_municipio });
+          }, 500);
+        }, 500);
+      
       },
       error => {
         console.log(error);
@@ -163,7 +178,6 @@ export class PerfilAsesorComponent implements OnInit {
     }
   });
 
-  // Append specific fields (this will overwrite any duplicates from the first pass)
   const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
   specificFields.forEach(field => {
     const value = this.asesorForm.get(field)?.value;
@@ -182,16 +196,6 @@ export class PerfilAsesorComponent implements OnInit {
   }
 
   formData.append('aliado', this.nombreAliado);
-
-  //   this.asesorService.updateAsesor(this.token, this.id, formData).subscribe(
-  //     data => {
-  //       location.reload();
-  //     },
-  //     error => {
-  //       console.error(error);
-  //     }
-  //   )
-  // }
 
   this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
     if (result.isConfirmed) {
@@ -343,14 +347,14 @@ initializeFormState(): void {
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
-        console.log("DEPARTAMENTO",data);
         this.listDepartamentos = data;
-        //this.cdRef.detectChanges(); // Forzar la detección de cambios
+        //console.log('Departamentos cargados:', JSON.stringify(data));
+        //console.log('zzzzzzzzzzz: ',this.listDepartamentos);
       },
       (err) => {
         console.log(err);
       }
-    )
+    );
   }
 
   onDepartamentoSeleccionado(event: Event): void {
@@ -364,16 +368,11 @@ initializeFormState(): void {
     this.cargarMunicipios(selectedDepartamento);
   }
 
-  cargarMunicipios(departamentoId: string): void {
-    this.municipioService.getMunicipios(departamentoId).subscribe(
+  cargarMunicipios(idDepartamento: string): void {
+    this.municipioService.getMunicipios(idDepartamento).subscribe(
       (data) => {
         this.listMunicipios = data;
-      console.log("MUNICIPIOS",data);
-        // Establecer el municipio actual en el select después de cargar los municipios
-        //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
-        // if (municipioId) {
-        //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
-        // }
+        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       (err) => {
         console.log('Error al cargar los municipios:', err);

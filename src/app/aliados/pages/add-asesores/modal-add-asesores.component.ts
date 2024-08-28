@@ -312,7 +312,7 @@ export class ModalAddAsesoresComponent implements OnInit {
 
       this.alerService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
         if (result.isConfirmed) {
-          this.asesorService.updateAsesor(this.token, this.idAsesor, formData).subscribe(
+          this.asesorService.updateAsesorxaliado(this.token, this.idAsesor, formData).subscribe(
             (data) => {
               setTimeout(function () {
                 //location.reload();
