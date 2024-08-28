@@ -58,6 +58,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   originalData: any;
   perfil: '';
   boton: boolean;
+  editboton: boolean;
   selectedImagen_perfil: File | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
 
@@ -96,6 +97,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     this.tipoDocumento();
     this.cargarDepartamentos(); 
     this.isEditing = true;
+    this.initializeFormState();
   }
 
   validateToken(): void {
@@ -258,86 +260,70 @@ export class PerfilEmprendedorComponent implements OnInit {
  updateEmprendedor(): void {
   const formData = new FormData();
   let estadoValue: string;
-  formData.append('nombre', this.emprendedorForm.get('nombre')?.value);
-  formData.append('apellido', this.emprendedorForm.get('apellido')?.value);
-  formData.append('documento', this.emprendedorForm.get('documento')?.value);
-  formData.append('celular', this.emprendedorForm.get('celular')?.value);
-  formData.append('genero', this.emprendedorForm.get('genero')?.value);
-  if (this.emprendedorForm.get('direccion')?.value) {
-    formData.append('direccion', this.emprendedorForm.get('direccion')?.value);
-  } else { }
-  //formData.append('direccion', this.asesorForm.get('direccion')?.value);
-  formData.append('id_tipo_documento', this.emprendedorForm.get('id_tipo_documento')?.value);
-  formData.append('id_departamento', this.emprendedorForm.get('id_departamento')?.value);
-  formData.append('id_municipio', this.emprendedorForm.get('id_municipio')?.value);
-  formData.append('email', this.emprendedorForm.get('email')?.value);
-  formData.append('password', this.emprendedorForm.get('password')?.value);
 
-  if (this.selectedImagen_perfil) {
-    formData.append('imagen_perfil',this.selectedImagen_perfil,this.selectedImagen_perfil.name);
-  }
-
+  // First pass: handle special cases and avoid duplication
   Object.keys(this.emprendedorForm.controls).forEach((key) => {
     const control = this.emprendedorForm.get(key);
-    if (control?.value !== null && control?.value !== undefined) {
-
-      if (key === 'password' && control.value === '') {
-        // No incluir la contraseña si está vacía
-        return;
-      }
-
-      if (key !== 'imagen_perfil') {
-        formData.append(key, control.value);
-      }
-      
-      // Manejar otros campos como antes
-      if (key === 'fecha_nac') {
-        if (control.value) {
-          const date = new Date(control.value);
-          if (!isNaN(date.getTime())) {
-            formData.append(key, date.toISOString().split('T')[0]);
-          }
+    if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
+      if (key === 'password') {
+        // Only include password if it's not empty
+        if (control.value.trim() !== '') {
+          formData.append(key, control.value);
+        }
+      } else if (key === 'fecha_nac') {
+        const date = new Date(control.value);
+        if (!isNaN(date.getTime())) {
+          formData.append(key, date.toISOString().split('T')[0]);
         }
       } else if (key === 'estado') {
         formData.append(key, control.value ? '1' : '0');
-      } else {
+      } else if (key !== 'imagen_perfil') {
         formData.append(key, control.value);
       }
     }
   });
-  // Agregar la imagen de perfil si se ha seleccionado una nueva
 
-  // Alternativa para imprimir los valores del FormData
-  // console.log('Datos enviados en el FormData:');
+  // Append specific fields (this will overwrite any duplicates from the first pass)
+  const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
+  specificFields.forEach(field => {
+    const value = this.emprendedorForm.get(field)?.value;
+    if (value !== null && value !== undefined && value !== '') {
+      formData.append(field, value);
+    }
+  });
+
+ 
+  if (this.emprendedorForm.get('direccion')?.value) {
+    formData.append('direccion', this.emprendedorForm.get('direccion')?.value);
+  }
+
+  if (this.selectedImagen_perfil) {
+    formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
+  }
+
+  // console.log('Data to be sent:');
   // formData.forEach((value, key) => {
-  // console.log(`${key}: ${value}`);
+  //   console.log(`${key}: ${value}`);
   // });
 
-  console.log('Datos del formulario:', this.emprendedorForm.value);
-
-
-  /* Actualiza emprendedor */
-
-
-    this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
-      if (result.isConfirmed) {
-        this.emprendedorService.updateEmprendedor(this.token, formData, this.documento).subscribe(
-          (data) => {
-            setTimeout(function () {
-              location.reload();
-            }, this.tiempoEspera);
-            this.alertService.successAlert('Exito', data.message);
-          },
-          (error) => {
-            this.alertService.errorAlert('Error', error.error.message);
-            console.error(error);
-            //console.log('error: ', error)
-          }
-        );
-      }
-    });
-    /* Crea asesor */
-  }
+  this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+    if (result.isConfirmed) {
+      this.emprendedorService.updateEmprendedor(this.token, formData, this.documento).subscribe(
+        (data) => {
+          console.log('Response from server:', data);
+          setTimeout(function () {
+            location.reload();
+          }, this.tiempoEspera);
+          this.alertService.successAlert('Exito', data.message);
+        },
+        (error) => {
+          console.error('Error from server:', error);
+          this.alertService.errorAlert('Error', error.error.message);
+        }
+      );
+    }
+  });
+}
 
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
@@ -443,20 +429,40 @@ export class PerfilEmprendedorComponent implements OnInit {
     return item.id;
   }
 
+  initializeFormState(): void {
+    const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
+    fieldsToDisable.forEach(field => {
+      const control = this.emprendedorForm.get(field);
+      if (control) {
+        control.disable();
+      }
+    });
+  }
+
   //para que no me deje editar el nombre del tipo del documento
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
-    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'email', 'password', 'genero', 'fecha_nac', 'direccion', 'municipio'];
+    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento'];
+    
     fieldsToToggle.forEach(field => {
       const control = this.emprendedorForm.get(field);
-      if (control && field !== 'nombretipodoc') {
+      if (control) {
         if (this.blockedInputs) {
           control.disable();
         } else {
           control.enable();
         }
+        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
+      } else {
+        console.warn(`Control for field ${field} not found in form`);
       }
     });
+  
+    // Force change detection
+    this.cdRef.detectChanges();
+  
+    // Log the entire form state
+    console.log('Form state after toggling:', this.emprendedorForm);
   }
 
   // Restaura los datos originales
@@ -466,6 +472,7 @@ export class PerfilEmprendedorComponent implements OnInit {
 
   mostrarGuardarCambios(): void {
     this.boton = false;
+    this.editboton = true;
   }
 
 
