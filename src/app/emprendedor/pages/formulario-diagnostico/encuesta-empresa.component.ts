@@ -883,49 +883,96 @@ export class EncuestaEmpresaComponent {
     let isValidForm = true;
     this.id_empresa;
     this.listaRespuestas4 = [];
-
+    //TRL 1
+    this.respuesta78.opcion === 'Si' ? this.respuesta78.valor = 0.7 : 0;
     this.listaRespuestas4.push(this.respuesta78);
+    this.respuesta79.opcion === 'Si' ? this.respuesta79.valor = 0.7 : 0;
     this.listaRespuestas4.push(this.respuesta79);
+    this.respuesta80.opcion === 'Si' ? this.respuesta80.valor = 0.7 : 0;
     this.listaRespuestas4.push(this.respuesta80);
+    //TRL 2
+    this.respuesta81.opcion === 'Si' ? this.respuesta81.valor = 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta81);
+    this.respuesta82.opcion === 'Si' ? this.respuesta82.valor = 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta82);
+    this.respuesta83.opcion === 'Si' ? this.respuesta83.valor = 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta83);
+    this.respuesta84.opcion === 'Si' ? this.respuesta84.valor = 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta84);
+    this.respuesta85.opcion === 'Si' ? this.respuesta85.valor = 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta85);
+    //TRL 3
+    this.respuesta86.opcion === 'Si' ? this.respuesta86.valor = 2 : 0;
     this.listaRespuestas4.push(this.respuesta86);
+    this.respuesta87.opcion === 'Si' ? this.respuesta87.valor = 2 : 0;
     this.listaRespuestas4.push(this.respuesta87);
+    this.respuesta88.opcion === 'Si' ? this.respuesta88.valor = 2 : 0;
     this.listaRespuestas4.push(this.respuesta88);
+    //TRL 4
+    this.respuesta89.opcion === 'Si' ? this.respuesta89.valor = 8 : 0;
     this.listaRespuestas4.push(this.respuesta89);
+    //TRL 5
+    this.respuesta90.opcion === 'Si' ? this.respuesta90.valor = 3.3 : 0;
     this.listaRespuestas4.push(this.respuesta90);
+    this.respuesta91.opcion === 'Si' ? this.respuesta91.valor = 3.3 : 0;
     this.listaRespuestas4.push(this.respuesta91);
+    this.respuesta92.opcion === 'Si' ? this.respuesta92.valor = 3.3 : 0;
     this.listaRespuestas4.push(this.respuesta92);
+    //TRL 6
+    this.respuesta93.opcion === 'Si' ? this.respuesta93.valor = 4 : 0;
     this.listaRespuestas4.push(this.respuesta93);
+    this.respuesta94.opcion === 'Si' ? this.respuesta94.valor = 4 : 0;
     this.listaRespuestas4.push(this.respuesta94);
+    this.respuesta95.opcion === 'Si' ? this.respuesta95.valor = 4 : 0;
     this.listaRespuestas4.push(this.respuesta95);
+    //TRL 7
+    this.respuesta96.opcion === 'Si' ? this.respuesta96.valor = 5 : 0;
     this.listaRespuestas4.push(this.respuesta96);
+    this.respuesta97.opcion === 'Si' ? this.respuesta97.valor = 5 : 0;
     this.listaRespuestas4.push(this.respuesta97);
+    this.respuesta98.opcion === 'Si' ? this.respuesta98.valor = 5 : 0;
     this.listaRespuestas4.push(this.respuesta98);
+    //TRL 8
+    this.respuesta99.opcion === 'Si' ? this.respuesta99.valor = 6 : 0;
     this.listaRespuestas4.push(this.respuesta99);
+    this.respuesta100.opcion === 'Si' ? this.respuesta100.valor = 6 : 0;
     this.listaRespuestas4.push(this.respuesta100);
+    this.respuesta101.opcion === 'Si' ? this.respuesta101.valor = 6 : 0;
     this.listaRespuestas4.push(this.respuesta101);
+    //TRL 9
+    this.respuesta102.opcion === 'Si' ? this.respuesta102.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta102);
+    this.respuesta103.opcion === 'Si' ? this.respuesta103.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta103);
+    this.respuesta104.opcion === 'Si' ? this.respuesta104.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta104);
+    this.respuesta105.opcion === 'Si' ? this.respuesta105.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta105);
+    this.respuesta106.opcion === 'Si' ? this.respuesta106.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta106);
+    this.respuesta107.opcion === 'Si' ? this.respuesta107.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta107);
+    this.respuesta108.opcion === 'Si' ? this.respuesta108.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta108);
     //pregunta 44
+    this.respuesta109.opcion === 'Si' ? this.respuesta109.valor = 10 : 0;
     this.listaRespuestas4.push(this.respuesta109);
     //pregunta 45
     this.listaRespuestas4.push(this.respuesta110);
     if (this.respuesta110.opcion === 'Si') {
+      this.respuesta111.opcion === 'Si' ? this.respuesta111.valor = 5.8 : 0;
       this.listaRespuestas4.push(this.respuesta111);
+      this.respuesta112.opcion === 'Si' ? this.respuesta112.valor = 5.8 : 0;
       this.listaRespuestas4.push(this.respuesta112);
+      this.respuesta113.opcion === 'Si' ? this.respuesta113.valor = 5.8 : 0;
       this.listaRespuestas4.push(this.respuesta113);
+      this.respuesta114.opcion === 'Si' ? this.respuesta114.valor = 5.8 : 0;
       this.listaRespuestas4.push(this.respuesta114);
+      this.respuesta115.opcion === 'Si' ? this.respuesta115.valor = 5.8 : 0;
       this.listaRespuestas4.push(this.respuesta115);
+      this.respuesta116.opcion === 'Si' ? this.respuesta116.valor = 5.8 : 0;
       this.listaRespuestas4.push(this.respuesta116);
+      this.respuesta117.opcion === 'Si' ? this.respuesta117.valor = 5.8 : 0;
       this.listaRespuestas4.push(this.respuesta117);
     } else {
       this.respuesta111.texto_res = 'N/A';
@@ -960,14 +1007,23 @@ export class EncuestaEmpresaComponent {
     //pregunta 46
     this.listaRespuestas4.push(this.respuesta118);
     if (this.respuesta118.opcion === 'Si') {
+      this.respuesta119.opcion === 'Si' ? this.respuesta119.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta119);
+      this.respuesta120.opcion === 'Si' ? this.respuesta120.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta120);
+      this.respuesta121.opcion === 'Si' ? this.respuesta121.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta121);
+      this.respuesta122.opcion === 'Si' ? this.respuesta122.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta122);
+      this.respuesta123.opcion === 'Si' ? this.respuesta123.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta123);
+      this.respuesta124.opcion === 'Si' ? this.respuesta124.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta124);
+      this.respuesta125.opcion === 'Si' ? this.respuesta125.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta125);
+      this.respuesta126.opcion === 'Si' ? this.respuesta126.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta126);
+      this.respuesta127.opcion === 'Si' ? this.respuesta127.valor = 6.9 : 0;
       this.listaRespuestas4.push(this.respuesta127);
     } else {
       this.respuesta119.texto_res = 'N/A';
