@@ -13,7 +13,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 2,
         nombre: 'Cuenta con personas de apoyo en:',
-        puntaje: 0,
+        puntaje: 10,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -27,9 +27,9 @@ export const PREGUNTAS: Preguntas[] = [
         ]
     },
     {
-        id: 3,
+        id: 3,//respuesta7
         nombre: '¿Su emprendimiento está legalmente constituido?',
-        puntaje: 0,
+        puntaje: 10,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -38,7 +38,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 4,
         nombre: '¿Cumple con las normas tributarias, contables, laborales, comerciales y/o legales para desempeñar la actividad?',
-        puntaje: 0,
+        puntaje: 5,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -47,7 +47,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 5,
         nombre: '¿Tiene claramente definido su modelo de negocio?',
-        puntaje: 0,
+        puntaje: 20,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -56,7 +56,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 6,
         nombre: '¿Tiene claramente definido su plan de negocios?',
-        puntaje: 0,
+        puntaje: 15,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -65,7 +65,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 7,
         nombre: '¿Tiene experiencia comercial relacionada con el producto y/o servicio?',
-        puntaje: 0,
+        puntaje: 10,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -74,7 +74,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 8,
         nombre: 'Si la respuesta anterior fue afirmativa indicar: ¿Cuánto tiempo de experiencia relacionada tiene?',
-        puntaje: 0,
+        puntaje: 10,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -83,7 +83,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 9,
         nombre: '¿Su emprendimiento tiene definido la misión y la visión?',
-        puntaje: 0,
+        puntaje: 2,
         id_seccion: 1,
         isAffirmativeQuestion: true,
         isText: false, 
@@ -110,7 +110,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 12,
         nombre: '¿Tiene definidas metas empresariales?',
-        puntaje: 0,
+        puntaje: 5,
         id_seccion: 1,
         isAffirmativeQuestion: true,
         isText: true,
@@ -124,7 +124,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 13,
         nombre: '¿El personal de apoyo está debidamente contratado?',
-        puntaje: 0,
+        puntaje: 5,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -133,7 +133,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 14,
         nombre: '¿Los cargos de apoyo tienen funciones claramente definidas?',
-        puntaje: 0,
+        puntaje: 4,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,
@@ -142,7 +142,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 15,
         nombre: '¿El perfil de los apoyos está debidamente definido?',
-        puntaje: 0,
+        puntaje: 4,
         id_seccion: 1,
         isAffirmativeQuestion: false,
         isText: false,

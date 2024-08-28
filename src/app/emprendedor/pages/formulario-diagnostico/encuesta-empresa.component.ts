@@ -225,6 +225,25 @@ export class EncuestaEmpresaComponent {
     let isValidForm = true;
 
     this.listaRespuestas1 = [];
+
+    //Mapeo de valores 
+    const valorPorOpcion = {
+      'Si': 10,
+      'No': 0,
+      'Medio': 10,
+      'Alto': 20,
+      '-1':2.5,
+      '1 y 2':5,
+      '2 y 4':7.5,
+      '5+':10
+  };
+
+  const valorPorOpcionQ13 = {
+    'Si': 5,
+    'No': 0,
+    'Medio': 2.5,
+  }
+
     //pregunta 1
     this.listaRespuestas1.push(this.respuesta1);
     //pregunta 2
@@ -235,31 +254,43 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas1.push(this.respuesta6);
     //fin pregunta 2
     //pregunta 3
+    this.respuesta7.valor = valorPorOpcion[this.respuesta7.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta7);
     //pregunta 4
+    this.respuesta8.valor = valorPorOpcion[this.respuesta8.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta8);
     //pregunta 5
+    this.respuesta9.valor = valorPorOpcion[this.respuesta9.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta9);
     //pregunta 6
+    this.respuesta10.valor = valorPorOpcion[this.respuesta10.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta10);
     //pregunta 7
+    this.respuesta11.valor = valorPorOpcion[this.respuesta11.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta11);
     //pregunta 8
+    this.respuesta12.valor = valorPorOpcion[this.respuesta12.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta12);
     //pregunta 9
+    this.respuesta13.valor = 2;
     this.listaRespuestas1.push(this.respuesta13);
     if (this.respuesta13.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta14);
       this.listaRespuestas1.push(this.respuesta15);
     } else {
+      this.respuesta14.opcion = 'N/A';
       this.respuesta14.texto_res = 'N/A';
+      this.respuesta14.valor = 0;
       this.respuesta14.id_pregunta = 10
       this.listaRespuestas1.push(this.respuesta14);
+      this.respuesta15.opcion = 'N/A';
+      this.respuesta15.valor = 0;
       this.respuesta15.texto_res = 'N/A';
       this.respuesta15.id_pregunta = 11
       this.listaRespuestas1.push(this.respuesta15);
     }
     //pregunta 12
+    this.respuesta16.valor = 2;
     this.listaRespuestas1.push(this.respuesta16);
     if (this.respuesta16.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta17);
@@ -268,28 +299,40 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas1.push(this.respuesta20);
     } else {
       this.respuesta17.texto_res = 'N/A';
+      this.respuesta17.opcion = 'N/A';
+      this.respuesta17.valor = 0;
       this.respuesta17.id_pregunta = 12;
       this.respuesta17.id_subpregunta = 7
       this.listaRespuestas1.push(this.respuesta17);
       this.respuesta18.texto_res = 'N/A';
+      this.respuesta18.opcion = 'N/A';
+      this.respuesta18.valor = 0;
       this.respuesta17.id_pregunta = 12;
       this.respuesta18.id_subpregunta = 8
       this.listaRespuestas1.push(this.respuesta18);
       this.respuesta19.texto_res = 'N/A';
+      this.respuesta19.opcion = 'N/A';
+      this.respuesta19.valor = 0;
       this.respuesta17.id_pregunta = 12;
       this.respuesta19.id_subpregunta = 9
       this.listaRespuestas1.push(this.respuesta19);
       this.respuesta20.texto_res = 'N/A';
+      this.respuesta20.opcion = 'N/A';
+      this.respuesta20.valor = 0;
       this.respuesta17.id_pregunta = 12;
       this.respuesta20.id_subpregunta = 10
       this.listaRespuestas1.push(this.respuesta20);
     }
     //pregunta 13
+    this.respuesta21.valor = valorPorOpcionQ13[this.respuesta21.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta21);
     //pregunta 14
+    this.respuesta22.valor = valorPorOpcionQ13[this.respuesta22.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta22);
     //pregunta 15
+    this.respuesta23.valor = valorPorOpcionQ13[this.respuesta23.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta23);
+
 
     const payload = { respuestas: this.listaRespuestas1, id_empresa: this.id_empresa };
 
@@ -400,7 +443,7 @@ export class EncuestaEmpresaComponent {
 
   //onSubmit seccion 2
   onSubmitSeccion2() {
-    //console.log(this.respuesta1);
+    
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
