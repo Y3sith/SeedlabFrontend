@@ -813,6 +813,7 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas3 = [];
 
+    this.respuesta66.valor = this.respuesta66.opcion === 'Si' ? 25 : this.respuesta66.opcion === 'Medio' ? 12.5 : 0;
     this.listaRespuestas3.push(this.respuesta66);
     if (this.respuesta66.opcion === 'Si') {
       this.listaRespuestas3.push(this.respuesta67);
@@ -821,6 +822,7 @@ export class EncuestaEmpresaComponent {
       this.respuesta67.id_pregunta = 31;
       this.listaRespuestas3.push(this.respuesta67);
     }
+    this.respuesta68.opcion === 'Si' ? this.respuesta68.valor = 20 : this.respuesta68.opcion === 'Medio' ? 10 : 0;
     this.listaRespuestas3.push(this.respuesta68);
     if (this.respuesta68.opcion === 'Si') {
       this.listaRespuestas3.push(this.respuesta69);
@@ -829,13 +831,19 @@ export class EncuestaEmpresaComponent {
       this.respuesta69.id_pregunta = 33;
       this.listaRespuestas3.push(this.respuesta69);
     }
+    this.respuesta70.valor = this.respuesta70.opcion === 'Si' ? 15 : this.respuesta70.opcion === 'Medio' ? 7.5 : 0;
     this.listaRespuestas3.push(this.respuesta70);
     this.listaRespuestas3.push(this.respuesta71);
     this.listaRespuestas3.push(this.respuesta72);
+    this.respuesta73.valor = this.respuesta73.opcion === 'Si' ? 20 : this.respuesta73.opcion === 'Medio' ? 10 : 0;
     this.listaRespuestas3.push(this.respuesta73);
+    this.respuesta74.opcion === 'Si'? this.respuesta74.valor = 5  : 0;
     this.listaRespuestas3.push(this.respuesta74);
+    this.respuesta75.opcion === 'Si'? this.respuesta75.valor = 5  : 0;
     this.listaRespuestas3.push(this.respuesta75);
+    this.respuesta76.opcion === 'Si'? this.respuesta76.valor = 5  : 0;
     this.listaRespuestas3.push(this.respuesta76);
+    this.respuesta77.opcion === 'Si'? this.respuesta77.valor = 5  : 0;
     this.listaRespuestas3.push(this.respuesta77);
 
     for (let i = 29; i < 41; i++) {

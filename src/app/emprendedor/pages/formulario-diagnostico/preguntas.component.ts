@@ -324,7 +324,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 30,//respuesta66
         nombre: '¿Tiene claramente definido sus clientes actuales?',
-        puntaje: 0,
+        puntaje: 25,
         id_seccion: 3,
         isAffirmativeQuestion: true,
         isText: false,
@@ -342,7 +342,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 32,//respuesta68
         nombre: '¿Tiene definido sus clientes potenciales?',
-        puntaje: 0,
+        puntaje: 20,
         id_seccion: 3,
         isAffirmativeQuestion: true,
         isText: false,
@@ -360,7 +360,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 34,//respuesta70
         nombre: '¿Tiene definido los competidores de su producto y/o servicio?',
-        puntaje: 0,
+        puntaje: 15,
         id_seccion: 3,
         isAffirmativeQuestion: false,
         isText: false,
@@ -387,7 +387,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 37,//respuesta73
         nombre: '¿Tiene identificado con claridad el factor diferencial de su empresa, producto y/o servicio?',
-        puntaje: 0,
+        puntaje: 20,
         id_seccion: 3,
         isAffirmativeQuestion: false,
         isText: false,
@@ -396,7 +396,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 38,//respuesta74
         nombre: '¿Ha participado en otras estrategias de fortalecimiento, semilla, aceleración y/o similares?',
-        puntaje: 0,
+        puntaje: 5,
         id_seccion: 3,
         isAffirmativeQuestion: false,
         isText: false,
@@ -405,7 +405,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 39,//respuesta75
         nombre: '¿Está dispuesto a realizar alianzas para la venta y/o distribución de sus productos, así como para la adquisición de equipos, insumos y/o materiales?',
-        puntaje: 0,
+        puntaje: 5,
         id_seccion: 3,
         isAffirmativeQuestion: false,
         isText: false,
@@ -414,7 +414,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 40,//respuesta76
         nombre: '¿Está dispuesto a realizar alianzas y/o convenios para el uso de equipos con otras instituciones y/u organizaciones para el desarrollo de productos?',
-        puntaje: 0,
+        puntaje: 5,
         id_seccion: 3,
         isAffirmativeQuestion: false,
         isText: false,
