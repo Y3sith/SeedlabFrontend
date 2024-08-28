@@ -1,9 +1,7 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RutaService } from '../../../servicios/rutas.service';
 import { Router } from '@angular/router';
 import { Ruta } from '../../../Modelos/ruta.modelo';
-
-
 
 @Component({
   selector: 'app-ruta-emprendedor',
@@ -69,4 +67,20 @@ export class RutaEmprendedorComponent implements OnInit {
       console.log('No hay token disponible');
     }
   }
-}  
+
+  getItemClass(index: number): string {
+    if (index === 0) return 'item-single';
+    if ((index - 1) % 3 === 0) return 'item-mid';
+    if ((index - 2) % 3 === 0) return 'item-mid';
+    return 'item-single';
+  }
+  
+  getOrder(index: number): number {
+    return Math.floor(index / 3) * 3 + (index % 3);
+  }
+
+  getCircleColor(index: number): string {
+    const colors = ['#1abc9c', '#3498db', '#9b59b6', '#e67e22', '#e74c3c', '#f39c12'];
+    return colors[index % colors.length];
+  }
+}
