@@ -272,7 +272,7 @@ export class EncuestaEmpresaComponent {
     this.respuesta12.valor = valorPorOpcion[this.respuesta12.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta12);
     //pregunta 9
-    this.respuesta13.valor = 2;
+    this.respuesta13.opcion === 'Si' ? this.respuesta13.valor = 2 : 0;
     this.listaRespuestas1.push(this.respuesta13);
     if (this.respuesta13.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta14);
@@ -290,7 +290,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas1.push(this.respuesta15);
     }
     //pregunta 12
-    this.respuesta16.valor = 2;
+    this.respuesta16.opcion === 'Si' ? this.respuesta16.valor = 2 : 0;
     this.listaRespuestas1.push(this.respuesta16);
     if (this.respuesta16.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta17);
@@ -449,16 +449,33 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas2 = [];
 
+    const valorRespuesta26 = {
+      'Ingreso superior al egreso':15,
+      'Ingreso igual al egreso':15,
+      'Ingreso inferior al egreso':15,
+      'No sabe':0
+    }
+
+
+
     //Pregunta 16 y 17
     this.listaRespuestas2.push(this.respuesta24);
     if (this.respuesta24.opcion === 'Si') {
+      this.respuesta25.opcion === 'Si' ? this.respuesta25.valor = 1.9 : this.respuesta25.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta25);
+      this.respuesta26.opcion === 'Si' ? this.respuesta26.valor = 1.9 : this.respuesta26.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta26);
+      this.respuesta27.opcion === 'Si' ? this.respuesta27.valor = 1.9 : this.respuesta27.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta27);
+      this.respuesta28.opcion === 'Si' ? this.respuesta28.valor = 1.9 : this.respuesta28.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta28);
+      this.respuesta29.opcion === 'Si' ? this.respuesta29.valor = 1.9 : this.respuesta29.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta29);
+      this.respuesta30.opcion === 'Si' ? this.respuesta30.valor = 1.9 : this.respuesta30.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta30);
+      this.respuesta31.opcion === 'Si' ? this.respuesta31.valor = 1.9 : this.respuesta31.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta31);
+      this.respuesta32.opcion === 'Si' ? this.respuesta32.valor = 1.9 : this.respuesta32.opcion === 'Medio' ? 0.9 : 0;
       this.listaRespuestas2.push(this.respuesta32);
     } else {
       this.respuesta25.texto_res = 'N/A';
@@ -497,10 +514,15 @@ export class EncuestaEmpresaComponent {
     //pregunta 18 y 19
     this.listaRespuestas2.push(this.respuesta33);
     if (this.respuesta33.opcion === 'Si') {
+      this.respuesta34.opcion === 'Si' ? this.respuesta34.valor = 2.5 : 0;
       this.listaRespuestas2.push(this.respuesta34);
+      this.respuesta35.opcion === 'Si' ? this.respuesta34.valor = 2.5 : 0;
       this.listaRespuestas2.push(this.respuesta35);
+      this.respuesta36.opcion === 'Si' ? this.respuesta34.valor = 2.5 : 0;
       this.listaRespuestas2.push(this.respuesta36);
+      this.respuesta37.opcion === 'Si' ? this.respuesta34.valor = 2.5 : 0;
       this.listaRespuestas2.push(this.respuesta37);
+      this.respuesta38.opcion === 'Si' ? this.respuesta34.valor = 2.5 : 0;
       this.listaRespuestas2.push(this.respuesta38);
     } else {
       this.respuesta34.texto_res = 'N/A';
@@ -527,9 +549,13 @@ export class EncuestaEmpresaComponent {
     //pregunta 20 y 21
     this.listaRespuestas2.push(this.respuesta39);
     if (this.respuesta39.opcion === 'Si') {
+      this.respuesta40.opcion === 'Si' ? this.respuesta40.valor = 6.7 : this.respuesta40.opcion === 'Medio' ? 3.3 : 0;
       this.listaRespuestas2.push(this.respuesta40);
+      this.respuesta41.opcion === 'Si' ? this.respuesta41.valor = 6.7 : this.respuesta41.opcion === 'Medio' ? 3.3 : 0;
       this.listaRespuestas2.push(this.respuesta41);
+      this.respuesta42.opcion === 'Si' ? this.respuesta42.valor = 6.7 : this.respuesta42.opcion === 'Medio' ? 3.3 : 0;
       this.listaRespuestas2.push(this.respuesta42);
+      this.respuesta43.opcion === 'Si' ? this.respuesta43.valor = 6.7 : this.respuesta43.opcion === 'Medio' ? 3.3 : 0;
       this.listaRespuestas2.push(this.respuesta43);
     } else {
       this.respuesta40.texto_res = 'N/A';
@@ -552,9 +578,13 @@ export class EncuestaEmpresaComponent {
     //pregunta 22 y 23
     this.listaRespuestas2.push(this.respuesta44);
     if (this.respuesta44.opcion === 'Si') {
+      this.respuesta45.opcion === 'Si' ? this.respuesta45.valor = 4.7 : this.respuesta45.opcion === 'Medio' ? 2.3 : 0;
       this.listaRespuestas2.push(this.respuesta45);
+      this.respuesta46.opcion === 'Si' ? this.respuesta46.valor = 4.7 : this.respuesta46.opcion === 'Medio' ? 2.3 : 0;
       this.listaRespuestas2.push(this.respuesta46);
+      this.respuesta47.opcion === 'Si' ? this.respuesta47.valor = 4.7 : this.respuesta47.opcion === 'Medio' ? 2.3 : 0;
       this.listaRespuestas2.push(this.respuesta47);
+      this.respuesta48.opcion === 'Si' ? this.respuesta48.valor = 4.7 : this.respuesta48.opcion === 'Medio' ? 2.3 : 0;
       this.listaRespuestas2.push(this.respuesta48);
     } else {
       this.respuesta45.texto_res = 'N/A';
@@ -575,15 +605,21 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta48);
     }
     //pregunta 24 
+    this.respuesta49.opcion === 'Si' ? this.respuesta49.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta49);
+    this.respuesta50.opcion === 'Si' ? this.respuesta50.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta50);
+    this.respuesta51.opcion === 'Si' ? this.respuesta51.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta51);
+    this.respuesta52.opcion === 'Si' ? this.respuesta52.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta52);
+    this.respuesta53.opcion === 'Si' ? this.respuesta53.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta53);
 
     //pregunta 25 y 26
     this.listaRespuestas2.push(this.respuesta54);
     if (this.respuesta54.opcion === 'Si') {
+      this.respuesta55.valor = valorRespuesta26[this.respuesta55.opcion];
       this.listaRespuestas2.push(this.respuesta55);
     } else {
       this.respuesta55.texto_res = 'N/A';
@@ -592,17 +628,26 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta55);
     }
     //pregunta27
+    this.respuesta56.opcion === 'Si' ? this.respuesta56.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta56);
+    this.respuesta57.opcion === 'Si' ? this.respuesta57.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta57);
+    this.respuesta58.opcion === 'Si' ? this.respuesta58.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta58);
+    this.respuesta59.opcion === 'Si' ? this.respuesta59.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta59);
+    this.respuesta60.opcion === 'Si' ? this.respuesta60.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta60);
     //pregunta 28 y 29
     this.listaRespuestas2.push(this.respuesta61);
     if (this.respuesta61.opcion === 'Si') {
+      this.respuesta62.opcion === 'Si' ? this.respuesta62.valor = 1.5 : 0;
       this.listaRespuestas2.push(this.respuesta62);
+      this.respuesta63.opcion === 'Si' ? this.respuesta63.valor = 1.5 : 0;
       this.listaRespuestas2.push(this.respuesta63);
+      this.respuesta64.opcion === 'Si' ? this.respuesta64.valor = 1.5 : 0;
       this.listaRespuestas2.push(this.respuesta64);
+      this.respuesta65.opcion === 'Si' ? this.respuesta65.valor = 1.5 : 0;
       this.listaRespuestas2.push(this.respuesta65);
     } else {
       this.respuesta62.texto_res = 'N/A';
@@ -966,7 +1011,7 @@ export class EncuestaEmpresaComponent {
       if (currentPregunta.isAffirmativeQuestion) {
         if (currentRespuesta.opcion === 'No') {
           // Si la respuesta es 'No', saltar la pregunta actual y todas las subpreguntas
-          if (i + 1 < 48) { // Verifica si hay una pregunta siguiente para saltar
+          if (i + 1 < 47) { // Verifica si hay una pregunta siguiente para saltar
             const nextPregunta = PREGUNTAS[i + 1];
             if (nextPregunta.subPreguntas && nextPregunta.subPreguntas.length > 0) {
               // Saltar también las subpreguntas de la siguiente pregunta si las hay

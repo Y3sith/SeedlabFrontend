@@ -160,7 +160,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 17,
         nombre: 'Si la respuesta anterior fue afirmativa indicar: ¿Cuáles?',
-        puntaje: 0,
+        puntaje: 15,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
@@ -187,7 +187,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 19,
         nombre: 'Si la respuesta anterior fue afirmativa indicar: ¿Cuáles?',
-        puntaje: 0,
+        puntaje: 10,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
@@ -211,7 +211,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 21,
         nombre: 'Si la respuesta anterior fue afirmativa indicar: ¿Cuáles?',
-        puntaje: 0,
+        puntaje: 20,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
@@ -234,7 +234,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 23,
         nombre: 'Si la anterior respuesta fue afirmativa: ¿Qué factores tiene en cuenta para definir el precio de su producto y/o servicio?',
-        puntaje: 0,
+        puntaje: 14,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
@@ -248,7 +248,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 24,
         nombre: '¿Cuáles alternativas de financiamiento usa para apoyar su emprendimiento?',
-        puntaje: 0,
+        puntaje: 10,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
@@ -272,7 +272,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 26,
         nombre: 'Si la anterior respuesta fue afirmativa: ¿Cuál es el valor promedio / estimado de las ventas al año?',
-        puntaje: 0,
+        puntaje: 15,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
@@ -286,7 +286,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 27,
         nombre: '¿Cuáles canales de ventas usa para comercializar su negocio?',
-        puntaje: 0,
+        puntaje: 10,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
@@ -310,7 +310,7 @@ export const PREGUNTAS: Preguntas[] = [
     {
         id: 29,
         nombre: 'Si la anterior respuesta fue afirmativa: ¿Cuáles?',
-        puntaje: 0,
+        puntaje: 6,
         id_seccion: 2,
         isAffirmativeQuestion: false,
         isText: false,
