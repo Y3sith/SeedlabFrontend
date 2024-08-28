@@ -36,9 +36,11 @@ const routes: Routes = [
       { path: 'actnivlec', component: ActnivlecComponent, data: { title: 'Act-Niv-Lec', showInMenu: false } },
       { path: 'add-actividad', component: AddActividadComponent, data: { title: 'Actividad', icon: 'fa-solid fa-table-list', showInMenu: false } },
       { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
-      { path: 'add-all', component: AddAllComponent, data: {title: 'Creación actividades', icon: 'fa-solid fa-table-list', showInMenu: true}},
+      { path: 'add-all', component: AddAllComponent, data: {title: 'Creación actividades', icon: 'fa-solid fa-table-list', showInMenu: false}},
       /////
       { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}},
+      ////
+      
     ]
   }
 ];

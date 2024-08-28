@@ -19,7 +19,7 @@ const routes: Routes = [
       {path: 'perfil-aliado', component: PerfilAliadoComponent, data: {title: 'Perfil', showInMenu: true, icon: 'fa-solid fa-circle-user'}},
       {path: 'Reportes', component:ReportesComponent, data:{title: 'Reportes', showInMenu: true, icon: 'fa-regular fa-file-lines'}},
       {path: 'add-asesor', component: ModalAddAsesoresComponent, data:{showInMenu:false}},
-      { path: 'edit-orientador/:id', component: ModalAddAsesoresComponent, data:{  showInMenu: false } },
+      {path: 'edit-asesor/:id', component: ModalAddAsesoresComponent, data:{  showInMenu: false } },
     ]
   }
 ];  
