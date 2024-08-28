@@ -43,6 +43,10 @@ export class PerfilAsesorComponent implements OnInit {
   listTipoDocumento: [] = [];
   /////
   selectedImagen_Perfil: File | null = null;
+  perfilPreview: string | ArrayBuffer | null = null;
+  isHidden = true;
+  showEditButton = false;
+  tiempoEspera = 1800;
   asesorId: any;
 
   asesorForm = this.fb.group({
@@ -55,7 +59,8 @@ export class PerfilAsesorComponent implements OnInit {
     fecha_nac: ['', Validators.required],
     direccion: ['', Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10)]],
-    municipio: ['',Validators.required],
+    id_departamento: [Validators.required],
+    id_municipio: [Validators.required],
     aliado: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
@@ -78,8 +83,7 @@ export class PerfilAsesorComponent implements OnInit {
     this.verEditar();
     this.tipodatoDocumento();
     this.cargarDepartamentos();
-    
-    
+    this.initializeFormState();
   }
 
   /* Valida el token del login */
@@ -117,7 +121,8 @@ export class PerfilAsesorComponent implements OnInit {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             celular: data.celular,
-            municipio: data.municipio,
+            id_municipio: data.id_municipio,
+            id_departamento: data.id_departamento,
             aliado: data.id,
             email: data.email,
             password: '',
@@ -134,120 +139,169 @@ export class PerfilAsesorComponent implements OnInit {
   /* Actualiza los datos del asesor */
   editAsesor(): void {
     const formData = new FormData();
-    let estadoValue: string;
-    if (this.asesorId == null) {
-      // Es un nuevo aliado, forzar el estado a 'true'
-      estadoValue = 'true';
-    } else {
-      // Es una edición, usar el valor del formulario
-      estadoValue = this.asesorForm.get('estado')?.value ? 'true' : 'false';
-    }
+  let estadoValue: string;
 
-    formData.append('nombre', this.asesorForm.get('nombre')?.value);
-    formData.append('apellido', this.asesorForm.get('apellido')?.value);
-    formData.append('documento', this.asesorForm.get('documento')?.value);
-    formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
-    formData.append('genero', this.asesorForm.get('genero')?.value);
-    formData.append('direccion', this.asesorForm.get('direccion')?.value);
-    formData.append('celular', this.asesorForm.get('celular')?.value);
-    formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
-    formData.append('aliado', this.nombreAliado);
-    formData.append('email', this.asesorForm.get('email')?.value);
-    formData.append('password', this.asesorForm.get('password')?.value);
-    formData.append('estado', estadoValue);
-    
-    
-    Object.keys(this.asesorForm.controls).forEach(key => {
-      const control = this.asesorForm.get(key);
-      if (control?.value !== null && control?.value !== undefined) {
-        if (key === 'fecha_nac') {
-          const date = new Date(control.value);
-          formData.append(key, date.toISOString().split('T')[0]);
-        } else if (key !== 'imagen_perfil') {
+  // First pass: handle special cases and avoid duplication
+  Object.keys(this.asesorForm.controls).forEach((key) => {
+    const control = this.asesorForm.get(key);
+    if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
+      if (key === 'password') {
+        // Only include password if it's not empty
+        if (control.value.trim() !== '') {
           formData.append(key, control.value);
         }
+      } else if (key === 'fecha_nac') {
+        const date = new Date(control.value);
+        if (!isNaN(date.getTime())) {
+          formData.append(key, date.toISOString().split('T')[0]);
+        }
+      } else if (key === 'estado') {
+        formData.append(key, control.value ? '1' : '0');
+      } else if (key !== 'imagen_perfil') {
+        formData.append(key, control.value);
       }
-    });
-
-
-    // Agregar la imagen de perfil si se ha seleccionado una nueva
-    if (this.selectedImagen_Perfil) {
-      formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
-    this.asesorService.updateAsesor(this.token, this.id, formData).subscribe(
-      data => {
-        location.reload();
-      },
-      error => {
-        console.error(error);
-      }
-    )
+  });
+
+  // Append specific fields (this will overwrite any duplicates from the first pass)
+  const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
+  specificFields.forEach(field => {
+    const value = this.asesorForm.get(field)?.value;
+    if (value !== null && value !== undefined && value !== '') {
+      formData.append(field, value);
+    }
+  });
+
+ 
+  if (this.asesorForm.get('direccion')?.value) {
+    formData.append('direccion', this.asesorForm.get('direccion')?.value);
   }
+
+  if (this.selectedImagen_perfil) {
+    formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
+  }
+
+  formData.append('aliado', this.nombreAliado);
+
+  //   this.asesorService.updateAsesor(this.token, this.id, formData).subscribe(
+  //     data => {
+  //       location.reload();
+  //     },
+  //     error => {
+  //       console.error(error);
+  //     }
+  //   )
+  // }
+
+  this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+    if (result.isConfirmed) {
+      this.asesorService.updateAsesor(this.token, this.id, formData).subscribe(
+        (data) => {
+          console.log('Response from server:', data);
+          setTimeout(function () {
+            location.reload();
+          }, this.tiempoEspera);
+          this.alertService.successAlert('Exito', data.message);
+        },
+        (error) => {
+          console.error('Error from server:', error);
+          this.alertService.errorAlert('Error', error.error.message);
+        }
+      );
+    }
+  });
+}
+
+initializeFormState(): void {
+  const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
+  fieldsToDisable.forEach(field => {
+    const control = this.asesorForm.get(field);
+    if (control) {
+      control.disable();
+    }
+  });
+}
 
   /* Bloqueo de inputs */
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
-    const fieldsToToggle = ['nombre', 'apellido', 'celular'];
+    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
+    
     fieldsToToggle.forEach(field => {
       const control = this.asesorForm.get(field);
-      if (this.blockedInputs) {
-        control.disable();
+      if (control) {
+        if (this.blockedInputs) {
+          control.disable();
+        } else {
+          control.enable();
+        }
+        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
       } else {
-        control.enable();
+        console.warn(`Control for field ${field} not found in form`);
       }
     });
+  
+    // Force change detection
+    this.cdRef.detectChanges();
+  
+    // Log the entire form state
+    console.log('Form state after toggling:', this.asesorForm);
   }
 
- /* Restaura los datos originales */
+  // Restaura los datos originales
   onCancel(): void {
-    this.verEditar();
+    location.reload();
   }
 
-  /* Muesta el boton de guardar cambios */
   mostrarGuardarCambios(): void {
     this.boton = false;
   }
 
+  onEdit() {
+    this.blockedInputs = false;
+    this.showEditButton = true;
+    this.toggleInputsLock();
+  }
+
+
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
+      
       let maxSize = 0;
-
-      if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
+  
+      if (field === 'imagen_perfil') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
-      } else if (field === 'ruta_documento') {
-        maxSize = 18 * 1024 * 1024; // 20MB para documentos
-      }
-
+      } 
+  
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-
-        ////Limpia el archivo seleccionado y resetea la previsualización
+  
+        //Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-
+  
         // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'imagen_perfil') {
           this.asesorForm.patchValue({ imagen_perfil: null });
           this.selectedImagen_perfil = null;
-          this.imagenPreview = null; // Resetea la previsualización
+          this.perfilPreview = null; // Resetea la previsualización
         }
         this.resetFileField(field);
         return;
       }
 
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const previewUrl = e.target.result;
-        if (field === 'imagen_perfil') {
-          this.asesorForm.patchValue({ imagen_perfil: previewUrl });
-          this.imagenPreview = previewUrl;
-        }
-      };
-      reader.readAsDataURL(file);
-
+    reader.onload = (e: any) => {
+      const previewUrl = e.target.result;
+      if (field === 'imagen_perfil') {
+        this.asesorForm.patchValue({ imagen_perfil: previewUrl });
+        this.perfilPreview = previewUrl;
+      }
+    };
+    reader.readAsDataURL(file);
+  
       // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
 
@@ -255,12 +309,12 @@ export class PerfilAsesorComponent implements OnInit {
         this.selectedImagen_perfil = file;
         this.asesorForm.patchValue({ imagen_perfil: file });
       }
-
-    } else {
-      this.resetFileField(field);
-    }
+      
+  } else {
+    this.resetFileField(field);
   }
-
+  }
+ 
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -285,10 +339,13 @@ export class PerfilAsesorComponent implements OnInit {
   }
 
 
+  //Funcion para cargar los departamentos
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
+        console.log("DEPARTAMENTO",data);
         this.listDepartamentos = data;
+        //this.cdRef.detectChanges(); // Forzar la detección de cambios
       },
       (err) => {
         console.log(err);
@@ -307,13 +364,18 @@ export class PerfilAsesorComponent implements OnInit {
     this.cargarMunicipios(selectedDepartamento);
   }
 
-  cargarMunicipios(idDepartamento: string): void {
-    this.municipioService.getMunicipios(idDepartamento).subscribe(
-      data => {
+  cargarMunicipios(departamentoId: string): void {
+    this.municipioService.getMunicipios(departamentoId).subscribe(
+      (data) => {
         this.listMunicipios = data;
-        console.log('Municipios cargados:', JSON.stringify(data));
+      console.log("MUNICIPIOS",data);
+        // Establecer el municipio actual en el select después de cargar los municipios
+        //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
+        // if (municipioId) {
+        //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
+        // }
       },
-      err => {
+      (err) => {
         console.log('Error al cargar los municipios:', err);
       }
     );
