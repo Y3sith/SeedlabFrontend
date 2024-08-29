@@ -48,10 +48,10 @@
                                     <!--video-->
                                     <div class="mb-4" *ngSwitchCase="'1'"> 
                                       <label class="block text-sm font-medium text-gray-700 mb-1" for="nombre">Link del video</label>
-                                      <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
+                                      <input type="text" id="fuente" formControlName="fuente" placeholder="Example http://example.com"
                                         (input)="onTextInput($event)"
                                         class="w-full p-2 border rounded ">
-                                      <div *ngIf="formSubmitted && actividadForm.get('ruta_multi')?.invalid" class="error text-red-700">
+                                      <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid" class="error text-red-700">
                                         Este campo es obligatorio.
                                       </div>
                                     </div>
@@ -61,26 +61,26 @@
                                     <div class="mb-4" *ngSwitchCase="'2'">
                                       <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center" for="nombre">
                                         <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
-                                          (change)="onFileSelecteds($event, 'ruta_multi')">
+                                          (change)="onFileSelecteds($event, 'fuente')">
                                         <span (click)="triggerFileInput()"
                                           class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
                                           Subir Imagen
                                           <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                                         </span>
                                       </label>
-                                      <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
+                                      <img *ngIf="fuentePreview" [src]="fuentePreview" alt="Vista previa de la ruta"
                                         class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
                                         class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
-                                      <div>
-                        
-                                      </div>
-                                      <div *ngIf="formSubmitted && actividadForm.get('ruta_multi')?.invalid" class="error text-red-700">
+
+                                      <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid" class="error text-red-700">
                                         Este campo es obligatorio.
+                                      </div>
+                                      <div *ngIf="actividadForm.get('fuente')?.value" class="mt-2 text-gray-500 text-center">
+                                        Archivo seleccionado: {{ aliadoForm.get('fuente')?.value?.name }}
                                       </div>
                                     </div>
 
                                     <!--pdf-->
-                        
                                     <div class="mb-4" *ngSwitchCase="'3'">
                                       <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center" for="nombre">
                                         <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
@@ -91,11 +91,11 @@
                                           <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                                         </span>
                                       </label>
-                                      <div *ngIf="formSubmitted && actividadForm.get('ruta_multi')?.invalid" class="error text-red-700">
+                                      <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid" class="error text-red-700">
                                         Este campo es obligatorio.
                                       </div>
-                                      <div *ngIf="actividadForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
-                                        Archivo seleccionado: {{ actividadForm.get('ruta_multi')?.value?.name }}
+                                      <div *ngIf="actividadForm.get('fuente')?.value" class="mt-2 text-gray-500 text-center">
+                                        Archivo seleccionado: {{ actividadForm.get('fuente')?.value?.name }}
                                       </div>
                                     </div>
                         
@@ -103,11 +103,11 @@
 
                                     <div class="mb-4" *ngSwitchCase="'4'">
                                       <label class="text-xl font-normal flex-none justify-center" for="nombre"></label>
-                                      <!-- <input type="text" id="fuente" formControlName="ruta_multi" (input)="onTextInput($event)" placeholder="Texto de la actividad"
-                                        class="w-full p-2 border rounded "> -->
-                                        <textarea type="text" id="fuente" formControlName="ruta_multi" (input)="onTextInput($event)" placeholder="Texto de la actividad"
-                                        class="w-full p-2 border rounded "></textarea>
-                                      <div *ngIf="formSubmitted && actividadForm.get('ruta_multi')?.invalid" class="error text-red-700">
+                                      <input type="text" id="fuente" formControlName="fuente" (input)="onTextInput($event)" placeholder="Texto de la actividad"
+                                        class="w-full p-2 border rounded ">
+                                        <!-- <textarea type="text" id="fuente" formControlName="fuente" (input)="onTextInput($event)" placeholder="Texto de la actividad"
+                                        class="w-full p-2 border rounded "></textarea> -->
+                                      <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid" class="error text-red-700">
                                         Este campo es obligatorio.
                                       </div>
                                     </div>
@@ -209,6 +209,7 @@
                                 </select>
                             </div>
                             <div class="mb-4">
+                                <label for="fuente" class="" ></label>
                                 <!-- toca cambiarlo para que acepte dependiendo si guardo imagen,pdf,video,texto -->
                                 <!-- <label class="block text-sm font-medium text-gray-700 mb-1">Fuente</label>
                                 <textarea class="w-full p-2 border rounded" rows="3"></textarea> -->
@@ -226,12 +227,13 @@
 
                                     <div *ngSwitchCase="'3'">
                                         <input type="file" id="fuente" formControlName="Imagen"
-                                            (change)="onFileSelected($event)"
+                                            (change)="onFileSelected($event, 'ruta_documento')"
                                             class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     </div>
 
                                     <div *ngSwitchCase="'4'">
                                         <input type="text" id="fuente" formControlName="Pdf"
+                                        (change)="onFileSelected($event, 'ruta_documento')"
                                             class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     </div>
 

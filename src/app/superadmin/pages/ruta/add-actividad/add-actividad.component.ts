@@ -44,7 +44,7 @@ export class AddActividadComponent implements OnInit {
   actividadForm = this.fb.group({
     nombre: ['', Validators.required],
     descripcion: ['', Validators.required],
-    ruta_multi: ['', Validators.required],
+    fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
     id_asesor: ['', Validators.required],
     id_ruta: ['', Validators.required],
@@ -136,7 +136,7 @@ export class AddActividadComponent implements OnInit {
     const actividad: Actividad = {
       nombre: this.actividadForm.value.nombre,
       descripcion: this.actividadForm.value.descripcion,
-      ruta_multi: this.actividadForm.value.ruta_multi,
+      fuente: this.actividadForm.value.fuente,
       id_tipo_dato: parseInt(this.actividadForm.value.id_tipo_dato),
       id_asesor: parseInt(this.actividadForm.value.id_asesor),
       id_ruta: this.rutaSeleccionada.id,
@@ -238,7 +238,7 @@ export class AddActividadComponent implements OnInit {
     this.actividadForm.patchValue({
       nombre: '',
       descripcion: '',
-      ruta_multi: '',
+      fuente: '',
       id_tipo_dato: '',
       id_asesor: ''
     });
