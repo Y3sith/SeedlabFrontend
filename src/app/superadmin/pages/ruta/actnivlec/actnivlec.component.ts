@@ -44,6 +44,7 @@ export class ActnivlecComponent implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef;
   fuentePreview: string | ArrayBuffer | null = null;
   selectedfuente: File | null = null;
+  idactividad: string;
 
 
   ////
@@ -198,6 +199,7 @@ export class ActnivlecComponent implements OnInit {
   //     }
   //   }
   // }
+
   onAliadoChange(event?: any): void {
     let aliadoId: any;
 
@@ -259,20 +261,43 @@ export class ActnivlecComponent implements OnInit {
 
   //agregar una actividad
   addActividadSuperAdmin(): void {
-    this.submittedActividad = true;
-    if (this.actividadForm.invalid) {
-      return;
+    // this.submittedActividad = true;
+    // if (this.actividadForm.invalid) {
+    //   return;
+    // }
+    // const actividad: Actividad = {
+    //   nombre: this.actividadForm.value.nombre,
+    //   descripcion: this.actividadForm.value.descripcion,
+    //   fuente: this.actividadForm.value.fuente,
+    //   id_tipo_dato: parseInt(this.actividadForm.value.id_tipo_dato),
+    //   id_asesor: parseInt(this.actividadForm.value.id_asesor),
+    //   id_ruta: this.rutaId,
+    //   id_aliado: parseInt(this.actividadForm.value.id_aliado)
+    // };
+    const formData = new FormData();
+    let estadoValue: string;
+    if (this.idactividad == null) {
+      estadoValue = 'true'
+    }else{
     }
-    const actividad: Actividad = {
-      nombre: this.actividadForm.value.nombre,
-      descripcion: this.actividadForm.value.descripcion,
-      fuente: this.actividadForm.value.fuente,
-      id_tipo_dato: parseInt(this.actividadForm.value.id_tipo_dato),
-      id_asesor: parseInt(this.actividadForm.value.id_asesor),
-      id_ruta: this.rutaId,
-      id_aliado: parseInt(this.actividadForm.value.id_aliado)
-    };
-    this.superAdminService.crearActividadSuperAdmin(this.token, actividad).subscribe(
+   formData.append('nombre', this.actividadForm.get('nombre')?.value);
+    formData.append('descripcion', this.actividadForm.get('descripcion')?.value);
+    formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
+    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value);
+    formData.append('id_ruta', this.rutaId.toString());
+    formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
+    formData.append('estado', estadoValue);
+    console.log('datos enviados: ',formData)
+
+    if (this.selectedfuente) {
+      formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
+    } else {
+      const rutaMultiValue = this.actividadForm.get('fuente')?.value;
+      if (rutaMultiValue) {
+        formData.append('fuente', rutaMultiValue);
+      }
+    }
+    this.superAdminService.crearActividadSuperAdmin(this.token, formData).subscribe(
       (data: any) => {
         const actividadCreada = data[0];
         this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
@@ -391,33 +416,6 @@ export class ActnivlecComponent implements OnInit {
     )
   }
 
-  // onTipoDatoChange(): void {
-  //   const tipoDatoId = this.actividadForm.get('id_tipo_dato').value;
-  //   this.actividadForm.get('id_tipo_dato').clearValidators();
-
-  //   switch (tipoDatoId) {
-  //     case '1': // Video
-  //       this.actividadForm.get('Video').setValidators([Validators.required]);
-  //       break;
-  //     case '2': // Imagen
-  //       this.actividadForm.get('Imagen').setValidators([Validators.required]);
-  //       break;
-  //     case '3': // PDF
-  //       this.actividadForm.get('PDF').setValidators([Validators.required]);
-
-  //       break;
-  //     case '4': // Texto
-  //       this.actividadForm.get('Texto').setValidators([Validators.required]);
-  //       break;
-  //     default:
-  //       this.actividadForm.get('fuente').clearValidators();
-  //       break
-  //   }
-
-  //   // Actualizar validaciones y detectar cambios
-  //   this.actividadForm.get('fuente').updateValueAndValidity();
-  //   //this.cdRef.detectChanges();
-  // }
   onTipoDatoChange(): void {
     const tipoDatoId = this.actividadForm.get('id_tipo_dato').value;
     this.actividadForm.get('fuente').clearValidators();
@@ -447,33 +445,57 @@ export class ActnivlecComponent implements OnInit {
     this.fileInput.nativeElement.click();
   }
 
+  // onFileSelecteds(event: any, field: string) {
+  //   if (event.target.files && event.target.files.length > 0) {
+  //     const file = event.target.files[0];
 
+  //     let maxSize = 0;
 
-  // onFileSelected(event: any): void {
-  //   const file: File = event.target.files[0];
-  //   if (file) {
+  //     if (field === 'fuente' ) {
+  //       maxSize = 5 * 1024 * 1024;
+  //     }else if (field === 'fuente_documento') {
+  //       maxSize == 18 * 1024 * 1024;
+  //     }
+
+  //     if (file.size > maxSize) {
+  //       const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
+  //       this.alertServices.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`)
+  //       this.resetFileField(field);
+
+  //       event.target.value =  '';
+
+  //       if (field === 'ruta_documento') {
+  //         this.actividadForm.patchValue({ fuente: null});
+  //         this.fuentePreview = null;
+  //         this.selectedfuente = null;
+  //       }
+  //       this.resetFileField(field);
+  //       return;
+  //     }
+
   //     const reader = new FileReader();
   //     reader.onload = (e: any) => {
-  //       const img = new Image();
-  //       img.src = e.target.result;
-  //       img.onload = () => {
-  //         const canvas = document.createElement('canvas');
-  //         canvas.width = 300; // Nueva anchura
-  //         canvas.height = 300; // Nueva altura
-  //         const pica = Pica();
-  //         pica.resize(img, canvas)
-  //           .then((result) => pica.toBlob(result, 'image/jpeg', 0.90))
-  //           .then((blob) => {
-  //             const reader2 = new FileReader();
-  //             reader2.onload = (e2: any) => {
-  //               this.contenidoLeccionForm.patchValue({ fuente: e2.target.result });
-  //             };
-  //             reader2.readAsDataURL(blob);
-  //           });
-  //       };
+  //       const previewUrl = e.target.result;
+  //       if (field === 'ruta_documento') {
+  //         this.actividadForm.patchValue({ fuente: previewUrl});
+  //         this.fuentePreview = previewUrl;
+  //       }
   //     };
   //     reader.readAsDataURL(file);
-  //   }
+
+  //     this.generateImagePreview(file, field);
+
+  //     if (field === 'ruta_documento') {
+  //       this.selectedfuente = file;
+  //       this.actividadForm.patchValue({fuente: file})
+  //     } else if (field === 'ruta_documento') {
+  //       this.selectedfuente = file;
+  //       this.actividadForm.patchValue({ fuente: file });
+  //     }
+
+  //   }else {
+  //     this.resetFileField(field);
+  //   } 
   // }
 
   onFileSelecteds(event: any, field: string) {
@@ -482,51 +504,27 @@ export class ActnivlecComponent implements OnInit {
 
       let maxSize = 0;
 
-      if (field === 'fuente' ) {
+      if (field === 'fuente') {
         maxSize = 5 * 1024 * 1024;
-      }else if (field === 'fuente_documento') {
-        maxSize == 18 * 1024 * 1024;
+      } else if (field === 'fuente_documento') {
+        maxSize = 18 * 1024 * 1024;
       }
 
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertServices.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`)
         this.resetFileField(field);
-
-        event.target.value =  '';
-
-        if (field === 'ruta_documento') {
-          this.actividadForm.patchValue({ fuente: null});
-          this.fuentePreview = null;
-          this.selectedfuente = null;
-        }
-        this.resetFileField(field);
+        event.target.value = '';
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        const previewUrl = e.target.result;
-        if (field === 'ruta_documento') {
-          this.actividadForm.patchValue({ fuente: previewUrl});
-          this.fuentePreview = previewUrl;
-        }
-      };
-      reader.readAsDataURL(file);
-
-      this.generateImagePreview(file, field);
-
-      if (field === 'ruta_documento') {
-        this.selectedfuente = file;
-        this.actividadForm.patchValue({fuente: file})
-      } else if (field === 'ruta_documento') {
+      if (field === 'fuente') {
         this.selectedfuente = file;
         this.actividadForm.patchValue({ fuente: file });
       }
-
-    }else {
+    } else {
       this.resetFileField(field);
-    } 
+    }
   }
 
   resetFileField(field: string) {

@@ -27,23 +27,6 @@
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <!-- <ng-container [ngSwitch]="actividadForm.get('id_tipo_dato').value">
-                                    <div *ngSwitchCase="'1'">
-                                        <input type="text" id="fuente" formControlName="fuente" placeholder="Example http://example.com" class="w-full p-2 border rounded">
-                                    </div>
-
-                                    <div *ngSwitchCase="'2'">
-                                        <input type="file" id="fuente" formControlName="fuente" (change)="onFileSelected($event)" class="w-full p-2 border rounded">
-                                    </div>
-
-                                    <div *ngSwitchCase="'3'">
-                                        <input type="file" id="fuente" formControlName="fuente"class="w-full p-2 border rounded">
-                                    </div>
-
-                                    <div *ngSwitchCase="'4'">
-                                        <input type="text" id="fuente" formControlName="fuente" class="w-full p-2 border rounded">
-                                    </div>
-                                </ng-container> -->
                                 <ng-container [ngSwitch]="actividadForm.get('id_tipo_dato').value">
                                     <!--video-->
                                     <div class="mb-4" *ngSwitchCase="'1'"> 
@@ -68,15 +51,11 @@
                                           <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                                         </span>
                                       </label>
-                                      <img *ngIf="fuentePreview" [src]="fuentePreview" alt="Vista previa de la ruta"
-                                        class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
-                                        class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
-
                                       <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid" class="error text-red-700">
                                         Este campo es obligatorio.
                                       </div>
                                       <div *ngIf="actividadForm.get('fuente')?.value" class="mt-2 text-gray-500 text-center">
-                                        Archivo seleccionado: {{ aliadoForm.get('fuente')?.value?.name }}
+                                        Archivo seleccionado: {{ selectedfuente.name }}
                                       </div>
                                     </div>
 

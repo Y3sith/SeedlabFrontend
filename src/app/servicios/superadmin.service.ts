@@ -76,9 +76,9 @@ export class SuperadminService {
     return this.http.get(this.url+"listAliado",options)
   }
 
-  crearActividadSuperAdmin(access_token: any, actividad: Actividad):Observable<any>{
-    const options = {headers: this.CreacionHeaders(access_token)};
-    return this.http.post(environment.apiUrl+"actividad/crearActividad",actividad,options)
+  crearActividadSuperAdmin(access_token: any, formData: FormData):Observable<any>{
+    const options = {headers: this.CreacionHeaderss(access_token)};
+    return this.http.post(environment.apiUrl+"actividad/crearActividad",formData,options)
   }
   crearNivelSuperAdmin(access_token:any,nivel: Nivel):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
