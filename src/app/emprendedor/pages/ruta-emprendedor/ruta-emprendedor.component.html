@@ -1,14 +1,19 @@
+<div class="container mx-auto p-0 pt-2">
+  <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+    <app-header [title] [subtitle]="'Ruta de actividades'"></app-header>
+  </header>
+</div>
+
+
+
 <div class="route-container">
   <ng-container *ngFor="let ruta of rutaList; let i = index">
     <div class="route-item" [ngClass]="getItemClass(i)" [style.order]="getOrder(i)">
-      <div class="circle">
+      <div class="circle" [ngClass]="getCirclePositionClass(i)">
         <div class="icon"></div>
         <div class="number">{{ (i + 1).toString().padStart(2, '0') }}</div>
       </div>
       <div class="content">
         <h3>{{ ruta.nombre }}</h3>
-        <p>{{ ruta.descripcion }}</p>
       </div>
     </div>
-  </ng-container>
-</div>

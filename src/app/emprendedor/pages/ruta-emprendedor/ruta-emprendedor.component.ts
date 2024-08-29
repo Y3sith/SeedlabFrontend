@@ -83,4 +83,16 @@ export class RutaEmprendedorComponent implements OnInit {
     const colors = ['#1abc9c', '#3498db', '#9b59b6', '#e67e22', '#e74c3c', '#f39c12'];
     return colors[index % colors.length];
   }
+
+  getCirclePositionClass(index: number): string {
+    // Calculamos el grupo de 6 en el que se encuentra el índice
+    const group = Math.floor(index / 6);
+    
+    // Calculamos la posición dentro del grupo (0, 1, 2, 3, 4, 5)
+    const positionInGroup = index % 6;
+    
+    // Los campos 1, 2 y 5 (posiciones 0, 1 y 4) tendrán el círculo a la derecha
+    // Los campos 3, 4 y 6 (posiciones 2, 3 y 5) tendrán el círculo a la izquierda
+    return [0, 1, 4].includes(positionInGroup) ? 'circle-right' : 'circle-left';
+  }
 }
