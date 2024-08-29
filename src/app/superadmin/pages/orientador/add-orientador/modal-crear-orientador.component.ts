@@ -6,7 +6,7 @@ import { Orientador } from '../../../../Modelos/orientador.model';
 import { OrientadorService } from '../../../../servicios/orientador.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SuperadminService } from '../../../../servicios/superadmin.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
 import { MunicipioService } from '../../../../servicios/municipio.service';
@@ -44,6 +44,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
   subSectionPerSection: number[] = [1, 1, 1];
   /////
   tiempoEspera = 1800;
+  ///
+  idOrientador: number = null;
 
   orientadorForm = this.fb.group({
     nombre: ['', Validators.required],
@@ -53,7 +55,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     imagen_perfil: [null, Validators.required],
     celular: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10)]],
     genero: ['', Validators.required],
-    //direccion: ['', Validators.required ],
     direccion: [],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
@@ -73,6 +74,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     private municipioService: MunicipioService,
     private authService: AuthService,
     private cdRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
 
   ) {
     //this.orientadorId = data.orientadorId;
@@ -80,17 +82,27 @@ export class ModalCrearOrientadorComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateToken();
-    this.verEditar();
-    this.tipodato();
-    this.cargarDepartamentos();
+    this.route.paramMap.subscribe(params => {
+      this.idOrientador = +params.get('id');
+      if (this.idOrientador) {
+        this.isEditing = true;
+        this.verEditar();
+      } else {
+        this.idOrientador = null; // Establece claramente que no hay un id en modo creación
+        this.isEditing = false;
+      }
+    });
+    
     if (this.orientadorId != null) {
       this.isEditing = true;
       this.orientadorForm.get('password')?.setValidators([Validators.minLength(8)]);
-      this.verEditar(); // Llama a verEditar si estás editando un orientador
+      //this.verEditar(); // Llama a verEditar si estás editando un orientador
     } else {
       this.orientadorForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
     this.orientadorForm.get('password')?.updateValueAndValidity();
+    this.tipoDocumento();
+    this.cargarDepartamentos();
 
   }
 
@@ -106,7 +118,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     }
   }
 
-  tipodato(): void {
+  tipoDocumento(): void {
     if (this.token) {
       this.authService.tipoDocumento().subscribe(
         data => {
@@ -155,8 +167,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
 
   verEditar(): void {
-    if (this.orientadorId != null) {
-      this.orientadorServices.getinformacionOrientador(this.token, this.orientadorId).subscribe(
+    if (this.idOrientador != null) {
+      this.orientadorServices.getinformacionOrientador(this.token, this.idOrientador).subscribe(
         data => {
           console.log('datossssss: ', data);
           this.orientadorForm.patchValue({
@@ -196,7 +208,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
               this.orientadorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
-
         },
         error => {
           console.log(error);
@@ -208,7 +219,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   addOrientador(): void {
     const formData = new FormData();
     let estadoValue: string;
-    if (this.orientadorId == null) {
+    if (this.idOrientador == null) {
       estadoValue = '1';
     } else {
       // Es una edición, usar el valor del formulario
@@ -253,17 +264,18 @@ export class ModalCrearOrientadorComponent implements OnInit {
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
-
     console.log('Datos del formulario:', this.orientadorForm.value);
 
-    if (this.orientadorId != null) {
+     /* Actualiza orientador */
+    if (this.idOrientador != null) {
       this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
         if (result.isConfirmed) {
-          this.orientadorServices.updateOrientador(this.token, this.orientadorId, formData).subscribe(
+          this.orientadorServices.updateOrientador(this.token, this.idOrientador, formData).subscribe(
             data => {
               setTimeout(function () {
-                location.reload();
+                //location.reload();
               }, this.tiempoEspera);
+              this.router.navigate(['/list-orientador']);
               this.alerService.successAlert('Exito', data.message);
             },
             error => {
@@ -293,11 +305,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
 
   toggleActive() {
     this.isActive = !this.isActive;
-    //this.orientadorForm.patchValue({ estado: this.isActive });
-    //console.log("Estado después de toggle:", this.isActive); // Verifica el estado después de toggle
-    //this.orientadorForm.patchValue({ estado: this.isActive ? true : false });
+    console.log("Estado después de toggle:", this.isActive);
     this.orientadorForm.patchValue({ estado: this.isActive ? true : false });
-    //console.log("Estado después de toggle:", this.isActive); // Verifica el estado después de toggle
   }
   mostrarToggle(): void {
     if (this.orientadorId != null) {

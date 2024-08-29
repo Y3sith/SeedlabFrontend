@@ -7,3 +7,25 @@
    
   
   }
+  @media (max-width: 900px) {
+    .contenedores {
+        display: block;
+    }
+
+    .contenedor {
+        width: 100%;
+        display: none;
+    }
+
+    .contenedor.active {
+        display: block;
+    }
+
+    .navegacion {
+        justify-content: space-between;
+    }
+
+    .border-red-500 {
+        border-color: #ef4444;
+      }
+}

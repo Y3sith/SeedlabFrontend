@@ -162,7 +162,7 @@
                             <div>
                                 <label for="departamento"
                                     class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
-                                <select id="departamento" (change)="onDepartamentoSeleccionado($event)"
+                                <select id="departamento" formControlName="id_departamento" (change)="onDepartamentoSeleccionado($event)"
                                     class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
                                     <option value="" disabled selected>Seleccionar Departamento...</option>
                                     <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
@@ -257,13 +257,15 @@
                             </div>
                             <!-- Toggle Field -->
                             <div *ngIf="isEditing">
-                                <div class="mt-4 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
+                                <div class="mt-1 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
                                     <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1"
                                         mat-raised-button
                                         matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
-                                        matTooltipPosition="right" style="color: #adb7c7;"></fa-icon>
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+
                                 </div>
-                                <label class="inline-flex items-center cursor-pointer md:mt-6">
+                                <label class="inline-flex items-center cursor-pointer md:mt-2">
                                     <input type="checkbox" class="sr-only peer" [checked]="isActive"
                                         (change)="toggleActive()" formControlName="estado">
                                     <div
@@ -293,3 +295,5 @@
         </div>
     </ng-container>
 </div>
+
+<!-- [routerLink]="['/list-superadmin']" -->
