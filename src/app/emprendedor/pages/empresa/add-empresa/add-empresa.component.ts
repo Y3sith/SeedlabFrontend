@@ -38,6 +38,8 @@ export class AddEmpresaComponent {
   subSectionPerSection: number[] = [1, 1, 1];
   empresa: Empresa;
   apoyo: ApoyoEmpresa;
+  addEmpresaForm: FormGroup;
+  addApoyoEmpresaForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -54,6 +56,35 @@ export class AddEmpresaComponent {
     this.id_emprendedor = this.route.snapshot.paramMap.get('id_emprendedor'); 
     console.log("EMPRENDEDOR",this.id_emprendedor);
     console.log("DOCUMENTO",this.id_documentoEmpresa)
+
+    this.addEmpresaForm = this.fb.group({
+      nombre: ['', Validators.required],
+      correo: ['', [Validators.required, Validators.email]],
+      id_tipo_documento: ['', Validators.required],
+      documento: ['', Validators.required],
+      razonSocial: ['', Validators.required],
+      id_departamento: ['', Validators.required],
+      id_municipio: ['', Validators.required],
+      telefono: [''],
+      celular: ['', Validators.required],
+      url_pagina: ['', Validators.required],
+      direccion: ['', Validators.required],
+      profesion: ['', Validators.required],
+      cargo: ['', Validators.required],
+      experiencia: ['', Validators.required],
+      funciones: ['', Validators.required],
+    });
+  
+    this.addApoyoEmpresaForm = this.fb.group({
+      documento: ['', Validators.required],
+      nombre: ['', Validators.required],
+      apellido: ['', Validators.required],
+      cargo: ['', Validators.required],
+      telefono: [''],
+      celular: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      id_tipo_documento: ['', Validators.required],
+    });
   }
 
 
@@ -137,34 +168,7 @@ export class AddEmpresaComponent {
       )
   }
 
-  addEmpresaForm = this.fb.group({
-    nombre: ['', Validators.required],
-    correo: ['', [Validators.required, Validators.email]],
-    id_tipo_documento: ['', Validators.required],
-    documento: ['', Validators.required],
-    razonSocial: ['', Validators.required],
-    id_departamento: ['', Validators.required],
-    id_municipio: ['', Validators.required],
-    telefono: [''],
-    celular: ['', Validators.required],
-    url_pagina: ['', Validators.required],
-    direccion: ['', Validators.required],
-    profesion: ['', Validators.required],
-    cargo: ['', Validators.required],
-    experiencia: ['', Validators.required],
-    funciones: ['', Validators.required],
-  });
-
-  addApoyoEmpresaForm = this.fb.group({
-    documento: ['', Validators.required],
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    cargo: ['', Validators.required],
-    telefono: [''],
-    celular: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    id_tipo_documento: ['', Validators.required],
-  });
+  
 
   get f() {
     return this.addEmpresaForm.controls;
@@ -242,52 +246,32 @@ export class AddEmpresaComponent {
   }
 
   crearEmpresa(): void {
-    // if (this.id_documentoEmpresa == null){
-    //   if (this.addEmpresaForm || this.addApoyoEmpresaForm){
+    this.submitted = true;
+    console.log("Formulario enviado", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
 
-    //     this.submitted = true;
-    //     console.log("Formulario enviado", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
-    
-    //     if (this.addEmpresaForm.invalid) {
-    //       this.submitted = true;
-    //       console.log("aqui",this.submitted)   
-    //     return; // Detiene la ejecución si el formulario es inválido
-          
-    //   }
-    //   console.error('Formulario inválido');
-    //   console.log('Errores empresa:', this.getFormValidationErrors(this.addEmpresaForm));
-    //   console.log('Errores apoyo:', this.getFormValidationErrors(this.addApoyoEmpresaForm));
-    //   return;
-    //   }
-    // }
-    //const formData = new FormData();
-    const empresa =  this.addEmpresaForm.value;
-    // any = {
-    //   documento: this.addEmpresaForm.get('documento')?.value,
-    //   nombre: this.addEmpresaForm.get('nombre')?.value,
-    //   correo: this.addEmpresaForm.get('correo')?.value,
-    //   cargo: this.addEmpresaForm.get('cargo')?.value,
-    //   razonSocial: this.addEmpresaForm.get('razonSocial')?.value,
-    //   url_pagina: this.addEmpresaForm.get('url_pagina')?.value,
-    //   telefono: this.addEmpresaForm.get('telefono')?.value,
-    //   celular: this.addEmpresaForm.get('celular')?.value,
-    //   direccion: this.addEmpresaForm.get('direccion')?.value,
-    //   profesion: this.addEmpresaForm.get('profesion')?.value,
-    //   experiencia: this.addEmpresaForm.get('experiencia')?.value,
-    //   funciones: this.addEmpresaForm.get('funciones')?.value,
-    //   id_tipo_documento: this.addEmpresaForm.get('id_tipo_documento')?.value,
-    //   id_departamento: this.addEmpresaForm.get('id_departamento')?.value,
-    //   id_municipio: this.addEmpresaForm.get('id_municipio')?.value,
-    //   id_emprendedor: this.user?.emprendedor.documento,
-    // };
+    if (this.addEmpresaForm.invalid) {
+      console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
+      return;
+    }
 
-  //   const specificFields = ['documento', 'nombre', 'correo', 'cargo', 'razonSocial', 'url_pagina', 'telefono', 'celular', 'direccion', 'profesion', 'experiencia', 'funciones', 'id_tipo_documento', 'id_departamento', 'id_municipio' ];
-  // specificFields.forEach(field => {
-  //   const value = this.addEmpresaForm.get(field)?.value;
-  //   if (value !== null && value !== undefined && value !== '') {
-  //     formData.append(field, value);
-  //   }
-  // });
+    const empresa: any = {
+      documento: this.addEmpresaForm.get('documento')?.value,
+      nombre: this.addEmpresaForm.get('nombre')?.value,
+      correo: this.addEmpresaForm.get('correo')?.value,
+      cargo: this.addEmpresaForm.get('cargo')?.value,
+      razonSocial: this.addEmpresaForm.get('razonSocial')?.value,
+      url_pagina: this.addEmpresaForm.get('url_pagina')?.value,
+      telefono: this.addEmpresaForm.get('telefono')?.value,
+      celular: this.addEmpresaForm.get('celular')?.value,
+      direccion: this.addEmpresaForm.get('direccion')?.value,
+      profesion: this.addEmpresaForm.get('profesion')?.value,
+      experiencia: this.addEmpresaForm.get('experiencia')?.value,
+      funciones: this.addEmpresaForm.get('funciones')?.value,
+      id_tipo_documento: this.addEmpresaForm.get('id_tipo_documento')?.value,
+      id_departamento: this.addEmpresaForm.get('id_departamento')?.value,
+      id_municipio: this.addEmpresaForm.get('id_municipio')?.value,
+      id_emprendedor: this.user?.emprendedor.documento,
+    };
 
     const apoyos = this.addApoyoEmpresaForm.valid ? {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,
@@ -312,29 +296,40 @@ export class AddEmpresaComponent {
 
     console.log('Payload para la API:', payload);
 
-    // if (this.id_documentoEmpresa != null){
-    //   this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, this.emprendedorDocumento).subscribe(
-    //     data=>{
-    //       console.log("empresa editada",data);
-    //     },
-    //     error => {
-    //       console.error(error);
-    //     }
-    //   )
-    // }else{
-      this.EmpresaService.addEmpresa(this.token, empresa).subscribe(
-        data => {
-          console.log('Respuesta de la API (empresa creada):', data);
-          this.alertService.successAlert('Éxito', 'Registro exitoso');
-          this.router.navigate(['list-empresa']);
-        },
-        error => {
-          this.alertService.errorAlert('Error', error.message);
-          console.log('Respuesta de la API ERROR:', error);
-        }
-      );
-  // }
+    this.EmpresaService.addEmpresa(this.token, payload).subscribe(
+      data => {
+        console.log('Respuesta de la API (empresa creada):', data);
+        this.alertService.successAlert('Éxito', 'Registro exitoso');
+        this.router.navigate(['list-empresa']);
+      },
+      error => {
+        this.alertService.errorAlert('Error', error.message);
+        console.log('Respuesta de la API ERROR:', error);
+      }
+    );
+  }
 
+  editEmpresa():void {
+    this.submitted = true;
+  
+    // Verifica si el formulario es inválido
+    if (this.addEmpresaForm.invalid) {
+      console.log('Formulario inválido');
+      return;
+    }
+    const empresaData = this.addEmpresaForm.value;
+
+    this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
+      response => {
+        console.log('Datos actualizados:', response);
+        this.alertService.successAlert('Éxito', 'Edición Realizada');
+        this.router.navigate(['list-empresa']);
+      },
+      error => {
+        console.error('Error al actualizar:', error);
+        alert('Error al actualizar la empresa: ' + error.message);
+      }
+    );
   }
 
   mostrarOcultarContenido() {
