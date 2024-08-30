@@ -14,6 +14,7 @@ import { Preguntas } from '../../../Modelos/preguntas.model';
 import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -437,6 +438,7 @@ export class EncuestaEmpresaComponent {
     if (!isValidForm) {
       return;
     }
+    this.next();
 
   }
 
@@ -667,7 +669,7 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 15; i < 30; i++) {
-      debugger
+      //debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
@@ -871,6 +873,7 @@ export class EncuestaEmpresaComponent {
       respCounter++;
     }
     console.log('fuera del ciclo', this.listaRespuestas3);
+    this.next();
   }
 
   onSubmitSeccion4() {
@@ -1061,7 +1064,7 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 41; i < 47; i++) {
-      debugger;
+      //debugger;
       const currentPregunta = PREGUNTAS[i];
       const currentRespuesta = this.listaRespuestas4[respCounter];
 
@@ -1139,6 +1142,15 @@ export class EncuestaEmpresaComponent {
       }
     }
     console.log('fuera del ciclo', this.listaRespuestas4);
+    if(isValidForm){
+      this.alertService.alertaActivarDesactivar('¿Esta seguro de enviar el formulario?', "warning").then((result) => {
+        if(result.isConfirmed){
+          this.enviarRespuestasJson();
+        }else{
+          console.log('Se guarda en cache');
+        }
+      });
+    }
   }
 
 
