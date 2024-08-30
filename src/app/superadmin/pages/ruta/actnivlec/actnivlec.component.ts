@@ -69,7 +69,6 @@ export class ActnivlecComponent implements OnInit {
 
   nivelForm = this.fb.group({
     nombre: ['', Validators.required],
-    descripcion: ['', Validators.required],
     id_actividad: ['', Validators.required]
   })
   mostrarNivelForm: boolean = false;
@@ -306,7 +305,6 @@ export class ActnivlecComponent implements OnInit {
     }
     const nivel: any = {
       nombre: this.nivelForm.value.nombre,
-      descripcion: this.nivelForm.value.descripcion,
       id_actividad: this.nivelForm.value.id_actividad
     }
     console.log('nivel data', nivel);
@@ -335,7 +333,6 @@ export class ActnivlecComponent implements OnInit {
     }
     const nivel: any = {
       nombre: this.nivelForm.value.nombre,
-      descripcion: this.nivelForm.value.descripcion,
       id_actividad: this.nivelForm.value.id_actividad
     };
     console.log('nivel data', nivel);
@@ -425,7 +422,7 @@ export class ActnivlecComponent implements OnInit {
   onTextInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.actividadForm.patchValue({ fuente: value });
-    console.log('fuente actualizada:', value);  // Para depuración
+    //console.log('fuente actualizada:', value);  // Para depuración
   }
 
   triggerFileInput() {
@@ -476,12 +473,6 @@ export class ActnivlecComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
-
-
-
-
-
   cancelarcrearActividad(): void {
     this.router.navigate(['/list-ruta'])
     this.actividadForm.patchValue({
@@ -497,7 +488,6 @@ export class ActnivlecComponent implements OnInit {
   cancelarGlobal(): void {
     this.nivelForm.patchValue({
       nombre: '',
-      descripcion: '',
     });
     this.leccionForm.patchValue({
       nombre: '',
