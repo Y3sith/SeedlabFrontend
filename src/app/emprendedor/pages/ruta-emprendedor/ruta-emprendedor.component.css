@@ -53,8 +53,9 @@
   border-radius: 20px;
   z-index: 1;
   flex-grow: 1;
-  height: 80px;
+  min-height: 80px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -66,14 +67,9 @@
   margin: 0;
 }
 
-.underline {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 2px;
-  background-color: rgb(255, 255, 255);
+.content .actividad-secundaria {
+  font-size: 1rem;
+  margin: 5px 0 0;
 }
 
 .circle-left {
@@ -92,15 +88,9 @@
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
-
+  
   .route-item.item-single {
     width: 90%;
-  }
-
-  .route-container::before {
-    left: 40px;
-    width: 4px;
-    height: calc(100% - 80px);
   }
   
   .circle-left, .circle-right {
@@ -108,7 +98,7 @@
     margin-right: -35px;
     margin-left: 0;
   }
-
+  
   .content {
     margin-left: -35px;
     margin-right: 0;
