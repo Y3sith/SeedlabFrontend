@@ -261,19 +261,6 @@ export class ActnivlecComponent implements OnInit {
 
   //agregar una actividad
   addActividadSuperAdmin(): void {
-    // this.submittedActividad = true;
-    // if (this.actividadForm.invalid) {
-    //   return;
-    // }
-    // const actividad: Actividad = {
-    //   nombre: this.actividadForm.value.nombre,
-    //   descripcion: this.actividadForm.value.descripcion,
-    //   fuente: this.actividadForm.value.fuente,
-    //   id_tipo_dato: parseInt(this.actividadForm.value.id_tipo_dato),
-    //   id_asesor: parseInt(this.actividadForm.value.id_asesor),
-    //   id_ruta: this.rutaId,
-    //   id_aliado: parseInt(this.actividadForm.value.id_aliado)
-    // };
     const formData = new FormData();
     let estadoValue: string;
     if (this.idactividad == null) {
@@ -445,67 +432,12 @@ export class ActnivlecComponent implements OnInit {
     this.fileInput.nativeElement.click();
   }
 
-  // onFileSelecteds(event: any, field: string) {
-  //   if (event.target.files && event.target.files.length > 0) {
-  //     const file = event.target.files[0];
-
-  //     let maxSize = 0;
-
-  //     if (field === 'fuente' ) {
-  //       maxSize = 5 * 1024 * 1024;
-  //     }else if (field === 'fuente_documento') {
-  //       maxSize == 18 * 1024 * 1024;
-  //     }
-
-  //     if (file.size > maxSize) {
-  //       const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
-  //       this.alertServices.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`)
-  //       this.resetFileField(field);
-
-  //       event.target.value =  '';
-
-  //       if (field === 'ruta_documento') {
-  //         this.actividadForm.patchValue({ fuente: null});
-  //         this.fuentePreview = null;
-  //         this.selectedfuente = null;
-  //       }
-  //       this.resetFileField(field);
-  //       return;
-  //     }
-
-  //     const reader = new FileReader();
-  //     reader.onload = (e: any) => {
-  //       const previewUrl = e.target.result;
-  //       if (field === 'ruta_documento') {
-  //         this.actividadForm.patchValue({ fuente: previewUrl});
-  //         this.fuentePreview = previewUrl;
-  //       }
-  //     };
-  //     reader.readAsDataURL(file);
-
-  //     this.generateImagePreview(file, field);
-
-  //     if (field === 'ruta_documento') {
-  //       this.selectedfuente = file;
-  //       this.actividadForm.patchValue({fuente: file})
-  //     } else if (field === 'ruta_documento') {
-  //       this.selectedfuente = file;
-  //       this.actividadForm.patchValue({ fuente: file });
-  //     }
-
-  //   }else {
-  //     this.resetFileField(field);
-  //   } 
-  // }
-
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
       let maxSize = 0;
-
       if (field === 'fuente') {
-        maxSize = 5 * 1024 * 1024;
+        maxSize = 5 * 1024 * 1024; // Tamaño máximo para imágenes
       } else if (field === 'fuente_documento') {
         maxSize = 18 * 1024 * 1024;
       }
@@ -517,8 +449,7 @@ export class ActnivlecComponent implements OnInit {
         event.target.value = '';
         return;
       }
-
-      if (field === 'fuente') {
+      if (field === 'fuente' || field === 'fuente_documento') {
         this.selectedfuente = file;
         this.actividadForm.patchValue({ fuente: file });
       }
