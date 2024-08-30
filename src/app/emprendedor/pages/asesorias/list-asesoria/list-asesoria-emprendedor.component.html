@@ -76,12 +76,19 @@
       </div>
 
       <!-- Contenedor de las tarjetas -->
-      <div class="flex flex-wrap rounded-lg overflow-hidden w-full m-4 bg-[#FAFAFA]">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full p-4 bg-[#FAFAFA] ">
         <div *ngFor="let asesoria of (showTrue ? asesoriasTrue : asesoriasFalse) | filterBy:userFilter"
-          class="relative w-full md:w-[25%] m-4">
+        class="relative w-full">
 
           <!-- Contenedor de la tarjeta con el efecto de recorte -->
-          <div class="relative bg-[#e6e6e6] rounded-lg overflow-hidden p-4 py-3 mt-[20px]">
+          <div class="relative bg-[#e6e6e6] rounded-lg p-4 py-3 h-auto">
+            <!-- Dentro del círculo -->
+            <div class="p-2 absolute  rounded-full bg-[#FAFAFA] -top-5 -right-3">
+            <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center"
+              [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
+              <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
+            </div>
+            </div>
 
             <!-- Contenido de la tarjeta -->
             <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{ asesoria.Nombre_sol }}</h2>
@@ -93,20 +100,6 @@
               class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
               title="{{ asesoria.notas }}">{{ asesoria.notas }}
             </div>
-          </div>
-
-          <!-- Círculo en la esquina superior derecha -->
-          <div class="absolute top-[5px] right-[-37px] sm:top-[-5px] sm:right-[-25px] sm:h-12  w-16 h-16 z-10">
-            <!-- Dentro del círculo -->
-            <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center"
-              [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
-              <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
-            </div>
-          </div>
-
-          <!-- Recorte circular de la esquina -->
-          <div
-            class="absolute top-0 right-0 w-[22%] h-[22%] z-0 bg-[#FAFAFA] rounded-full transform translate-x-[28%] translate-y-[-10%]">
           </div>
         </div>
       </div>
