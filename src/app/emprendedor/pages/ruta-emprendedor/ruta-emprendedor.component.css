@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
 .route-container {
   display: flex;
   flex-wrap: wrap;
@@ -6,6 +8,7 @@
   margin: 0 auto;
   padding: 20px;
   position: relative;
+  font-family: 'Poppins', sans-serif;
 }
 
 .route-item {
@@ -16,7 +19,7 @@
 }
 
 .route-item.item-single {
-  width: 57%; /* Reducido del 100% para hacerlo más pequeño */
+  width: 57%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -24,7 +27,8 @@
 .circle {
   width: 120px;
   height: 120px;
-  border: 15px solid #008080;
+  border-width: 15px;
+  border-style: solid;
   background-color: white;
   border-radius: 50%;
   display: flex;
@@ -39,18 +43,37 @@
 .number {
   font-size: 32px;
   font-weight: bold;
-  color: #008080;
   line-height: 1;
+  font-style: italic;
 }
 
 .content {
-  background-color: #008080;
   color: white;
   padding: 15px 40px;
   border-radius: 20px;
   z-index: 1;
   flex-grow: 1;
   height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.underline {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 2px;
+  background-color: rgb(255, 255, 255);
 }
 
 .circle-left {
@@ -71,7 +94,7 @@
   }
 
   .route-item.item-single {
-    width: 90%; /* Ajustado para dispositivos móviles */
+    width: 90%;
   }
 
   .route-container::before {

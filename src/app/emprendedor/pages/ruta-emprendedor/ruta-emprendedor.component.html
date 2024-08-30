@@ -4,16 +4,15 @@
   </header>
 </div>
 
-
-
 <div class="route-container">
   <ng-container *ngFor="let ruta of rutaList; let i = index">
     <div class="route-item" [ngClass]="getItemClass(i)" [style.order]="getOrder(i)">
-      <div class="circle" [ngClass]="getCirclePositionClass(i)">
-        <div class="icon"></div>
-        <div class="number">{{ (i + 1).toString().padStart(2, '0') }}</div>
+      <div class="circle" [ngClass]="getCirclePositionClass(i)" [style.border-color]="getItemColor(i)">
+        <div class="number" [style.color]="getItemColor(i)">{{ (i + 1).toString().padStart(2, '0') }}</div>
       </div>
-      <div class="content">
+      <div class="content" [style.background-color]="getItemColor(i)">
         <h3>{{ ruta.nombre }}</h3>
       </div>
     </div>
+  </ng-container>
+</div>
