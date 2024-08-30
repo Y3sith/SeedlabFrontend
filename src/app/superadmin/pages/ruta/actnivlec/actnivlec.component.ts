@@ -57,6 +57,7 @@ export class ActnivlecComponent implements OnInit {
   ////añadir actividad
 
   actividadForm = this.fb.group({
+    id:[],
     nombre: ['', Validators.required],
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
@@ -110,9 +111,9 @@ export class ActnivlecComponent implements OnInit {
 
     this.validateToken();
     this.tipoDato();
+    this.verNivel();
     this.listaAliado();
     this.onAliadoChange();
-    this.verNivel();
   }
 
   validateToken(): void {
@@ -172,33 +173,6 @@ export class ActnivlecComponent implements OnInit {
     console.log("el aliado seleccionado fue: ", this.aliadoSeleccionado)
   }
 
-  // onAliadoChange(event?: any): void {
-  //   const aliadoId = event.target.value;
-  //   const aliadoSeleccionado = this.listarAliadoo.find(aliado => aliado.id == aliadoId);
-
-  //   if (aliadoSeleccionado) {
-  //     console.log("El aliado seleccionado fue: ", {
-  //       id: aliadoSeleccionado.id,
-  //       nombre: aliadoSeleccionado.nombre
-  //     });
-
-  //     // Aquí puedes hacer lo que necesites con el aliado seleccionado
-  //     this.aliadoSeleccionado = aliadoSeleccionado;
-
-  //     if (this.token) {
-  //       this.aliadoService.getinfoAsesor(this.token, this.aliadoSeleccionado.id, this.userFilter.estado).subscribe(
-  //         data => {
-  //           this.listarAsesores = data;
-  //           console.log('Asesores: ', data);
-  //         },
-  //         error => {
-  //           console.log(error);
-  //         }
-  //       );
-  //     }
-  //   }
-  // }
-
   onAliadoChange(event?: any): void {
     let aliadoId: any;
 
@@ -239,9 +213,23 @@ export class ActnivlecComponent implements OnInit {
     }
 }
 
-  verNivel(): void {
+  // verNivel(): void {
+  //   if (this.token) {
+  //     this.nivelService.getNivel(this.token).subscribe(
+  //       data => {
+  //         this.listarNiveles = data;
+  //         console.log('Niveles: ', data);
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       }
+  //     )
+  //   }
+  // }
+
+  verNivel():void {
     if (this.token) {
-      this.nivelService.getNivel(this.token).subscribe(
+      this.nivelService.mostrarNivelXidActividad(this.token, this.actividadForm.value.id).subscribe(
         data => {
           this.listarNiveles = data;
           console.log('Niveles: ', data);
@@ -259,6 +247,8 @@ export class ActnivlecComponent implements OnInit {
   // }
 
   //agregar una actividad
+  
+
   addActividadSuperAdmin(): void {
     const formData = new FormData();
     let estadoValue: string;
@@ -315,10 +305,6 @@ export class ActnivlecComponent implements OnInit {
         this.verNivel();
         this.mostrarLeccionForm = true;
         console.log('id nivel: ', data.id);
-        this.avanzarSeccion();
-        this.currentIndex = 2;
-
-
       },
       error => {
         console.log(error);
@@ -367,8 +353,6 @@ export class ActnivlecComponent implements OnInit {
         this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
         this.mostrarContenidoLeccionForm = true;
         console.log('id leccion: ', data.id);
-        //this.avanzarSeccion();
-        //this.currentIndex = 3;
       },
       error => {
         console.log(error);
@@ -391,8 +375,6 @@ export class ActnivlecComponent implements OnInit {
       (data: any) => {
         console.log('datos recibidos: ', data);
         location.reload();
-        //this.currentIndex = 2;
-        // this.currentIndex = 3;
       },
       error => {
         console.log(error);
@@ -509,5 +491,4 @@ export class ActnivlecComponent implements OnInit {
       }
     }
   }
-
 }

@@ -153,13 +153,29 @@
                             </div>
                         </form>
 
+                        <form [formGroup]="leccionForm">
+                            <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Agregar lección</h2>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para crear la lección</label>
+                                <select formControlName="id_nivel" class="w-full p-2 border rounded">
+                                    <option *ngFor="let vernivel of listarNiveles" [value]="vernivel.id">
+                                        {{vernivel.nombre}}</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección</label>
+                                <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
+                            </div>
+                            <input type="hidden" id="id_nivel" formControlName="id_nivel">
+                        </form>
+
                     </div>
 
                     <!-- Contenido -->
                     <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Contenido</h2>
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nivel</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para agregar Contenido</label>
                             <select class="w-full p-2 border rounded">
                                 <option *ngFor="let vernivel of listarNiveles" [value]="vernivel.id">
                                     {{vernivel.nombre}}</option>
