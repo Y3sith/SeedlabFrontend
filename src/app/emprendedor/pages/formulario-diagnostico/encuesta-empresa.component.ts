@@ -747,11 +747,8 @@ export class EncuestaEmpresaComponent {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
           return;
-        } else {
-          respCounter += 4;
-          i += 1;
-        }
-        respCounter++;
+        } 
+        respCounter ++;
         continue;
       }
 
