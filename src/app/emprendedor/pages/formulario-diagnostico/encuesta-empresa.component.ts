@@ -14,7 +14,6 @@ import { Preguntas } from '../../../Modelos/preguntas.model';
 import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
 
 
 @Component({
@@ -35,6 +34,10 @@ export class EncuestaEmpresaComponent {
   token = '';
   id: number | null = null;
   currentRolId: number;
+  currentSubSectionIndex: number = 0;
+  currentIndex: number = 0;
+  subSectionPerSection: number[] = [3, 3, 2, 7];
+  progressPercentage: number = 0;
 
   id_pregunta: number;
   id_subpregunta: number | null = null;
@@ -42,6 +45,7 @@ export class EncuestaEmpresaComponent {
   listaRespuestas2: Respuesta[] = [];
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
+  setcionId :number;
 
   id_empresa: number | null = null;
   //private originalAttributes: Map<Element, { colspan: string | null, rowspan: string | null }> = new Map();
@@ -219,12 +223,12 @@ export class EncuestaEmpresaComponent {
   }
 
 
-  onSubmitSeccion1():boolean {
+  onSubmitSeccion1(): boolean {
 
     this.id_empresa;
     let respCounter = 0;
     let isValidForm = true;
-
+    this.section = 1;
     this.listaRespuestas1 = [];
 
     //Mapeo de valores 
@@ -340,7 +344,7 @@ export class EncuestaEmpresaComponent {
 
     for (let i = 0; i < 15; i++) {
       //debugger;
-      console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
+      //console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas1[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas1[respCounter].id_empresa = this.id_empresa;
@@ -392,14 +396,14 @@ export class EncuestaEmpresaComponent {
         } else if (this.listaRespuestas1[respCounter].opcion === 'No') {
           i += 2;
           respCounter += 2;
-          console.log(`Saltando preguntas 10 y 11 debido a respuesta 'No' en la pregunta 9`);
+          //console.log(`Saltando preguntas 10 y 11 debido a respuesta 'No' en la pregunta 9`);
         }
         respCounter++;
       } else if (currentPregunta.id === 10 || currentPregunta.id === 11) {
         if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return false; 
+          return false;
         }
         respCounter++;
       } else if (currentPregunta.id === 12) {
@@ -433,22 +437,24 @@ export class EncuestaEmpresaComponent {
         }
         respCounter++;
       }
-      console.log('fuera del ciclo', this.listaRespuestas1);
     }
+    console.log('fuera del ciclo', this.listaRespuestas1);
     if (!isValidForm) {
       return false;
     }
     this.next();
+    this.saveSetion1();
     return isValidForm;
   }
 
 
   //onSubmit seccion 2
-  onSubmitSeccion2():boolean {
+  onSubmitSeccion2(): boolean {
 
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
+    this.setcionId = 2;
     this.listaRespuestas2 = [];
 
     const valorRespuesta26 = {
@@ -749,8 +755,8 @@ export class EncuestaEmpresaComponent {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
           return false;
-        } 
-        respCounter ++;
+        }
+        respCounter++;
         continue;
       }
 
@@ -802,14 +808,16 @@ export class EncuestaEmpresaComponent {
       console.log('fuera del ciclo', this.listaRespuestas2);
     }
     this.next();
+    this.saveSetion2();
     return isValidForm;
 
   }
 
-  onSubmitSeccion3():boolean {
+  onSubmitSeccion3(): boolean {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
+    this.setcionId = 3;
     this.listaRespuestas3 = [];
 
     this.respuesta66.valor = this.respuesta66.opcion === 'Si' ? 25 : this.respuesta66.opcion === 'Medio' ? 12.5 : 0;
@@ -876,13 +884,15 @@ export class EncuestaEmpresaComponent {
     }
     console.log('fuera del ciclo', this.listaRespuestas3);
     this.next();
+    this.saveSetion3();
     return isValidForm;
   }
 
-  onSubmitSeccion4():boolean {
+  onSubmitSeccion4(): boolean {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
+    this.setcionId = 4;
     this.listaRespuestas4 = [];
     //TRL 1
     this.respuesta78.opcion === 'Si' ? this.respuesta78.valor = 0.7 : 0;
@@ -1071,7 +1081,7 @@ export class EncuestaEmpresaComponent {
       const currentPregunta = PREGUNTAS[i];
       const currentRespuesta = this.listaRespuestas4[respCounter];
 
-      
+
       this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas4[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas4[respCounter].id_subpregunta = null;
@@ -1145,11 +1155,11 @@ export class EncuestaEmpresaComponent {
       }
     }
     console.log('fuera del ciclo', this.listaRespuestas4);
-    if(isValidForm){
+    if (isValidForm) {
       this.alertService.alertaActivarDesactivar('¿Esta seguro de enviar el formulario?', "warning").then((result) => {
-        if(result.isConfirmed){
+        if (result.isConfirmed) {
           this.enviarRespuestasJson();
-        }else{
+        } else {
           console.log('Se guarda en cache');
         }
       });
@@ -1163,65 +1173,96 @@ export class EncuestaEmpresaComponent {
   enviarRespuestasJson() {
     let isFormValid = true;
 
-  // Validar cada sección antes de proceder
-  if (!this.onSubmitSeccion1()) {
-    isFormValid = false;
-  }
-  if (!this.onSubmitSeccion2()) {
-    isFormValid = false;
-  }
-  if (!this.onSubmitSeccion3()) {
-    isFormValid = false;
-  }
-  if (!this.onSubmitSeccion4()) {
-    isFormValid = false;
-  }
-
-  // Si alguna sección no es válida, detener el flujo y no enviar las respuestas
-  if (!isFormValid) {
-    this.alertService.errorAlert('Error','El formulario contiene errores y no puede ser enviado.');
-    return; // Detiene la ejecución si hay errores
-  }else{
-    let totalRespuestas = [];
-
-    if (this.listaRespuestas1 && this.listaRespuestas1.length > 0) {
-      totalRespuestas = totalRespuestas.concat(this.listaRespuestas1);
+    // Validar cada sección antes de proceder
+    if (!this.onSubmitSeccion1()) {
+      isFormValid = false;
     }
-    if (this.listaRespuestas2 && this.listaRespuestas2.length > 0) {
-      totalRespuestas = totalRespuestas.concat(this.listaRespuestas2);
+    if (!this.onSubmitSeccion2()) {
+      isFormValid = false;
     }
-    if (this.listaRespuestas3 && this.listaRespuestas3.length > 0) {
-      totalRespuestas = totalRespuestas.concat(this.listaRespuestas3);
+    if (!this.onSubmitSeccion3()) {
+      isFormValid = false;
     }
-    if (this.listaRespuestas4 && this.listaRespuestas4.length > 0) {
-      totalRespuestas = totalRespuestas.concat(this.listaRespuestas4);
+    if (!this.onSubmitSeccion4()) {
+      isFormValid = false;
     }
 
-    const payload = {
-      respuestas: totalRespuestas,
-      id_empresa: this.id_empresa
-    };
-    console.log('Payload a enviar:', payload);
+    // Si alguna sección no es válida, detener el flujo y no enviar las respuestas
+    if (!isFormValid) {
+      this.alertService.errorAlert('Error', 'El formulario contiene errores y no puede ser enviado.');
+      return; // Detiene la ejecución si hay errores
+    } else {
+      let totalRespuestas = [];
 
-    this.respuestasService.saveAnswers(this.token, payload).subscribe(
-      (data: any) => {
-        console.log(data);
-      },
-      error => {
-        console.log(error);
+      if (this.listaRespuestas1 && this.listaRespuestas1.length > 0) {
+        totalRespuestas = totalRespuestas.concat(this.listaRespuestas1);
       }
-    );
-    this.alertService.successAlert('Exito','El formulario Fue guardado');
-    return;
+      if (this.listaRespuestas2 && this.listaRespuestas2.length > 0) {
+        totalRespuestas = totalRespuestas.concat(this.listaRespuestas2);
+      }
+      if (this.listaRespuestas3 && this.listaRespuestas3.length > 0) {
+        totalRespuestas = totalRespuestas.concat(this.listaRespuestas3);
+      }
+      if (this.listaRespuestas4 && this.listaRespuestas4.length > 0) {
+        totalRespuestas = totalRespuestas.concat(this.listaRespuestas4);
+      }
+
+      const payload = {
+        respuestas: totalRespuestas,
+        id_empresa: this.id_empresa
+      };
+      console.log('Payload a enviar:', payload);
+
+      this.respuestasService.saveAnswers(this.token, payload).subscribe(
+        (data: any) => {
+          console.log(data);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+      this.alertService.successAlert('Exito', 'El formulario Fue guardado');
+      return;
+    }
   }
 
-    
+  saveSetion1():void{
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion1).subscribe(
+      data =>
+        console.log(data,'Guadado en redis'),
+      error =>
+        console.error(error)
+      )
   }
 
-  currentSubSectionIndex: number = 0;
-  currentIndex: number = 0;
-  subSectionPerSection: number[] = [3, 3, 2, 7];
-  progressPercentage: number = 0;
+  saveSetion2():void{
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion2).subscribe(
+      data =>
+        console.log(data,'Guadado en redis'),
+      error =>
+        console.error(error)
+      )
+  }
+
+  saveSetion3():void{
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion3).subscribe(
+      data =>
+        console.log(data,'Guadado en redis'),
+      error =>
+        console.error(error)
+      )
+  }
+
+  saveSetion4():void{
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion4).subscribe(
+      data =>
+        console.log(data,'Guadado en redis'),
+      error =>
+        console.error(error)
+      )
+  }
+
+
 
   updateProgress() {
     let answeredQuestions = 0;
