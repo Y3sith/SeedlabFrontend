@@ -44,6 +44,10 @@ export class AddEmpresaComponent {
   listaApoyo: ApoyoEmpresa[] = [];
   isLoading: boolean = true; // Variable para gestionar el estado de carga
 
+  ////
+  showFirstSection = true;
+  showSecondSection = false;
+  showThirdSection = false;
 
   constructor(
     private fb: FormBuilder,
@@ -350,27 +354,31 @@ export class AddEmpresaComponent {
 
   
   next() {
-    if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
-      this.currentSubSectionIndex++;
-    } else {
-      if (this.currentIndex < this.subSectionPerSection.length - 1) {
-        this.currentIndex++;
-        this.currentSubSectionIndex = 0;
-      }
+    if (this.currentIndex === 0) {
+      this.showFirstSection = false;
+      this.showSecondSection = true;
+      this.showThirdSection = false;
+      this.currentIndex = 1;
+    } else if (this.currentIndex === 1) {
+      this.showFirstSection = false;
+      this.showSecondSection = false;
+      this.showThirdSection = true;
+      this.currentIndex = 2;
     }
-
   }
 
-  previous(): void {
-    if (this.currentSubSectionIndex > 0) {
-      this.currentSubSectionIndex--;
-    } else {
-      if (this.currentIndex > 0) {
-        this.currentIndex--;
-        this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
-      }
+  previous() {
+    if (this.currentIndex === 1) {
+      this.showFirstSection = true;
+      this.showSecondSection = false;
+      this.showThirdSection = false;
+      this.currentIndex = 0;
+    } else if (this.currentIndex === 2) {
+      this.showFirstSection = false;
+      this.showSecondSection = true;
+      this.showThirdSection = false;
+      this.currentIndex = 1;
     }
-
   }
 
   getFormValidationErrors(form: FormGroup) {
@@ -394,6 +402,10 @@ export class AddEmpresaComponent {
         console.error(error);
       });
   }
+
+
+
+
 }
 
 

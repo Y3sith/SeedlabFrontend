@@ -5,37 +5,37 @@
   <!-- transicion basada en el estado -->
   <div class="w-full flex items-center justify-center px-4">
     <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
-      <div *ngFor="let contenedor of [1, 2, 3]; let i = index" class="contenedor mb-2 sm:mb-0"
+      <div *ngFor="let contenedor of [1, 2, 3,]; let i = index" class="contenedor mb-2 sm:mb-0"
         [class.active]="i === currentIndex">
         <div
-          class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto text-base md:text-xl"
+          class="step-number flex items-center justify-center w-8 h-8 border rounded-full mx-auto text-base md:text-xl"
           [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
           {{ i + 1 }}
         </div>
         <ng-container *ngIf="i === 0">
           <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-            class=" text-base md:text-xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate">
+            class=" text-base md:text-1xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate">
             Datos basicos
           </h2>
         </ng-container>
         <ng-container *ngIf="i === 1">
           <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-            class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
-            Datos profesionales
+            class="text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
+            datos Profesionales
           </h2>
         </ng-container>
         <ng-container *ngIf="i === 2">
           <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-            class=" text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
-            Datos Apoyos
+            class=" text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
+            datos apoyos
           </h2>
         </ng-container>
       </div>
     </div>
   </div>
-  
+
   <!-- Datos Basicos Lider -->
-  <ng-container *ngIf="currentIndex === 0">
+  <ng-container *ngIf="showFirstSection">
     <div *ngIf="currentSubSectionIndex === 0">
       <div class="space-y-8 max-w-full md:px-8">
         <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
@@ -70,7 +70,7 @@
                         class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
                         <option value="" disabled selected>Selecciona el tipo de documento...</option>
                         <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
-                    </select>
+                      </select>
                       <div *ngIf="submitted && f.id_tipo_documento.errors"
                         class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
                         <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
@@ -159,13 +159,14 @@
                         </div>
                       </div>
                     </div>
-        
+
                     <div class="w-full text-base relative">
                       <label for="url_pagina" class="text-lg font-normal">Página web:</label>
                       <input
                         class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
                         formControlName="url_pagina" />
-                      <div *ngIf="submitted && f.url_pagina.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                      <div *ngIf="submitted && f.url_pagina.errors"
+                        class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
                         <div *ngIf="f.url_pagina.errors.required">Este campo es requerido *</div>
                       </div>
                     </div>
@@ -188,7 +189,7 @@
   </ng-container>
 
   <!-- Datos Profesionales Lider -->
-  <ng-container *ngIf="currentIndex === 1">
+  <ng-container *ngIf="showSecondSection">
     <div *ngIf="currentSubSectionIndex === 0">
       <div class="space-y-8 max-w-full md:px-8">
         <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
@@ -239,34 +240,34 @@
             </form>
           </div>
         </div>
-        <div class="flex justify-center h-10 space-x-4">
+        <div class="flex flex-row sm:flex-row justify-center h-auto space-y-2 sm:space-y-0 sm:space-x-2">
           <button
-            class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+            class="py-2 px-4 sm:px-8 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
             (click)="previous()">
             Anterior
           </button>
           <button type="button" (click)="crearEmpresa()"  *ngIf="!id_documentoEmpresa"
-          class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
-          <span class="px-2">Crear Empresa</span>
-         
+            class="py-2 px-4 sm:px-8 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal">
+            <span class="block">Crear Empresa</span>
+           
         </button>
         <button id="guardar" (click)="editEmpresa()" *ngIf="id_documentoEmpresa"
         class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
         Guardar
-      </button>
-        <button type="button" (click)="next()"
-          class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
-          <span class="px-2">Agregar Apoyo</span>
-          <!-- <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon> -->
         </button>
-        </div>
+          <button type="button" (click)="next()"
+            class="py-2 px-4 sm:px-8 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal">
+            <span class="block">Agregar Apoyo</span>
+            <!-- <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon> -->
+          </button>
+        </div>        
       </div>
     </div>
   </ng-container>
 
   <!-- Datos apoyos -->
    <div *ngIf="!id_documentoEmpresa">
-     <ng-container *ngIf="currentIndex === 2">
+     <ng-container *ngIf="showThirdSection">
        <div *ngIf="currentSubSectionIndex === 0">
          <div class="space-y-8 max-w-full md:px-8">
            <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
@@ -297,8 +298,8 @@
                      <select id="tipoDocumento" formControlName="id_tipo_documento"
                        class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                        <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                           <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
-                       </select>
+                       <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
+                     </select>
                      <div *ngIf="submitted && f.id_tipo_documento.errors"
                        class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
                        <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
