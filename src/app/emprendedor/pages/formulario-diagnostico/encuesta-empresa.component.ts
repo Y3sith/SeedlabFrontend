@@ -36,7 +36,7 @@ export class EncuestaEmpresaComponent {
   currentRolId: number;
   currentSubSectionIndex: number = 0;
   currentIndex: number = 0;
-  subSectionPerSection: number[] = [3, 3, 2, 7];
+  subSectionPerSection: number[] = [3, 3, 2, 6, 1];
   progressPercentage: number = 0;
 
   id_pregunta: number;
@@ -45,7 +45,8 @@ export class EncuestaEmpresaComponent {
   listaRespuestas2: Respuesta[] = [];
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
-  setcionId :number;
+  listaRespuestas5: Respuesta[] = [];
+  setcionId: number;
 
   id_empresa: number | null = null;
   //private originalAttributes: Map<Element, { colspan: string | null, rowspan: string | null }> = new Map();
@@ -249,6 +250,9 @@ export class EncuestaEmpresaComponent {
       'Medio': 2.5,
     }
 
+    let totalXpregunta: number = 0;
+    let acumXSeccion: number = 0;
+
     //pregunta 1
     this.listaRespuestas1.push(this.respuesta1);
     //pregunta 2
@@ -343,13 +347,16 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 0; i < 15; i++) {
-      //debugger;
+      debugger;
       //console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas1[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas1[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas1[respCounter].id_subpregunta = null;
+      totalXpregunta = this.listaRespuestas1[respCounter].valor;
+      acumXSeccion += totalXpregunta;
 
+      //Validación de pregunta 2 con subpreguntas
       if (currentPregunta.id === 2) {
         for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
           const respuestaActual = this.listaRespuestas1[respCounter + j];
@@ -385,7 +392,7 @@ export class EncuestaEmpresaComponent {
           }
           respuestaActual.id_pregunta = currentPregunta.id;
           respuestaActual.id_subpregunta = currentPregunta.subPreguntas[j].id;
-
+          totalXpregunta += respuestaActual.valor;
         }
         respCounter += currentPregunta.subPreguntas.length;
         continue;
@@ -675,7 +682,7 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 15; i < 28; i++) {
-      debugger
+      //debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
@@ -788,7 +795,7 @@ export class EncuestaEmpresaComponent {
 
       if (currentPregunta.isText) {
         if (currentPregunta.isText) {
-          if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas2[respCounter].texto_res.trim() === '' || this.listaRespuestas2[respCounter].texto_res !== 'N/A') {
+          if (!this.listaRespuestas2[respCounter].texto_res || this.listaRespuestas2[respCounter].texto_res.trim() === '' || this.listaRespuestas2[respCounter].texto_res !== 'N/A') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
             return false;
@@ -965,118 +972,10 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas4.push(this.respuesta107);
     this.respuesta108.opcion === 'Si' ? this.respuesta108.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta108);
-    //pregunta 44
-    this.respuesta109.opcion === 'Si' ? this.respuesta109.valor = 10 : 0;
-    this.listaRespuestas4.push(this.respuesta109);
-    //pregunta 45
-    this.listaRespuestas4.push(this.respuesta110);
-    if (this.respuesta110.opcion === 'Si') {
-      this.respuesta111.opcion === 'Si' ? this.respuesta111.valor = 5.8 : 0;
-      this.listaRespuestas4.push(this.respuesta111);
-      this.respuesta112.opcion === 'Si' ? this.respuesta112.valor = 5.8 : 0;
-      this.listaRespuestas4.push(this.respuesta112);
-      this.respuesta113.opcion === 'Si' ? this.respuesta113.valor = 5.8 : 0;
-      this.listaRespuestas4.push(this.respuesta113);
-      this.respuesta114.opcion === 'Si' ? this.respuesta114.valor = 5.8 : 0;
-      this.listaRespuestas4.push(this.respuesta114);
-      this.respuesta115.opcion === 'Si' ? this.respuesta115.valor = 5.8 : 0;
-      this.listaRespuestas4.push(this.respuesta115);
-      this.respuesta116.opcion === 'Si' ? this.respuesta116.valor = 5.8 : 0;
-      this.listaRespuestas4.push(this.respuesta116);
-      this.respuesta117.opcion === 'Si' ? this.respuesta117.valor = 5.8 : 0;
-      this.listaRespuestas4.push(this.respuesta117);
-    } else {
-      this.respuesta111.texto_res = 'N/A';
-      this.respuesta111.id_pregunta = 45;
-      this.respuesta111.id_subpregunta = 81;
-      this.listaRespuestas4.push(this.respuesta111);
-      this.respuesta112.texto_res = 'N/A';
-      this.respuesta112.id_pregunta = 45;
-      this.respuesta112.id_subpregunta = 82;
-      this.listaRespuestas4.push(this.respuesta112);
-      this.respuesta113.texto_res = 'N/A';
-      this.respuesta113.id_pregunta = 45;
-      this.respuesta113.id_subpregunta = 83;
-      this.listaRespuestas4.push(this.respuesta113);
-      this.respuesta114.texto_res = 'N/A';
-      this.respuesta114.id_pregunta = 45;
-      this.respuesta114.id_subpregunta = 84;
-      this.listaRespuestas4.push(this.respuesta114);
-      this.respuesta115.texto_res = 'N/A';
-      this.respuesta115.id_pregunta = 45;
-      this.respuesta115.id_subpregunta = 85;
-      this.listaRespuestas4.push(this.respuesta115);
-      this.respuesta116.texto_res = 'N/A';
-      this.respuesta116.id_pregunta = 45;
-      this.respuesta116.id_subpregunta = 86;
-      this.listaRespuestas4.push(this.respuesta116);
-      this.respuesta117.texto_res = 'N/A';
-      this.respuesta117.id_pregunta = 45;
-      this.respuesta117.id_subpregunta = 87;
-      this.listaRespuestas4.push(this.respuesta117);
-    }
-    //pregunta 46
-    this.listaRespuestas4.push(this.respuesta118);
-    if (this.respuesta118.opcion === 'Si') {
-      this.respuesta119.opcion === 'Si' ? this.respuesta119.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta119);
-      this.respuesta120.opcion === 'Si' ? this.respuesta120.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta120);
-      this.respuesta121.opcion === 'Si' ? this.respuesta121.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta121);
-      this.respuesta122.opcion === 'Si' ? this.respuesta122.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta122);
-      this.respuesta123.opcion === 'Si' ? this.respuesta123.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta123);
-      this.respuesta124.opcion === 'Si' ? this.respuesta124.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta124);
-      this.respuesta125.opcion === 'Si' ? this.respuesta125.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta125);
-      this.respuesta126.opcion === 'Si' ? this.respuesta126.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta126);
-      this.respuesta127.opcion === 'Si' ? this.respuesta127.valor = 6.9 : 0;
-      this.listaRespuestas4.push(this.respuesta127);
-    } else {
-      this.respuesta119.texto_res = 'N/A';
-      this.respuesta119.id_pregunta = 46;
-      this.respuesta119.id_subpregunta = 88;
-      this.listaRespuestas4.push(this.respuesta119);
-      this.respuesta120.texto_res = 'N/A';
-      this.respuesta120.id_pregunta = 46;
-      this.respuesta120.id_subpregunta = 89;
-      this.listaRespuestas4.push(this.respuesta120);
-      this.respuesta121.texto_res = 'N/A';
-      this.respuesta121.id_pregunta = 46;
-      this.respuesta121.id_subpregunta = 90;
-      this.listaRespuestas4.push(this.respuesta121);
-      this.respuesta122.texto_res = 'N/A';
-      this.respuesta122.id_pregunta = 46;
-      this.respuesta122.id_subpregunta = 91;
-      this.listaRespuestas4.push(this.respuesta122);
-      this.respuesta123.texto_res = 'N/A';
-      this.respuesta123.id_pregunta = 46;
-      this.respuesta123.id_subpregunta = 92;
-      this.listaRespuestas4.push(this.respuesta123);
-      this.respuesta124.texto_res = 'N/A';
-      this.respuesta124.id_pregunta = 46;
-      this.respuesta124.id_subpregunta = 93;
-      this.listaRespuestas4.push(this.respuesta124);
-      this.respuesta125.texto_res = 'N/A';
-      this.respuesta125.id_pregunta = 46;
-      this.respuesta125.id_subpregunta = 94;
-      this.listaRespuestas4.push
-      this.respuesta126.texto_res = 'N/A';
-      this.respuesta126.id_pregunta = 46;
-      this.respuesta126.id_subpregunta = 95;
-      this.listaRespuestas4.push(this.respuesta126);
-      this.respuesta127.texto_res = 'N/A';
-      this.respuesta127.id_pregunta = 46;
-      this.respuesta127.id_subpregunta = 96;
-      this.listaRespuestas4.push(this.respuesta127);
-    }
 
 
-    for (let i = 41; i < 47; i++) {
+
+    for (let i = 41; i < 42; i++) {
       //debugger;
       const currentPregunta = PREGUNTAS[i];
       const currentRespuesta = this.listaRespuestas4[respCounter];
@@ -1155,6 +1054,189 @@ export class EncuestaEmpresaComponent {
       }
     }
     console.log('fuera del ciclo', this.listaRespuestas4);
+    
+    return isValidForm;
+  }
+
+  onSubmitSeccion5(): boolean {
+    let respCounter = 0;
+    let isValidForm = true;
+    this.id_empresa;
+    this.setcionId = 5;
+    this.listaRespuestas5 = [];
+    //pregunta 43 
+    this.respuesta109.opcion === 'Si' ? this.respuesta109.valor = 10 : 0;
+    this.listaRespuestas5.push(this.respuesta109);
+    //pregunta 44 - 45
+    this.listaRespuestas5.push(this.respuesta110);
+    if (this.respuesta110.opcion === 'Si') {
+      this.respuesta111.opcion === 'Si' ? this.respuesta111.valor = 5.8 : 0;
+      this.listaRespuestas5.push(this.respuesta111);
+      this.respuesta112.opcion === 'Si' ? this.respuesta112.valor = 5.8 : 0;
+      this.listaRespuestas5.push(this.respuesta112);
+      this.respuesta113.opcion === 'Si' ? this.respuesta113.valor = 5.8 : 0;
+      this.listaRespuestas5.push(this.respuesta113);
+      this.respuesta114.opcion === 'Si' ? this.respuesta114.valor = 5.8 : 0;
+      this.listaRespuestas5.push(this.respuesta114);
+      this.respuesta115.opcion === 'Si' ? this.respuesta115.valor = 5.8 : 0;
+      this.listaRespuestas5.push(this.respuesta115);
+      this.respuesta116.opcion === 'Si' ? this.respuesta116.valor = 5.8 : 0;
+      this.listaRespuestas5.push(this.respuesta116);
+      this.respuesta117.opcion === 'Si' ? this.respuesta117.valor = 5.8 : 0;
+      this.listaRespuestas5.push(this.respuesta117);
+    } else {
+      this.respuesta111.texto_res = 'N/A';
+      this.respuesta111.id_pregunta = 45;
+      this.respuesta111.id_subpregunta = 81;
+      this.listaRespuestas5.push(this.respuesta111);
+      this.respuesta112.texto_res = 'N/A';
+      this.respuesta112.id_pregunta = 45;
+      this.respuesta112.id_subpregunta = 82;
+      this.listaRespuestas5.push(this.respuesta112);
+      this.respuesta113.texto_res = 'N/A';
+      this.respuesta113.id_pregunta = 45;
+      this.respuesta113.id_subpregunta = 83;
+      this.listaRespuestas5.push(this.respuesta113);
+      this.respuesta114.texto_res = 'N/A';
+      this.respuesta114.id_pregunta = 45;
+      this.respuesta114.id_subpregunta = 84;
+      this.listaRespuestas5.push(this.respuesta114);
+      this.respuesta115.texto_res = 'N/A';
+      this.respuesta115.id_pregunta = 45;
+      this.respuesta115.id_subpregunta = 85;
+      this.listaRespuestas5.push(this.respuesta115);
+      this.respuesta116.texto_res = 'N/A';
+      this.respuesta116.id_pregunta = 45;
+      this.respuesta116.id_subpregunta = 86;
+      this.listaRespuestas5.push(this.respuesta116);
+      this.respuesta117.texto_res = 'N/A';
+      this.respuesta117.id_pregunta = 45;
+      this.respuesta117.id_subpregunta = 87;
+      this.listaRespuestas5.push(this.respuesta117);
+    }
+    //pregunta 46 - 47
+    this.listaRespuestas5.push(this.respuesta118);
+    if (this.respuesta118.opcion === 'Si') {
+      this.respuesta119.opcion === 'Si' ? this.respuesta119.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta119);
+      this.respuesta120.opcion === 'Si' ? this.respuesta120.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta120);
+      this.respuesta121.opcion === 'Si' ? this.respuesta121.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta121);
+      this.respuesta122.opcion === 'Si' ? this.respuesta122.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta122);
+      this.respuesta123.opcion === 'Si' ? this.respuesta123.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta123);
+      this.respuesta124.opcion === 'Si' ? this.respuesta124.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta124);
+      this.respuesta125.opcion === 'Si' ? this.respuesta125.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta125);
+      this.respuesta126.opcion === 'Si' ? this.respuesta126.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta126);
+      this.respuesta127.opcion === 'Si' ? this.respuesta127.valor = 6.9 : 0;
+      this.listaRespuestas5.push(this.respuesta127);
+    } else {
+      this.respuesta119.texto_res = 'N/A';
+      this.respuesta119.id_pregunta = 46;
+      this.respuesta119.id_subpregunta = 88;
+      this.listaRespuestas5.push(this.respuesta119);
+      this.respuesta120.texto_res = 'N/A';
+      this.respuesta120.id_pregunta = 46;
+      this.respuesta120.id_subpregunta = 89;
+      this.listaRespuestas5.push(this.respuesta120);
+      this.respuesta121.texto_res = 'N/A';
+      this.respuesta121.id_pregunta = 46;
+      this.respuesta121.id_subpregunta = 90;
+      this.listaRespuestas5.push(this.respuesta121);
+      this.respuesta122.texto_res = 'N/A';
+      this.respuesta122.id_pregunta = 46;
+      this.respuesta122.id_subpregunta = 91;
+      this.listaRespuestas5.push(this.respuesta122);
+      this.respuesta123.texto_res = 'N/A';
+      this.respuesta123.id_pregunta = 46;
+      this.respuesta123.id_subpregunta = 92;
+      this.listaRespuestas5.push(this.respuesta123);
+      this.respuesta124.texto_res = 'N/A';
+      this.respuesta124.id_pregunta = 46;
+      this.respuesta124.id_subpregunta = 93;
+      this.listaRespuestas5.push(this.respuesta124);
+      this.respuesta125.texto_res = 'N/A';
+      this.respuesta125.id_pregunta = 46;
+      this.respuesta125.id_subpregunta = 94;
+      this.listaRespuestas5.push
+      this.respuesta126.texto_res = 'N/A';
+      this.respuesta126.id_pregunta = 46;
+      this.respuesta126.id_subpregunta = 95;
+      this.listaRespuestas5.push(this.respuesta126);
+      this.respuesta127.texto_res = 'N/A';
+      this.respuesta127.id_pregunta = 46;
+      this.respuesta127.id_subpregunta = 96;
+      this.listaRespuestas5.push(this.respuesta127);
+    }
+
+    for (let i = 42; i < 47; i++) {
+      debugger;
+      const currentPregunta = PREGUNTAS[i];
+      this.listaRespuestas5[respCounter].id_pregunta = currentPregunta.id;
+      this.listaRespuestas5[respCounter].id_empresa = this.id_empresa;
+      this.listaRespuestas5[respCounter].id_subpregunta = null;
+
+      if (currentPregunta.isAffirmativeQuestion) {
+        if (!this.listaRespuestas5[respCounter].opcion || this.listaRespuestas5[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return false;
+        }
+        const nextPregunta = PREGUNTAS[i + 1];
+        if (this.listaRespuestas5[respCounter].opcion === 'Si') {
+          let subPreguntaCounter = 0; // Contador para las subpreguntas
+
+          for (let j = 0; j < nextPregunta.subPreguntas.length; j++) {
+            const respuestaActual = this.listaRespuestas5[respCounter + 1 + subPreguntaCounter];
+
+            if (!respuestaActual.opcion || respuestaActual.opcion === '') {
+              this.alertService.errorAlert('Error', `La subpregunta ${nextPregunta.subPreguntas[j].id} de la pregunta ${nextPregunta.id} está vacía.`);
+              isValidForm = false;
+              return false;
+            }
+            // Asignar valores a la respuesta actual
+            this.listaRespuestas5[respCounter + 1 + subPreguntaCounter].id_pregunta = nextPregunta.id;
+            this.listaRespuestas5[respCounter + 1 + subPreguntaCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
+            this.listaRespuestas5[respCounter + 1 + subPreguntaCounter].id_empresa = this.id_empresa;
+
+            subPreguntaCounter++;
+          }
+
+          respCounter += subPreguntaCounter  + 1;
+          
+        }else if (this.listaRespuestas5[respCounter].opcion === 'No') {
+          i += 1;
+          respCounter += nextPregunta.subPreguntas.length + 1;
+        }
+        continue;
+      }else if (currentPregunta.isText) {
+        if (currentPregunta.isText) {
+          if (!this.listaRespuestas5[respCounter].texto_res || this.listaRespuestas5[respCounter].texto_res.trim() === '' || this.listaRespuestas2[respCounter].texto_res !== 'N/A') {
+            this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+            isValidForm = false;
+            return false;
+          }
+        }
+      } else {
+        if (!this.listaRespuestas5[respCounter].opcion || this.listaRespuestas5[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return false;
+        }
+      }
+      respCounter++;
+      if (!isValidForm) {
+        return false;
+      }
+      console.log(i);
+      console.log('fuera del ciclo', this.listaRespuestas5);
+
+    }
     if (isValidForm) {
       this.alertService.alertaActivarDesactivar('¿Esta seguro de enviar el formulario?', "warning").then((result) => {
         if (result.isConfirmed) {
@@ -1166,7 +1248,6 @@ export class EncuestaEmpresaComponent {
     }
     return isValidForm;
   }
-
 
 
 
@@ -1184,6 +1265,9 @@ export class EncuestaEmpresaComponent {
       isFormValid = false;
     }
     if (!this.onSubmitSeccion4()) {
+      isFormValid = false;
+    }
+    if (!this.onSubmitSeccion5()) {
       isFormValid = false;
     }
 
@@ -1206,6 +1290,9 @@ export class EncuestaEmpresaComponent {
       if (this.listaRespuestas4 && this.listaRespuestas4.length > 0) {
         totalRespuestas = totalRespuestas.concat(this.listaRespuestas4);
       }
+      if (this.listaRespuestas5 && this.listaRespuestas5.length > 0) {
+        totalRespuestas = totalRespuestas.concat(this.listaRespuestas5);
+      }
 
       const payload = {
         respuestas: totalRespuestas,
@@ -1226,40 +1313,40 @@ export class EncuestaEmpresaComponent {
     }
   }
 
-  saveSetion1():void{
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion1).subscribe(
+  saveSetion1(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas1).subscribe(
       data =>
-        console.log(data,'Guadado en redis'),
+        console.log(data, 'Guadado seccion 1 en redis'),
       error =>
         console.error(error)
-      )
+    )
   }
 
-  saveSetion2():void{
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion2).subscribe(
+  saveSetion2(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas2).subscribe(
       data =>
-        console.log(data,'Guadado en redis'),
+        console.log(data, 'Guadado seccion 2 en redis'),
       error =>
         console.error(error)
-      )
+    )
   }
 
-  saveSetion3():void{
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion3).subscribe(
+  saveSetion3(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas3).subscribe(
       data =>
-        console.log(data,'Guadado en redis'),
+        console.log(data, 'Guadado seccion 3 en redis'),
       error =>
         console.error(error)
-      )
+    )
   }
 
-  saveSetion4():void{
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.onSubmitSeccion4).subscribe(
+  saveSetion4(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas4).subscribe(
       data =>
-        console.log(data,'Guadado en redis'),
+        console.log(data, 'Guadado seccion 4 en redis'),
       error =>
         console.error(error)
-      )
+    )
   }
 
 
