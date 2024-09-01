@@ -219,7 +219,7 @@ export class EncuestaEmpresaComponent {
   }
 
 
-  onSubmitSeccion1() {
+  onSubmitSeccion1():boolean {
 
     this.id_empresa;
     let respCounter = 0;
@@ -352,7 +352,7 @@ export class EncuestaEmpresaComponent {
           if (!respuestaActual.opcion || respuestaActual.opcion === '') {
             this.alertService.errorAlert('Error', `La subpregunta ${currentPregunta.subPreguntas[j].id} de la pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
-            return;
+            return false;
           }
           if (respuestaActual.opcion !== 'Si') {
             respuestaActual.texto_res = '0';
@@ -388,7 +388,7 @@ export class EncuestaEmpresaComponent {
       } else if (currentPregunta.id === 9) {
         if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
-          return;
+          return false;
         } else if (this.listaRespuestas1[respCounter].opcion === 'No') {
           i += 2;
           respCounter += 2;
@@ -399,14 +399,14 @@ export class EncuestaEmpresaComponent {
         if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false; 
         }
         respCounter++;
       } else if (currentPregunta.id === 12) {
         if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         } else if (this.listaRespuestas1[respCounter].opcion === 'Si') {
           for (let k = 0; k < currentPregunta.subPreguntas.length; k++) {
             this.listaRespuestas1[respCounter + 1 + k].id_pregunta = currentPregunta.id;
@@ -422,13 +422,13 @@ export class EncuestaEmpresaComponent {
           if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas1[respCounter].texto_res.trim() === '' || this.listaRespuestas1[respCounter].texto_res !== 'N/A') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
-            return;
+            return false;
           }
         } else {
           if (!this.listaRespuestas1[respCounter].opcion || this.listaRespuestas1[respCounter].opcion === '') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
-            return;
+            return false;
           }
         }
         respCounter++;
@@ -436,15 +436,15 @@ export class EncuestaEmpresaComponent {
       console.log('fuera del ciclo', this.listaRespuestas1);
     }
     if (!isValidForm) {
-      return;
+      return false;
     }
     this.next();
-
+    return isValidForm;
   }
 
 
   //onSubmit seccion 2
-  onSubmitSeccion2() {
+  onSubmitSeccion2():boolean {
 
     let respCounter = 0;
     let isValidForm = true;
@@ -668,8 +668,8 @@ export class EncuestaEmpresaComponent {
     const payload = { respuestas: this.listaRespuestas2, id_empresa: this.id_empresa };
 
 
-    for (let i = 15; i < 30; i++) {
-      //debugger
+    for (let i = 15; i < 28; i++) {
+      debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
@@ -679,7 +679,7 @@ export class EncuestaEmpresaComponent {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         }
         const nextPregunta = PREGUNTAS[i + 1];
         if (this.listaRespuestas2[respCounter].opcion === 'Si') {
@@ -691,7 +691,7 @@ export class EncuestaEmpresaComponent {
             if (!respuestaActual.opcion || respuestaActual.opcion === '') {
               this.alertService.errorAlert('Error', `La subpregunta ${nextPregunta.subPreguntas[j].id} de la pregunta ${nextPregunta.id} está vacía.`);
               isValidForm = false;
-              return;
+              return false;
             }
             // Asignar valores a la respuesta actual
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_pregunta = nextPregunta.id;
@@ -716,7 +716,7 @@ export class EncuestaEmpresaComponent {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         } else {
           for (let j = 0; j < currentPregunta.subPreguntas.length; j++) {
             this.listaRespuestas2[respCounter + j].id_pregunta = currentPregunta.id;
@@ -733,7 +733,7 @@ export class EncuestaEmpresaComponent {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         } else if (this.listaRespuestas2[respCounter].opcion === 'No') {
           i += 1;
           respCounter += 1;
@@ -748,7 +748,7 @@ export class EncuestaEmpresaComponent {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         } 
         respCounter ++;
         continue;
@@ -759,7 +759,7 @@ export class EncuestaEmpresaComponent {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         } else {
           for (let h = 0; h < currentPregunta.subPreguntas.length; h++) {
             const subPreguntaIndex = respCounter + h;
@@ -767,7 +767,7 @@ export class EncuestaEmpresaComponent {
             if (!respuestaActual.opcion || respuestaActual.opcion === '') {
               this.alertService.errorAlert('Error', `La subpregunta ${currentPregunta.subPreguntas[h].id} de la pregunta ${currentPregunta.id} está vacía.`);
               isValidForm = false;
-              return;
+              return false;
             }
             this.listaRespuestas2[subPreguntaIndex].id_pregunta = currentPregunta.id;
             this.listaRespuestas2[subPreguntaIndex].id_subpregunta = currentPregunta.subPreguntas[h].id;
@@ -785,26 +785,28 @@ export class EncuestaEmpresaComponent {
           if (!this.listaRespuestas1[respCounter].texto_res || this.listaRespuestas2[respCounter].texto_res.trim() === '' || this.listaRespuestas2[respCounter].texto_res !== 'N/A') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
-            return;
+            return false;
           }
         } else {
           if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
             isValidForm = false;
-            return;
+            return false;
           }
         }
       }
       if (!isValidForm) {
-        return
+        return false;
       }
       console.log(i);
       console.log('fuera del ciclo', this.listaRespuestas2);
     }
+    this.next();
+    return isValidForm;
 
   }
 
-  onSubmitSeccion3() {
+  onSubmitSeccion3():boolean {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
@@ -854,13 +856,13 @@ export class EncuestaEmpresaComponent {
         if (!this.listaRespuestas3[respCounter].texto_res || this.listaRespuestas3[respCounter].texto_res === '' && this.listaRespuestas3[respCounter].texto_res !== 'N/A') {
           this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         }
       } else {
         if (!this.listaRespuestas3[respCounter].opcion || this.listaRespuestas3[respCounter].opcion === '') {
           this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
           isValidForm = false;
-          return;
+          return false;
         }
       }
       if (currentPregunta.isAffirmativeQuestion) {
@@ -874,9 +876,10 @@ export class EncuestaEmpresaComponent {
     }
     console.log('fuera del ciclo', this.listaRespuestas3);
     this.next();
+    return isValidForm;
   }
 
-  onSubmitSeccion4() {
+  onSubmitSeccion4():boolean {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
@@ -1151,17 +1154,34 @@ export class EncuestaEmpresaComponent {
         }
       });
     }
+    return isValidForm;
   }
 
 
 
 
   enviarRespuestasJson() {
-    this.onSubmitSeccion1();
-    this.onSubmitSeccion2();
-    this.onSubmitSeccion3();
-    this.onSubmitSeccion4();
+    let isFormValid = true;
 
+  // Validar cada sección antes de proceder
+  if (!this.onSubmitSeccion1()) {
+    isFormValid = false;
+  }
+  if (!this.onSubmitSeccion2()) {
+    isFormValid = false;
+  }
+  if (!this.onSubmitSeccion3()) {
+    isFormValid = false;
+  }
+  if (!this.onSubmitSeccion4()) {
+    isFormValid = false;
+  }
+
+  // Si alguna sección no es válida, detener el flujo y no enviar las respuestas
+  if (!isFormValid) {
+    this.alertService.errorAlert('Error','El formulario contiene errores y no puede ser enviado.');
+    return; // Detiene la ejecución si hay errores
+  }else{
     let totalRespuestas = [];
 
     if (this.listaRespuestas1 && this.listaRespuestas1.length > 0) {
@@ -1191,6 +1211,11 @@ export class EncuestaEmpresaComponent {
         console.log(error);
       }
     );
+    this.alertService.successAlert('Exito','El formulario Fue guardado');
+    return;
+  }
+
+    
   }
 
   currentSubSectionIndex: number = 0;
