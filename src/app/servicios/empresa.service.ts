@@ -41,7 +41,10 @@ export class EmpresaService {
     return this.http.post(this.url+"/createEmpresa", payload, { headers });
   }
 
-  
+  getApoyo(access_token:any, id_documentoEmpresa:string): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(`${this.url}/getApoyo/${id_documentoEmpresa}`, options);
+  }
 
 }
 

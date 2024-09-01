@@ -245,12 +245,12 @@
             (click)="previous()">
             Anterior
           </button>
-          <button type="button" (click)="crearEmpresa()"
+          <button type="button" (click)="crearEmpresa()"  *ngIf="!id_documentoEmpresa"
           class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
           <span class="px-2">Crear Empresa</span>
          
         </button>
-        <button id="guardar" (click)="editEmpresa()"
+        <button id="guardar" (click)="editEmpresa()" *ngIf="id_documentoEmpresa"
         class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
         Guardar
       </button>
@@ -265,104 +265,150 @@
   </ng-container>
 
   <!-- Datos apoyos -->
-  <ng-container *ngIf="currentIndex === 2">
-    <div *ngIf="currentSubSectionIndex === 0">
-      <div class="space-y-8 max-w-full md:px-8">
-        <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-          <div class="container mx-auto px-4 py-12">
-            <form [formGroup]="addApoyoEmpresaForm" (ngSubmit)="crearEmpresa()">
-              <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2  gap-6 mb-6">
-                <div class="w-full text-base relative">
-                  <label for="nombre" class="text-lg font-normal">Nombre:</label>
-                  <input formControlName="nombre"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && f.nombre.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.nombre.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
+   <div *ngIf="!id_documentoEmpresa">
+     <ng-container *ngIf="currentIndex === 2">
+       <div *ngIf="currentSubSectionIndex === 0">
+         <div class="space-y-8 max-w-full md:px-8">
+           <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+             <div class="container mx-auto px-4 py-12">
+               <form [formGroup]="addApoyoEmpresaForm" (ngSubmit)="crearEmpresa()">
+                 <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2  gap-6 mb-6">
+                   <div class="w-full text-base relative">
+                     <label for="nombre" class="text-lg font-normal">Nombre:</label>
+                     <input formControlName="nombre"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                     <div *ngIf="submitted && f.nombre.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                       <div *ngIf="f.nombre.errors.required">Este campo es requerido *</div>
+                     </div>
+                   </div>
+   
+                   <div class="w-full text-base relative">
+                     <label for="apellido" class="text-lg font-normal">Apellido:</label>
+                     <input formControlName="apellido"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                     <div *ngIf="submitted && g.apellido.errors"
+                       class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                       <div *ngIf="g.apellido.errors.required">Este campo es requerido *</div>
+                     </div>
+                   </div>
+   
+                   <div class="w-full text-base relative">
+                     <label for="tipodocumento" class="text-lg font-normal">Tipo de Documento:</label>
+                     <select id="tipoDocumento" formControlName="id_tipo_documento"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                       <option value="" disabled selected>Selecciona el tipo de documento...</option>
+                           <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
+                       </select>
+                     <div *ngIf="submitted && f.id_tipo_documento.errors"
+                       class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                       <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
+                     </div>
+                   </div>
+   
+                   <div class="w-full text-base relative">
+                     <label for="numeroDocumento" class="text-lg font-normal">Número de documento:</label>
+                     <input formControlName="documento"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                     <div *ngIf="submitted && f.documento.errors"
+                       class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                       <div *ngIf="f.documento.errors.required">Este campo es requerido *</div>
+                     </div>
+                   </div>
+   
+                   <div class="w-full text-base relative">
+                     <label for="cargo" class="text-lg font-normal">Cargo:</label>
+                     <input formControlName="cargo"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                     <div *ngIf="submitted && f.cargo.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                       <div *ngIf="f.cargo.errors.required">Este campo es requerido *</div>
+                     </div>
+                   </div>
+   
+                   <div class="w-full text-base relative">
+                     <label for="correo" class="text-lg font-normal">Correo:</label>
+                     <input formControlName="email"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                     <div *ngIf="submitted && g.email.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                       <div *ngIf="g.email.errors.required">Este campo es requerido *</div>
+                     </div>
+                   </div>
+   
+                   <div class="w-full text-base relative">
+                     <label for="celular" class="text-lg font-normal">Celular:</label>
+                     <input formControlName="celular"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                     <div *ngIf="submitted && f.celular.errors"
+                       class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
+                       <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
+                     </div>
+                   </div>
+   
+                   <div class="w-full text-base relative">
+                     <label for="fijo" class="text-lg font-normal">Telefono:</label>
+                     <input formControlName="telefono"
+                       class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
+                   </div>
+                 </div>
+               </form>
+             </div>
+           </div>
+           <div class="flex justify-center h-10 space-x-4">
+             <button
+               class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+               (click)="previous()">
+               Anterior
+             </button>
+             <button id="guardar" (click)="crearEmpresa()"
+               class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+               Guardar
+             </button>
+           </div>
+         </div>
+       </div>
+     </ng-container>
+   </div>
 
-                <div class="w-full text-base relative">
-                  <label for="apellido" class="text-lg font-normal">Apellido:</label>
-                  <input formControlName="apellido"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && g.apellido.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="g.apellido.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="tipodocumento" class="text-lg font-normal">Tipo de Documento:</label>
-                  <select id="tipoDocumento" formControlName="id_tipo_documento"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                    <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                        <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
-                    </select>
-                  <div *ngIf="submitted && f.id_tipo_documento.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.id_tipo_documento.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="numeroDocumento" class="text-lg font-normal">Número de documento:</label>
-                  <input formControlName="documento"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && f.documento.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.documento.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="cargo" class="text-lg font-normal">Cargo:</label>
-                  <input formControlName="cargo"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && f.cargo.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.cargo.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="correo" class="text-lg font-normal">Correo:</label>
-                  <input formControlName="email"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && g.email.errors" class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="g.email.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="celular" class="text-lg font-normal">Celular:</label>
-                  <input formControlName="celular"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                  <div *ngIf="submitted && f.celular.errors"
-                    class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                    <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
-                  </div>
-                </div>
-
-                <div class="w-full text-base relative">
-                  <label for="fijo" class="text-lg font-normal">Telefono:</label>
-                  <input formControlName="telefono"
-                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100" />
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="flex justify-center h-10 space-x-4">
-          <button
-            class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
-            (click)="previous()">
-            Anterior
-          </button>
-          <button id="guardar" (click)="crearEmpresa()"
-            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
-            Guardar
-          </button>
+   <div *ngIf="id_documentoEmpresa">
+    <ng-container *ngIf="currentIndex === 2">
+      <div class="p-4 mb-6 bg-gray-100 rounded-lg shadow-md" >
+        <div class="overflow-x-auto">
+          <table class="lg:w-5/6 md:5/6 md:mx-auto">
+            <thead>
+              <tr>
+                <th class="p-2 text-left">Nombre</th>
+                <th class="p-2 text-left">Apellido</th>  
+                <th class="hidden p-2 text-left sm:table-cell">Correo</th>
+                <th class="p-2 text-left"></th>
+              </tr>
+            </thead>
+            <tbody class="space-y-6">
+              <ng-container
+                *ngFor="let apoyo of listaApoyo | paginate: { itemsPerPage: 5, currentPage: page }; let i = index">
+                <tr class="my-5 bg-gray-300 rounded-xl">
+                  <td class="p-2 rounded-s-lg">{{ apoyo.nombre }}</td>
+                  <td class="p-2 max-sm:break-all">{{ apoyo.apellido }}</td>
+                  <td class="hidden p-2 sm:table-cell">{{ apoyo.email }}</td>
+                  <td class="p-2 text-center rounded-e-lg">
+                    <button type="button" (click)="editApoyo(apoyo.documento)"
+                      class="text-blue-500 mr-2 " title="Editar Empresa">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4 h-4" fill="currentColor">
+                        <path
+                          d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="i < listaApoyo.length - 1">
+                  <td class="py-2"></td>
+                </tr>
+              </ng-container>
+              <tr *ngIf="listaApoyo.length === 0">
+                <td colspan="4" class="py-4 text-center text-gray-500">No se encontraron apoyos.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+   </div>
 </div>

@@ -10,6 +10,7 @@ import { AuthService } from '../../../../servicios/auth.service';
 import { Empresa } from '../../../../Modelos/empresa.model';
 import { ApoyoEmpresa } from '../../../../Modelos/apoyo-empresa.modelo';
 import { ActivatedRoute, Router } from '@angular/router';
+import { data } from 'jquery';
 
 
 @Component({
@@ -40,6 +41,9 @@ export class AddEmpresaComponent {
   apoyo: ApoyoEmpresa;
   addEmpresaForm: FormGroup;
   addApoyoEmpresaForm: FormGroup;
+  listaApoyo: ApoyoEmpresa[] = [];
+  isLoading: boolean = true; // Variable para gestionar el estado de carga
+
 
   constructor(
     private fb: FormBuilder,
@@ -92,9 +96,9 @@ export class AddEmpresaComponent {
     this.validateToken();
     this.cargarDepartamentos();
     this.tipodato();
-    
     this.cargarDatosEmpresa();
     this.cargarDepartamentos();
+    this.cargarApoyos();
   }
 
   /* Valida el token del login */
@@ -378,6 +382,17 @@ export class AddEmpresaComponent {
       }
     });
     return result;
+  }
+
+  cargarApoyos(): void {
+    this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
+      data => {
+        this.listaApoyo = data;
+        console.log("apoyos", this.listaApoyo);
+      },
+      error => {
+        console.error(error);
+      });
   }
 }
 
