@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { RutaService } from '../../../servicios/rutas.service';
 import { Router } from '@angular/router';
 import { Ruta } from '../../../Modelos/ruta.modelo';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-ruta-emprendedor',
@@ -17,10 +18,22 @@ export class RutaEmprendedorComponent implements OnInit {
   rutaList: Ruta[] = [];
   modalVisible: boolean = false;
   selectedActividad: any = null;
+  
+
+  actividadForm = this.fb.group({
+    id:[null],
+    nombre: [''],
+    descripcion: [''],
+    ruta_multi: [''],
+    id_tipo_dato: [''],
+    id_asesor: [''],
+    id_aliado: ['']
+  })
 
   constructor(
     private rutaService: RutaService,
     private router: Router,
+    private fb: FormBuilder,
   ) {}
 
   ngOnInit(): void {
@@ -102,19 +115,16 @@ export class RutaEmprendedorComponent implements OnInit {
     return [0, 1, 4].includes(positionInGroup) ? 'circle-right' : 'circle-left';
   }
   openModal(actividad: any): void {
-    // Asegúrate de que la ruta de la imagen sea completa
-    if (actividad.imagen && !actividad.imagen.startsWith('http') && !actividad.imagen.startsWith('/')) {
-      actividad.imagen = '/assets/images/' + actividad.imagen;
-    }
     this.selectedActividad = actividad;
+    console.log("ACTIVIDDDAAAD", this.selectedActividad)
     this.modalVisible = true;
-    console.log('Abriendo modal con actividad:', this.selectedActividad); // Para depuración
   }
 
   closeModal(): void {
     this.modalVisible = false;
     this.selectedActividad = null;
   }
+
   
 }
 

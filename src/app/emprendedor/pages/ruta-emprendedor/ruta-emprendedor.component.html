@@ -19,6 +19,7 @@
 </div>
 
 <app-modal-actividad 
+  *ngIf="selectedActividad"
   [actividad]="selectedActividad" 
   [visible]="modalVisible" 
   (close)="closeModal()">
