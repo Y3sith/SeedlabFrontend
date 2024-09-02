@@ -11,6 +11,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from '../shared.module';
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 
 import { NgChartsModule } from 'ng2-charts';
 
@@ -29,6 +31,7 @@ import { NgChartsModule } from 'ng2-charts';
     FontAwesomeModule,
     SharedModule,
     FilterPipeModule,
+    NgxPaginationModule,
     ReactiveFormsModule,
     FormsModule,
     NgChartsModule

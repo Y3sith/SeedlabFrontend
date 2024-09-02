@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<div class="container mx-auto p-0 pt-2 ">
+<div class="container p-0 pt-2 mx-auto ">
   <!-- Encabezado -->
-  <header class="flex flex-col md:flex-row justify-between items-center mb-6">
+  <header class="flex flex-col items-center justify-between mb-6 md:flex-row">
     <app-header [title] [subtitle]="'Asesorias'"></app-header>
     <!-- Barra de búsqueda -->
     <div class="relative flex justify-end w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl md:mb-10">
@@ -10,21 +10,21 @@
         <i class="fas fa-search text-[18px]"></i>
       </span>
       <input type="text" [(ngModel)]="userFilter.Nombre_sol" placeholder="Buscar..."
-        class="w-full max-md:w-full h-10 max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray">
+        class="w-full h-10 pl-2 border-2 rounded-full max-md:w-full max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pr-9 bg-form-gray">
     </div>
   </header>
-  <div class="flex flex-col mb-4 px-1 sm:px-1 mt-8">
+  <div class="flex flex-col px-1 mt-8 mb-4 sm:px-1">
 
     <!-- Contenedor principal -->
     <div class="flex flex-wrap gap-4 w-full md:w-auto ml-[10px] md:ml-[55px] items-center">
       <h5 class="mt-2 font-bold">FILTROS</h5>
 
       <!-- Botones de filtro -->
-      <div class="flex flex-wrap items-center space-x-2 bg-gray-100 rounded-lg p-2">
+      <div class="flex flex-wrap items-center p-2 space-x-2 bg-gray-100 rounded-lg">
 
         <!-- Botón de 'Sin asignar' -->
         <button id="sinAsignar"
-          class="flex items-center md:px-4 px-2 py-2 text-gray-800 ease-in-out listado-aseorias italic"
+          class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out md:px-4 listado-aseorias"
           (click)="filterAsesorias(false)">
           <span
             class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg">
@@ -35,10 +35,10 @@
 
         <!-- Botón de 'Asignadas' -->
         <button id="Asignadas"
-          class="btn-color flex items-center md:px-4 px-2 py-2 text-gray-800 ease-in-out listado-aseorias italic"
+          class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out btn-color md:px-4 listado-aseorias"
           (click)="filterAsesorias(true)">
           <span
-            class="border border-green-500 text-green-500 bg-white rounded-lg w-6 h-6 flex items-center justify-center mr-2">
+            class="flex items-center justify-center w-6 h-6 mr-2 text-green-500 bg-white border border-green-500 rounded-lg">
             {{ asesoriasConHorario.length }}
           </span>
           <span>Asignadas</span>
@@ -52,18 +52,18 @@
     <div class="spinner"></div>
   </div>
 
-  <div class="flex flex-wrap justify-center mt-6 px-2" *ngIf="showFalse && !isLoading">
+  <div class="flex flex-wrap justify-center px-2 mt-6" *ngIf="!isLoading && (showTrue || showFalse)">
     <div *ngIf="asesoriasSinHorario.length === 0" class="mt-6 text-center text-gray-500">
       No tienes asesorias pendientes por asignar.
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full p-4 bg-[#FAFAFA] ">
       <!-- Contenedor de la card -->
-      <div *ngFor="let asesoria of asesoriasSinHorario|filterBy:userFilter" class="relative w-full">
+      <div *ngFor="let asesoria of (showTrue ? asesoriasConHorario : asesoriasSinHorario )|filterBy:userFilter" class="relative w-full">
         <!-- Contenedor de la tarjeta con el efecto de recorte -->
         <div class="relative bg-[#e6e6e6] rounded-lg p-4 py-3 h-auto">
           <!-- Dentro del círculo -->
           <div class="p-2 absolute  rounded-full bg-[#FAFAFA] -top-5 -right-3">
-            <div class="flex items-center justify-center rounded-full cursor-pointer w-12 h-12"
+            <div class="flex items-center justify-center w-12 h-12 rounded-full cursor-pointer"
               (click)="openModal(asesoria)" [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
               <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
             </div>
@@ -74,79 +74,12 @@
           <div
             class="block w-full h-[3.7rem] text-gray-900 focus:outline-none resize-none overflow-hidden text-ellipsis mb-3"
             title="{{ asesoria.notas }}">{{ asesoria.notas }}</div>
-          <p class="text-sm text-gray-700 mb-2"><strong>Emprendedor: </strong>{{ asesoria.nombre }} {{
+          <p class="mb-2 text-sm text-gray-700"><strong>Emprendedor: </strong>{{ asesoria.nombre }} {{
             asesoria.apellido }}</p>
-          <p class="text-sm text-gray-700 mb-2"><strong>Celular: </strong>{{ asesoria.celular }}</p>
-          <p class="text-sm text-gray-700 mb-2"><strong>Correo: </strong>{{ asesoria.correo }}</p>
+          <p class="mb-2 text-sm text-gray-700"><strong>Celular: </strong>{{ asesoria.celular }}</p>
+          <p class="mb-2 text-sm text-gray-700"><strong>Correo: </strong>{{ asesoria.correo }}</p>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="flex flex-wrap justify-center mt-6 px-2" *ngIf="showTrue && !isLoading">
-    <div *ngIf="asesoriasConHorario.length === 0" class="text-center text-gray-500 mt-6">
-      Aun no asignas aliado a ninguna asesoria.
-    </div>
-    <div class="flex flex-wrap rounded-lg overflow-hidden w-full m-4 bg-[#FAFAFA]">
-      <!-- Contenedor de la card -->
-      <div *ngFor="let asesoria of asesoriasConHorario | filterBy:userFilter" class="relative w-full md:w-[25%] m-4">
-        <!-- Contenedor de la tarjeta con el efecto de recorte -->
-        <div class="relative bg-[#e6e6e6] rounded-lg p-4 py-3 h-auto">
-          <!-- Dentro del círculo -->
-          <div class="p-2 absolute  rounded-full bg-[#FAFAFA] -top-5 -right-3">
-            <div class="flex items-center justify-center rounded-full cursor-pointer w-11 h-11"
-              (click)="openModal(asesoria)" [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
-              <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
-            </div>
-          </div>
-
-          <!-- Contenido de la tarjeta -->
-          <h2 class="text-lg font-bold h-[3.3rem] overflow-hidden text-ellipsis">{{ asesoria.Nombre_sol }}</h2>
-          <div
-            class="block w-full h-[3.7rem] text-gray-900 focus:outline-none resize-none overflow-hidden text-ellipsis mb-3"
-            title="{{ asesoria.notas }}">{{ asesoria.notas }}</div>
-          <p class="text-sm text-gray-700 mb-2"><strong>Emprendedor: </strong>{{ asesoria.nombre }} {{
-            asesoria.apellido }}</p>
-          <p class="text-sm text-gray-700 mb-2"><strong>Celular: </strong>{{ asesoria.celular }}</p>
-          <p class="text-sm text-gray-700 mb-2"><strong>Correo: </strong>{{ asesoria.correo }}</p>
-          <p class="text-sm text-gray-700 mb-2">
-            <strong>Fecha: </strong>
-            <span class="whitespace-nowrap overflow-hidden text-ellipsis block">{{ asesoria.fecha_asignacion }}</span>
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
-      <div *ngFor="let asesoria of asesoriasConHorario | filterBy:userFilter"
-        class="relative bg-white rounded-xl shadow-lg overflow-hidden transition-transform transform hover:-translate-y-1 hover:shadow-xl max-w-full"
-        (click)="openModal(asesoria)">
-        <div class="absolute h-full w-2 bg-red-500"></div>
-        <div class="p-4">
-          <h2 class="text-lg font-bold h-[3.3rem] overflow-hidden text-ellipsis whitespace-nowrap">{{
-            asesoria.Nombre_sol }}</h2>
-          <div
-            class="block w-full h-[3.7rem] text-gray-900 focus:outline-none resize-none overflow-hidden text-ellipsis whitespace-nowrap mb-3"
-            title="{{ asesoria.notas }}">{{ asesoria.notas }}</div>
-          <p class="text-sm text-gray-700 mb-2">
-            <strong>Emprendedor: </strong>
-            <span class="whitespace-nowrap overflow-hidden text-ellipsis block">{{ asesoria.nombre }} {{
-              asesoria.apellido }}</span>
-          </p>
-          <p class="text-sm text-gray-700 mb-2">
-            <strong>Celular: </strong>
-            <span class="whitespace-nowrap overflow-hidden text-ellipsis block">{{ asesoria.celular }}</span>
-          </p>
-          <p class="text-sm text-gray-700 mb-2">
-            <strong>Correo: </strong>
-            <span class="break-words">{{ asesoria.correo }}</span>
-          </p>
-          <p class="text-sm text-gray-700 mb-2">
-            <strong>Fecha: </strong>
-            <span class="whitespace-nowrap overflow-hidden text-ellipsis block">{{ asesoria.fecha_asignacion }}</span>
-          </p>
-        </div>
-      </div>
-    </div> -->
-  </div>
+  </div>  
 </div>
