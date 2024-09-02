@@ -43,7 +43,9 @@ export class AddEmpresaComponent {
   addApoyoEmpresaForm: FormGroup;
   listaApoyo: ApoyoEmpresa[] = [];
   isLoading: boolean = true; // Variable para gestionar el estado de carga
-
+  selectedApoyoDocumento: string = '';
+  mostrarBotonEditar: boolean = true;
+  mostrarBotonesNuevos: boolean = false;
   ////
   showFirstSection = true;
   showSecondSection = false;
@@ -164,6 +166,7 @@ export class AddEmpresaComponent {
     );
   }
   
+
   tipodato():void{
       this.authService.tipoDocumento().subscribe(
         data => {
@@ -326,6 +329,7 @@ export class AddEmpresaComponent {
       return;
     }
     const empresaData = this.addEmpresaForm.value;
+    const apoyo = this.addApoyoEmpresaForm.value;
 
     this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
       response => {
@@ -397,13 +401,98 @@ export class AddEmpresaComponent {
       data => {
         this.listaApoyo = data;
         console.log("apoyos", this.listaApoyo);
+        if (this.listaApoyo.length > 0) {
+          this.onApoyoSelect(this.listaApoyo[0].documento);
+        }
       },
       error => {
         console.error(error);
       });
   }
 
+  onApoyoSelect(documento: string) {
+    const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
+    
+    if (selectedApoyo) {
+      this.selectedApoyoDocumento = selectedApoyo.documento;
+      this.addApoyoEmpresaForm.patchValue({
+        documento: selectedApoyo.documento,
+        nombre: selectedApoyo.nombre,
+        apellido: selectedApoyo.apellido,
+        email: selectedApoyo.email,
+        cargo: selectedApoyo.cargo,
+        telefono: selectedApoyo.telefono,
+        celular: selectedApoyo.celular,
+        id_tipo_documento: selectedApoyo.id_tipo_documento,
+        id_empresa: selectedApoyo.id_empresa,
+      });
+      console.log("Apoyo seleccionado:", selectedApoyo);
+    } else {
+      console.log("No se encontró el apoyo con documento:", documento);
+    }
+  }
 
+  editarApoyo():void {
+    const apoyo = this.addApoyoEmpresaForm.value;
+
+    this.EmpresaService.updateApoyo(this.token, this.selectedApoyoDocumento, apoyo).subscribe(
+      data => {
+        console.log("funcionaaaaa", this.apoyo.documento);
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
+  limpiarYCambiarBotones() {
+    // Limpiar los inputs (asumiendo que tienes un formulario)
+    this.addApoyoEmpresaForm.reset();
+
+    // Ocultar el botón de editar
+    this.mostrarBotonEditar = false;
+
+    // Mostrar los nuevos botones
+    this.mostrarBotonesNuevos = true;
+
+    // Ocultar el botón seleccionado (el que se acaba de clicar)
+    // Esto se logra automáticamente al cambiar la vista
+  }
+
+  crearApoyo():void {
+    const apoyo = this.addApoyoEmpresaForm.valid ? {
+      documento: this.addApoyoEmpresaForm.get('documento')?.value,
+      nombre: this.addApoyoEmpresaForm.get('nombre')?.value,
+      apellido: this.addApoyoEmpresaForm.get('apellido')?.value,
+      cargo: this.addApoyoEmpresaForm.get('cargo')?.value,
+      telefono: this.addApoyoEmpresaForm.get('telefono')?.value,
+      celular: this.addApoyoEmpresaForm.get('celular')?.value,
+      email: this.addApoyoEmpresaForm.get('email')?.value,
+      id_tipo_documento: this.addApoyoEmpresaForm.get('id_tipo_documento')?.value,
+      id_empresa: this.id_documentoEmpresa,
+    } : null;
+
+    
+    this.EmpresaService.crearApoyo(this.token, apoyo).subscribe(
+      data => {
+        console.log("funcionaaaaa el crearrr");
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
+  cancel():void{
+    this.cargarDatosEmpresa();
+
+        // mostrar el botón de editar
+        this.mostrarBotonEditar = true;
+
+        // Ocultar los nuevos botones
+        this.mostrarBotonesNuevos = false;
+
+  }
 
 
 }

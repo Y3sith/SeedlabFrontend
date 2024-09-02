@@ -32,7 +32,16 @@ export class EmpresaService {
     return this.http.get(`${this.url}/getEmpresa/${id_emprendedor}/${documento}`, options);
   }
 
-  
+  updateApoyo(access_token: any, documento: any, apoyoData: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.put(`${this.url}/updateApoyo/${documento}`,apoyoData, options);
+  }
+
+  crearApoyo(access_token: any, apoyoData: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.post(`${this.url}/createApoyo`,apoyoData, options);
+  }
+
   addEmpresa(access_token: any, payload: any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
