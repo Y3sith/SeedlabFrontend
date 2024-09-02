@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SuperadminService } from '../../../../servicios/superadmin.service';
 import { Asesor } from '../../../../Modelos/asesor.model';
 import { ActividadService } from '../../../../servicios/actividad.service';
-import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, faFile, faFilePdf, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
 import { Aliado } from '../../../../Modelos/aliado.model';
 import { Superadmin } from '../../../../Modelos/superadmin.model';
@@ -47,14 +47,16 @@ export class ActnivlecComponent implements OnInit {
   currentIndex: number = 0;
   /////
   faImages = faImage;
+  faFile = faFilePdf;
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('fileInputs') fileInputs: ElementRef;
   fuentePreview: string | ArrayBuffer | null = null;
   fuentePreviewContenido: string | ArrayBuffer | null = null;
   selectedfuente: File | null = null;
   selectedfuenteContenido: File | null = null;
-  idactividad: string;
+  idactividad: string | null;
   idcontenidoLeccion: string;
+  camposDeshabilitados: boolean = false;
 
 
   ////
@@ -129,6 +131,28 @@ export class ActnivlecComponent implements OnInit {
     this.verNivel();
     this.listaAliado();
     this.onAliadoChange();
+    this.bloquearBotones();
+
+    this.nivelForm = this.fb.group({// Campo deshabilitado
+      nombre: [{ value: '', disabled: true }], 
+      id_actividad: [{ value: '', disabled: true }]
+  });
+
+  this.leccionForm = this.fb.group({
+    nombre: [{ value: '', disabled: true }], 
+    id_nivel: [{ value: '', disabled: true }]
+  });
+
+  this.contenidoLeccionForm = this.fb.group({
+    titulo: [{ value: '', disabled: true }], 
+    descripcion: [{ value: '', disabled: true }], 
+    fuente_contenido: [{ value: '', disabled: true }], 
+    id_tipo_dato: [{ value: '', disabled: true }], 
+    id_leccion: [{ value: '', disabled: true }]
+  })
+  
+
+
   }
 
   validateToken(): void {
@@ -270,7 +294,6 @@ export class ActnivlecComponent implements OnInit {
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
-    console.log('datos enviados: ', formData)
 
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
@@ -279,20 +302,93 @@ export class ActnivlecComponent implements OnInit {
       if (rutaMultiValue) {
         formData.append('fuente', rutaMultiValue);
       }
+      console.log('datos enviados: ', formData)
     }
-    this.superAdminService.crearActividadSuperAdmin(this.token, formData).subscribe(
-      (data: any) => {
-        const actividadCreada = data[0];
-        this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-        this.mostrarNivelForm = true;
-        this.currentIndex = 1;
-        console.log('datos enviados: ', data)
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    if (this.idactividad == null) {
+      this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
+        if (result.isConfirmed) {
+          this.superAdminService.crearActividadSuperAdmin(this.token, formData).subscribe(
+            (data: any) => {
+              const actividadCreada = data[0];
+              this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
+              this.mostrarNivelForm = true;
+              this.alertServices.successAlert('Exito', data.message);
+              this.desactivarcamposActividad();
+              console.log('datos enviados: ', data)
+              this.activarformularios();
+              this.habilitarBotones();
+            },
+            error => {
+              console.log(error);
+              this.alertServices.errorAlert('Error', error.error.message);
+            }
+          );
+        }
+      })
+    }
   }
+
+  desactivarcamposActividad(): void {
+    this.actividadForm.disable();
+
+    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+    if (guardarBtn) {
+      guardarBtn.disabled = true;
+      guardarBtn.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
+    }
+
+    const fuente = document.getElementById('fuente') as HTMLButtonElement;
+    if (fuente) {
+      fuente.disabled = true;
+      fuente.classList.add('disabled-btn');
+    }
+  }
+
+  activarformularios(): void {
+    this.nivelForm.enable(); // Habilita el formulario de niveles
+    this.leccionForm.enable(); 
+    this.contenidoLeccionForm.enable();
+}
+
+bloquearBotones(): void{
+  const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+    if (agregarNivelBtn) {
+        agregarNivelBtn.style.pointerEvents = 'none'; 
+        agregarNivelBtn.style.opacity = '0.5'; 
+    }
+  
+    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
+    if (agregarLeccionBtn) {
+        agregarLeccionBtn.style.pointerEvents = 'none';
+        agregarLeccionBtn.style.opacity = '0.5'; 
+    }
+
+    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
+    if (agregarContenidoBtn) {
+        agregarContenidoBtn.style.pointerEvents = 'none';
+        agregarContenidoBtn.style.opacity = '0.5'; 
+    }
+}
+habilitarBotones(): void{
+  const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+    if (agregarNivelBtn) {
+        agregarNivelBtn.style.pointerEvents = 'auto'; 
+        agregarNivelBtn.style.opacity = '1';
+    }
+
+    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
+    if (agregarLeccionBtn) {
+        agregarLeccionBtn.style.pointerEvents = 'auto'; 
+        agregarLeccionBtn.style.opacity = '1';
+    }
+
+    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
+    if (agregarContenidoBtn) {
+        agregarContenidoBtn.style.pointerEvents = 'auto'; 
+        agregarContenidoBtn.style.opacity = '1';
+    }
+  
+}
 
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
@@ -452,6 +548,7 @@ export class ActnivlecComponent implements OnInit {
   ///////////////////////////////////////////////////////////////////////////////
   onTipoDatoChange(): void {
     const tipoDatoId = this.actividadForm.get('id_tipo_dato').value;
+    this.resetFuenteField();
     this.actividadForm.get('fuente').clearValidators();
 
     switch (tipoDatoId) {
@@ -512,31 +609,17 @@ export class ActnivlecComponent implements OnInit {
       this.fuentePreview = null;
     }
   }
+  resetFuenteField(): void {
+    this.actividadForm.patchValue({ fuente: '' });
+    this.selectedfuente = null;
+    this.fuentePreview = null;
+  }
 
-  // generateImagePreview(file: File, field: string) {
-  //   const reader = new FileReader();
-  //   reader.onload = (e: any) => {
-  //     if (field === 'fuente') {
-  //       this.fuentePreview = e.target.result;
-  //     }
-  //     this.cdRef.detectChanges();
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
   ////////////////////////////////////////////////////////////////////////////////////////
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   onTipoDatoChangeContenido(): void {
     const tipoDatoIdContenido = this.contenidoLeccionForm.get('id_tipo_dato').value;
+    this.resetFuenteFieldContenido();
     this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
 
     switch (tipoDatoIdContenido) {
@@ -598,44 +681,14 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-  // generateImagePreviewContenido(file: File, field: string) {
-  //   const reader = new FileReader();
-  //   reader.onload = (e: any) => {
-  //     if (field === 'fuente') {
-  //       this.fuentePreview = e.target.result;
-  //     }
-  //     this.cdRef.detectChanges();
-  //   };
-  //   reader.readAsDataURL(file);
-  // }
+  resetFuenteFieldContenido(): void {
+    this.contenidoLeccionForm.patchValue({ fuente_contenido: '' });
+    this.selectedfuenteContenido = null;
+    this.fuentePreviewContenido = null;
+  }
 
   ////////////////////////////////////////////////////////////////////////
-
-  // cancelarcrearActividad(): void {
-  //   this.router.navigate(['/list-ruta'])
-  //   this.actividadForm.patchValue({
-  //     nombre: '',
-  //     descripcion: '',
-  //     fuente: '',
-  //     id_tipo_dato: '',
-  //     id_asesor: '',
-  //     id_aliado: '',
-  //   });
-  // }
-
-  // cancelarGlobal(): void {
-  //   this.nivelForm.patchValue({
-  //     nombre: '',
-  //   });
-  //   this.leccionForm.patchValue({
-  //     nombre: '',
-
-  //   });
-  //   this.contenidoLeccionForm.patchValue({
-  //     titulo: '',
-  //     descripcion: '',
-  //     fuente: '',
-  //     id_tipo_dato: '',
-  //   })
+  // alinicio():void{
+  //   this.router.navigate(['/list-ruta']);
   // }
 }
