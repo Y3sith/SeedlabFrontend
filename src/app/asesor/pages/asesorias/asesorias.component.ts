@@ -5,6 +5,7 @@ import { HorarioModalComponent } from '../horario-modal/horario-modal.component'
 import { AsesoriaService } from '../../../servicios/asesoria.service';
 import { Asesoria } from '../../../Modelos/asesoria.model';
 import { AsesorService } from '../../../servicios/asesor.service';
+import { forkJoin } from 'rxjs'; // Asegúrate de importar forkJoin desde RxJS
 
 @Component({
   selector: 'app-asesorias',
@@ -14,8 +15,8 @@ import { AsesorService } from '../../../servicios/asesor.service';
 })
 export class AsesoriasComponent implements OnInit {
   asesorias: Asesoria[] = [];
-  asesoriasConHorario: Asesoria[] = [];
-  asesoriasSinHorario: Asesoria[] = [];
+  asesoriasConHorario: any[] = [];
+  asesoriasSinHorario: any[] = [];
   showTrue: boolean = false; // Inicializa en false para no mostrar asesorías con horario al principio
   showFalse: boolean = true; // Inicializa en true para mostrar asesorías sin horario al principio
   token: string | null = null;
@@ -24,21 +25,28 @@ export class AsesoriasComponent implements OnInit {
   currentRolId: number;
   isLoading: boolean = false;
 
-  userFilter: any = { Nombre_sol: ''};
+  sinHorarioCount: number = 0;
+  conHorarioCount: number = 0;
+  totalAsesorias: number = 0; // variable para almacenar el total de asesorias
+  page: number = 1;
+  itemsPerPage: number = 6; // Puedes ajustar este valor según la cantidad de ítems por página
+
+  userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
 
+
+
   constructor(
-    private asesoriaService: AsesoriaService, 
+    private asesoriaService: AsesoriaService,
     public dialog: MatDialog,
     private router: Router,
     private asesorService: AsesorService
   ) { }
- 
+
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
-    this.loadAsesoriasFalse();    
-    this.loadAsesoriasTrue();
+    this.listarAsesorias()
   }
 
   /* Valida el token del login */
@@ -59,55 +67,83 @@ export class AsesoriasComponent implements OnInit {
 
     if (!this.token) {
       this.router.navigate(['home']);
-    } else {
-      this.loadAsesoriasFalse();
     }
   }
 
+  listarAsesorias(): void {
+    if (this.user && this.token) {
+      this.isLoading = true; // Empieza a cargar
 
-  filterAsesorias(status: boolean): void {
-    if (status) {
-      this.showTrue = true;
-      this.showFalse = false;
-      this.filteredAsesorias = this.asesoriasConHorario;
+      const idAsesor = this.user.id;
+
+      // Agrega paginación a las solicitudes
+      const requestSinHorario = this.asesorService.mostrarAsesoriasAsesor(this.token, idAsesor, false);
+      const requestConHorario = this.asesorService.mostrarAsesoriasAsesor(this.token, idAsesor, true);
+
+      // Ejecutar ambas solicitudes en paralelo
+      forkJoin([requestSinHorario, requestConHorario]).subscribe(
+        ([responseSinHorario, responseConHorario]) => {
+          console.log('Response Sin Horario:', responseSinHorario); // Log the entire response
+          console.log('Response Con Horario:', responseConHorario); // Log the entire response
+
+          this.asesoriasSinHorario = responseSinHorario || []; // Ensure the assignment
+          this.asesoriasConHorario = responseConHorario || []; // Ensure the assignment
+
+          this.sinHorarioCount = this.asesoriasSinHorario.length;
+          this.conHorarioCount = this.asesoriasConHorario.length;
+          this.totalAsesorias = this.asesoriasSinHorario.length + this.asesoriasConHorario.length; // Calcula el total de asesorías
+
+          console.log('Asesorias Sin Horario:', this.asesoriasSinHorario); // Check assigned data
+          console.log('Asesorias Con Horario:', this.asesoriasConHorario); // Check assigned data
+
+          this.isLoading = false; // Finaliza la carga
+        },
+        error => {
+          console.error('Error al cargar asesorías:', error);
+          this.isLoading = false; // Finaliza la carga en caso de error
+        }
+      );
     } else {
-      this.showTrue = false;
-      this.showFalse = true;
-      this.filteredAsesorias = this.asesoriasSinHorario;
+      console.error('Usuario o token no encontrado.');
     }
   }
 
-  loadAsesoriasFalse(): void {
-    this.isLoading = true; 
-
-    const idAsesor = this.user.id; // Obtener el ID del asesor del objeto de usuario
-    const horario = false; // Cambia esto según sea necesario
-    this.asesorService.mostrarAsesoriasAsesor(this.token, idAsesor, horario).subscribe(
-      response => {
-        this.asesoriasSinHorario = response;
-        this.isLoading = false; 
-      },
-      error => {
-        console.error('Error al cargar asesorías:', error);
-        this.isLoading = false; 
+  changePage(pageNumber: number | string): void {
+    if (pageNumber === 'previous') {
+      if (this.page > 1) {
+        this.page--;
+        this.listarAsesorias(); // Carga las asesorías de la página anterior
       }
-    );
+    } else if (pageNumber === 'next') {
+      if (this.page < this.getTotalPages()) {
+        this.page++;
+        this.listarAsesorias(); // Carga las asesorías de la página siguiente
+      }
+    } else {
+      this.page = pageNumber as number;
+      this.listarAsesorias(); // Carga las asesorías de la página seleccionada
+    }
   }
 
-  loadAsesoriasTrue(): void {
-    this.isLoading = true; 
-    const idAsesor = this.user.id; // Obtener el ID del asesor del objeto de usuario
-    const horario = true; // Cambia esto según sea necesario
-    this.asesorService.mostrarAsesoriasAsesor(this.token, idAsesor, horario).subscribe(
-      response => {
-        this.asesoriasConHorario = response;
-        this.isLoading = false; 
-      },
-      error => {
-        console.error('Error al cargar asesorías:', error);
-        this.isLoading = false; 
-      }
-    );
+  getTotalPages(): number {
+    const list = this.showFalse ? this.asesoriasSinHorario : this.asesoriasConHorario;
+    if (!list) {
+      return 1; // Devuelve 1 si la lista es undefined
+    }
+    return Math.ceil(list.length / this.itemsPerPage);
+  }
+
+  getPages(): number[] {
+    const totalPages = this.getTotalPages();
+    return Array(totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  canGoPrevious(): boolean {
+    return this.page > 1;
+  }
+
+  canGoNext(): boolean {
+    return this.page < this.getTotalPages();
   }
 
   openModal(asesoria: any): void {
@@ -123,8 +159,22 @@ export class AsesoriasComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       // Recargar las asesorías después de cerrar el modal
-      this.loadAsesoriasFalse();
-      this.loadAsesoriasTrue();
+      this.listarAsesorias();
     });
   }
+
+  showSinAsignar() {
+    this.showTrue = false;
+    this.showFalse = true;
+    this.page = 1;
+    this.listarAsesorias(); // Esto asegurará que se carguen las asesorías sin horario
+  }
+
+  showAsignadas() {
+    this.showTrue = true;
+    this.showFalse = false;
+    this.page = 1;
+    this.listarAsesorias(); // Esto asegurará que se carguen las asesorías con horario
+  }
+
 }
