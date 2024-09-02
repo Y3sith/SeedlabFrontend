@@ -14,7 +14,8 @@ import { Preguntas } from '../../../Modelos/preguntas.model';
 import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
-import { Console } from 'console';
+import { PuntajesService } from '../../../servicios/puntajes.service';
+import { error } from 'console';
 
 
 @Component({
@@ -48,9 +49,12 @@ export class EncuestaEmpresaComponent {
   listaRespuestas4: Respuesta[] = [];
   listaRespuestas5: Respuesta[] = [];
 
-
+  acumXSeccion1: number = 0;
+  acumXSeccion2: number = 0;
+  acumXSeccion3: number = 0;
+  acumXTrl: number = 0;
+  acumXTecnica: number = 0;
   id_empresa: number | null = null;
-  //private originalAttributes: Map<Element, { colspan: string | null, rowspan: string | null }> = new Map();
 
   respuesta1: Respuesta = new Respuesta({});
   respuesta2: Respuesta = new Respuesta({});
@@ -189,7 +193,8 @@ export class EncuestaEmpresaComponent {
     private respuestasService: RespuestasService,
     private alertService: AlertService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private puntajeService: PuntajesService
   ) { }
 
 
@@ -233,7 +238,6 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas1 = [];
 
     let totalXpregunta: number = 0;
-    let acumXSeccion: number = 0;
     //Mapeo de valores 
     const valorPorOpcion = {
       '-1': 2.5,
@@ -340,14 +344,14 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 0; i < 15; i++) {
-      debugger;
+      //debugger;
       //console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas1[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas1[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas1[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas1[respCounter].valor;
-      acumXSeccion += totalXpregunta;
+      this.acumXSeccion1 += totalXpregunta;
 
       //Validación de pregunta 2 con subpreguntas
       if (currentPregunta.id === 2) {
@@ -387,7 +391,7 @@ export class EncuestaEmpresaComponent {
           respuestaActual.id_subpregunta = currentPregunta.subPreguntas[j].id;
           totalXpregunta += respuestaActual.valor;
         }
-        acumXSeccion += totalXpregunta;
+        this.acumXSeccion1 += totalXpregunta;
         respCounter += currentPregunta.subPreguntas.length;
         continue;
       } else if (currentPregunta.id === 9) {
@@ -440,7 +444,7 @@ export class EncuestaEmpresaComponent {
       }
     }
     console.log('fuera del ciclo', this.listaRespuestas1);
-    console.log('Acumulado por sección 1:', acumXSeccion);
+    console.log('Acumulado por sección 1:', this.acumXSeccion1);
     if (!isValidForm) {
       return false;
     }
@@ -450,7 +454,7 @@ export class EncuestaEmpresaComponent {
   }
 
 
-  //onSubmit seccion 2
+  //Seccion 2
   onSubmitSeccion2(): boolean {
 
     let respCounter = 0;
@@ -458,7 +462,6 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas2 = [];
     let totalXpregunta: number = 0;
-    let acumXSeccion: number = 0;
 
     const valorRespuesta26 = {
       'Ingreso superior al egreso': 15.0,
@@ -671,18 +674,14 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta65);
     }
 
-    const payload = { respuestas: this.listaRespuestas2, id_empresa: this.id_empresa };
-
-
     for (let i = 15; i < 28; i++) {
-      debugger
+      //debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas2[respCounter].id_subpregunta = null;
       totalXpregunta = 0;
-      acumXSeccion += totalXpregunta;
-      console.log(acumXSeccion);
+      this.acumXSeccion2 += totalXpregunta;
 
       if (currentPregunta.isAffirmativeQuestion) {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
@@ -709,17 +708,13 @@ export class EncuestaEmpresaComponent {
             totalXpregunta += this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].valor;
             subPreguntaCounter++;
           }
-          acumXSeccion += totalXpregunta;
+          this.acumXSeccion2 += totalXpregunta;
           respCounter += subPreguntaCounter + 1;
         }
         else if (this.listaRespuestas2[respCounter].opcion === 'No') {
           respCounter += nextPregunta.subPreguntas.length + 1;
         }
-        //respCounter++;
-        //continue;
       }
-
-
 
       if (currentPregunta.id === 24) {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
@@ -733,10 +728,9 @@ export class EncuestaEmpresaComponent {
             this.listaRespuestas2[respCounter + j].id_empresa = this.id_empresa;
             totalXpregunta += this.listaRespuestas2[respCounter + j].valor;
           }
-          acumXSeccion += totalXpregunta;
+          this.acumXSeccion2 += totalXpregunta;
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
-
         respCounter++;
         continue;
       }
@@ -762,7 +756,7 @@ export class EncuestaEmpresaComponent {
           isValidForm = false;
           return false;
         }
-        acumXSeccion += this.listaRespuestas2[respCounter].valor;
+        this.acumXSeccion2 += this.listaRespuestas2[respCounter].valor;
         respCounter++;
         continue;
       }
@@ -787,7 +781,7 @@ export class EncuestaEmpresaComponent {
             this.listaRespuestas2[subPreguntaIndex].id_empresa = this.id_empresa;
             totalXpregunta += this.listaRespuestas2[subPreguntaIndex].valor;
           }
-          acumXSeccion += totalXpregunta;
+          this.acumXSeccion2 += totalXpregunta;
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
         respCounter++;
@@ -815,6 +809,7 @@ export class EncuestaEmpresaComponent {
       }
     }
     console.log('fuera del ciclo', this.listaRespuestas2);
+    console.log(this.acumXSeccion2);
     this.next();
     this.saveSection2();
     return isValidForm;
@@ -827,7 +822,6 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas3 = [];
     let totalXpregunta: number = 0;
-    let acumXSeccion: number = 0;
     
 
     this.respuesta66.valor = this.respuesta66.opcion === 'Si' ? 25 : this.respuesta66.opcion === 'Medio' ? 12.5 : 0;
@@ -871,7 +865,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas3[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas3[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas3[respCounter].valor;
-      acumXSeccion += totalXpregunta;
+      this.acumXSeccion3 += totalXpregunta;
 
       if (currentPregunta.isText) {
         if (!this.listaRespuestas3[respCounter].texto_res || this.listaRespuestas3[respCounter].texto_res === '' && this.listaRespuestas3[respCounter].texto_res !== 'N/A') {
@@ -896,7 +890,7 @@ export class EncuestaEmpresaComponent {
       respCounter++;
     }
     console.log('fuera del ciclo', this.listaRespuestas3);
-    console.log('Acumulado seccion 3', acumXSeccion);
+    console.log('Acumulado seccion 3', this.acumXSeccion3);
     this.next();
     this.saveSection3();
     return isValidForm;
@@ -908,7 +902,6 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas4 = [];
     let totalXpregunta: number = 0;
-    let acumXSeccion: number = 0;
     let trl;
     let acumTrl1: number = 0;
     let acumTrl2: number = 0;
@@ -1003,8 +996,8 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas4[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas4[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas4[respCounter].valor;
-      acumXSeccion += totalXpregunta;
-      console.log(acumXSeccion);
+      this.acumXTrl += totalXpregunta;
+      console.log('acum TRl',this.acumXTrl);
 
       if (currentPregunta.isAffirmativeQuestion) {
         if (currentRespuesta.opcion === 'No') {
@@ -1038,7 +1031,7 @@ export class EncuestaEmpresaComponent {
           respuestaSubPregunta.id_subpregunta = subPregunta.id;
           respuestaSubPregunta.id_empresa = this.id_empresa;
           totalXpregunta = respuestaSubPregunta.valor;
-          acumXSeccion += totalXpregunta;
+          this.acumXTrl += totalXpregunta;
 
           if(subPregunta.id >=50 && subPregunta.id <=52){
             acumTrl1 += totalXpregunta;
@@ -1157,7 +1150,6 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas5 = [];
     let totalXpregunta: number = 0;
-    let acumXSeccion: number = 0;
 
     //pregunta 43 
     this.respuesta109.opcion === 'Si' ? this.respuesta109.valor = 10 : 0;
@@ -1270,14 +1262,14 @@ export class EncuestaEmpresaComponent {
     }
 
     for (let i = 42; i < 46; i++) {
-      debugger;
+      //debugger;
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas5[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas5[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas5[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas5[respCounter].valor;
-      acumXSeccion += totalXpregunta;
-      console.log(acumXSeccion);
+      this.acumXTecnica += totalXpregunta;
+      console.log('acum Tecnica',this.acumXTecnica);
 
       if (currentPregunta.id === 43) {
         if (!this.listaRespuestas5[respCounter].opcion || this.listaRespuestas5[respCounter].opcion === '') {
@@ -1315,7 +1307,7 @@ export class EncuestaEmpresaComponent {
 
             subPreguntaCounter++;
           }
-          acumXSeccion += totalXpregunta;
+          this.acumXTecnica += totalXpregunta;
           respCounter += subPreguntaCounter + 1;
 
         } else if (this.listaRespuestas5[respCounter].opcion === 'No') {
@@ -1420,9 +1412,28 @@ export class EncuestaEmpresaComponent {
           console.log(error);
         }
       );
-      this.alertService.successAlert('Exito', 'El formulario Fue guardado');
-      return;
-    }
+
+      const puntajes = {
+        info_general: this.acumXSeccion1,
+        info_financiera: this.acumXSeccion2,
+        info_mercado: this.acumXSeccion3,
+        info_trl: this.acumXTrl,
+        info_tecnica: this.acumXTecnica,
+        documento_empresa: this.id_empresa,
+        ver_form: true 
+    };
+    
+    this.puntajeService.savePuntajeSeccion(puntajes).subscribe(
+        data => {
+            console.log('puntajes',data);
+            this.alertService.successAlert('Éxito', 'Los puntajes se han guardado correctamente.');
+        },
+        error => {
+            console.error(error);
+            this.alertService.errorAlert('Error', 'Hubo un problema al guardar los puntajes.');
+        }
+    );
+  }
   }
 
   saveSection1(): void {
@@ -1433,6 +1444,8 @@ export class EncuestaEmpresaComponent {
         console.error(error)
     )
   }
+
+  
 
   saveSection2(): void {
     this.respuestasService.SaveAnswersRedis(this.token, 2, this.listaRespuestas2).subscribe(
