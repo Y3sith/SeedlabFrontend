@@ -26,4 +26,10 @@ export class LeccionService {
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.http.put(this.url+'/editar_leccion/'+id,leccion,options)
   }
+
+  LeccionxNivel(access_token:any,idNivel:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/leccionXnivel/'+idNivel,options);
+  }
+
 }
