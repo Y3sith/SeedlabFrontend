@@ -910,7 +910,17 @@ export class EncuestaEmpresaComponent {
     let totalXpregunta: number = 0;
     let acumXSeccion: number = 0;
     let trl;
-    let acumTrl: number = 0;
+    let acumTrl1: number = 0;
+    let acumTrl2: number = 0;
+    let acumTrl3: number = 0;
+    let acumTrl4: number = 0;
+    let acumTrl5: number = 0;
+    let acumTrl6: number = 0;
+    let acumTrl7: number = 0;
+    let acumTrl8: number = 0;
+    let acumTrl9: number = 0;
+    let maxTrl = 0;
+
 
    
     //TRL 1
@@ -986,7 +996,7 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas4.push(this.respuesta108);
 
     for (let i = 41; i < 42; i++) {
-      debugger;
+      //debugger;
       const currentPregunta = PREGUNTAS[i];
       const currentRespuesta = this.listaRespuestas4[respCounter];
       this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
@@ -1030,31 +1040,72 @@ export class EncuestaEmpresaComponent {
           totalXpregunta = respuestaSubPregunta.valor;
           acumXSeccion += totalXpregunta;
 
-          if(subPregunta.id >=50 && subPregunta.id <52){
-            acumTrl += totalXpregunta;
-            if(acumTrl <=2){
+          if(subPregunta.id >=50 && subPregunta.id <=52){
+            acumTrl1 += totalXpregunta;
+            if(acumTrl1 <=2){
               trl = 1;
             }
           }else if(subPregunta.id >=53 && subPregunta.id <=57){
-            acumTrl += totalXpregunta;
-            if(acumTrl == 4){
+            acumTrl2 += totalXpregunta;
+            if(acumTrl2 === 4 && acumTrl1 >= 2){
               trl = 2;
-            }else if(acumXSeccion <4){
+            }else if(acumTrl2 < 4){
               trl = 1;
             }
           }else if(subPregunta.id >=58 && subPregunta.id <=60 ){
-            if(acumXSeccion == 6){
+            acumTrl3 += totalXpregunta;
+            if(acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
               trl = 3;
-            } else if(acumXSeccion <6){
-              trl = 2;
+            } else if(acumTrl3 < 6){
+              trl = 1;
             }
           }else if(subPregunta.id === 61){
-            if(acumXSeccion == 8){
+            acumTrl4 += totalXpregunta;
+            if(acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
               trl = 4;
-            } else if(acumXSeccion <8){
+            } else if(acumTrl4 < 8){
+              trl = 1;
+            }
+          }else if(subPregunta.id >= 62 && subPregunta.id <= 64){
+            acumTrl5 += totalXpregunta;
+            if(acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+              trl = 5;
+            } else if(acumTrl5 < 10){
+              trl = 1;
+            }
+          }else if(subPregunta.id >=65 && subPregunta.id <= 67){
+            acumTrl6 += totalXpregunta;
+            if(acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+              trl = 6;
+            } else if(acumTrl6 < 12){
+              trl = 1;
+            }
+          }else if(subPregunta.id >= 68 && subPregunta.id <= 70){
+            acumTrl7 += totalXpregunta;
+            if(acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+              trl = 7;
+            } else if(acumTrl7 < 15){
+              trl = 1;
+            }
+          }else if(subPregunta.id >= 71 && subPregunta.id <= 73){
+            acumTrl8 += totalXpregunta;
+            if(acumTrl8 == 18 && acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+              trl = 8;
+            } else if(acumTrl8 < 18){
+              trl = 1;
+            }
+          }else if(subPregunta.id >=74 && subPregunta.id <=80){
+            acumTrl9 += totalXpregunta;
+            if(acumTrl9 == 25 && acumTrl8 == 18 && acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+              trl = 9;
+            } else if(acumTrl9 < 25){
               trl = 1;
             }
           }
+
+          if (trl > maxTrl) {
+            maxTrl = trl;
+        }
 
           // Validar respuesta de subpregunta
           if (!respuestaSubPregunta.opcion || respuestaSubPregunta.opcion === '') {
@@ -1090,7 +1141,7 @@ export class EncuestaEmpresaComponent {
         respCounter++;
       }
     }
-    console.log('TRL:',trl);
+    console.log('TRL:',maxTrl);
     console.log('fuera del ciclo', this.listaRespuestas4);
     this.next();
     this.saveSection4();
