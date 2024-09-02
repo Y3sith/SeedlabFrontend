@@ -828,6 +828,7 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas3 = [];
     let totalXpregunta: number = 0;
     let acumXSeccion: number = 0;
+    
 
     this.respuesta66.valor = this.respuesta66.opcion === 'Si' ? 25 : this.respuesta66.opcion === 'Medio' ? 12.5 : 0;
     this.listaRespuestas3.push(this.respuesta66);
@@ -908,6 +909,8 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas4 = [];
     let totalXpregunta: number = 0;
     let acumXSeccion: number = 0;
+    let trl;
+    let acumTrl: number = 0;
 
    
     //TRL 1
@@ -1026,25 +1029,51 @@ export class EncuestaEmpresaComponent {
           respuestaSubPregunta.id_empresa = this.id_empresa;
           totalXpregunta = respuestaSubPregunta.valor;
           acumXSeccion += totalXpregunta;
+
+          if(subPregunta.id >=50 && subPregunta.id <52){
+            acumTrl += totalXpregunta;
+            if(acumTrl <=2){
+              trl = 1;
+            }
+          }else if(subPregunta.id >=53 && subPregunta.id <=57){
+            acumTrl += totalXpregunta;
+            if(acumTrl == 4){
+              trl = 2;
+            }else if(acumXSeccion <4){
+              trl = 1;
+            }
+          }else if(subPregunta.id >=58 && subPregunta.id <=60 ){
+            if(acumXSeccion == 6){
+              trl = 3;
+            } else if(acumXSeccion <6){
+              trl = 2;
+            }
+          }else if(subPregunta.id === 61){
+            if(acumXSeccion == 8){
+              trl = 4;
+            } else if(acumXSeccion <8){
+              trl = 1;
+            }
+          }
+
           // Validar respuesta de subpregunta
           if (!respuestaSubPregunta.opcion || respuestaSubPregunta.opcion === '') {
-            firstEmptySubPreguntaId = subPregunta.sub_id; // Guarda el ID de la primera subpregunta vacía
+            firstEmptySubPreguntaId = subPregunta.sub_id;
             isValidForm = false;
           }
-          // Si se encontró un error en una subpregunta, detener el bucle
+          
           if (!isValidForm) {
             break;
           }
         }
-        // Si se encontró una subpregunta vacía, mostrar un mensaje de error y salir
+
         if (!isValidForm && firstEmptySubPreguntaId !== null) {
           this.alertService.errorAlert('Error', `La subpregunta ${firstEmptySubPreguntaId}, de la pregunta ${currentPregunta.id} está vacía.`);
           break;
         }
-        // Aumenta el contador de respuestas por el número de subpreguntas
+    
         respCounter += currentPregunta.subPreguntas.length;
       } else {
-        // Validar pregunta sin subpreguntas
         if (currentPregunta.isText) {
           if (!currentRespuesta.texto_res || currentRespuesta.texto_res === '') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
@@ -1061,41 +1090,14 @@ export class EncuestaEmpresaComponent {
         respCounter++;
       }
     }
-    this.calculateTRL(acumXSeccion);
-    console.log('TRL', this.calculateTRL(acumXSeccion));
+    console.log('TRL:',trl);
     console.log('fuera del ciclo', this.listaRespuestas4);
     this.next();
     this.saveSection4();
     return isValidForm;
   }
 
-  calculateTRL(acumXSeccion: number): number {
-    let TRL: number;
 
-    if (acumXSeccion <= 2) {
-        TRL = 1;
-    } else if (acumXSeccion == 6) {
-        TRL = 2;
-    } else if (acumXSeccion <= 30) {
-        TRL = 3;
-    } else if (acumXSeccion <= 40) {
-        TRL = 4;
-    } else if (acumXSeccion <= 50) {
-        TRL = 5;
-    } else if (acumXSeccion <= 60) {
-        TRL = 6;
-    } else if (acumXSeccion <= 70) {
-        TRL = 7;
-    } else if (acumXSeccion <= 80) {
-        TRL = 8;
-    } else if (acumXSeccion <= 90) {
-        TRL = 9;
-    } else {
-        TRL = 10;
-    }
-
-    return TRL;
-}
 
 
   onSubmitSeccion5(): boolean {
