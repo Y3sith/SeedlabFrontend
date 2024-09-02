@@ -46,6 +46,9 @@ export class AddEmpresaComponent {
   selectedApoyoDocumento: string = '';
   mostrarBotonEditar: boolean = true;
   mostrarBotonesNuevos: boolean = false;
+  tiempoEspera = 1800;
+  nombre_apoyo: string;
+  apellido_apoyo: string;
   ////
   showFirstSection = true;
   showSecondSection = false;
@@ -233,6 +236,7 @@ export class AddEmpresaComponent {
       data => {
         this.empresa = data;
         this.apoyo = data.apoyo;
+
         console.log('empresa', data); // Verifica los datos cargados
         this.setFormValues();
         this.cargarDepartamentos();
@@ -262,6 +266,7 @@ export class AddEmpresaComponent {
 
     if (this.addEmpresaForm.invalid) {
       console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos de la empresa');
       return;
     }
 
@@ -325,17 +330,18 @@ export class AddEmpresaComponent {
   
     // Verifica si el formulario es inválido
     if (this.addEmpresaForm.invalid) {
-      console.log('Formulario inválido');
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos de la empresa');
       return;
     }
     const empresaData = this.addEmpresaForm.value;
-    const apoyo = this.addApoyoEmpresaForm.value;
 
     this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
       response => {
         console.log('Datos actualizados:', response);
-        this.alertService.successAlert('Éxito', 'Edición Realizada');
-        this.router.navigate(['list-empresa']);
+        setTimeout(function () {
+          location.reload();
+        }, this.tiempoEspera);
+        this.alertService.successAlert('Exito', 'Empresa editado con exito');
       },
       error => {
         console.error('Error al actualizar:', error);
@@ -433,11 +439,23 @@ export class AddEmpresaComponent {
   }
 
   editarApoyo():void {
-    const apoyo = this.addApoyoEmpresaForm.value;
+    const apoyos = this.addApoyoEmpresaForm.value;
+    this.submitted = true;
 
-    this.EmpresaService.updateApoyo(this.token, this.selectedApoyoDocumento, apoyo).subscribe(
+    if (this.addApoyoEmpresaForm.invalid) {
+      console.log('Formulario inválido');
+      console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
+      return;
+    }
+
+    this.EmpresaService.updateApoyo(this.token, this.selectedApoyoDocumento, apoyos).subscribe(
       data => {
-        console.log("funcionaaaaa", this.apoyo.documento);
+        //console.log("funcionaaaaa", this.apoyo.documento);
+        setTimeout(function () {
+          location.reload();
+        }, this.tiempoEspera);
+        this.alertService.successAlert('Exito', 'Apoyo editado con exito');
       },
       error => {
         console.error(error);
@@ -455,12 +473,19 @@ export class AddEmpresaComponent {
     // Mostrar los nuevos botones
     this.mostrarBotonesNuevos = true;
 
-    // Ocultar el botón seleccionado (el que se acaba de clicar)
-    // Esto se logra automáticamente al cambiar la vista
   }
 
   crearApoyo():void {
-    const apoyo = this.addApoyoEmpresaForm.valid ? {
+    this.submitted = true;
+  
+    if (this.addApoyoEmpresaForm.invalid) {
+      console.log('Formulario inválido');
+      console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
+      return;
+    }
+
+    const apoyos = this.addApoyoEmpresaForm.valid ? {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,
       nombre: this.addApoyoEmpresaForm.get('nombre')?.value,
       apellido: this.addApoyoEmpresaForm.get('apellido')?.value,
@@ -473,9 +498,14 @@ export class AddEmpresaComponent {
     } : null;
 
     
-    this.EmpresaService.crearApoyo(this.token, apoyo).subscribe(
+    this.EmpresaService.crearApoyo(this.token, apoyos).subscribe(
       data => {
         console.log("funcionaaaaa el crearrr");
+        setTimeout(function () {
+          location.reload();
+        }, this.tiempoEspera);
+        this.alertService.successAlert('Exito', 'Apoyo creado con exito');
+
       },
       error => {
         console.error(error);
