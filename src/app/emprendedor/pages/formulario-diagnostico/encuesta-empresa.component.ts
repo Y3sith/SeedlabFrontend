@@ -14,6 +14,7 @@ import { Preguntas } from '../../../Modelos/preguntas.model';
 import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
+import { Console } from 'console';
 
 
 @Component({
@@ -46,7 +47,7 @@ export class EncuestaEmpresaComponent {
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
   listaRespuestas5: Respuesta[] = [];
-  setcionId: number;
+
 
   id_empresa: number | null = null;
   //private originalAttributes: Map<Element, { colspan: string | null, rowspan: string | null }> = new Map();
@@ -229,15 +230,12 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     let respCounter = 0;
     let isValidForm = true;
-    this.section = 1;
     this.listaRespuestas1 = [];
 
+    let totalXpregunta: number = 0;
+    let acumXSeccion: number = 0;
     //Mapeo de valores 
     const valorPorOpcion = {
-      'Si': 10,
-      'No': 0,
-      'Medio': 10,
-      'Alto': 20,
       '-1': 2.5,
       '1 y 2': 5,
       '2 y 4': 7.5,
@@ -250,8 +248,6 @@ export class EncuestaEmpresaComponent {
       'Medio': 2.5,
     }
 
-    let totalXpregunta: number = 0;
-    let acumXSeccion: number = 0;
 
     //pregunta 1
     this.listaRespuestas1.push(this.respuesta1);
@@ -263,25 +259,25 @@ export class EncuestaEmpresaComponent {
     this.listaRespuestas1.push(this.respuesta6);
     //fin pregunta 2
     //pregunta 3
-    this.respuesta7.valor = valorPorOpcion[this.respuesta7.opcion] || 0;
+    this.respuesta7.valor = this.respuesta7.opcion === 'Si' ? 10 : 0;
     this.listaRespuestas1.push(this.respuesta7);
     //pregunta 4
-    this.respuesta8.valor = valorPorOpcion[this.respuesta8.opcion] || 0;
+    this.respuesta8.valor = this.respuesta8.opcion === 'Si' ? 5 : 0;
     this.listaRespuestas1.push(this.respuesta8);
     //pregunta 5
-    this.respuesta9.valor = valorPorOpcion[this.respuesta9.opcion] || 0;
+    this.respuesta9.valor = this.respuesta9.opcion === 'Si' ? 20 : 0;
     this.listaRespuestas1.push(this.respuesta9);
     //pregunta 6
-    this.respuesta10.valor = valorPorOpcion[this.respuesta10.opcion] || 0;
+    this.respuesta10.valor = this.respuesta10.opcion === 'Si' ? 15 : this.respuesta10.opcion === 'Medio' ? 7.5 : 0;
     this.listaRespuestas1.push(this.respuesta10);
     //pregunta 7
-    this.respuesta11.valor = valorPorOpcion[this.respuesta11.opcion] || 0;
+    this.respuesta11.valor = this.respuesta11.opcion === 'Si' ? 10 : this.respuesta11.opcion === 'Medio' ? 5.0 : 0;
     this.listaRespuestas1.push(this.respuesta11);
     //pregunta 8
     this.respuesta12.valor = valorPorOpcion[this.respuesta12.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta12);
     //pregunta 9
-    this.respuesta13.opcion === 'Si' ? this.respuesta13.valor = 2 : 0;
+    this.respuesta13.valor = this.respuesta13.opcion === 'Si' ? 2.0 : 0;
     this.listaRespuestas1.push(this.respuesta13);
     if (this.respuesta13.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta14);
@@ -299,7 +295,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas1.push(this.respuesta15);
     }
     //pregunta 12
-    this.respuesta16.opcion === 'Si' ? this.respuesta16.valor = 2 : 0;
+    this.respuesta16.valor = this.respuesta16.opcion === 'Si' ? 2.0 : 0;
     this.listaRespuestas1.push(this.respuesta16);
     if (this.respuesta16.opcion === 'Si') {
       this.listaRespuestas1.push(this.respuesta17);
@@ -336,14 +332,11 @@ export class EncuestaEmpresaComponent {
     this.respuesta21.valor = valorPorOpcionQ13[this.respuesta21.opcion] || 0;
     this.listaRespuestas1.push(this.respuesta21);
     //pregunta 14
-    this.respuesta22.valor = valorPorOpcionQ13[this.respuesta22.opcion] || 0;
+    this.respuesta22.valor = this.respuesta22.opcion === 'Si' ? 4.0 : this.respuesta22.opcion === 'Medio' ? 2.0 : 0;
     this.listaRespuestas1.push(this.respuesta22);
     //pregunta 15
-    this.respuesta23.valor = valorPorOpcionQ13[this.respuesta23.opcion] || 0;
+    this.respuesta23.valor = this.respuesta23.opcion === 'Si' ? 4.0 : this.respuesta23.opcion === 'Medio' ? 2.0 : 0;
     this.listaRespuestas1.push(this.respuesta23);
-
-
-    const payload = { respuestas: this.listaRespuestas1, id_empresa: this.id_empresa };
 
 
     for (let i = 0; i < 15; i++) {
@@ -394,6 +387,7 @@ export class EncuestaEmpresaComponent {
           respuestaActual.id_subpregunta = currentPregunta.subPreguntas[j].id;
           totalXpregunta += respuestaActual.valor;
         }
+        acumXSeccion += totalXpregunta;
         respCounter += currentPregunta.subPreguntas.length;
         continue;
       } else if (currentPregunta.id === 9) {
@@ -446,11 +440,12 @@ export class EncuestaEmpresaComponent {
       }
     }
     console.log('fuera del ciclo', this.listaRespuestas1);
+    console.log('Acumulado por sección 1:', acumXSeccion);
     if (!isValidForm) {
       return false;
     }
     this.next();
-    this.saveSetion1();
+    this.saveSection1();
     return isValidForm;
   }
 
@@ -461,17 +456,16 @@ export class EncuestaEmpresaComponent {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
-    this.setcionId = 2;
     this.listaRespuestas2 = [];
+    let totalXpregunta: number = 0;
+    let acumXSeccion: number = 0;
 
     const valorRespuesta26 = {
-      'Ingreso superior al egreso': 15,
-      'Ingreso igual al egreso': 15,
-      'Ingreso inferior al egreso': 15,
-      'No sabe': 0
+      'Ingreso superior al egreso': 15.0,
+      'Ingreso igual al egreso': 10.0,
+      'Ingreso inferior al egreso': 5.0,
+      'No sabe': 1
     }
-
-
 
     //Pregunta 16 y 17
     this.listaRespuestas2.push(this.respuesta24);
@@ -620,15 +614,14 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2.push(this.respuesta48);
     }
     //pregunta 24 
-    this.respuesta49.opcion === 'Si' ? this.respuesta49.valor = 2.5 : 0;
+    this.respuesta49.valor = this.respuesta49.opcion === 'Si' ? 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta49);
-    this.respuesta50.opcion === 'Si' ? this.respuesta50.valor = 2.5 : 0;
+    this.respuesta50.valor = this.respuesta50.opcion === 'Si' ? 1.5 : 0;
     this.listaRespuestas2.push(this.respuesta50);
-    this.respuesta51.opcion === 'Si' ? this.respuesta51.valor = 2.5 : 0;
+    this.respuesta51.valor = this.respuesta51.opcion === 'Si' ? 3.0 : 0;
     this.listaRespuestas2.push(this.respuesta51);
-    this.respuesta52.opcion === 'Si' ? this.respuesta52.valor = 2.5 : 0;
+    this.respuesta52.valor = this.respuesta52.opcion === 'Si' ? 3.0 : 0;
     this.listaRespuestas2.push(this.respuesta52);
-    this.respuesta53.opcion === 'Si' ? this.respuesta53.valor = 2.5 : 0;
     this.listaRespuestas2.push(this.respuesta53);//30
 
     //pregunta 25 y 26
@@ -682,11 +675,14 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 15; i < 28; i++) {
-      //debugger
+      debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas2[respCounter].id_subpregunta = null;
+      totalXpregunta = 0;
+      acumXSeccion += totalXpregunta;
+      console.log(acumXSeccion);
 
       if (currentPregunta.isAffirmativeQuestion) {
         if (!this.listaRespuestas2[respCounter].opcion || this.listaRespuestas2[respCounter].opcion === '') {
@@ -710,10 +706,10 @@ export class EncuestaEmpresaComponent {
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
             this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].id_empresa = this.id_empresa;
-
+            totalXpregunta += this.listaRespuestas2[respCounter + 1 + subPreguntaCounter].valor;
             subPreguntaCounter++;
           }
-
+          acumXSeccion += totalXpregunta;
           respCounter += subPreguntaCounter + 1;
         }
         else if (this.listaRespuestas2[respCounter].opcion === 'No') {
@@ -735,9 +731,12 @@ export class EncuestaEmpresaComponent {
             this.listaRespuestas2[respCounter + j].id_pregunta = currentPregunta.id;
             this.listaRespuestas2[respCounter + j].id_subpregunta = currentPregunta.subPreguntas[j].id;
             this.listaRespuestas2[respCounter + j].id_empresa = this.id_empresa;
+            totalXpregunta += this.listaRespuestas2[respCounter + j].valor;
           }
+          acumXSeccion += totalXpregunta;
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
+
         respCounter++;
         continue;
       }
@@ -763,6 +762,7 @@ export class EncuestaEmpresaComponent {
           isValidForm = false;
           return false;
         }
+        acumXSeccion += this.listaRespuestas2[respCounter].valor;
         respCounter++;
         continue;
       }
@@ -785,7 +785,9 @@ export class EncuestaEmpresaComponent {
             this.listaRespuestas2[subPreguntaIndex].id_pregunta = currentPregunta.id;
             this.listaRespuestas2[subPreguntaIndex].id_subpregunta = currentPregunta.subPreguntas[h].id;
             this.listaRespuestas2[subPreguntaIndex].id_empresa = this.id_empresa;
+            totalXpregunta += this.listaRespuestas2[subPreguntaIndex].valor;
           }
+          acumXSeccion += totalXpregunta;
           respCounter += currentPregunta.subPreguntas.length - 1;
         }
         respCounter++;
@@ -811,11 +813,10 @@ export class EncuestaEmpresaComponent {
       if (!isValidForm) {
         return false;
       }
-      console.log(i);
-      console.log('fuera del ciclo', this.listaRespuestas2);
     }
+    console.log('fuera del ciclo', this.listaRespuestas2);
     this.next();
-    this.saveSetion2();
+    this.saveSection2();
     return isValidForm;
 
   }
@@ -824,8 +825,9 @@ export class EncuestaEmpresaComponent {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
-    this.setcionId = 3;
     this.listaRespuestas3 = [];
+    let totalXpregunta: number = 0;
+    let acumXSeccion: number = 0;
 
     this.respuesta66.valor = this.respuesta66.opcion === 'Si' ? 25 : this.respuesta66.opcion === 'Medio' ? 12.5 : 0;
     this.listaRespuestas3.push(this.respuesta66);
@@ -867,6 +869,9 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas3[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas3[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas3[respCounter].id_subpregunta = null;
+      totalXpregunta = this.listaRespuestas3[respCounter].valor;
+      acumXSeccion += totalXpregunta;
+
       if (currentPregunta.isText) {
         if (!this.listaRespuestas3[respCounter].texto_res || this.listaRespuestas3[respCounter].texto_res === '' && this.listaRespuestas3[respCounter].texto_res !== 'N/A') {
           this.alertService.errorAlert('Error', `La pregunta ${currentRespuesta.id} está vacía.`);
@@ -890,8 +895,9 @@ export class EncuestaEmpresaComponent {
       respCounter++;
     }
     console.log('fuera del ciclo', this.listaRespuestas3);
+    console.log('Acumulado seccion 3', acumXSeccion);
     this.next();
-    this.saveSetion3();
+    this.saveSection3();
     return isValidForm;
   }
 
@@ -899,66 +905,69 @@ export class EncuestaEmpresaComponent {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
-    this.setcionId = 4;
     this.listaRespuestas4 = [];
+    let totalXpregunta: number = 0;
+    let acumXSeccion: number = 0;
+
+   
     //TRL 1
-    this.respuesta78.opcion === 'Si' ? this.respuesta78.valor = 0.7 : 0;
+    this.respuesta78.valor = (this.respuesta78.opcion === 'Si') ? 0.7 : 0;
     this.listaRespuestas4.push(this.respuesta78);
-    this.respuesta79.opcion === 'Si' ? this.respuesta79.valor = 0.7 : 0;
+    this.respuesta79.valor = (this.respuesta79.opcion === 'Si') ? 0.7 : 0;
     this.listaRespuestas4.push(this.respuesta79);
-    this.respuesta80.opcion === 'Si' ? this.respuesta80.valor = 0.7 : 0;
+    this.respuesta80.valor = (this.respuesta80.opcion === 'Si') ? 0.7 : 0;
     this.listaRespuestas4.push(this.respuesta80);
     //TRL 2
-    this.respuesta81.opcion === 'Si' ? this.respuesta81.valor = 0.8 : 0;
+    this.respuesta81.valor = (this.respuesta81.opcion === 'Si') ? 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta81);
-    this.respuesta82.opcion === 'Si' ? this.respuesta82.valor = 0.8 : 0;
+    this.respuesta82.valor = (this.respuesta82.opcion === 'Si') ? 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta82);
-    this.respuesta83.opcion === 'Si' ? this.respuesta83.valor = 0.8 : 0;
+    this.respuesta83.valor = (this.respuesta83.opcion === 'Si') ? 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta83);
-    this.respuesta84.opcion === 'Si' ? this.respuesta84.valor = 0.8 : 0;
+    this.respuesta84.valor = (this.respuesta84.opcion === 'Si') ? 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta84);
-    this.respuesta85.opcion === 'Si' ? this.respuesta85.valor = 0.8 : 0;
+    this.respuesta85.valor = (this.respuesta85.opcion === 'Si') ? 0.8 : 0;
     this.listaRespuestas4.push(this.respuesta85);
-    //TRL 3
-    this.respuesta86.opcion === 'Si' ? this.respuesta86.valor = 2 : 0;
+    // TRL 3
+    this.respuesta86.valor = (this.respuesta86.opcion === 'Si') ? 2 : 0;
     this.listaRespuestas4.push(this.respuesta86);
-    this.respuesta87.opcion === 'Si' ? this.respuesta87.valor = 2 : 0;
+    this.respuesta87.valor = (this.respuesta87.opcion === 'Si') ? 2 : 0;
     this.listaRespuestas4.push(this.respuesta87);
-    this.respuesta88.opcion === 'Si' ? this.respuesta88.valor = 2 : 0;
+    this.respuesta88.valor = (this.respuesta88.opcion === 'Si') ? 2 : 0;
     this.listaRespuestas4.push(this.respuesta88);
-    //TRL 4
-    this.respuesta89.opcion === 'Si' ? this.respuesta89.valor = 8 : 0;
+    // TRL 4
+    this.respuesta89.valor = (this.respuesta89.opcion === 'Si') ? 8 : 0;
     this.listaRespuestas4.push(this.respuesta89);
-    //TRL 5
-    this.respuesta90.opcion === 'Si' ? this.respuesta90.valor = 3.3 : 0;
+    // TRL 5
+    this.respuesta90.valor = (this.respuesta90.opcion === 'Si') ? 3.3 : 0;
     this.listaRespuestas4.push(this.respuesta90);
-    this.respuesta91.opcion === 'Si' ? this.respuesta91.valor = 3.3 : 0;
+    this.respuesta91.valor = (this.respuesta91.opcion === 'Si') ? 3.3 : 0;
     this.listaRespuestas4.push(this.respuesta91);
-    this.respuesta92.opcion === 'Si' ? this.respuesta92.valor = 3.3 : 0;
+    this.respuesta92.valor = (this.respuesta92.opcion === 'Si') ? 3.3 : 0;
     this.listaRespuestas4.push(this.respuesta92);
-    //TRL 6
-    this.respuesta93.opcion === 'Si' ? this.respuesta93.valor = 4 : 0;
+    // TRL 6
+    this.respuesta93.valor = (this.respuesta93.opcion === 'Si') ? 4 : 0;
     this.listaRespuestas4.push(this.respuesta93);
-    this.respuesta94.opcion === 'Si' ? this.respuesta94.valor = 4 : 0;
+    this.respuesta94.valor = (this.respuesta94.opcion === 'Si') ? 4 : 0;
     this.listaRespuestas4.push(this.respuesta94);
-    this.respuesta95.opcion === 'Si' ? this.respuesta95.valor = 4 : 0;
+    this.respuesta95.valor = (this.respuesta95.opcion === 'Si') ? 4 : 0;
     this.listaRespuestas4.push(this.respuesta95);
-    //TRL 7
-    this.respuesta96.opcion === 'Si' ? this.respuesta96.valor = 5 : 0;
+    // TRL 7
+    this.respuesta96.valor = (this.respuesta96.opcion === 'Si') ? 5 : 0;
     this.listaRespuestas4.push(this.respuesta96);
-    this.respuesta97.opcion === 'Si' ? this.respuesta97.valor = 5 : 0;
+    this.respuesta97.valor = (this.respuesta97.opcion === 'Si') ? 5 : 0;
     this.listaRespuestas4.push(this.respuesta97);
-    this.respuesta98.opcion === 'Si' ? this.respuesta98.valor = 5 : 0;
+    this.respuesta98.valor = (this.respuesta98.opcion === 'Si') ? 5 : 0;
     this.listaRespuestas4.push(this.respuesta98);
-    //TRL 8
-    this.respuesta99.opcion === 'Si' ? this.respuesta99.valor = 6 : 0;
+    // TRL 8:
+    this.respuesta99.valor = (this.respuesta99.opcion === 'Si') ? 6 : 0;
     this.listaRespuestas4.push(this.respuesta99);
-    this.respuesta100.opcion === 'Si' ? this.respuesta100.valor = 6 : 0;
+    this.respuesta100.valor = (this.respuesta100.opcion === 'Si') ? 6 : 0;
     this.listaRespuestas4.push(this.respuesta100);
-    this.respuesta101.opcion === 'Si' ? this.respuesta101.valor = 6 : 0;
+    this.respuesta101.valor = (this.respuesta101.opcion === 'Si') ? 6 : 0;
     this.listaRespuestas4.push(this.respuesta101);
     //TRL 9
-    this.respuesta102.opcion === 'Si' ? this.respuesta102.valor = 3.6 : 0;
+    this.respuesta102.valor = (this.respuesta102.opcion === 'Si') ? 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta102);
     this.respuesta103.opcion === 'Si' ? this.respuesta103.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta103);
@@ -973,24 +982,21 @@ export class EncuestaEmpresaComponent {
     this.respuesta108.opcion === 'Si' ? this.respuesta108.valor = 3.6 : 0;
     this.listaRespuestas4.push(this.respuesta108);
 
-
-
     for (let i = 41; i < 42; i++) {
-      //debugger;
+      debugger;
       const currentPregunta = PREGUNTAS[i];
       const currentRespuesta = this.listaRespuestas4[respCounter];
-
-
       this.listaRespuestas4[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas4[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas4[respCounter].id_subpregunta = null;
+      totalXpregunta = this.listaRespuestas4[respCounter].valor;
+      acumXSeccion += totalXpregunta;
+      console.log(acumXSeccion);
 
-
-      // Validar pregunta afirmativa
       if (currentPregunta.isAffirmativeQuestion) {
         if (currentRespuesta.opcion === 'No') {
           // Si la respuesta es 'No', saltar la pregunta actual y todas las subpreguntas
-          if (i + 1 < 47) { // Verifica si hay una pregunta siguiente para saltar
+          if (i + 1 < 47) { 
             const nextPregunta = PREGUNTAS[i + 1];
             if (nextPregunta.subPreguntas && nextPregunta.subPreguntas.length > 0) {
               // Saltar también las subpreguntas de la siguiente pregunta si las hay
@@ -1018,6 +1024,8 @@ export class EncuestaEmpresaComponent {
           respuestaSubPregunta.id_pregunta = currentPregunta.id;
           respuestaSubPregunta.id_subpregunta = subPregunta.id;
           respuestaSubPregunta.id_empresa = this.id_empresa;
+          totalXpregunta = respuestaSubPregunta.valor;
+          acumXSeccion += totalXpregunta;
           // Validar respuesta de subpregunta
           if (!respuestaSubPregunta.opcion || respuestaSubPregunta.opcion === '') {
             firstEmptySubPreguntaId = subPregunta.sub_id; // Guarda el ID de la primera subpregunta vacía
@@ -1053,17 +1061,51 @@ export class EncuestaEmpresaComponent {
         respCounter++;
       }
     }
+    this.calculateTRL(acumXSeccion);
+    console.log('TRL', this.calculateTRL(acumXSeccion));
     console.log('fuera del ciclo', this.listaRespuestas4);
-    
+    this.next();
+    this.saveSection4();
     return isValidForm;
   }
+
+  calculateTRL(acumXSeccion: number): number {
+    let TRL: number;
+
+    if (acumXSeccion <= 2) {
+        TRL = 1;
+    } else if (acumXSeccion == 6) {
+        TRL = 2;
+    } else if (acumXSeccion <= 30) {
+        TRL = 3;
+    } else if (acumXSeccion <= 40) {
+        TRL = 4;
+    } else if (acumXSeccion <= 50) {
+        TRL = 5;
+    } else if (acumXSeccion <= 60) {
+        TRL = 6;
+    } else if (acumXSeccion <= 70) {
+        TRL = 7;
+    } else if (acumXSeccion <= 80) {
+        TRL = 8;
+    } else if (acumXSeccion <= 90) {
+        TRL = 9;
+    } else {
+        TRL = 10;
+    }
+
+    return TRL;
+}
+
 
   onSubmitSeccion5(): boolean {
     let respCounter = 0;
     let isValidForm = true;
     this.id_empresa;
-    this.setcionId = 5;
     this.listaRespuestas5 = [];
+    let totalXpregunta: number = 0;
+    let acumXSeccion: number = 0;
+
     //pregunta 43 
     this.respuesta109.opcion === 'Si' ? this.respuesta109.valor = 10 : 0;
     this.listaRespuestas5.push(this.respuesta109);
@@ -1174,12 +1216,25 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas5.push(this.respuesta127);
     }
 
-    for (let i = 42; i < 47; i++) {
+    for (let i = 42; i < 46; i++) {
       debugger;
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas5[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas5[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas5[respCounter].id_subpregunta = null;
+      totalXpregunta = this.listaRespuestas5[respCounter].valor;
+      acumXSeccion += totalXpregunta;
+      console.log(acumXSeccion);
+
+      if (currentPregunta.id === 43) {
+        if (!this.listaRespuestas5[respCounter].opcion || this.listaRespuestas5[respCounter].opcion === '') {
+          this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
+          isValidForm = false;
+          return false;
+        }
+        respCounter++;
+        continue;
+      }
 
       if (currentPregunta.isAffirmativeQuestion) {
         if (!this.listaRespuestas5[respCounter].opcion || this.listaRespuestas5[respCounter].opcion === '') {
@@ -1203,18 +1258,18 @@ export class EncuestaEmpresaComponent {
             this.listaRespuestas5[respCounter + 1 + subPreguntaCounter].id_pregunta = nextPregunta.id;
             this.listaRespuestas5[respCounter + 1 + subPreguntaCounter].id_subpregunta = nextPregunta.subPreguntas[j].id;
             this.listaRespuestas5[respCounter + 1 + subPreguntaCounter].id_empresa = this.id_empresa;
+            totalXpregunta += this.listaRespuestas5[respCounter + 1 + subPreguntaCounter].valor;
 
             subPreguntaCounter++;
           }
+          acumXSeccion += totalXpregunta;
+          respCounter += subPreguntaCounter + 1;
 
-          respCounter += subPreguntaCounter  + 1;
-          
-        }else if (this.listaRespuestas5[respCounter].opcion === 'No') {
-          i += 1;
+        } else if (this.listaRespuestas5[respCounter].opcion === 'No') {
           respCounter += nextPregunta.subPreguntas.length + 1;
+          i += 1;
         }
-        continue;
-      }else if (currentPregunta.isText) {
+      } else if (currentPregunta.isText) {
         if (currentPregunta.isText) {
           if (!this.listaRespuestas5[respCounter].texto_res || this.listaRespuestas5[respCounter].texto_res.trim() === '' || this.listaRespuestas2[respCounter].texto_res !== 'N/A') {
             this.alertService.errorAlert('Error', `La pregunta ${currentPregunta.id} está vacía.`);
@@ -1229,7 +1284,7 @@ export class EncuestaEmpresaComponent {
           return false;
         }
       }
-      respCounter++;
+
       if (!isValidForm) {
         return false;
       }
@@ -1246,8 +1301,12 @@ export class EncuestaEmpresaComponent {
         }
       });
     }
+    this.saveSection5();
     return isValidForm;
   }
+
+
+
 
 
 
@@ -1313,8 +1372,8 @@ export class EncuestaEmpresaComponent {
     }
   }
 
-  saveSetion1(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas1).subscribe(
+  saveSection1(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, 1, this.listaRespuestas1).subscribe(
       data =>
         console.log(data, 'Guadado seccion 1 en redis'),
       error =>
@@ -1322,8 +1381,8 @@ export class EncuestaEmpresaComponent {
     )
   }
 
-  saveSetion2(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas2).subscribe(
+  saveSection2(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, 2, this.listaRespuestas2).subscribe(
       data =>
         console.log(data, 'Guadado seccion 2 en redis'),
       error =>
@@ -1331,8 +1390,8 @@ export class EncuestaEmpresaComponent {
     )
   }
 
-  saveSetion3(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas3).subscribe(
+  saveSection3(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, 3, this.listaRespuestas3).subscribe(
       data =>
         console.log(data, 'Guadado seccion 3 en redis'),
       error =>
@@ -1340,10 +1399,19 @@ export class EncuestaEmpresaComponent {
     )
   }
 
-  saveSetion4(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, this.section, this.listaRespuestas4).subscribe(
+  saveSection4(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, 4, this.listaRespuestas4).subscribe(
       data =>
         console.log(data, 'Guadado seccion 4 en redis'),
+      error =>
+        console.error(error)
+    )
+  }
+
+  saveSection5(): void {
+    this.respuestasService.SaveAnswersRedis(this.token, 5, this.listaRespuestas5).subscribe(
+      data =>
+        console.log(data, 'Guadado seccion 5 en redis'),
       error =>
         console.error(error)
     )
