@@ -15,6 +15,8 @@ export class RutaEmprendedorComponent implements OnInit {
   currentRolId: number;
   idRuta: number | null; 
   rutaList: Ruta[] = [];
+  modalVisible: boolean = false;
+  selectedActividad: any = null;
 
   constructor(
     private rutaService: RutaService,
@@ -99,5 +101,20 @@ export class RutaEmprendedorComponent implements OnInit {
     const positionInGroup = index % 6;
     return [0, 1, 4].includes(positionInGroup) ? 'circle-right' : 'circle-left';
   }
+  openModal(actividad: any): void {
+    // Asegúrate de que la ruta de la imagen sea completa
+    if (actividad.imagen && !actividad.imagen.startsWith('http') && !actividad.imagen.startsWith('/')) {
+      actividad.imagen = '/assets/images/' + actividad.imagen;
+    }
+    this.selectedActividad = actividad;
+    this.modalVisible = true;
+    console.log('Abriendo modal con actividad:', this.selectedActividad); // Para depuración
+  }
+
+  closeModal(): void {
+    this.modalVisible = false;
+    this.selectedActividad = null;
+  }
+  
 }
 
