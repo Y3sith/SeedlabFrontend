@@ -15,7 +15,6 @@ import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import { PuntajesService } from '../../../servicios/puntajes.service';
-import { error } from 'console';
 
 
 @Component({
