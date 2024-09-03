@@ -390,13 +390,20 @@ export class ActnivlecComponent implements OnInit {
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
     //this.submitted = true;
+    const nombreNivel = this.nivelForm.get('nombre')?.value;
+    // Validación de longitud del nombre
+    if (nombreNivel && nombreNivel.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        return; // Salir de la función si la validación falla
+    }
     if (this.nivelForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
 
     const nivel: any = {
-      nombre: this.nivelForm.value.nombre,
+      //nombre: this.nivelForm.value.nombre,
+      nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
     }
     console.log('nivel data', nivel);
@@ -413,7 +420,7 @@ export class ActnivlecComponent implements OnInit {
         //this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
       },
       error => {
-        this.alertServices.errorAlert('Error', error.message);
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     )
@@ -421,12 +428,18 @@ export class ActnivlecComponent implements OnInit {
 
   agregarOtroNivel(): void {
     this.submittedNivel = true;
+    const nombreNivel = this.nivelForm.get('nombre')?.value;
+    if (nombreNivel && nombreNivel.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.nivelForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
     const nivel: any = {
-      nombre: this.nivelForm.value.nombre,
+      //nombre: this.nivelForm.value.nombre,
+      nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
     };
     console.log('nivel data', nivel);
@@ -441,6 +454,7 @@ export class ActnivlecComponent implements OnInit {
         this.verNivel();
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     );
@@ -448,6 +462,12 @@ export class ActnivlecComponent implements OnInit {
 
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
+
+    const nombreLeccion = this.leccionForm.get('nombre')?.value;
+    if (nombreLeccion && nombreLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
@@ -455,7 +475,8 @@ export class ActnivlecComponent implements OnInit {
     }
     //submittedLeccion
     const leccion: any = {
-      nombre: this.leccionForm.value.nombre,
+      //nombre: this.leccionForm.value.nombre,
+      nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
     console.log('leccion data', leccion);
@@ -472,6 +493,7 @@ export class ActnivlecComponent implements OnInit {
         console.log('id leccion: ', data.id);
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     )
@@ -479,12 +501,18 @@ export class ActnivlecComponent implements OnInit {
 
   agregarOtraLeccion(): void {
     this.submittedLeccion = true;
+    const nombreLeccion = this.leccionForm.get('nombre')?.value;
+    if (nombreLeccion && nombreLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
     }
     const leccion: any = {
-      nombre: this.leccionForm.value.nombre,
+      //nombre: this.leccionForm.value.nombre,
+      nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     };
     console.log('leccion data', leccion);
@@ -498,6 +526,7 @@ export class ActnivlecComponent implements OnInit {
         this.verLeccicon();
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     );
