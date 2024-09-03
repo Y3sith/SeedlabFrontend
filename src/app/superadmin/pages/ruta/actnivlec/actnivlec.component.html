@@ -15,12 +15,20 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la
                                     actividad</label>
                                 <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
+                                <div *ngIf="submitted && a.nombre.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="a.nombre.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Descripción de la
                                     actividad</label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
                                     formControlName="descripcion"></textarea>
+                                <div *ngIf="submitted && a.descripcion.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="a.descripcion.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
 
                             <div class="mb-4">
@@ -30,6 +38,10 @@
                                     <option *ngFor="let tipodato of listarTipoDato" [value]="tipodato.id">
                                         {{tipodato.nombre}}</option>
                                 </select>
+                                <div *ngIf="submitted && a.id_tipo_dato.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="a.id_tipo_dato.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <!--  -->
                             <div class="mb-4">
@@ -41,6 +53,10 @@
                                         <input type="text" id="fuente" formControlName="fuente"
                                             placeholder="Example http://example.com" (input)="onTextInput($event)"
                                             class="w-full p-2 border rounded">
+                                        <div *ngIf="submitted && a.fuente.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
+                                        </div>
                                         <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid"
                                             class="error text-red-700">
                                             Este campo es obligatorio.
@@ -59,9 +75,9 @@
                                                 <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                                             </span>
                                         </label>
-                                        <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
+                                        <div *ngIf="submitted && a.fuente.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
                                         </div>
                                         <div *ngIf="actividadForm.get('fuente')?.value"
                                             class="mt-2 text-gray-500 text-center">
@@ -81,9 +97,9 @@
                                                 <fa-icon [icon]="faFile" class="text-md ml-2"></fa-icon>
                                             </span>
                                         </label>
-                                        <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
+                                        <div *ngIf="submitted && a.fuente.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
                                         </div>
                                         <div *ngIf="actividadForm.get('fuente')?.value"
                                             class="mt-2 text-gray-500 text-center">
@@ -97,9 +113,9 @@
                                         <textarea type="text" id="fuente" formControlName="fuente"
                                             (input)="onTextInput($event)" placeholder="Texto de la actividad"
                                             class="w-full p-2 border rounded "></textarea>
-                                        <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
+                                        <div *ngIf="submitted && a.fuente.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
                                         </div>
                                     </div>
                                 </ng-container>
@@ -113,6 +129,10 @@
                                         {{aliado.nombre}}
                                     </option>
                                 </select>
+                                <div *ngIf="submitted && a.id_aliado.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="a.id_aliado.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Asesor</label>
@@ -121,6 +141,10 @@
                                         {{ asesor.nombre }} {{ asesor.apellido }}
                                     </option>
                                 </select>
+                                <div *ngIf="submitted && a.id_asesor.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="a.id_asesor.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <div class="flex justify-center h-10 mt-4">
                                 <!--toca cambiarlo-->
@@ -138,6 +162,10 @@
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del nivel</label>
                                 <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
+                                <div *ngIf="submittedNivel && n.nombre.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="n.nombre.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <input type="hidden" id="id_actividad" formControlName="id_actividad">
                             <!-- Botón para agregar -->
@@ -162,10 +190,18 @@
                                     <option *ngFor="let vernivel of listarNiveles" [value]="vernivel.id">
                                         {{vernivel.nombre}}</option>
                                 </select>
+                                <div *ngIf="submittedLeccion && l.id_nivel.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="l.id_nivel.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección</label>
                                 <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
+                                <div *ngIf="submittedLeccion && l.nombre.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="l.nombre.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <input type="hidden" id="id_nivel" formControlName="id_nivel">
                             <!-- Botón para agregar -->
@@ -195,15 +231,27 @@
                                     <option *ngFor="let verleccion of listarLeccion" [value]="verleccion.id">
                                         {{verleccion.nombre}}</option>
                                 </select>
+                                <div *ngIf="submittedContent && cl.id_leccion.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="cl.id_leccion.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
                                 <input formControlName="titulo" type="text" class="w-full p-2 border rounded">
+                                <div *ngIf="submittedContent && cl.titulo.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="cl.titulo.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
                                     formControlName="descripcion"></textarea>
+                                <div *ngIf="submittedContent && cl.descripcion.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="cl.descripcion.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
 
                             <div class="mb-4">
@@ -214,6 +262,10 @@
                                         [value]="tipoDatoContenido.id">
                                         {{tipoDatoContenido.nombre}}</option>
                                 </select>
+                                <div *ngIf="submittedContent && cl.id_tipo_dato.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="cl.id_tipo_dato.errors.required">Este campo es requerido *</div>
+                                </div>
                             </div>
                             <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
                             <div class="mb-4">
@@ -225,9 +277,10 @@
                                         <input type="text" id="fuente_contenido" formControlName="fuente_contenido"
                                             placeholder="Example http://example.com"
                                             (input)="onTextInputContenido($event)" class="w-full p-2 border rounded ">
-                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente_contenido')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
+                                        <div *ngIf="submittedContent && cl.fuente_contenido.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="cl.fuente_contenido.errors.required">Este campo es requerido *
+                                            </div>
                                         </div>
                                     </div>
                                     <!--imagen-->
@@ -244,9 +297,10 @@
                                                 <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                                             </span>
                                         </label>
-                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente_contenido')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
+                                        <div *ngIf="submittedContent && cl.fuente_contenido.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="cl.fuente_contenido.errors.required">Este campo es requerido *
+                                            </div>
                                         </div>
                                         <div *ngIf="contenidoLeccionForm.get('fuente_contenido')?.value"
                                             class="mt-2 text-gray-500 text-center">
@@ -267,9 +321,10 @@
                                                 <fa-icon [icon]="faFile" class="text-md ml-2"></fa-icon>
                                             </span>
                                         </label>
-                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente_contenido')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
+                                        <div *ngIf="submittedContent && cl.fuente_contenido.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="cl.fuente_contenido.errors.required">Este campo es requerido *
+                                            </div>
                                         </div>
                                         <div *ngIf="contenidoLeccionForm.get('fuente_contenido')?.value"
                                             class="mt-2 text-gray-500 text-center">
@@ -285,9 +340,10 @@
                                             (input)="onTextInputContenido($event)" placeholder="Texto del contenido"
                                             class="w-full p-2 border rounded"></textarea>
 
-                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente_contenido')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
+                                        <div *ngIf="submittedContent && cl.fuente_contenido.errors"
+                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                            <div *ngIf="cl.fuente_contenido.errors.required">Este campo es requerido *
+                                            </div>
                                         </div>
                                     </div>
                                 </ng-container>
@@ -309,8 +365,9 @@
                 </div>
             </div>
             <div class="mt-6 text-center">
-                <button 
-                    class="bg-orange-500 text-white px-20 py-2 rounded-full text-lg font-semibold italic text-[30px] font-poppins" [routerLink]="'/list-ruta'">Finalizar</button>
+                <button
+                    class="bg-orange-500 text-white px-20 py-2 rounded-full text-lg font-semibold italic text-[30px] font-poppins"
+                    [routerLink]="'/list-ruta'">Finalizar</button>
             </div>
 
         </div>

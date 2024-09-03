@@ -82,26 +82,26 @@ export class ActnivlecComponent implements OnInit {
   ////anadir nivel
 
   nivelForm = this.fb.group({
-    nombre: ['', Validators.required],
-    id_actividad: ['', Validators.required]
+    nombre: [{value:'',disabled:true}, Validators.required],
+    id_actividad: [{value:'',disabled:true}, Validators.required]
   })
   mostrarNivelForm: boolean = false;
 
   ///// añadir leccion
   leccionForm = this.fb.group({
-    nombre: ['', Validators.required],
-    id_nivel: ['', Validators.required]
+    nombre: [{value:'',disabled:true}, Validators.required],
+    id_nivel: [{value:'',disabled:true}, Validators.required]
   })
   mostrarLeccionForm: boolean = false;
 
   ///añadir contenido por leccion
 
   contenidoLeccionForm = this.fb.group({
-    titulo: ['', Validators.required],
-    descripcion: ['', Validators.required],
-    fuente_contenido: ['', Validators.required],
-    id_tipo_dato: ['', Validators.required],
-    id_leccion: ['', Validators.required]
+    titulo: [{value:'',disabled:true}, Validators.required],
+    descripcion: [{value:'',disabled:true}, Validators.required],
+    fuente_contenido: [{value:'',disabled:true}, Validators.required],
+    id_tipo_dato: [{value:'',disabled:true}, Validators.required],
+    id_leccion: [{value:'',disabled:true}, Validators.required]
   })
   mostrarContenidoLeccionForm: boolean = false;
   constructor(
@@ -132,27 +132,6 @@ export class ActnivlecComponent implements OnInit {
     this.listaAliado();
     this.onAliadoChange();
     this.bloquearBotones();
-
-    this.nivelForm = this.fb.group({// Campo deshabilitado
-      nombre: [{ value: '', disabled: true }], 
-      id_actividad: [{ value: '', disabled: true }]
-  });
-
-  this.leccionForm = this.fb.group({
-    nombre: [{ value: '', disabled: true }], 
-    id_nivel: [{ value: '', disabled: true }]
-  });
-
-  this.contenidoLeccionForm = this.fb.group({
-    titulo: [{ value: '', disabled: true }], 
-    descripcion: [{ value: '', disabled: true }], 
-    fuente_contenido: [{ value: '', disabled: true }], 
-    id_tipo_dato: [{ value: '', disabled: true }], 
-    id_leccion: [{ value: '', disabled: true }]
-  })
-  
-
-
   }
 
   validateToken(): void {
@@ -294,8 +273,13 @@ export class ActnivlecComponent implements OnInit {
   }
 
   addActividadSuperAdmin(): void {
+    this.submitted = true;
     const formData = new FormData();
     let estadoValue: string;
+    if (this.actividadForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+      return;
+    }
     if (this.idactividad == null) {
       estadoValue = 'true'
     } else {
@@ -333,7 +317,7 @@ export class ActnivlecComponent implements OnInit {
             },
             error => {
               console.log(error);
-              this.alertServices.errorAlert('Error', error.error.message);
+              this.alertServices.errorAlert('Error', error.message);
             }
           );
         }
@@ -359,55 +343,58 @@ export class ActnivlecComponent implements OnInit {
 
   activarformularios(): void {
     this.nivelForm.enable(); // Habilita el formulario de niveles
-    this.leccionForm.enable(); 
+    this.leccionForm.enable();
     this.contenidoLeccionForm.enable();
-}
+  }
 
-bloquearBotones(): void{
-  const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+  bloquearBotones(): void {
+    const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
     if (agregarNivelBtn) {
-        agregarNivelBtn.style.pointerEvents = 'none'; 
-        agregarNivelBtn.style.opacity = '0.5'; 
-    }
-  
-    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
-    if (agregarLeccionBtn) {
-        agregarLeccionBtn.style.pointerEvents = 'none';
-        agregarLeccionBtn.style.opacity = '0.5'; 
-    }
-
-    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
-    if (agregarContenidoBtn) {
-        agregarContenidoBtn.style.pointerEvents = 'none';
-        agregarContenidoBtn.style.opacity = '0.5'; 
-    }
-}
-habilitarBotones(): void{
-  const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
-    if (agregarNivelBtn) {
-        agregarNivelBtn.style.pointerEvents = 'auto'; 
-        agregarNivelBtn.style.opacity = '1';
+      agregarNivelBtn.style.pointerEvents = 'none';
+      agregarNivelBtn.style.opacity = '0.5';
     }
 
     const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
     if (agregarLeccionBtn) {
-        agregarLeccionBtn.style.pointerEvents = 'auto'; 
-        agregarLeccionBtn.style.opacity = '1';
+      agregarLeccionBtn.style.pointerEvents = 'none';
+      agregarLeccionBtn.style.opacity = '0.5';
     }
 
     const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
     if (agregarContenidoBtn) {
-        agregarContenidoBtn.style.pointerEvents = 'auto'; 
-        agregarContenidoBtn.style.opacity = '1';
+      agregarContenidoBtn.style.pointerEvents = 'none';
+      agregarContenidoBtn.style.opacity = '0.5';
     }
-  
-}
+  }
+  habilitarBotones(): void {
+    const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+    if (agregarNivelBtn) {
+      agregarNivelBtn.style.pointerEvents = 'auto';
+      agregarNivelBtn.style.opacity = '1';
+    }
+
+    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
+    if (agregarLeccionBtn) {
+      agregarLeccionBtn.style.pointerEvents = 'auto';
+      agregarLeccionBtn.style.opacity = '1';
+    }
+
+    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
+    if (agregarContenidoBtn) {
+      agregarContenidoBtn.style.pointerEvents = 'auto';
+      agregarContenidoBtn.style.opacity = '1';
+    }
+
+  }
 
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
-    if (this.actividadForm.invalid) {
+    //this.submitted = true;
+    if (this.nivelForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
+
     const nivel: any = {
       nombre: this.nivelForm.value.nombre,
       id_actividad: this.nivelForm.value.id_actividad
@@ -415,16 +402,18 @@ habilitarBotones(): void{
     console.log('nivel data', nivel);
     this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos', data);
         this.leccionForm.patchValue({ id_nivel: data.id })
         this.verNivel();
         this.mostrarLeccionForm = true;
         this.nivelForm.reset();
+        this.submittedNivel = false;
         this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
-        this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
-        //console.log('id nivel: ', data.id);
+        //this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
       },
       error => {
+        this.alertServices.errorAlert('Error', error.message);
         console.log(error);
       }
     )
@@ -433,6 +422,7 @@ habilitarBotones(): void{
   agregarOtroNivel(): void {
     this.submittedNivel = true;
     if (this.nivelForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
     const nivel: any = {
@@ -442,9 +432,11 @@ habilitarBotones(): void{
     console.log('nivel data', nivel);
     this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos', data);
         // Resetea el formulario para agregar otro nivel
         this.nivelForm.reset();
+        this.submittedNivel = false;
         this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
         this.verNivel();
       },
@@ -456,8 +448,10 @@ habilitarBotones(): void{
 
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
-    if (this.actividadForm.invalid) {
+    if (this.leccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
+      
     }
     //submittedLeccion
     const leccion: any = {
@@ -468,10 +462,12 @@ habilitarBotones(): void{
     this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
       (data: any) => {
         console.log('datos recibidos', data);
+        this.alertServices.successAlert('Exito', data.message);
         this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
         this.verLeccicon();
         this.mostrarContenidoLeccionForm = true;
         this.leccionForm.reset();
+        this.submittedLeccion = false;
         this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
         console.log('id leccion: ', data.id);
       },
@@ -484,6 +480,7 @@ habilitarBotones(): void{
   agregarOtraLeccion(): void {
     this.submittedLeccion = true;
     if (this.leccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
     }
     const leccion: any = {
@@ -493,8 +490,10 @@ habilitarBotones(): void{
     console.log('leccion data', leccion);
     this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos', data);
         this.leccionForm.reset();
+        this.submittedLeccion = false;
         this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
         this.verLeccicon();
       },
@@ -527,6 +526,11 @@ habilitarBotones(): void{
   }
 
   addContenidoLeccionSuperAdmin(): void {
+    this.submittedContent = true
+    if (this.contenidoLeccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
+      return;
+    }
     const formData = new FormData();
     let estadoValue: string;
     if (this.idcontenidoLeccion == null) {
@@ -548,8 +552,10 @@ habilitarBotones(): void{
     }
     this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos: ', data);
         this.contenidoLeccionForm.reset();
+        this.submittedContent = false;
         //location.reload();
       },
       error => {

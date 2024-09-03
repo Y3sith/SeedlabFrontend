@@ -51,7 +51,10 @@ export class DashboardsService {
     return this.http.get<any>(this.url + "generoAliado", options)
   }
 
-
+  graficaFormulario(access_token: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get<any>(this.url+"graficaFormulario", options);
+  }
 
 
 
