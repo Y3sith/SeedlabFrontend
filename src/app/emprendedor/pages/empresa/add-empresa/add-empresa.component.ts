@@ -339,9 +339,9 @@ export class AddEmpresaComponent {
       response => {
         console.log('Datos actualizados:', response);
         setTimeout(function () {
-          location.reload();
         }, this.tiempoEspera);
         this.alertService.successAlert('Exito', 'Empresa editado con exito');
+        this.router.navigate(['list-empresa']);
       },
       error => {
         console.error('Error al actualizar:', error);

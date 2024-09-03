@@ -40,7 +40,7 @@ export class RegistroComponent implements OnInit {
 
   currentIndex = 0;
   progressWidth = 0;
-  totalFields = 12;
+  totalFields = 13;
 
   sections = [
     { title: 'Información Personal', fieldNames: ['nombre', 'apellido', 'id_tipo_documento', 'documento'] },
@@ -285,5 +285,23 @@ console.log(emprendedor);
         }
       }
     );
+  }
+
+  onSelectChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+  
+    // Lógica para cuando cambia el departamento
+    if (target.id === 'id_departamento') {
+      this.onDepartamentoSeleccionado(event);
+    }
+  
+    // Lógica para cuando cambia el municipio
+    if (target.id === 'id_municipio') {
+      this.updateProgress();
+    }
+  
+    // Si necesitas acceder al valor seleccionado
+    const selectedValue = target.value;
+    console.log(selectedValue);
   }
 }
