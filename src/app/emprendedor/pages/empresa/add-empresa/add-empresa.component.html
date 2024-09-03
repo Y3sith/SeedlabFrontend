@@ -67,7 +67,7 @@
                     <div class="relative w-full text-base">
                       <label for="tipodocumento" class="text-lg font-normal">Tipo de Documento:</label>
                       <select id="tipoDocumento" formControlName="id_tipo_documento"
-                        class="w-full h-10 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
+                        class="w-full h-10 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
                         <option value="" disabled selected>Selecciona el tipo de documento...</option>
                         <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
                       </select>
@@ -104,7 +104,7 @@
                       <select id="departamento" name="departamento"
                         (change)="onDepartamentoSeleccionado($event.target.value)" formControlName="id_departamento"
                         (change)="onDepartamentoSeleccionado($event)"
-                        class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
+                        class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200  focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
                         <option value="" disabled selected>
                           Seleccionar Departamento...
                         </option>
@@ -120,7 +120,7 @@
                     <div class="relative w-full text-base">
                       <label for="municipio" class="text-lg font-normal">Municipio:</label>
                       <select id="municipio" name="municipio" formControlName="id_municipio"
-                        class="w-full h-10 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 max-sm:text-xs">
+                        class="w-full h-10 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 max-sm:text-xs">
                         <option value="" disabled selected>
                           Seleccionar Municipio...
                         </option>
@@ -295,17 +295,22 @@
             <div class="container mx-auto px-4 py-12">
               <form [formGroup]="addApoyoEmpresaForm" (ngSubmit)="crearEmpresa()">
 
-                <div class="w-full text-base relative md:px-60 text-center mb-5" *ngIf="id_documentoEmpresa && mostrarBotonEditar">
-                  <label for="tipodocumento" class="text-lg font-normal text-center">Apoyo</label>
-                  <select id="tipoDocumento" formControlName="documento" (change)="onApoyoSelect($event.target.value)"
-                    class="p-2 w-full h-10 mb-2 px-20 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
-                    <option value="" disabled selected>Selecciona el apoyo...</option>
-                    <option *ngFor="let apoyo of listaApoyo" [value]="apoyo.documento">{{ apoyo.nombre }} {{
-                      apoyo.apellido }}</option>
-                  </select>
+                <div class="flex justify-center w-full">
+
+                  <label for="tipodocumento" class="text-lg font-normal text-center text-amber-500">Seleccione apoyo a editar</label>
+                </div>
+                <div class="w-full text-base relative text-center flex justify-center" *ngIf="id_documentoEmpresa && mostrarBotonEditar">
+
+                  <div class="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-1  gap-6 mb-6 flex-none justify-center">
+                    <select id="tipoDocumento" formControlName="documento" (change)="onApoyoSelect($event.target.value)"
+                      class="p-2 w-full h-10 mb-2 px-20 border-blue-300 rounded-lg bg-gray-200  focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100 max-sm:text-sm">
+                      <option value="" disabled selected>Selecciona el apoyo...</option>
+                      <option *ngFor="let apoyo of listaApoyo" [value]="apoyo.documento">{{ apoyo.nombre }} {{
+                        apoyo.apellido }}</option>
+                    </select>
+                  </div>
                 </div>
 
-                
                 <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2  gap-6 mb-6">
                   <div class="w-full text-base relative">
                     <label for="nombre" class="text-lg font-normal">Nombre:</label>
@@ -316,6 +321,7 @@
                       <div *ngIf="g.nombre.errors.required">Este campo es requerido *</div>
                     </div>
                   </div>
+                  
                   <div class="w-full text-base relative">
                     <label for="apellido" class="text-lg font-normal">Apellido:</label>
                     <input formControlName="apellido"
@@ -329,7 +335,7 @@
                   <div class="w-full text-base relative">
                     <label for="tipodocumento" class="text-lg font-normal">Tipo de Documento:</label>
                     <select id="tipoDocumento" formControlName="id_tipo_documento"
-                      class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                      class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200  focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                       <option value="" disabled selected>Selecciona el tipo de documento...</option>
                       <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
                     </select>

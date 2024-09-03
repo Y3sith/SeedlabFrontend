@@ -356,36 +356,6 @@ mostrarToggle(): void {
     }
   }
 
-
-  //  onFileSelecteds(event: any, field: string){
-  //   if (event.target.files && event.target.files.length > 0) {
-  //     const file = event.target.files[0];
-  // try {
-  //   if (field === 'urlImagen') {
-  //     await this.validateImageDimensions(file, 800, 300, 8100, 3100); // Validar dimensiones para el banner
-  //     this.selectedBanner = file;
-  //     this.bannerForm.patchValue({ urlImagen: file });
-  //   } else {
-  //     await this.validateImageDimensions(file, 100, 100, 600, 600); // Validar dimensiones para el logo
-  //     this.selectedLogo = file;
-  //     this.aliadoForm.patchValue({ logo: file });
-  //   }
-  //   this.generateImagePreview(file);
-  // } catch (error) {
-  //   console.error(error);
-  //   alert(error);
-
-  //   // Limpiar el input file directamente en el DOM
-  //   if (field === 'urlImagen') {
-  //     this.selectedBanner = null;
-  //   } else {
-  //     this.selectedLogo = null;
-  //   }
-  //   event.target.value = ''; // Esta línea limpia el input de tipo file
-  // }
-  //   }
-  // }
-
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
     this.aliadoForm.get('ruta_multi').clearValidators();
@@ -394,16 +364,13 @@ mostrarToggle(): void {
       case '1': // Video
         this.aliadoForm.get('Video').setValidators([Validators.required]);
         break;
-      // case '2': // Multimedia
-      //   this.aliadoForm.get('Multimedia').setValidators([Validators.required,]);
-      //   break;
-      case '3': // Imagen
+      case '2': // Imagen
         this.aliadoForm.get('Imagen').setValidators([Validators.required,]);
         break;
-      case '4': // PDF
+      case '3': // PDF
         this.aliadoForm.get('PDF').setValidators([Validators.required,]);
         break;
-      case '5': // Texto
+      case '4': // Texto
         this.aliadoForm.get('Texto').setValidators([Validators.required]);
         break;
       default:
