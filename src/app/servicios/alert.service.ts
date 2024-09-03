@@ -119,14 +119,14 @@ export class AlertService {
     });
   }
 
-  // infoAlert(title: string, text: string) {
-  //   Swal.fire({
-  //     icon: "info",
-  //     title: title,
-  //     text: text,
-  //     footer: '<a href="#">Why do I have this issue?</a>'
-  //   });
-  // }
+  infoAlert(title: string, text: string) {
+    return Swal.fire({
+      icon: "info",
+      title: title,
+      text: text,
+      //footer: '<a href="#">Why do I have this issue?</a>'
+    });
+  }
 
   // warningAlert(title: string, text: string) {
   //   Swal.fire({

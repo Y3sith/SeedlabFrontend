@@ -27,9 +27,9 @@ export class EmpresaService {
     return this.http.put(`${this.url}/updateEmpresa/${id_documentoEmpresa}`, empresaData, options);
   }
 
-  traerEmpresasola(access_token: any, id_emprendedor:string, documento: string): Observable<any> {
+  traerEmpresasola(access_token: any, id_emprendedor:string, id_empresa: string): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(`${this.url}/getEmpresa/${id_emprendedor}/${documento}`, options);
+    return this.http.get(`${this.url}/getEmpresa/${id_emprendedor}/${id_empresa}`, options);
   }
 
   updateApoyo(access_token: any, documento: any, apoyoData: any): Observable<any> {

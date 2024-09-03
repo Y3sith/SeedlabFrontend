@@ -23,4 +23,9 @@ export class ContenidoLeccionService {
     const options = {headers: this.CreacionHeaders(access_token)};
     return this.htts.put(this.ulr+'/editarContenidoPorLeccion/'+id,contenidoLeccion,options)
   }
+
+  getTipoDato(access_token:any): Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.htts.get(this.ulr+"/tipo_dato",options)
+  }
 }

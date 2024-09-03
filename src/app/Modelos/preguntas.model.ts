@@ -9,6 +9,7 @@ export interface SubPreguntas {
     sub_id: number;
     texto: string;
     puntaje: number;
+    respuesta: string;
     id_pregunta: number;
 }
 export interface Preguntas {

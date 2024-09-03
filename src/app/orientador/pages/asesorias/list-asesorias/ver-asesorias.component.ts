@@ -62,7 +62,7 @@ export class VerAsesoriasComponent implements OnInit {
 
   loadAsesorias(pendiente: boolean): void {
     this.isLoading = true; // Inicia la carga
-  
+
     this.asesoriaService.postAsesoriasOrientador(this.token, pendiente).subscribe(
       data => {
         if (pendiente) {
@@ -74,7 +74,7 @@ export class VerAsesoriasComponent implements OnInit {
         }
         // Total de asesorías siempre es la suma de ambos
         this.totalAsesorias = this.asesoriasSinAsesor.length + this.asesoriasConAsesor.length;
-  
+
         this.isLoading = false; // Finaliza la carga
       },
       error => {
@@ -83,7 +83,7 @@ export class VerAsesoriasComponent implements OnInit {
       }
     );
   }
-  
+
 
   // Código para la paginación
   changePage(pageNumber: number | string): void {
@@ -104,7 +104,11 @@ export class VerAsesoriasComponent implements OnInit {
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.totalAsesorias / this.itemsPerPage);
+    if (this.asesoriasSinAsesor.length >= 2 && this.showAsignadasFlag == false) {
+      return Math.ceil(this.asesoriasSinAsesor.length / this.itemsPerPage);
+    }else{
+      return Math.ceil(this.asesoriasConAsesor.length / this.itemsPerPage);
+    }
   }
 
   getPages(): number[] {
@@ -145,10 +149,12 @@ export class VerAsesoriasComponent implements OnInit {
   loadSinAsignar(): void {
     this.showAsignadasFlag = false;
     this.loadAsesorias(true);
+    this.page = 1;
   }
 
   loadAsignadas(): void {
     this.showAsignadasFlag = true;
     this.loadAsesorias(false);
+    this.page = 1;
   }
 }
