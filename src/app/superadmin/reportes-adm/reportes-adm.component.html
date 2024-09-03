@@ -5,56 +5,58 @@
     </header>
     <!-- Sección de filtros -->
     <div class="mb-6">
+      <form [formGroup]="reporteForm" (ngSubmit)="getReportes()">
         <div class="flex flex-wrap items-end gap-4">
           <h2 class="text-lg font-semibold mr-4 mb-3 sm:mb-0">FILTROS</h2>
           <div class="flex-grow flex flex-wrap gap-4">
             <div class="w-full sm:w-40 md:w-48">
-              <select class="w-full p-3 border rounded-md bg-gray-100 text-base">
-                <option>Fecha</option>
+              <select class="w-full p-3 border rounded-md bg-gray-100 text-base" formControlName="tipo_reporte">
+                <option value="" disabled selected>Selecione una opción</option>
+                <option value="aliado">Aliados</option>
+                <option value="emprendedor">Emprendedores</option>
+                <option value="orientador">Orientadores</option>
+                <option value="empresa">Empresas</option>
+                <option value="asesoria">Asesorias Solicitadas</option>
               </select>
             </div>
             <div class="w-full sm:w-40 md:w-48">
-              <select class="w-full p-3 border rounded-md bg-gray-100 text-base">
-                <option>Lineas</option>
-              </select>
+              <input type="date" formControlName="fecha_inicio"  class="w-full p-3 border rounded-md bg-gray-100 text-base">
             </div>
             <div class="w-full sm:w-40 md:w-48">
-              <select class="w-full p-3 border rounded-md bg-gray-100 text-base">
-                <option>Aliados</option>
-              </select>
-            </div>
-            <div class="w-full sm:w-40 md:w-48">
-              <select class="w-full p-3 border rounded-md bg-gray-100 text-base">
-                <option>TRL</option>
-              </select>
-            </div>
+              <input type="date" formControlName="fecha_fin"  class="w-full p-3 border rounded-md bg-gray-100 text-base">
+            </div>     
             <div class="w-full sm:w-auto ">
-              <button class="w-full sm:w-auto px-12 py-3 bg-[#FFA300] text-white font-bold text-xl rounded-md hover:bg-yellow-500 text-base">
+              <button type="submit" class="w-full sm:w-auto px-12 py-3 bg-[#FFA300] text-white font-bold text-xl rounded-md hover:bg-yellow-500 text-base">
                 Generar
               </button>
             </div>
           </div>
         </div>
+      </form>
       </div>
     
       <!-- Tarjeta de fondo gris suave -->
       <div class="bg-gray-50 rounded-lg shadow-md p-6">
-        <!-- Sección de gráficos -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Gráfico izquierdo (ocupa 1/3 en pantallas grandes) -->
-          <div class="lg:col-span-1 bg-white rounded-lg shadow-sm p-4 h-96">
-            <!-- Aquí iría tu componente de gráfico -->
-            <div class="w-full h-full flex items-center justify-center text-gray-500">
-              Gráfico 1
-            </div>
-          </div>
-          
-          <!-- Gráfico derecho (ocupa 2/3 en pantallas grandes) -->
-          <div class="lg:col-span-2 bg-white rounded-lg shadow-sm p-4 h-96">
-            <!-- Aquí iría tu componente de gráfico -->
-            <div class="w-full h-full flex items-center justify-center text-gray-500">
-              Gráfico 2
-            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">        
+          <div class="lg:col-span-3 bg-white rounded-lg shadow-sm p-4 h-96">
+            <table class="w-full">
+              <thead>
+                <tr>
+                  <th *ngFor="let columna of columnas">{{ columna | titlecase }}</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let dato of reportes">
+                  <td *ngFor="let columna of columnas">{{ dato[columna] }}</td>
+                  <td>
+                    <button (click)="descargarReporte(reporteForm.value.tipo_reporte)" class="text-blue-500 hover:underline">
+                      Descargar
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
