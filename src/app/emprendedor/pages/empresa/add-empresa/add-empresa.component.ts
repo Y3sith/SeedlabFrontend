@@ -23,7 +23,7 @@ import { data } from 'jquery';
 export class AddEmpresaComponent {
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  listTipoDocumento: []= [];
+  listTipoDocumento: [] = [];
   departamentoPredeterminado = '';
   submitted = false;
   token = '';
@@ -132,6 +132,8 @@ export class AddEmpresaComponent {
       this.router.navigate(['home']);
     }
   }
+
+
   //Funcion para cargar los departamentos
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
@@ -302,9 +304,12 @@ export class AddEmpresaComponent {
     } : null;
 
     const apoyosList: Array<any> = [];
+    
     if (apoyos) {
       apoyosList.push(apoyos);
     }
+
+
     const payload = {
       empresa: empresa,
       apoyos: apoyosList
@@ -360,9 +365,9 @@ export class AddEmpresaComponent {
     }
   }
 
-  
 
-  
+
+
   next() {
     if (this.currentIndex === 0) {
       this.showFirstSection = false;

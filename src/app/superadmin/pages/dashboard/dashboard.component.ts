@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import * as echarts from 'echarts';
 
 import { DashboardsService } from '../../../servicios/dashboard.service';
+import { PuntajesService } from '../../../servicios/puntajes.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,13 +30,12 @@ export class DashboardComponent implements AfterViewInit {
   registrosEchartsOptions: echarts.EChartsOption;
   promedioAsesoriasEchartsOptions: echarts.EChartsOption;
   emprenDeparEchartsOptions: echarts.EChartsOption;
+  getPuntajesForm: echarts.EChartsOption;
   years: number[] = [];
   selectedYear: number;
   isLoading: boolean = false;
 
   constructor(
-    private superAdminService: SuperadminService,
-    private aliadoService: AliadoService,
     private dashboardService: DashboardsService,
     private router: Router,
   ) { }
@@ -49,6 +49,7 @@ export class DashboardComponent implements AfterViewInit {
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
     this.selectedYear = currentYear;
     this.promedioAsesoriasMesAnio(this.selectedYear);
+    this.graficaPuntajesFormulario();
     this.emprendedorPorDepartamento();
   }
 
@@ -58,6 +59,8 @@ export class DashboardComponent implements AfterViewInit {
     this.getRegistrosMensuales();
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.emprendedorPorDepartamento();
+    this.graficaPuntajesFormulario();
+    
   }
 
   validateToken(): void {
@@ -100,7 +103,7 @@ export class DashboardComponent implements AfterViewInit {
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
       data => {
-        console.log('Promedio de asesorías:', data);
+        //console.log('Promedio de asesorías:', data);
 
         const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
@@ -213,7 +216,7 @@ export class DashboardComponent implements AfterViewInit {
         // Inicializar el gráfico de Asesorías
         this.initEChartsPie();
 
-        console.log(data);
+        //console.log(data);
       },
       error => {
         console.log(error);
@@ -316,7 +319,7 @@ export class DashboardComponent implements AfterViewInit {
   getDatosGenerosGrafica(): void {
     this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
-        console.log('data generos', data);
+        //console.log('data generos', data);
         const dataGenero = data.map(item => item.total);
         this.doughnutChartOption = {
           tooltip: {
@@ -354,7 +357,7 @@ export class DashboardComponent implements AfterViewInit {
 
         // Inicializa el gráfico aquí después de obtener los datos
         this.initEChartsDoughnut();
-        console.log(data);
+        //console.log(data);
       },
       error => {
         console.log(error);
@@ -385,7 +388,7 @@ export class DashboardComponent implements AfterViewInit {
   getRegistrosMensuales(): void {
     this.dashboardService.contarRegistrosMensual(this.token).subscribe(
       data => {
-        console.log('data meses', data);
+        //console.log('data meses', data);
 
 
         const emprendedoresData = data.promedios.map(item => parseInt(item.emprendedores));
@@ -478,7 +481,7 @@ export class DashboardComponent implements AfterViewInit {
   emprendedorPorDepartamento() {
     this.dashboardService.emprendedoresPorDepartamento(this.token).subscribe(
       (data: { departamento: string; total_emprendedores: number }[]) => {
-        console.log('data departamentos', data);  
+        //console.log('data departamentos', data);
         fetch('assets/data/COL1.geo.json')
           .then(response => response.json())
           .then(colJson => {
@@ -492,7 +495,7 @@ export class DashboardComponent implements AfterViewInit {
             colJson.features.forEach(feature => {
               feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
             });
-            
+
             //console.log('Datos mapeados:', mappedData);  
 
             const maxValue = Math.max(...data.map(item => item.total_emprendedores));
@@ -504,7 +507,7 @@ export class DashboardComponent implements AfterViewInit {
               },
               tooltip: {
                 trigger: 'item',
-                formatter: function(params) {
+                formatter: function (params) {
                   return `
                     Departamento: ${params.name}<br>
                     Valor: ${isNaN(params.value) ? 0 : params.value}<br>
@@ -525,8 +528,8 @@ export class DashboardComponent implements AfterViewInit {
                   type: 'map',
                   map: 'Colombia',
                   roam: true,
-                  data: mappedData,                
-                  nameProperty: 'NOMBRE_DPT', 
+                  data: mappedData,
+                  nameProperty: 'NOMBRE_DPT',
                   emphasis: {
                     label: {
                       show: true
@@ -562,6 +565,61 @@ export class DashboardComponent implements AfterViewInit {
     if (chartDom) {
       const myChart = echarts.init(chartDom);
       myChart.setOption(this.emprenDeparEchartsOptions);
+
+      // Manejar el cambio de tamaño
+      window.addEventListener('resize', () => {
+        myChart.resize();
+      });
+    } else {
+      console.error('No se pudo encontrar el elemento con id "echarts-empXDepar"');
+    }
+  }
+
+  graficaPuntajesFormulario(): void {
+    this.dashboardService.graficaFormulario(this.token).subscribe(
+      data => {
+        console.log('data puntajes', data);
+        this.getPuntajesForm = {
+          title: {
+            text: 'Puntajes por Formulario',
+            left: 'center'
+          },
+          radar: {
+            indicator: [
+              { name: 'General', max: 100 },
+              { name: 'Técnia', max: 100 },
+              { name: 'TRL', max: 100 },
+              { name: 'Mercado', max: 100 },
+              { name: 'Financiera', max: 100 }
+            ]
+          },
+          series: [
+            {
+              name: 'Puntajes',
+              type: 'radar',
+              data: data.map(item => ({
+                value: [
+                  item.info_general, 
+                  item.info_tecnica, 
+                  item.info_trl, 
+                  item.info_mercado, 
+                  item.info_financiera],
+                name: `Empresa ${item.documento_empresa}`
+              }))
+            }
+          ]
+        }
+        this.initEchartsGraficaFormulario();
+      },
+      error => console.error('Error al obtener los puntajes del formulario:', error)
+    );
+  }
+
+  initEchartsGraficaFormulario(): void {
+    const chartDom = document.getElementById('echarts-formulario');
+    if (chartDom) {
+      const myChart = echarts.init(chartDom);
+      myChart.setOption(this.getPuntajesForm);
 
       // Manejar el cambio de tamaño
       window.addEventListener('resize', () => {

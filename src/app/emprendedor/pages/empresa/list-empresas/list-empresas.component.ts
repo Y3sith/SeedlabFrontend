@@ -6,6 +6,7 @@ import { faMagnifyingGlass, faPenToSquare } from '@fortawesome/free-solid-svg-ic
 import { EmprendedorService } from '../../../../servicios/emprendedor.service';
 import { Empresa } from '../../../../Modelos/empresa.model';
 import { User } from '../../../../Modelos/user.model';
+import { AlertService } from '../../../../servicios/alert.service';
 
 
 @Component({
@@ -33,18 +34,16 @@ export class ListEmpresasComponent implements OnInit {
   constructor(
     private emprendedorService: EmprendedorService,
     private router: Router,
-    private aRoute: ActivatedRoute,
+    private alertService: AlertService,
     
   ) {
-    this.documento = this.aRoute.snapshot.paramMap.get('id');
+    
   }
 
   ngOnInit(): void {
     this.validarToken();
     this.cargarEmpresas();
-    this.aRoute.paramMap.subscribe(params => {
-      this.empresaId = +params.get('id'); // se captura el ID de la empresa
-    });
+    
   }
 
   validarToken(): void {
@@ -128,4 +127,16 @@ export class ListEmpresasComponent implements OnInit {
     // Implementa la lógica para editar una empresa
     this.router.navigate(['add-empresa', id_emprendedor, documento ]);
   }
+
+  showInfoAlert(documento:string):any{
+    this.alertService.infoAlert("Indicaciones del formulario", "Por favor, asegúrese de completar todas las secciones requeridas antes de enviar el formulario.")
+    .then((result) => {
+       if (result.isConfirmed) {
+         this.router.navigate(['/encuesta', documento]);
+       }
+ 
+    })
+  }
+
+
 }
