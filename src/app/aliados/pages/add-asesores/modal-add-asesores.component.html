@@ -6,7 +6,7 @@
     <!-- transicion basada en el estado -->
     <div class="w-full flex items-center justify-center px-4">
         <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
-          <div *ngFor="let contenedor of [1, 2, 3,]; let i = index" class="contenedor mb-2 sm:mb-0"
+          <div *ngFor="let contenedor of [1, 2]; let i = index" class="contenedor mb-2 sm:mb-0"
             [class.active]="i === currentIndex">
             <div
               class="step-number flex items-center justify-center w-8 h-8 border rounded-full mx-auto text-base md:text-xl"

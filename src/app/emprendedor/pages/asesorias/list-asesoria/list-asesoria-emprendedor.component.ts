@@ -146,7 +146,11 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.totalAsesorias / this.itemsPerPage);
+    if(this.asesoriasFalse.length >= 2 && this.showFalse == true){
+      return Math.ceil(this.asesoriasFalse.length / this.itemsPerPage);
+    }else{
+      return Math.ceil(this.asesoriasTrue.length / this.itemsPerPage);
+    }
   }
 
   getPages(): number[] {
@@ -179,11 +183,13 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
   showSinAsignar() {
     this.showTrue = false;
     this.showFalse = true;
+    this.page = 1;
   }
 
   showAsignadas() {
     this.showTrue = true;
     this.showFalse = false;
+    this.page = 1;
   }
   manejarCambio(event: Event) {
     this.busqueda = (event.target as HTMLInputElement).value;
