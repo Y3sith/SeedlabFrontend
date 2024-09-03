@@ -6,6 +6,7 @@ import { AsesoriaService } from '../../../servicios/asesoria.service';
 import { HeaderComponent } from '../../../header/header.component';
 import { Asesoria } from '../../../Modelos/asesoria.model';
 import { AlertService } from '../../../servicios/alert.service';
+import { Rol } from '../../../Modelos/rol.model';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class AsesoriaAliadoComponent implements OnInit {
   page: number = 1; // Inicializa la página actual
   totalAsesorias: number = 0; // variable para almacenar el total de asesorias
   itemsPerPage: number = 6; // Número de asesorias por página
+  showAsignadasFlag: boolean = false; 
 
   constructor(
     private asesoriaService: AsesoriaService,
@@ -97,21 +99,22 @@ export class AsesoriaAliadoComponent implements OnInit {
     if (pageNumber === 'previous') {
       if (this.page > 1) {
         this.page--;
-        this.separarAsesorias(); // Carga las asesorias de la página anterior
       }
     } else if (pageNumber === 'next') {
       if (this.page < this.getTotalPages()) {
         this.page++;
-        this.separarAsesorias(); // Carga las asesorias de la página siguiente
       }
     } else {
       this.page = pageNumber as number;
-      this.separarAsesorias(); // Carga las asesorias de la página seleccionada
     }
   }
 
   getTotalPages(): number {
-    return Math.ceil(this.totalAsesorias / this.itemsPerPage);
+    if (this.asesoriasSinAsesor.length >= 2 && this.showAsignadasFlag == false){
+      return Math.ceil(this.asesoriasSinAsesor.length / this.itemsPerPage);
+    }else{
+      return Math.ceil(this.asesoriasConAsesor.length / this.itemsPerPage);
+    }
   }
 
   getPages(): number[] {
@@ -179,15 +182,16 @@ export class AsesoriaAliadoComponent implements OnInit {
     }
 }
 
-
   showSinAsignar(): void {
+    this.showAsignadasFlag = false; 
     this.asesorias = this.asesoriasSinAsesor;
-    this.mensaje = this.asesorias.length === 0 ? "No hay asesorías esperando por asignación." : null;
+    this.page = 1;
   }
 
   showAsignadas(): void {
+    this.showAsignadasFlag = true; 
     this.asesorias = this.asesoriasConAsesor;
-    this.mensaje = this.asesorias.length === 0 ? "Aún no has asignado ninguna asesoría." : null;
+    this.page = 1;
   }
 
   filtrarAsesorias(): void {

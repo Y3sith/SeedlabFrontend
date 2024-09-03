@@ -28,4 +28,9 @@ export class NivelService {
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.http.get(this.url+'/listar_Nivel',options)
   }
+
+  mostrarNivelXidActividad(access_token:any, idActividad:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/nivelXactividad/'+idActividad,options)
+  }
 }

@@ -127,9 +127,9 @@ export class ModalAddRutaComponent implements OnInit {
         if (result.isConfirmed) {
           this.rutaService.updateRutas(this.token, ruta, this.rutaId).subscribe(
             data => {
+              this.alertService.successAlert('Exito', data.message);
               location.reload();
               console.log('erererer', data);
-              //this.alertService.successAlert('Exito', data.message);
             },
             error => {
               this.alertService.errorAlert('Error', error.error.message);
@@ -141,8 +141,8 @@ export class ModalAddRutaComponent implements OnInit {
     } else {
       this.rutaService.createRutas(this.token, ruta).subscribe(
         data => {
-          location.reload();
           this.alertService.successAlert('Exito', data.message);
+          location.reload();
         },
         error => {
           this.alertService.errorAlert('Error', error.error.message);

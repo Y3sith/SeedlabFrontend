@@ -47,6 +47,11 @@ export class AsesorService {
     return this.http.post(`${this.url}editarAsesor/${asesorId}`, formData, options);
   }
 
+  updateAsesorxaliado(access_token: any, asesorId: number, formData: FormData): Observable<any> {
+    const options = { headers: this.CreacionHeaderss(access_token) };
+    return this.http.post(`${this.url}editarAsesorxaliado/${asesorId}`, formData, options);
+  }
+
   mostrarAsesoriasAsesor(access_token: any, idAsesor: number, conHorario: boolean): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get<any>(`${this.url}mostrarAsesoriasAsesor/${idAsesor}/${conHorario}`, options);

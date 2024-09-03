@@ -7,6 +7,8 @@ import { SharedModule } from '../shared.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { AsesorRoutingModule } from './asesor-routing.module';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
 
@@ -25,6 +27,7 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
     SharedModule,
     FontAwesomeModule,
     ReactiveFormsModule,
+    NgxPaginationModule,
     FormsModule,
     FilterPipeModule
   ]

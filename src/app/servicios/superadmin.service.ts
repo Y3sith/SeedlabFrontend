@@ -76,9 +76,9 @@ export class SuperadminService {
     return this.http.get(this.url+"listAliado",options)
   }
 
-  crearActividadSuperAdmin(access_token: any, actividad: Actividad):Observable<any>{
-    const options = {headers: this.CreacionHeaders(access_token)};
-    return this.http.post(environment.apiUrl+"actividad/crearActividad",actividad,options)
+  crearActividadSuperAdmin(access_token: any, formData: FormData):Observable<any>{
+    const options = {headers: this.CreacionHeaderss(access_token)};
+    return this.http.post(environment.apiUrl+"actividad/crearActividad",formData,options)
   }
   crearNivelSuperAdmin(access_token:any,nivel: Nivel):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
@@ -91,9 +91,9 @@ export class SuperadminService {
     return this.http.post(environment.apiUrl+"leccion/crearLeccion",leccion,options)
   }
 
-  crearContenicoLeccionSuperAdmin(access_token:string, contenido_leccion:Contenido_Leccion):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.post(environment.apiUrl+"contenido_por_leccion/crearContenidoPorLeccion",contenido_leccion,options)
+  crearContenicoLeccionSuperAdmin(access_token:string, formData: FormData):Observable<any>{
+    const options = { headers: this.CreacionHeaderss(access_token)};
+    return this.http.post(environment.apiUrl+"contenido_por_leccion/crearContenidoPorLeccion",formData,options)
   }
 
   

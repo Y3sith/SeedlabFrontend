@@ -29,7 +29,9 @@ export class ListAsesoresComponent implements OnInit {
   listaAsesores: Asesor[] = [];
   selectedAsesorId: number | null = null;
   isLoading: boolean = false;
-
+//////
+  idAsesor: number = null;
+//////
   userFilter: any = { nombre: '', estado: 'Activo' };
 
   constructor(
@@ -68,7 +70,7 @@ export class ListAsesoresComponent implements OnInit {
       this.isLoading = true;
       this.aliadoService.getinfoAsesor(this.token, this.user.id, this.userFilter.estado).subscribe(
         (data) => {
-          //console.log('qqqqqqqqq: ',data);
+          //console.log('datos: ',data);
           this.listaAsesores = data;
           this.isLoading = false;
         },

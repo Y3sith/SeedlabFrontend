@@ -33,7 +33,7 @@
         <thead>
           <tr>
             <th class="p-2 text-left">Nombre</th>
-            <th class="p-2 text-left">Teléfono</th>
+            <th class="p-2 text-left">Correo</th>
             <th class="hidden p-2 text-left sm:table-cell">Dirección</th>
             <th class="p-2 text-left"></th>
           </tr>
@@ -43,7 +43,7 @@
             *ngFor="let empresa of listaEmpresas | filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index">
             <tr class="my-5 bg-gray-300 rounded-xl">
               <td class="p-2 rounded-s-lg">{{ empresa.nombre }}</td>
-              <td class="p-2">{{ empresa.telefono }}</td>
+              <td class="p-2 max-sm:break-all">{{ empresa.correo }}</td>
               <td class="hidden p-2 sm:table-cell">{{ empresa.direccion }}</td>
               <td class="p-2 text-center rounded-e-lg">
                 <a  type="button" [routerLink]="['/edit-empresa', empresa.documento]"
@@ -77,7 +77,7 @@
   <div *ngIf="!isLoading">
     <div class="text-center">
       <nav aria-label="Page navigation example">
-        <ul class="inline-flex space-x-2 text-sm">
+        <ul class="inline-flex space-x-2 text-sm pl-0">
           <li>
             <a href="javascript:void(0)"
               class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"

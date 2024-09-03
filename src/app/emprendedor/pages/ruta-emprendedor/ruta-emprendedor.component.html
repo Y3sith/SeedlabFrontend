@@ -2,22 +2,18 @@
   <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
     <app-header [title] [subtitle]="'Ruta de actividades'"></app-header>
   </header>
-
-  <div class="container">
-    <div class="row">
-      <div class="main-timeline-container">
-        <div *ngFor="let ruta of rutaList; let i = index">
-          <div *ngFor="let actividad of ruta.actividades; let j = index">
-            <div class="timeline" [ngClass]="'timeline-' + (i * ruta.actividades.length + j + 1)">
-              <a href="#" class="timeline-content">
-                <span class="timeline-year">{{ i * ruta.actividades.length + j + 1 }}</span>
-                <div class="content">
-                  <h3>{{ actividad.nombre }}</h3>
-                </div>
-              </a>
-            </div>
-          </div>
+</div>
+<div class="route-container">
+  <ng-container *ngFor="let ruta of rutaList; let i = index">
+    <ng-container *ngFor="let actividad of ruta.actividades; let j = index">
+      <div class="route-item" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)">
+        <div class="circle" [ngClass]="getCirclePositionClass(i * ruta.actividades.length + j)" [style.border-color]="getItemColor(i * ruta.actividades.length + j)">
+          <div class="number" [style.color]="getItemColor(i * ruta.actividades.length + j)">{{ (i * ruta.actividades.length + j + 1).toString().padStart(2, '0') }}</div>
         </div>
-    </div>
-  </div>
+        <div class="content" [style.background-color]="getItemColor(i * ruta.actividades.length + j)">
+          <h3>{{ actividad.nombre }}</h3>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
 </div>

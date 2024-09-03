@@ -29,15 +29,18 @@ const routes: Routes = [
       { path: 'perfil-admin', component: PerfilSuperadminComponent, data: { title: 'Perfil', icon: 'fa-solid fa-circle-user', showInMenu: true } },
       { path: 'add-aliados', component: AddAliadosComponent, data: { showInMenu: false } },
       { path: 'add-orientador', component: ModalCrearOrientadorComponent, data:{  showInMenu: false } },
+      { path: 'edit-orientador/:id', component: ModalCrearOrientadorComponent, data:{  showInMenu: false } },
       { path: 'add-superAdmin', component: ModalCrearSuperadminComponent, data:{  showInMenu: false } },
       { path: 'edit-superAdmin/:id', component: ModalCrearSuperadminComponent, data:{  showInMenu: false } },
       { path: 'edit-aliados/:id', component: AddAliadosComponent, data: { showInMenu: false } },
       { path: 'actnivlec', component: ActnivlecComponent, data: { title: 'Act-Niv-Lec', showInMenu: false } },
       { path: 'add-actividad', component: AddActividadComponent, data: { title: 'Actividad', icon: 'fa-solid fa-table-list', showInMenu: false } },
       { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
-      { path: 'add-all', component: AddAllComponent, data: {title: 'Creación actividades', icon: 'fa-solid fa-table-list', showInMenu: true}},
+      { path: 'add-all', component: AddAllComponent, data: {title: 'Creación actividades', icon: 'fa-solid fa-table-list', showInMenu: false}},
       /////
       { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}},
+      ////
+      
     ]
   }
 ];
