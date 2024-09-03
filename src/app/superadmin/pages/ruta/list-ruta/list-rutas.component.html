@@ -45,7 +45,7 @@
                 </thead>
                 <tbody class="space-y-6">
                     <ng-container
-                        *ngFor="let rutas of listaRutas | filterBy: userFilter | paginate: { itemsPerPage: 8, currentPage: page }; let i = index">
+                        *ngFor="let rutas of listaRutas | filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index">
                         <tr class="bg-gray-300 my-5 rounded-xl">
                             <td class="p-2 rounded-s-lg">{{rutas.nombre }}</td>
                             <td class="p-2">{{rutas.fecha_creacion }}</td>

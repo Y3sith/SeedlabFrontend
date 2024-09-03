@@ -317,7 +317,7 @@ export class ActnivlecComponent implements OnInit {
             },
             error => {
               console.log(error);
-              this.alertServices.errorAlert('Error', error.message);
+              this.alertServices.errorAlert('Error', error.error.message);
             }
           );
         }
@@ -707,7 +707,5 @@ export class ActnivlecComponent implements OnInit {
   }
 
   ////////////////////////////////////////////////////////////////////////
-  // alinicio():void{
-  //   this.router.navigate(['/list-ruta']);
-  // }
+ 
 }
