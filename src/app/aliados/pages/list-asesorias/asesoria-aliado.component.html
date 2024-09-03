@@ -32,7 +32,7 @@
           (click)="showSinAsignar()">
           <span
             class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg">
-            {{ sinAsesorCount }}
+            {{ asesoriasSinAsesor.length }}
           </span>
           <span>Sin asignar</span>
         </button>
@@ -43,7 +43,7 @@
           (click)="showAsignadas()">
           <span
             class="flex items-center justify-center w-6 h-6 mr-2 text-green-500 bg-white border border-green-500 rounded-lg">
-            {{ conAsesorCount }}
+            {{ asesoriasConAsesor.length }}
           </span>
           <span>Asignadas</span>
         </button>
@@ -57,51 +57,46 @@
   </div>
 
   <!-- Listado de asesorías -->
-<div class="flex flex-wrap justify-center px-2 mt-6" *ngIf="!isLoading && (showTrue || showFalse)">
+  <div class="flex flex-wrap justify-center px-2 mt-6" *ngIf="!isLoading">
 
-  <!-- Mensaje para asesorías -->
-  <div *ngIf="showFalse && asesoriasSinAsesor.length === 0" class="mt-6 text-center text-gray-500">
-    {{ mensaje || 'No hay asesorías sin asignar.' }}
-  </div>
-  <div *ngIf="showTrue && asesoriasConAsesor.length === 0" class="mt-6 text-center text-gray-500">
-    {{ mensaje || 'No hay asesorías asignadas.' }}
-  </div>
+    <!-- Mensaje para asesorías -->
+    <div *ngIf="mensaje" class="mt-6 text-center text-gray-500">{{ mensaje }}</div>
 
-  <!-- Contenedor de las tarjetas -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full p-4 bg-[#FAFAFA] ">
-    <div *ngFor="let asesoria of (showFalse ? asesoriasSinAsesor : asesoriasConAsesor) | filterBy: userFilter | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index" class="relative w-full">
+    <!-- Contenedor de las tarjetas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full p-4 bg-[#FAFAFA] ">
+      <div *ngFor="let asesoria of asesorias | filterBy: userFilter | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index" class="relative w-full">
 
-      <!-- Contenedor de la tarjeta con el efecto de recorte -->
-      <div class="relative bg-[#e6e6e6] rounded-lg p-4 py-3 h-auto">
-        <!-- Dentro del círculo -->
-        <div class="p-2 absolute  rounded-full bg-[#FAFAFA] -top-5 -right-3">
-          <div class="rounded-full w-12 h-12 cursor-pointer bg-[#FAFAFA] flex items-center justify-center"
-            [ngClass]="asesoria.Asesor ? 'bg-green-500' : 'bg-red-500'"
-            (click)="openModal(asesoria)">
-            <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
+        <!-- Contenedor de la tarjeta con el efecto de recorte -->
+        <div class="relative bg-[#e6e6e6] rounded-lg p-4 py-3 h-auto">
+          <!-- Dentro del círculo -->
+          <div class="p-2 absolute  rounded-full bg-[#FAFAFA] -top-5 -right-3">
+            <div class="rounded-full w-12 h-12 cursor-pointer bg-[#FAFAFA] flex items-center justify-center"
+              [ngClass]="asesoria.Asesor ? 'bg-green-500' : 'bg-red-500'"
+              (click)="openModal(asesoria)">
+              <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
+            </div>
           </div>
+
+          <!-- Contenido de la tarjeta -->
+          <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{asesoria.Nombre_sol }}</h2>
+          <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong>{{ asesoria.fecha_solicitud }}
+          </p>
+          <div
+            class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
+            title="{{ asesoria.notas }}">{{ asesoria.notas }}</div>
+          <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Emprendedor: </strong>{{ asesoria.Emprendedor
+            }}</p>
+          <p class="italic text-sm text-black mt-[-22px] ml-[4%]" *ngIf="asesoria.Asesor"><strong>Asesor: </strong>{{
+            asesoria.Asesor }}</p>
         </div>
 
-        <!-- Contenido de la tarjeta -->
-        <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{asesoria.Nombre_sol }}</h2>
-        <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong>{{ asesoria.fecha_solicitud }}
-        </p>
-        <div
-          class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
-          title="{{ asesoria.notas }}">{{ asesoria.notas }}</div>
-        <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Emprendedor: </strong>{{ asesoria.Emprendedor
-         }}</p>
-        <p class="italic text-sm text-black mt-[-22px] ml-[4%]" *ngIf="asesoria.Asesor"><strong>Asesor: </strong>{{ 
-        asesoria.Asesor }}</p>
-      </div>
-
-      <!-- Botones de acción -->
-      <div class="hover-buttons " *ngIf="!asesoria.Asesor">
-        <button class="btn btn-aceptar " (click)="openModal(asesoria)">Aceptar</button>
-        <button class="btn btn-rechazar " (click)="rechazarAsesoria(asesoria)">Rechazar</button>
+        <!-- Botones de acción -->
+        <div class="hover-buttons " *ngIf="!asesoria.Asesor">
+          <button class="btn btn-aceptar " (click)="openModal(asesoria)">Aceptar</button>
+          <button class="btn btn-rechazar " (click)="rechazarAsesoria(asesoria)">Rechazar</button>
+        </div>
       </div>
     </div>
-  </div>
 
     <!-- Contenedor de la paginación -->
     <div class="text-center">
