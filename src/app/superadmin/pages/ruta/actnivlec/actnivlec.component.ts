@@ -193,6 +193,19 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  get a() {
+    return this.actividadForm.controls;
+  }
+  get n() {
+    return this.nivelForm.controls;
+  }
+  get l() {
+    return this.leccionForm.controls;
+  }
+  get cl() {
+    return this.contenidoLeccionForm.controls;
+  }
+
   tipoDatoContenido(): void {
     if (this.token) {
       this.contenidoLeccionService.getTipoDato(this.token).subscribe(
