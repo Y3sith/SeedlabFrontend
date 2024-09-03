@@ -126,6 +126,6 @@ export class ListEmpresasComponent implements OnInit {
 
   editEmpresa(id_emprendedor: string ,documento: string): void {
     // Implementa la lógica para editar una empresa
-    this.router.navigate(['edit-empresa', id_emprendedor, documento ]);
+    this.router.navigate(['add-empresa', id_emprendedor, documento ]);
   }
 }

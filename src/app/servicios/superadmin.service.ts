@@ -91,9 +91,9 @@ export class SuperadminService {
     return this.http.post(environment.apiUrl+"leccion/crearLeccion",leccion,options)
   }
 
-  crearContenicoLeccionSuperAdmin(access_token:string, contenido_leccion:Contenido_Leccion):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.post(environment.apiUrl+"contenido_por_leccion/crearContenidoPorLeccion",contenido_leccion,options)
+  crearContenicoLeccionSuperAdmin(access_token:string, formData: FormData):Observable<any>{
+    const options = { headers: this.CreacionHeaderss(access_token)};
+    return this.http.post(environment.apiUrl+"contenido_por_leccion/crearContenidoPorLeccion",formData,options)
   }
 
   

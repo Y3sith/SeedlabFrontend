@@ -157,7 +157,7 @@
                             <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Agregar lección</h2>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para crear la lección</label>
-                                <select formControlName="id_nivel" class="w-full p-2 border rounded">
+                                <select formControlName="id_nivel" class="w-full p-2 border rounded" (change)="onNivelChange($event.target.value)">
                                     <option *ngFor="let vernivel of listarNiveles" [value]="vernivel.id">
                                         {{vernivel.nombre}}</option>
                                 </select>
@@ -167,33 +167,32 @@
                                 <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
                             </div>
                             <input type="hidden" id="id_nivel" formControlName="id_nivel">
+                            <!-- Botón para agregar -->
+                            <div class="flex justify-end items-center mb-4">
+                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
+                                    style="font-weight: 600;">Agregar nivel</span>
+                                <a (click)="agregarOtraLeccion()" [routerLink]="'#'"
+                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
+                                    <span class="text-3xl font-semibold leading-none ">+</span>
+                                </a>
+                            </div>
                         </form>
-
                     </div>
 
                     <!-- Contenido -->
                     <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Contenido</h2>
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para agregar Contenido</label>
-                            <select class="w-full p-2 border rounded">
-                                <option *ngFor="let vernivel of listarNiveles" [value]="vernivel.id">
-                                    {{vernivel.nombre}}</option>
-                            </select>
-                        </div>
-                        <form [formGroup]="leccionForm">
-                            <h3 class="text-lg text-center font-semibold mb-2 font-poppins">Agregar lección</h3>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección</label>
-                                <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
-                            </div>
-                            <input type="hidden" id="id_nivel" formControlName="id_nivel">
-                        </form>
-
                         <form [formGroup]="contenidoLeccionForm">
                             <h3 class="text-lg text-center font-semibold mb-2 font-poppins">Agregar contenido a la
                                 lección
                             </h3>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para agregar Contenido</label>
+                                <select formControlName="id_leccion" class="w-full p-2 border rounded">
+                                    <option *ngFor="let verleccion of listarLeccion" [value]="verleccion.id">
+                                        {{verleccion.nombre}}</option>
+                                </select>
+                            </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
                                 <input formControlName="titulo" type="text" class="w-full p-2 border rounded">
@@ -203,48 +202,102 @@
                                 <textarea class="w-full p-2 border rounded" rows="3"
                                     formControlName="descripcion"></textarea>
                             </div>
+
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato</label>
-                                <select class="w-full p-2 border rounded" formControlName="id_tipo_dato">
+                                <select class="w-full p-2 border rounded" formControlName="id_tipo_dato"
+                                    (change)="onTipoDatoChangeContenido()">
                                     <option *ngFor="let tipodato of listarTipoDato" [value]="tipodato.id">
                                         {{tipodato.nombre}}</option>
                                 </select>
                             </div>
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
                             <div class="mb-4">
-                                <label for="fuente" class=""></label>
-                                <!-- toca cambiarlo para que acepte dependiendo si guardo imagen,pdf,video,texto -->
-                                <!-- <label class="block text-sm font-medium text-gray-700 mb-1">Fuente</label>
-                                <textarea class="w-full p-2 border rounded" rows="3"></textarea> -->
                                 <ng-container [ngSwitch]="contenidoLeccionForm.get('id_tipo_dato').value">
-                                    <div *ngSwitchCase="'1'">
+                                    <!--video-->
+                                    <div class="mb-4" *ngSwitchCase="'1'">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1" for="nombre">Link
+                                            del video</label>
                                         <input type="text" id="fuente" formControlName="fuente"
-                                            placeholder="Example http://example.com" class="w-full p-2 border rounded">
+                                            placeholder="Example http://example.com" (input)="onTextInputContenido($event)"
+                                            class="w-full p-2 border rounded ">
+                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente')?.invalid"
+                                            class="error text-red-700">
+                                            Este campo es obligatorio.
+                                        </div>
                                     </div>
-
-                                    <div *ngSwitchCase="'2'">
-                                        <input type="text" id="fuente" formControlName="Multimedia"
-                                            class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <!--imagen-->
+                                    <div class="mb-4" *ngSwitchCase="'2'">
+                                        <label
+                                            class="text-sm font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center"
+                                            for="nombre">
+                                            <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+                                                (change)="onFileSelectedsContenido($event, 'fuente')">
+                                            <span (click)="triggerFileInputContenido()"
+                                                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+                                                Subir Imagen
+                                                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+                                            </span>
+                                        </label>
+                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente')?.invalid"
+                                            class="error text-red-700">
+                                            Este campo es obligatorio.
+                                        </div>
+                                        <div *ngIf="contenidoLeccionForm.get('fuente')?.value"
+                                            class="mt-2 text-gray-500 text-center">
+                                            Archivo seleccionado: {{ selectedfuente.name }}
+                                        </div>
                                     </div>
-
-                                    <div *ngSwitchCase="'3'">
-                                        <input type="file" id="fuente" formControlName="Imagen"
-                                            (change)="onFileSelected($event, 'ruta_documento')"
-                                            class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <!--pdf-->
+                                    <div class="mb-4" *ngSwitchCase="'3'">
+                                        <label
+                                            class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center"
+                                            for="nombre">
+                                            <input type="file" id="fuente" class="hidden" accept="application/pdf"
+                                                #fileInput (change)="onFileSelectedsContenido($event, 'fuente_documento')">
+                                            <span (click)="triggerFileInputContenido()"
+                                                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+                                                Subir PDF
+                                                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+                                            </span>
+                                        </label>
+                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente')?.invalid"
+                                            class="error text-red-700">
+                                            Este campo es obligatorio.
+                                        </div>
+                                        <div *ngIf="contenidoLeccionForm.get('fuente')?.value"
+                                            class="mt-2 text-gray-500 text-center">
+                                            Archivo seleccionado: {{ contenidoLeccionForm.get('fuente')?.value?.name }}
+                                        </div>
                                     </div>
-
-                                    <div *ngSwitchCase="'4'">
-                                        <input type="text" id="fuente" formControlName="Pdf"
-                                            (change)="onFileSelected($event, 'ruta_documento')"
-                                            class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    </div>
-
-                                    <div *ngSwitchCase="'5'">
+                                    <!--texto-->
+                                    <div class="mb-4" *ngSwitchCase="'4'">
+                                        <label class="text-xl font-normal flex-none justify-center"
+                                            for="nombre"></label>
                                         <input type="text" id="fuente" formControlName="fuente"
-                                            class="w-full md:max-w-screen-md px-3 py-2 bg-gray-200 border-0 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            (input)="onTextInputContenido($event)" placeholder="Texto del contenido"
+                                            class="w-full p-2 border rounded">
+                                        <!-- <textarea type="text" id="fuente" formControlName="fuente" (input)="onTextInput($event)" placeholder="Texto de la actividad"
+                                        class="w-full p-2 border rounded "></textarea> -->
+                                        <div *ngIf="formSubmitted && contenidoLeccionForm.get('fuente')?.invalid"
+                                            class="error text-red-700">
+                                            Este campo es obligatorio.
+                                        </div>
                                     </div>
                                 </ng-container>
                             </div>
+
                             <input type="hidden" id="id_leccion" formControlName="id_leccion">
+                            <!-- Botón para agregar -->
+                            <div class="flex justify-end items-center mb-4">
+                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
+                                    style="font-weight: 600;">Agregar Contenido</span>
+                                <a (click)="addContenidoLeccionSuperAdmin()" [routerLink]="'#'"
+                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
+                                    <span class="text-3xl font-semibold leading-none ">+</span>
+                                </a>
+                            </div>
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
                         </form>
                     </div>
                 </div>
