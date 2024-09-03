@@ -114,8 +114,9 @@ export class RutaEmprendedorComponent implements OnInit {
     const positionInGroup = index % 6;
     return [0, 1, 4].includes(positionInGroup) ? 'circle-right' : 'circle-left';
   }
-  openModal(actividad: any): void {
+  openModal(actividad: any, index: number): void {
     this.selectedActividad = actividad;
+    this.selectedActividad = { ...actividad, colorIndex: index };
     console.log("ACTIVIDDDAAAD", this.selectedActividad)
     this.modalVisible = true;
   }
