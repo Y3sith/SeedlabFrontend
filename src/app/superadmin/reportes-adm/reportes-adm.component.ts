@@ -55,29 +55,40 @@ export class ReportesAdmComponent {
     }
   }
 
-  obtenerReportesDisponibles() {
-    this.reporteService.obtenerReportes().subscribe(
-      (data: any) => {
-        this.reportes = data;
-      },
-      (error) => console.error('Error al obtener los reportes', error)
-    );
+  mostrarReportes() {
+    if (this.reporteForm.valid) {
+      const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
+
+      // Obtener los datos del reporte para visualización
+      this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
+        (data: any[]) => {
+          this.reportes = data;
+          this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
+        },
+        (error) => console.error('Error al obtener datos del reporte', error)
+      );
+    } else {
+      console.error('Formulario inválido:', this.reporteForm.value);
+      alert('Debe seleccionar todos los filtros');
+    }
   }
+  
 
   getReportes(){
     if(this.reporteForm.valid){
       const {tipo_reporte, fecha_inicio, fecha_fin} = this.reporteForm.value;
 
-      this.reporteService.getReporteRole(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
-        data =>{
-          this.reportes = data;
-          // const url = window.URL.createObjectURL(data);
+      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
+       (data:Blob) =>{
+          
+          const url = window.URL.createObjectURL(data);
 
-          // const a = document.createElement('a');
-          // a.href = url;
-          // a.download = 'Reporte_Roles.xlsx';
-          // a.click();
-          // window.URL.revokeObjectURL(url);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${tipo_reporte}_reporte.xlsx`;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
         },
         error => {
           console.error('Error al descargar el reporte', error);

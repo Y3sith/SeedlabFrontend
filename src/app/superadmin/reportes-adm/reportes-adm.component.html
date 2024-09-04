@@ -5,7 +5,7 @@
     </header>
     <!-- Sección de filtros -->
     <div class="mb-6">
-      <form [formGroup]="reporteForm" (ngSubmit)="getReportes()">
+      <form [formGroup]="reporteForm" (ngSubmit)="mostrarReportes()">
         <div class="flex flex-wrap items-end gap-4">
           <h2 class="text-lg font-semibold mr-4 mb-3 sm:mb-0">FILTROS</h2>
           <div class="flex-grow flex flex-wrap gap-4">
@@ -42,15 +42,15 @@
             <table class="w-full">
               <thead>
                 <tr>
-                  <th *ngFor="let columna of columnas">{{ columna | titlecase }}</th>
-                  <th>Acciones</th>
+                  <th *ngFor="let columna of columnas">{{ columna }}</th>
+                  <th>Acción</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let dato of reportes">
-                  <td *ngFor="let columna of columnas">{{ dato[columna] }}</td>
+                <tr *ngFor="let reporte of reportes">
+                  <td *ngFor="let columna of columnas">{{ reporte[columna] }}</td>
                   <td>
-                    <button (click)="descargarReporte(reporteForm.value.tipo_reporte)" class="text-blue-500 hover:underline">
+                    <button (click)="getReportes()" class="text-blue-500 hover:underline">
                       Descargar
                     </button>
                   </td>

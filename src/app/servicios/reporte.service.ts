@@ -12,21 +12,36 @@ export class ReporteService {
 
   url = environment.apiUrl;
 
-  obtenerReportes(): Observable<any> {
-    return this.http.get<any>(`${this.url}reportes_disponibles`);
-  }
+
 
   getReporteRole(tipo_reporte: string, fecha_inicio: string, fecha_fin: string): Observable<any> {
     const body = { tipo_reporte, fecha_inicio, fecha_fin };
 
     return this.http.post<Blob>(`${this.url}reporte_roles`, body, {
-      responseType: 'blob' as 'json'  // Se especifica que se espera una respuesta de tipo Blob
+      responseType: 'blob' as 'json'
     });
   }
 
-  getReporteEmpresas(tipo_reporte,fecha_inicio: string, fecha_fin: string): Observable<Blob>{
-    const body = {tipo_reporte, fecha_inicio, fecha_fin };
+  exportarReporte(tipo_reporte: string, fecha_inicio: string, fecha_fin: string): Observable<Blob> {
+    const body = { tipo_reporte, fecha_inicio, fecha_fin };
+
+    return this.http.post(`${this.url}exportar_reporte`, body, { responseType: 'blob' });
+  }
+
+
+  getReporteEmpresas(tipo_reporte, fecha_inicio: string, fecha_fin: string): Observable<Blob> {
+    const body = { tipo_reporte, fecha_inicio, fecha_fin };
     return this.http.post<Blob>(`${this.url}reporte_empresas`, body);
+  }
+
+  obtenerDatosReporte(tipo_reporte: string, fecha_inicio: string, fecha_fin: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.url}obtener_datos_reporte`, {
+      params: {
+        tipo_reporte,
+        fecha_inicio,
+        fecha_fin
+      }
+    });
   }
 
 }
