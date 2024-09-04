@@ -137,6 +137,7 @@
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Asesor</label>
                                 <select formControlName="id_asesor" class="w-full p-2 border rounded">
+                                    <option value="" >Ninguno</option>
                                     <option *ngFor="let asesor of listarAsesores" [value]="asesor.id">
                                         {{ asesor.nombre }} {{ asesor.apellido }}
                                     </option>

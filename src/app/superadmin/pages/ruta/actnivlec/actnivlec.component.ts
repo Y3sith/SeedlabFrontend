@@ -75,7 +75,7 @@ export class ActnivlecComponent implements OnInit {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: ['', Validators.required],
+    id_asesor: [],
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
@@ -288,10 +288,12 @@ export class ActnivlecComponent implements OnInit {
     formData.append('nombre', this.actividadForm.get('nombre')?.value);
     formData.append('descripcion', this.actividadForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
-    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value);
+    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
+
+    console.log('datos: ',this.actividadForm.value);
 
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
