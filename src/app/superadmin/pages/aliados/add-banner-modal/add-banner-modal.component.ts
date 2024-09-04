@@ -64,7 +64,7 @@ export class AddBannerModalComponent implements OnInit {
         this.user = identity;
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
-        console.log("OTRO ID",this.currentRolId);
+        console.log("OTRO ID", this.currentRolId);
         if (this.currentRolId != 1) {
           this.router.navigate(['home']);
         }
@@ -75,15 +75,15 @@ export class AddBannerModalComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     this.validateToken();
-    console.log("PARA EL TOKEN",this.currentRolId);
+    console.log("PARA EL TOKEN", this.currentRolId);
     this.verEditar();
     this.mostrarToggle();
     this.toggleActive();
   }
 
-  verEditar(): void{
+  verEditar(): void {
     this.aliadoService.getBannerxid(this.token, this.id_banner).subscribe(
       data => {
         this.bannerForm.patchValue({
@@ -96,7 +96,6 @@ export class AddBannerModalComponent implements OnInit {
       },
       error => {
         console.error(error);
-        this.alertService.errorAlert('Error', error.error.message);
       }
     )
   }
@@ -112,7 +111,7 @@ export class AddBannerModalComponent implements OnInit {
     } else {
       estadoValue = this.isActive ? '1' : '0';
     }
-  
+
     if (this.selectedBanner) {
       formData.append('urlImagen', this.selectedBanner, this.selectedBanner.name);
     }
@@ -161,14 +160,14 @@ export class AddBannerModalComponent implements OnInit {
   
       if (field === 'urlImagen') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
-      } 
+      }
   
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
   
-        //Limpia el archivo seleccionado y resetea la previsualización
+        ////Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
   
         // Resetea el campo correspondiente en el formulario y la previsualización
@@ -203,6 +202,7 @@ export class AddBannerModalComponent implements OnInit {
     this.resetFileField(field);
   }
   }
+
 
   resetFileField(field: string) {
     if (field === 'urlImagen') {

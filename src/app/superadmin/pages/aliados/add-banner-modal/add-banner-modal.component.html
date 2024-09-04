@@ -1,8 +1,14 @@
 <div class="fixed z-50 inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center p-4">
   <div class="bg-white border border-gray-300 p-6 sm:p-10 rounded w-full max-w-md md:max-w-lg lg:max-w-2xl h-auto">
-    <h1 class="text-start text-lg sm:text-xl font-bold mb-10">
-      {{ id_banner ? 'Editar Banner' : 'Crear Banner' }}
-    </h1>
+    <div class="flex">
+      <h1 class="text-start text-lg sm:text-xl font-bold mb-10">
+        {{ id_banner ? 'Editar Banner' : 'Crear Banner' }}
+      </h1>
+      <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
+        matTooltip="Tenga en cuenta que la altura debe ser maximo 684px para que el banner se vea bien en la pagina principal"
+        matTooltipPosition="right" style="color: #adb7c7;">
+      </fa-icon>
+    </div>
 
     <form [formGroup]="bannerForm" (ngSubmit)="addBanner()">
 
@@ -25,32 +31,31 @@
           </div>
         </div>
 
-        <div class="-mt-6" *ngIf="!id_banner">
-          <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center" for="nombre">Banner
-            <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+        <div *ngIf="!id_banner">
+          <label class="text-xl font-normal relative mt-3" for="logo">Banner
+          </label>
+          <div class="w-full text-xl font-normal mt-2">
+            <input class="hidden" id="banner" type="file" accept="image/*" #fileInput
               (change)="onFileSelecteds($event, 'urlImagen')">
             <span (click)="triggerFileInput()"
-              class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+              class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg bg-white hover:bg-blue-100">
               Subir Imagen
               <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
             </span>
-          </label>
-          <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
-            class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
-            class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
-          <div>
-
-          </div>
-          <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
-            Este campo es obligatorio.
+            <div *ngIf="formSubmitted && bannerForm.get('urlImagen')?.invalid" class="error text-red-700">
+              Este campo es obligatorio.
+            </div>
+            <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner" width="200px"
+              class="mt-4 flex-none justify-center preview-image-banner border rounded-md object-cover md:text-center small-preview"
+              alt="Vista previa de la imagen">
           </div>
         </div>
 
       </div>
       <div *ngIf="id_banner" class="flex justify-end items-center">
-        <div class="mt-1 block text-sm font-medium text-gray-700 flex-none justify-center ">Activar/Desactivar Usuario
+        <div class="mt-1 block text-sm font-medium text-gray-700 flex-none justify-center ">Activar/Desactivar Banner
           <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-            matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
+            matTooltip="Al descativarlo ten en cuenta que ya no se vera este banner en la pagina principal, pero podras despues volverlo a activar"
             matTooltipPosition="right" style="color: #adb7c7;">
           </fa-icon>
 

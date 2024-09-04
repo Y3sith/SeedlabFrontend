@@ -46,7 +46,7 @@
               <td class="p-2 max-sm:break-all">{{ empresa.correo }}</td>
               <td class="hidden p-2 sm:table-cell">{{ empresa.direccion }}</td>
               <td class="p-2 text-center rounded-e-lg">
-                <a  type="button" [routerLink]="['/edit-empresa', empresa.documento]"
+                <a  type="button" (click)="editEmpresa(empresa.id_emprendedor ,empresa.documento)"
                   class="text-blue-500 mr-2 " title="Editar Empresa">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4 h-4" fill="currentColor">
                     <path
