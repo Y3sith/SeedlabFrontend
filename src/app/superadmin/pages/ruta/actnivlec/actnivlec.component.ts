@@ -75,7 +75,7 @@ export class ActnivlecComponent implements OnInit {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: ['', Validators.required],
+    id_asesor: [],
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
@@ -162,8 +162,9 @@ export class ActnivlecComponent implements OnInit {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
-          this.listarTipoDato = data;
-          console.log('tipo de dato:', data);
+
+          this.listarTipoDato = data.filter((tipo:any) => tipo.nombre === 'Imagen'); //solo me muestra imagen en el select tipo dato
+          console.log('tipo de dato:', this.listarTipoDato);
         },
         error => {
           console.log(error);
@@ -287,10 +288,12 @@ export class ActnivlecComponent implements OnInit {
     formData.append('nombre', this.actividadForm.get('nombre')?.value);
     formData.append('descripcion', this.actividadForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
-    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value);
+    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
+
+    console.log('datos: ',this.actividadForm.value);
 
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
@@ -317,7 +320,7 @@ export class ActnivlecComponent implements OnInit {
             },
             error => {
               console.log(error);
-              this.alertServices.errorAlert('Error', error.message);
+              this.alertServices.errorAlert('Error', error.error.message);
             }
           );
         }
@@ -390,13 +393,20 @@ export class ActnivlecComponent implements OnInit {
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
     //this.submitted = true;
+    const nombreNivel = this.nivelForm.get('nombre')?.value;
+    // Validación de longitud del nombre
+    if (nombreNivel && nombreNivel.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+        return; // Salir de la función si la validación falla
+    }
     if (this.nivelForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
 
     const nivel: any = {
-      nombre: this.nivelForm.value.nombre,
+      //nombre: this.nivelForm.value.nombre,
+      nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
     }
     console.log('nivel data', nivel);
@@ -413,7 +423,7 @@ export class ActnivlecComponent implements OnInit {
         //this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
       },
       error => {
-        this.alertServices.errorAlert('Error', error.message);
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     )
@@ -421,12 +431,18 @@ export class ActnivlecComponent implements OnInit {
 
   agregarOtroNivel(): void {
     this.submittedNivel = true;
+    const nombreNivel = this.nivelForm.get('nombre')?.value;
+    if (nombreNivel && nombreNivel.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.nivelForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
     const nivel: any = {
-      nombre: this.nivelForm.value.nombre,
+      //nombre: this.nivelForm.value.nombre,
+      nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
     };
     console.log('nivel data', nivel);
@@ -441,6 +457,7 @@ export class ActnivlecComponent implements OnInit {
         this.verNivel();
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     );
@@ -448,6 +465,12 @@ export class ActnivlecComponent implements OnInit {
 
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
+
+    const nombreLeccion = this.leccionForm.get('nombre')?.value;
+    if (nombreLeccion && nombreLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
@@ -455,7 +478,8 @@ export class ActnivlecComponent implements OnInit {
     }
     //submittedLeccion
     const leccion: any = {
-      nombre: this.leccionForm.value.nombre,
+      //nombre: this.leccionForm.value.nombre,
+      nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
     console.log('leccion data', leccion);
@@ -472,6 +496,7 @@ export class ActnivlecComponent implements OnInit {
         console.log('id leccion: ', data.id);
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     )
@@ -479,12 +504,18 @@ export class ActnivlecComponent implements OnInit {
 
   agregarOtraLeccion(): void {
     this.submittedLeccion = true;
+    const nombreLeccion = this.leccionForm.get('nombre')?.value;
+    if (nombreLeccion && nombreLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
     }
     const leccion: any = {
-      nombre: this.leccionForm.value.nombre,
+      //nombre: this.leccionForm.value.nombre,
+      nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     };
     console.log('leccion data', leccion);
@@ -498,6 +529,7 @@ export class ActnivlecComponent implements OnInit {
         this.verLeccicon();
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     );
@@ -527,10 +559,24 @@ export class ActnivlecComponent implements OnInit {
 
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
+    
     if (this.contenidoLeccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
       return;
     }
+
+    const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
+    if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
+        return; 
+    }
+
+    const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
+    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 470) {
+        this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 470 caracteres');
+        return; 
+    }
+
     const formData = new FormData();
     let estadoValue: string;
     if (this.idcontenidoLeccion == null) {
@@ -571,10 +617,10 @@ export class ActnivlecComponent implements OnInit {
     this.actividadForm.get('fuente').clearValidators();
 
     switch (tipoDatoId) {
-      case '1': // Video
+     // case '1': // Video
       case '2': // Imagen
-      case '3': // PDF
-      case '4': // Texto
+      //case '3': // PDF
+     // case '4': // Texto
         this.actividadForm.get('fuente').setValidators([Validators.required]);
         break;
       default:
@@ -707,7 +753,5 @@ export class ActnivlecComponent implements OnInit {
   }
 
   ////////////////////////////////////////////////////////////////////////
-  // alinicio():void{
-  //   this.router.navigate(['/list-ruta']);
-  // }
+ 
 }

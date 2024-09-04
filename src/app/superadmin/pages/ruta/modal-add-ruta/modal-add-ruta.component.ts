@@ -128,12 +128,14 @@ export class ModalAddRutaComponent implements OnInit {
           this.rutaService.updateRutas(this.token, ruta, this.rutaId).subscribe(
             data => {
               this.alertService.successAlert('Exito', data.message);
-              location.reload();
-              console.log('erererer', data);
+              //location.reload();
+              setTimeout(() => {
+                location.reload();
+              }, 2000);
             },
             error => {
               this.alertService.errorAlert('Error', error.error.message);
-              console.error('Error', error.error.message);
+              console.error('Error', error.message);
             }
           );
         }
@@ -142,11 +144,14 @@ export class ModalAddRutaComponent implements OnInit {
       this.rutaService.createRutas(this.token, ruta).subscribe(
         data => {
           this.alertService.successAlert('Exito', data.message);
-          location.reload();
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
         },
         error => {
           this.alertService.errorAlert('Error', error.error.message);
-          console.error('Error', error.error.message);
+          console.error('Error', error.message);
+          console.log(error)
         }
       )
     }
