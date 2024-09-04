@@ -162,8 +162,9 @@ export class ActnivlecComponent implements OnInit {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
-          this.listarTipoDato = data;
-          console.log('tipo de dato:', data);
+
+          this.listarTipoDato = data.filter((tipo:any) => tipo.nombre === 'Imagen'); //solo me muestra imagen en el select tipo dato
+          console.log('tipo de dato:', this.listarTipoDato);
         },
         error => {
           console.log(error);
@@ -393,7 +394,7 @@ export class ActnivlecComponent implements OnInit {
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     // Validación de longitud del nombre
     if (nombreNivel && nombreNivel.length > 70) {
-        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
         return; // Salir de la función si la validación falla
     }
     if (this.nivelForm.invalid) {
@@ -430,7 +431,7 @@ export class ActnivlecComponent implements OnInit {
     this.submittedNivel = true;
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
-        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
         return; 
     }
     if (this.nivelForm.invalid) {
@@ -465,7 +466,7 @@ export class ActnivlecComponent implements OnInit {
 
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
-        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
         return; 
     }
     if (this.leccionForm.invalid) {
@@ -503,7 +504,7 @@ export class ActnivlecComponent implements OnInit {
     this.submittedLeccion = true;
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
-        this.alertServices.errorAlert('Error', 'El nombre no puede tener más de 70 caracteres');
+        this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
         return; 
     }
     if (this.leccionForm.invalid) {
@@ -556,10 +557,24 @@ export class ActnivlecComponent implements OnInit {
 
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
+    
     if (this.contenidoLeccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
       return;
     }
+
+    const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
+    if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
+        return; 
+    }
+
+    const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
+    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 470) {
+        this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 470 caracteres');
+        return; 
+    }
+
     const formData = new FormData();
     let estadoValue: string;
     if (this.idcontenidoLeccion == null) {
@@ -600,10 +615,10 @@ export class ActnivlecComponent implements OnInit {
     this.actividadForm.get('fuente').clearValidators();
 
     switch (tipoDatoId) {
-      case '1': // Video
+     // case '1': // Video
       case '2': // Imagen
-      case '3': // PDF
-      case '4': // Texto
+      //case '3': // PDF
+     // case '4': // Texto
         this.actividadForm.get('fuente').setValidators([Validators.required]);
         break;
       default:
