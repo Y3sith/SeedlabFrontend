@@ -126,7 +126,7 @@
                                 <div *ngIf="f.fecha_nacimiento.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
                                 <div *ngIf="f.fecha_nacimiento.errors.futureDate" class="text-red-700 pl-2 rounded-lg inline-block">La fecha no es válida*</div>
                                 <div *ngIf="f.fecha_nacimiento.errors.tooOld" class="text-red-700 pl-2 rounded-lg inline-block">La fecha no es válida*</div>
-                                <div *ngIf="f.fecha_nacimiento.errors.tooRecent" class="text-red-700 pl-2 rounded-lg inline-block">La fecha no es válida*</div>
+                                <div *ngIf="f.fecha_nacimiento.errors.tooRecent" class="text-red-700 pl-2 rounded-lg inline-block">Debe tener al menos 18 años *</div>
                             </div>
                         </div>
 
@@ -208,7 +208,7 @@
                         <!-- pregunta 10 -->
                         <div class="relative">
                             <label for="id_departamento" class="block truncate">Departamento:</label>
-                            <select id="id_departamento" name="id_departamento" formControlName="id_departamento" (change)="onDepartamentoSeleccionado($event)"
+                            <select id="id_departamento" name="id_departamento" formControlName="id_departamento" (change)="onSelectChange($event)"
                                 class="mt-2 p-2 block w-full rounded-md border-0 py-1.5 text-[#000] shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] focus:outline-none sm:text-sm sm:leading-6">
                               <option value="" disabled selected>Seleccionar Departamento...</option>
                               <option *ngFor="let nameDepartamento of listDepartamentos" [value]="nameDepartamento.id">

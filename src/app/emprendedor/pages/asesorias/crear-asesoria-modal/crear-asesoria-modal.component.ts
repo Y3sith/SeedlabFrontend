@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import { AsesoriaService } from '../../../../servicios/asesoria.service';
 import { FormControl } from '@angular/forms';
+import { AlertService } from '../../../../servicios/alert.service';
+
 
 @Component({
   selector: 'app-crear-asesoria-modal',
@@ -30,6 +32,8 @@ export class CrearAsesoriaModalComponent {
     private asesoriaService: AsesoriaService,
     private router: Router,
     private aliadoService: AliadoService,
+    private alertService: AlertService,
+
   ) {
     this.asesoriaForm = this.fb.group({
       nombre: [''],
@@ -119,9 +123,10 @@ export class CrearAsesoriaModalComponent {
       this.asesoriaService.crearAsesoria(this.token, formData).subscribe(
         response => {
           this.dialogRef.close(formData);
+          this.alertService.successAlert('Exito', 'Asesoría creada correctamente');
         },
         error => {
-          console.error('Error al crear asesoría:', error);
+          this.alertService.errorAlert('Error', 'Los campos de la asesoría estan vacios')
         }
       );
     }

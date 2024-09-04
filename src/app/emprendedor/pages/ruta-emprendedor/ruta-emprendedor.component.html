@@ -6,7 +6,7 @@
 <div class="route-container">
   <ng-container *ngFor="let ruta of rutaList; let i = index">
     <ng-container *ngFor="let actividad of ruta.actividades; let j = index">
-      <div class="route-item" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)">
+      <div class="route-item" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)" (click)="openModal(actividad, i * ruta.actividades.length + j)">
         <div class="circle" [ngClass]="getCirclePositionClass(i * ruta.actividades.length + j)" [style.border-color]="getItemColor(i * ruta.actividades.length + j)">
           <div class="number" [style.color]="getItemColor(i * ruta.actividades.length + j)">{{ (i * ruta.actividades.length + j + 1).toString().padStart(2, '0') }}</div>
         </div>
@@ -17,3 +17,10 @@
     </ng-container>
   </ng-container>
 </div>
+
+<app-modal-actividad 
+  *ngIf="selectedActividad"
+  [actividad]="selectedActividad" 
+  [visible]="modalVisible" 
+  (close)="closeModal()">
+</app-modal-actividad>
