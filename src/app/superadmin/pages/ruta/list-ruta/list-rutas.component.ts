@@ -30,13 +30,16 @@ export class ListRutasComponent implements OnInit {
   modalSwitch: boolean;
   listaRutasFiltrada: Ruta[] = [];
   isLoading: boolean = false;
+  rutaId: any;
 
   constructor(
     private rutaService: RutaService,
     private router: Router,
     private modalSS: SwitchService,
     public dialog: MatDialog,
-  ) { }
+  ) { 
+    
+  }
 
   ngOnInit(): void {
     this.validateToken();
@@ -137,4 +140,12 @@ export class ListRutasComponent implements OnInit {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
+  // listarActividad():void {
+  //   this.router.navigate(['list-actividades'], {queryParams: {id_ruta: this.rutaId}});
+  // }
+  listarActividad(rutaId: number): void {
+    this.router.navigate(['list-actividades'], { queryParams: { id_ruta: rutaId } });
+}
+
+  
 }

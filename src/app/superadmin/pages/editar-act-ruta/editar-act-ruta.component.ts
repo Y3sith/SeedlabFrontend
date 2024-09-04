@@ -61,13 +61,6 @@ export class EditarActRutaComponent {
     id_tipo_dato: ['']
   });
 
-
-
-
-
-
-
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -84,6 +77,7 @@ export class EditarActRutaComponent {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.rutaId = +params['id_ruta'];
+      console.log('xxxxxx: ',this.rutaId);
 
     })
     this.validateToken();

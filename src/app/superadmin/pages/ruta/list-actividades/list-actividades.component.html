@@ -1,0 +1,62 @@
+<div class="container mx-auto p-4 pt-2">
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6">
+        <!-- le podemos colocar el nombre de la ruta en un futuro -->
+        <app-header [title] [subtitle]="'Actividades'"></app-header>
+        <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">
+            <!-- <input type="text" [(ngModel)]="userFilter.nombre"
+                class="w-full max-md:w-full max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray"
+                placeholder="Buscar..." required /> -->
+            <button class="absolute md:right-3 right-1 top-1.5 bg-sky-500 p-1.5 rounded-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="flex justify-end items-center mb-4">
+
+        <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900;">Agregar</span>
+        <!-- <button class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center"
+            (click)="openModalSINId()">
+            <span class="text-3xl font-semibold leading-none ">+</span>
+        </button> -->
+    </div>
+
+    <!-- Spinner -->
+    <!-- <div class="flex justify-center" *ngIf="isLoading">
+        <div class="spinner"></div>
+    </div> -->
+
+    <div class="bg-gray-100 rounded-lg shadow-md p-4 mb-6">
+        <div class="overflow-x-auto">
+            <table class="lg:w-4/6 md:5/6  md:mx-auto">
+                <thead>
+                    <tr>
+                        <th class="text-left p-2">Nombre Actividad</th>
+                        <!-- <th class="text-left p-2">Descripcion</th> -->
+                        <th class="text-left p-2">Aliado</th>
+                        <th class="text-left p-2">Asesor</th>
+                    </tr>
+                </thead>
+                <tbody class="space-y-6">
+                    <ng-container *ngFor="let contenido of listAcNiLeCo">
+                        <ng-container *ngFor="let actividad of contenido.actividades">
+                            <tr class="bg-gray-300 my-5 rounded-xl">
+                                <td class="p-2 rounded-s-lg">{{actividad.nombre}}</td>
+                                <!-- <td class="p-2 rounded-s-lg">{{actividad.descripcion}}</td> -->
+                                <td class="p-2 ">{{actividad.id_aliado}}</td>
+                                <td class="p-2 rounded-e-lg text-center">{{actividad.id_asesor}}</td>
+                            </tr>
+                            <tr class="h-2"></tr>
+                        </ng-container>
+
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
