@@ -45,7 +45,6 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(this.url+'/ruta', ruta,options);
   }
-
   
   rutaXid(access_token:any, rutaId: number):Observable<any>{
     const options= { headers: this.CreacionHeaders(access_token)};
@@ -57,6 +56,15 @@ export class RutaService {
     return this.http.get(this.url+'/mostrarRutaContenido/'+idRuta,options);
   }
 
+  actnivleccontXruta(access_token:any, idRuta: number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
+  }
+
+  ruta(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/rutas',options)
+  }
   
   //////  editar
   updateRutas(access_token:any, ruta:Ruta,id:number):Observable<any>{
