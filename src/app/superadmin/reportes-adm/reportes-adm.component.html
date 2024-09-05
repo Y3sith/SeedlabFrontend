@@ -41,15 +41,23 @@
   <div class="bg-gray-50 rounded-lg shadow-md p-6 font-poppins">
     <!-- Botones de descarga -->
     <div class="flex justify-end space-x-4 mb-4">
-      <button (click)="getReportes()" class="flex items-center px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+      <button (click)="getReportes()"
+        class="flex items-center px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+          </path>
         </svg>
         Excel
       </button>
-      <button class="flex items-center px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+      <button
+        class="flex items-center px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+          </path>
         </svg>
         PDF
       </button>
@@ -66,30 +74,57 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <tr *ngFor="let reporte of reportes" class="hover:bg-gray-50 transition-colors duration-200">
-            <td *ngFor="let columna of columnas" class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
-              {{ reporte[columna] }}
-            </td>
-          </tr>
+          <ng-container *ngIf="paginatedReportes.length > 0">
+            <tr *ngFor="let reporte of paginatedReportes" class="hover:bg-gray-50 transition-colors duration-200">
+              <td *ngFor="let columna of columnas" class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+                {{ reporte[columna] }}
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>
 
-    <!-- Paginación (opcional) -->
-    <div class="mt-4 flex justify-between items-center">
-      <div class="text-sm text-gray-700">
-        Mostrando <span class="font-medium">1</span> a <span class="font-medium">10</span> de <span
-          class="font-medium">97</span> resultados
-      </div>
-      <div class="flex space-x-2">
-        <button class="px-3 py-1 border rounded text-sm font-medium text-gray-700 hover:bg-gray-50">
-          Anterior
-        </button>
-        <button class="px-3 py-1 border rounded text-sm font-medium text-gray-700 hover:bg-gray-50">
-          Siguiente
-        </button>
+    <!-- Paginación -->
+    <div class="mt-4 flex justify-center items-center">
+      <div class="text-center">
+        <nav aria-label="Page navigation example">
+          <ul class="inline-flex space-x-2 text-sm items-center pl-0">
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline"
+                (click)="changePage('previous')" [class.opacity-50]="!canGoPrevious()"
+                [class.cursor-not-allowed]="!canGoPrevious()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                  <path
+                    d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
+                </svg>
+              </a>
+            </li>
+            <ng-container *ngFor="let pageNumber of getPages()">
+              <li>
+                <a href="javascript:void(0)"
+                  class="inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 border-amber-500 text-amber-500 hover:bg-amber-100 focus:outline-none no-underline font-bold"
+                  (click)="changePage(pageNumber)" [class.bg-amber-500]="page === pageNumber"
+                  [class.text-white]="page === pageNumber">
+                  {{ pageNumber }}
+                </a>
+              </li>
+            </ng-container>
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline"
+                (click)="changePage('next')" [class.opacity-50]="!canGoNext()"
+                [class.cursor-not-allowed]="!canGoNext()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                  <path
+                    d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   </div>
 </div>
-

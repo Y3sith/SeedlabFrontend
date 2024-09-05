@@ -16,7 +16,10 @@ export class ReportesAdmComponent {
   reporteForm: FormGroup;
   reportes: any[] = []; 
   columnas: string[] = [];
-
+  public page: number = 1;
+  public itemsPerPage: number = 5;
+  public totalItems: number = 0;
+  public paginatedReportes: string[] = [];
 
 
   constructor(
@@ -63,6 +66,9 @@ export class ReportesAdmComponent {
       this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
           this.reportes = data;
+          this.totalItems = data.length;
+          this.page = 1;
+          this.updatePaginated();
           this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
         },
         (error) => console.error('Error al obtener datos del reporte', error)
@@ -98,6 +104,44 @@ export class ReportesAdmComponent {
       console.error('Formulario inválido:', this.reporteForm.value);
       alert('Debe seleccionar todos los filtros');
     }
+  }
+
+  updatePaginated(): void {
+    const start = (this.page - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+
+    this.paginatedReportes = this.reportes.slice(start, end);
+    
+  }
+
+  changePage(page: number | string): void {
+    if (page === 'previous') {
+      if (this.canGoPrevious()) {
+        this.page--;
+        this.updatePaginated();
+      }
+    } else if (page === 'next') {
+      if (this.canGoNext()) {
+        this.page++;
+        this.updatePaginated();
+      }
+    } else {
+      this.page = page as number;
+      this.updatePaginated();
+    }
+  }
+
+  canGoPrevious(): boolean {
+    return this.page > 1;
+  }
+
+  canGoNext(): boolean {
+    return this.page < Math.ceil(this.totalItems / this.itemsPerPage);
+  }
+
+  getPages(): number[] {
+    const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
   
