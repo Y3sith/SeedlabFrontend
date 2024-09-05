@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { faEye, faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEye,
+  faMagnifyingGlass,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import { RutaService } from '../../../../servicios/rutas.service';
 import { Ruta } from '../../../../Modelos/ruta.modelo';
@@ -13,11 +17,10 @@ import { ModalAddRutaComponent } from '../modal-add-ruta/modal-add-ruta.componen
   selector: 'app-list-rutas',
   templateUrl: './list-rutas.component.html',
   styleUrls: ['./list-rutas.component.css'],
-  providers: [RutaService]
+  providers: [RutaService],
 })
 export class ListRutasComponent implements OnInit {
   userFilter: any = { nombre: '', estado: 'Activo', fecha_creacion: '' };
-
 
   public page: number = 1;
   listaRutas: Ruta[] = [];
@@ -36,27 +39,24 @@ export class ListRutasComponent implements OnInit {
     private rutaService: RutaService,
     private router: Router,
     private modalSS: SwitchService,
-    public dialog: MatDialog,
-  ) { 
-    
-  }
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.validateToken();
     this.cargarRutas();
-    this.modalSS.$modal.subscribe((valor) => { this.modalSwitch = valor });
+    this.modalSS.$modal.subscribe((valor) => {
+      this.modalSwitch = valor;
+    });
   }
-
 
   openModal(rutaId: number | null): void {
     let dialogRef: MatDialogRef<ModalAddRutaComponent>;
     dialogRef = this.dialog.open(ModalAddRutaComponent, {
-      data: { rutaId: rutaId }
+      data: { rutaId: rutaId },
     });
-    dialogRef.afterClosed().subscribe(result => {
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
-
 
   validateToken(): void {
     if (!this.token) {
@@ -77,22 +77,23 @@ export class ListRutasComponent implements OnInit {
     }
   }
 
-
   cargarRutas(): void {
     this.isLoading = true;
     if (this.token) {
       this.isLoading = true;
-      this.rutaService.getAllRutas(this.token, this.userFilter.estado).subscribe(
-        (data) => {
-          this.listaRutas = data;
-          console.log('listaRutas filtrada:', this.listaRutas);
-          this.isLoading = false;
-        },
-        (err) => {
-          console.log(err);
-          this.isLoading = false;
-        }
-      );
+      this.rutaService
+        .getAllRutas(this.token, this.userFilter.estado)
+        .subscribe(
+          (data) => {
+            this.listaRutas = data;
+            console.log('listaRutas filtrada:', this.listaRutas);
+            this.isLoading = false;
+          },
+          (err) => {
+            console.log(err);
+            this.isLoading = false;
+          }
+        );
     } else {
       console.error('Token is not available');
     }
@@ -108,7 +109,7 @@ export class ListRutasComponent implements OnInit {
     this.userFilter = { nombre: '', estado: 'Activo', fecha_creacion: '' };
     this.cargarRutas();
   }
-  
+
   openModalSINId(): void {
     this.openModal(null);
   }
@@ -144,8 +145,8 @@ export class ListRutasComponent implements OnInit {
   //   this.router.navigate(['list-actividades'], {queryParams: {id_ruta: this.rutaId}});
   // }
   listarActividad(rutaId: number): void {
-    this.router.navigate(['list-actividades'], { queryParams: { id_ruta: rutaId } });
-}
-
-  
+    this.router.navigate(['list-actividades'], {
+      queryParams: { id_ruta: rutaId },
+    });
+  }
 }
