@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../../../Modelos/user.model';
 import { RutaService } from '../../../../servicios/rutas.service';
 import { FormBuilder } from '@angular/forms';
+import { ActividadService } from '../../../../servicios/actividad.service';
 
 @Component({
   selector: 'app-list-actividades',
@@ -27,7 +28,8 @@ export class ListActividadesComponent {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
-    private rutaService: RutaService
+    private rutaService: RutaService,
+    private actividadService: ActividadService,
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +77,24 @@ export class ListActividadesComponent {
     }
   }
 
+  toggleEstado(actividad: any): void {
+    const nuevoEstado = !actividad.estado  ? 0 : 1; // Cambia el estado actual
+    // Actualizar el estado en el backend
+    this.actividadService.updateActividad(actividad.id, nuevoEstado, this.token).subscribe(
+      (response) => {
+        actividad.estado = nuevoEstado; // Actualizar el estado localmente si la petición es exitosa
+        console.log('Estado actualizado', response);
+      },
+      (error) => {
+        console.log('Error al actualizar el estado', error);
+      }
+    );
+  }
+
+
+
   EditarActividad(ActividadId: number): void {
     this.router.navigate(['editar-act-ruta'], { queryParams: { id_actividad: ActividadId } });
   }
+  
 }

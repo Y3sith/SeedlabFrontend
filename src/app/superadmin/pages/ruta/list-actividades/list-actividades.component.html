@@ -48,7 +48,13 @@
                                 <td class="p-2 rounded-s-lg">{{actividad.nombre}}</td>
                                 <td class="p-2 ">{{actividad.id_aliado}}</td>
                                 <td class="p-2 ">{{actividad.id_asesor}}</td>
-                                <td class="p-2 text-center">{{actividad.estado}}</td>
+                                <!-- <td class="p-2 text-center">{{actividad.estado}}</td> -->
+                                 <td class="p-2 text-center">
+                                    <label class="switch">
+                                        <input type="checkbox" [checked]="actividad.estado" (change)="toggleEstado(actividad)">
+                                        <span class="slider round"></span>
+                                      </label>
+                                 </td>
                                 <td class="p-2 rounded-e-lg">
                                     <button type="button" class="text-blue-500" (click)="EditarActividad(actividad.id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4"

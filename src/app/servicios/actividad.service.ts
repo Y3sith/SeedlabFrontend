@@ -17,6 +17,12 @@ export class ActividadService {
     });
   }
 
+  private CreacionHeaderss(access_token: any): HttpHeaders {
+    return new HttpHeaders({
+      'Authorization': 'Bearer ' + access_token
+    });
+  }
+
   url = environment.apiUrl + 'actividad'
 
   getTipoDato(access_token:any): Observable<any>{
@@ -30,8 +36,8 @@ export class ActividadService {
   }
 
   updateActividad(access_token:any,id:number,actividad:any):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.put(this.url+'/editar_actividad/'+id,actividad,options)
+    const options = { headers: this.CreacionHeaderss(access_token)};
+    return this.http.post(this.url+'/editar_actividad/'+id,actividad,options)
   }
 
  
