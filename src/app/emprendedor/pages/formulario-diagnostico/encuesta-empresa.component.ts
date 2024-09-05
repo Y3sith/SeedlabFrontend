@@ -39,7 +39,7 @@ export class EncuestaEmpresaComponent {
   currentIndex: number = 0;
   subSectionPerSection: number[] = [3, 3, 2, 6, 1];
   progressPercentage: number = 0;
-
+  documento: string;
   id_pregunta: number;
   id_subpregunta: number | null = null;
   listaRespuestas1: Respuesta[] = [];
@@ -216,6 +216,7 @@ export class EncuestaEmpresaComponent {
         let identity = JSON.parse(identityJSON);
 
         this.user = identity;
+        console.log('user', this.user);
         this.id = this.user.id_rol;
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 5) {
@@ -1422,7 +1423,7 @@ export class EncuestaEmpresaComponent {
         ver_form: true 
     };
     
-    this.puntajeService.savePuntajeSeccion(puntajes).subscribe(
+    this.puntajeService.savePuntajeSeccion(puntajes, this.id_empresa).subscribe(
         data => {
             console.log('puntajes',data);
             this.alertService.successAlert('Éxito', 'Los puntajes se han guardado correctamente.');
