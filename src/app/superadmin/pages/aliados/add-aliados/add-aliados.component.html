@@ -1,88 +1,63 @@
-<div class="container mx-auto p-0 pt-2 ">
+<div class="container mx-auto p-0 pt-2 font-poppins ">
   <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
     <app-header [title] [subtitle]="'Panel de Agregar Aliados'"></app-header>
   </header>
-  <!-- ----------------------------------------------- -->
-  <div class="w-full flex items-center justify-center px-4">
-    <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
-        <div *ngFor="let contenedor of [1, 2, 3,]; let i = index" class="contenedor mb-2 sm:mb-0"
-            [class.active]="i === currentIndex">
-            <div class="step-number flex items-center justify-center w-8 h-8 border rounded-full mx-auto text-base md:text-xl"
-                [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
-                {{ i + 1 }}
-            </div>
-            <ng-container *ngIf="i === 0">
-                <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                    class=" text-base md:text-1xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate">
-                    Información Básica
-                </h2>
-            </ng-container>
-            <ng-container *ngIf="i === 1">
-                <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                    class="text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
-                    Información de Fanpage
-                </h2>
-            </ng-container>
-            <ng-container *ngIf="i === 2">
-                <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                    class=" text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
-                    Banner
-                </h2>
-            </ng-container>
-        </div>
-    </div>
-</div>
-  <!-- ----------------------------------------------- -->
 
 
   <form [formGroup]="aliadoForm" (ngSubmit)="addAliado()" class="space-y-6 w-full">
     <!-- Primera Sección -->
-    <div *ngIf="showFirstSection" class="space-y-6 w-full">
+    <div class="space-y-6 w-full">
       <!-- Contenido de la primera sección -->
 
 
       <div
-        class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md px-10 md:px-20 md:py-10 md:my-6 mx-auto ">
-        <div class="md:flex justify-center">
-          <div class="md:mr-10">
-            <div class="relative">
-              <div class="flex items-center flex-wrap justify-center mb-6">
-                <div
-                  class="w-36 h-36 mt-4 flex items-center justify-center border overflow-hidden mb-2 rounded-full border-x-gray-900 cursor-pointer relative">
-                  <ng-container *ngIf="logoPreview || aliadoForm.get('logo')?.value; else noImage">
-                    <img [src]="logoPreview || aliadoForm.get('logo')?.value" class="object-cover w-full h-full">
-                  </ng-container>
-                  <ng-template #noImage>
-                    <span class="text-gray-500">Logo del Aliado</span>
-                  </ng-template>
-                  <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'logo')" accept="image/*"
-                    class="absolute inset-0 opacity-0 cursor-pointer">
-                </div>
-              </div>
+        class="w-full h-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md px-10 py-4 md:px-32 md:py-10 md:my-6 mx-auto">
+        <div class="flex items-center mb-4 sm:mb-6 justify-center">
+          <label for="imagen_ruta" class="cursor-pointer text-center">
+            <div
+              class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
+              <ng-container *ngIf="logoPreview || aliadoForm.get('logo')?.value; else noImage">
+                <img [src]="logoPreview || aliadoForm.get('logo')?.value" class="object-cover w-full h-full">
+              </ng-container>
+              <ng-template #noImage>
+                <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                  </path>
+                </svg>
+              </ng-template>
+            </div>
+            <span class="text-xs sm:text-sm text-gray-600">Logo</span>
+            <input type="file" id="imagen_ruta" name="profilePicture" class="hidden"
+              (change)="onFileSelecteds($event, 'logo')" accept="image/*">
+          </label>
+
+        </div>
+
+        <div class="grid grid-cols-1 md:grid md:grid-cols-1">
+
+
+          <!-- Campo Nombre -->
+          <div class="text-xl font-normal">
+            <label class="text-xl font-normal" for="nombre">Nombre</label>
+            <input type="text" formControlName="nombre"
+              class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+            <div *ngIf="formSubmitted && aliadoForm.get('nombre')?.invalid" class="error text-red-700">
+              Este campo es obligatorio.
             </div>
           </div>
-
-          <div>
-            <!-- Campo Nombre -->
-            <div class="text-xl font-normal">
-              <label class="text-xl font-normal" for="nombre">Nombre</label>
-              <input type="text" formControlName="nombre"
-                class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <div *ngIf="formSubmitted && aliadoForm.get('nombre')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
-              </div>
+          <!-- Campo Correo Electrónico -->
+          <div class="text-xl font-normal mt-3">
+            <label class="text-xl font-normal" for="email">Correo Electrónico</label>
+            <input type="text" formControlName="email"
+              class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+            <div *ngIf="formSubmitted && aliadoForm.get('email')?.invalid" class="error text-red-700">
+              Este campo es obligatorio.
             </div>
-            <!-- Campo Correo Electrónico -->
-            <div class="text-xl font-normal">
-              <label class="text-xl font-normal" for="email">Correo Electrónico</label>
-              <input type="text" formControlName="email"
-                class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <div *ngIf="formSubmitted && aliadoForm.get('email')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
-              </div>
-            </div>
-            <!-- Campo Contraseña -->
-            <div class="text-xl font-normal relative">
+          </div>
+          <!-- Campo Contraseña -->
+          <div class="md:flex items-center h-full">
+            <div class="text-xl font-normal relative mt-3">
               <label class="text-xl font-normal" for="password">Contraseña</label>
               <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
                 class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
@@ -94,38 +69,38 @@
               </div>
             </div>
 
-            <div class="text-xl font-normal">
-              <label class="text-xl font-normal" for="descripcion">Descripción fanpage</label>
-              <textarea formControlName="descripcion"
-                class=" mt-1 w-full px-2 py-1 h-40 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200  hover:bg-blue-100 focus:bg-blue-100"></textarea>
-              <div *ngIf="formSubmitted && aliadoForm.get('descripcion')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
+            <div *ngIf="idAliado" class="md:ml-24 flex flex-col justify-center h-full">
+              <div class="block text-sm font-medium text-gray-700 flex-none justify-center">
+                Activar/Desactivar Aliado
+                <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
+                  matTooltip="Esta funcion sirve para Activar/Desactivar el usuario. Si lo desactivas no podra acceder a sus funciones y tendras que activarlo"
+                  matTooltipPosition="right" style="color: #adb7c7;">
+                </fa-icon>
               </div>
+              <label class="inline-flex items-center cursor-pointer md:mt-2">
+                <input type="checkbox" class="sr-only peer" [checked]="isActive" (change)="toggleActive()"
+                  formControlName="estado">
+                <div
+                  class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                </div>
+                <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ isActive ? 'Activo' :
+                  'Inactivo' }}</span>
+              </label>
             </div>
           </div>
-        </div>
-      </div>
 
+          <!-- Campo Descripción -->
+          <div class="text-xl font-normal mt-3">
+            <label class="text-xl font-normal" for="descripcion">Descripción fanpage</label>
+            <textarea formControlName="descripcion"
+              class=" mt-1 w-full px-2 py-1 h-40 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200  hover:bg-blue-100 focus:bg-blue-100"></textarea>
+            <div *ngIf="formSubmitted && aliadoForm.get('descripcion')?.invalid" class="error text-red-700">
+              Este campo es obligatorio.
+            </div>
+          </div>
 
-      <!-- Botón Siguiente -->
-      <div class="flex justify-center h-auto mt-4 ">
-        <button
-          class="py-2 px-4 mb-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300"
-          (click)="next()">
-          Siguiente
-        </button>
-      </div>
-    </div>
-
-    <!-- Segunda Sección -->
-    <div *ngIf="showSecondSection" class="space-y-6 w-full">
-      <div
-        class="grid grid-cols-1 gap-4 w-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md max-md:p-4 md:px-36 md:py-10 md:my-6 mx-auto ">
-
-
-        <div class="flex justify-center">
-
-          <div class="text-xl font-normal">
+          <!-- Campo Tipo de archivo -->
+          <div class="text-xl font-normal mt-3">
             <label class="text-xl font-normal" for="id_tipo_dato">Tipo de archivo</label>
             <select id="id_tipo_dato" formControlName="id_tipo_dato"
               class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
@@ -137,49 +112,27 @@
             </select>
           </div>
 
-          <div *ngIf="idAliado" class="md:ml-24">
-            <div class="mt-1 block text-sm font-medium text-gray-700 flex-none justify-center ">Activar/Desactivar Usuario
-              <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-                matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
-                matTooltipPosition="right" style="color: #adb7c7;">
-              </fa-icon>
-
-            </div>
-            <label class="inline-flex items-center cursor-pointer md:mt-2">
-              <input type="checkbox" class="sr-only peer" [checked]="isActive" (change)="toggleActive()"
-                formControlName="estado">
-              <div
-                class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-              </div>
-              <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ isActive ? 'Activo' :
-                'Inactivo' }}</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="text-xl font-normal ">
-          <label for="fuente" class="" ></label>
           <ng-container [ngSwitch]="aliadoForm.get('id_tipo_dato').value">
-            <div class="-mt-6" *ngSwitchCase="'1'">
-              <label class="text-xl font-normal  flex-none justify-center" for="nombre">Link del video</label>
+            <!-- Campo video -->
+            <div class="mt-3" *ngSwitchCase="'1'">
               <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
                 (input)="onTextInput($event)"
-                class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
+                class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
                 Este campo es obligatorio.
               </div>
             </div>
 
-            <div class="-mt-6" *ngSwitchCase="'3'">
-              <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center" for="nombre">Imagen
-                <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
-                  (change)="onFileSelecteds($event, 'ruta_multi')">
-                <span (click)="triggerFileInput()"
-                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
-                  Subir Imagen
-                  <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
-                </span>
-              </label>
+            <!-- Campo imagen -->
+            <div class="mt-3 w-full flex-none justify-center text-xl" *ngSwitchCase="'2'">
+              <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+                (change)="onFileSelecteds($event, 'ruta_multi')">
+              <span (click)="triggerFileInput()"
+                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                Subir Imagen
+                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+              </span>
+
               <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
                 class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
                 class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
@@ -191,16 +144,16 @@
               </div>
             </div>
 
-            <div class="-mt-6" *ngSwitchCase="'4'">
-              <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center" for="nombre">PDF
-                <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
-                  (change)="onFileSelecteds($event, 'ruta_documento')">
-                <span (click)="triggerFileInput()"
-                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
-                  Subir PDF
-                  <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
-                </span>
-              </label>
+            <!-- Campo pdf -->
+            <div class="mt-3 text-xl" *ngSwitchCase="'3'">
+              <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
+                (change)="onFileSelecteds($event, 'ruta_documento')">
+              <span (click)="triggerFileInput()"
+                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                Subir PDF
+                <fa-icon [icon]="fafile" class="text-md ml-2"></fa-icon>
+              </span>
+
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
                 Este campo es obligatorio.
               </div>
@@ -209,145 +162,112 @@
               </div>
             </div>
 
-            <div class="-mt-6" *ngSwitchCase="'5'">
-              <label class="text-xl font-normal flex-none justify-center" for="nombre">Texto</label>
+            <!-- Campo texto -->
+            <div class="mt-3" *ngSwitchCase="'4'">
               <input type="text" id="fuente" formControlName="ruta_multi" (input)="onTextInput($event)"
-                class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
+                class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
                 Este campo es obligatorio.
               </div>
             </div>
-
-
           </ng-container>
-        </div>
 
-
-
-
-
-      </div>
-
-
-      <!-- Botones Anterior y Siguiente -->
-      <div class="flex justify-center h-10 gap-2">
-        <button
-          class=" py-2 px-4 sm:px-16 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
-          (click)="previous()">
-          Anterior
-        </button>
-        <button
-          class="py-2 px-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300"
-          (click)="next()">
-          Siguiente
-        </button>
-        <button type="submit" *ngIf="idAliado"
-          class="py-2 px-4 sm:px-16 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
-          Guardar
-        </button>
-      </div>
-    </div>
-
-    <!-- Tercera Sección -->
-    <div *ngIf="showThirdSection" class="space-y-6 w-full">
-
-      <div
-        class="bg-gray-50 rounded-lg shadow-md  md:py-6 max-md:p-4  md:my-6 w-full sm:w-3/4 md:w-2/3 mx-auto ">
-        <div id="contenido" *ngIf="!idAliado">
-          <div class="w-full relative text-xl font-normal">
-            <label class="text-xl font-normal relative cursor-pointer flex flex-row items-center justify-center" for="logo">Banner
-              <input class="hidden" id="banner" type="file" accept="image/*" #fileInput
+          <!-- Campo banner -->
+          <div *ngIf="!idAliado">
+            <label class="text-xl font-normal relative mt-3" for="logo">Banner
+            </label>
+            <div class="w-full text-xl font-normal mt-2">
+              <input class="hidden" id="banner" type="file" accept="image/*" #fileInputs
                 (change)="onFileSelecteds($event, 'urlImagen')">
-              <span (click)="triggerFileInput()"
-                class="text-black px-4 py-2 border-2 border-blue-300 rounded-full inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+              <span (click)="triggerFileInputs()"
+                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg bg-white hover:bg-blue-100">
                 Subir Imagen
                 <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
               </span>
-            </label>
-            <div *ngIf="formSubmitted && bannerForm.get('urlImagen')?.invalid" class="error text-red-700">
-              Este campo es obligatorio.
+              <div *ngIf="formSubmitted && bannerForm.get('urlImagen')?.invalid" class="error text-red-700">
+                Este campo es obligatorio.
+              </div>
+              <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner" width="200px"
+                class="mt-4 flex-none justify-center preview-image-banner border rounded-md object-cover md:text-center small-preview"
+                alt="Vista previa de la imagen">
             </div>
-            <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner" width="200px"
-              class="mt-4 flex-none justify-center preview-image-banner border rounded-md object-cover md:text-center small-preview"
-             
-              alt="Vista previa de la imagen">
           </div>
 
-        </div>
+          <div class="flex mt-3">
 
+            <div class="space-y-6 w-full flex justify-center">
+              <button *ngIf="idAliado" (click)="cancel()" type="button"
+                class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full">
+                Cancelar
+              </button>
+            </div>
 
-        <div class="flex md:justify-end items-center mb-4 justify-center md:mr-5" *ngIf="idAliado">
-          <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900;">Agregar Banner</span>
-          <button class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center"  type="button"
-          (click)="openModal(null)">
-              <span class="text-3xl font-semibold leading-none ">+</span>
-          </button>
-      </div>
-
-        <div class="" *ngIf="idAliado">
-          <div class="overflow-x-auto">
-            <table class="lg:w-5/6 md:5/6  md:mx-auto">
-              <thead>
-                <tr>
-                  <th class="text-center p-2 flex-none">Imagen</th>
-                  <th class="text-center p-2 hidden sm:table-cell">Estado</th>
-                  <th class="text-center p-2">Acciones</th>
-                  <th class="text-left p-2"></th>
-                </tr>
-              </thead>
-              <tbody class="space-y-6">
-                <ng-container >
-                  <ng-container
-                    *ngFor="let banner of listBanners">
-                    <tr class="bg-line-gray my-5 rounded-xl">
-                      <td class="p-6 rounded-s-lg">
-                        <img [src]="banner.urlImagen" class="w-full">
-                      </td>
-                      <td class="px-3">{{ banner.estadobanner }}</td>
-                      <td class=" rounded-e-lg">
-                        <button type="button"
-                        class="inline-block py-0 px-1 text-xl text-blue-500 font-bold rounded-full hover:bg-gray-300 transition duration-300 mr-2"
-                        (click)="openModal(banner.id)">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-6 w-6" fill="currentColor">
-                          <path d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z"/>
-                        </svg>
-                        </button>
-                      <button type="button" (click)="eliminarBanner(banner.id)"
-                      class="inline-block py-0 px-1 text-xl text-[#373435] font-bold rounded-full hover:bg-gray-300 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-6 w-6" fill="currentColor"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z"/></svg>
-                      </button>
-                    
-                      </td>
-                      
-                    </tr>
-                    <td class="py-2"></td>
-                    <!-- <tr *ngIf="i < listBanners.length - 1">
-                      <td class="py-2"></td>
-                    </tr> -->
-                  </ng-container>
-                </ng-container>
-                <tr *ngIf="listBanners.length === 0">
-                  <td colspan="4" class="text-center py-4 text-gray-500">No se encontraron Banners.</td>
-                </tr>
-              </tbody>
-
-            </table>
+            <div class="space-y-6 w-full flex justify-center">
+              <button type="submit" *ngIf="idAliado"
+                class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full">
+                Guardar Cambios
+              </button>
+            </div>
           </div>
         </div>
-
-        <!-- Botones Anterior y Crear -->
-      </div>
-      <div class="flex justify-center h-auto gap-2">
-        <button
-        class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
-        (click)="previous()">
-          Anterior
-        </button>
-        <button type="submit" *ngIf="!idAliado"
-        class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300">
-          Crear Aliado
-        </button>
       </div>
     </div>
+
+    <div class="space-y-6 w-full flex justify-center">
+      <button type="submit" *ngIf="!idAliado"
+        class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full">
+        Crear Aliado
+      </button>
+    </div>
   </form>
+  <div
+    class="space-y-6 w-full rounded-lg  md:py-6 max-md:p-4  md:my-6 sm:w-3/4 md:w-2/3 mx-auto flex-none justify-center"
+    *ngIf="idAliado">
+    <ng-container>
+
+      <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4">
+        <div *ngFor="let banner of listBanners" class="bg-white rounded-lg shadow-md overflow-hidden relative">
+          <img [src]="banner.urlImagen" alt="Gallery image" class="w-full h-64 object-cover">
+          <div class="absolute top-2 right-2 flex space-x-2"> 
+            <!-- Botón del lápiz -->
+            <button
+              class="bg-white h-8 w-8 flex items-center justify-center rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+              id="editboton" (click)="openModal(banner.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                <path
+                  d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
+              </svg>
+            </button>
+            <!-- Botón de la basurita -->
+            <button
+              class="bg-white h-8 w-8 flex items-center justify-center rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+              id="deleteboton" (click)="eliminarBanner(banner.id)">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-4 w-4" fill="currentColor">
+                <path
+                  d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      
+        <button (click)="openModal(null)">
+          <label class="cursor-pointer text-center">
+            <div
+              class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
+              <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                </path>
+              </svg>
+            </div>
+            <span class="text-xs sm:text-sm text-gray-600">Agregar Banner</span>
+          </label>
+        </button>
+      </div>
+      
+      <tr *ngIf="listBanners.length === 0">
+        <td colspan="4" class="text-center py-4 text-gray-500">No se encontraron Banners.</td>
+      </tr>
+    </ng-container>
+
+  </div>
 </div>

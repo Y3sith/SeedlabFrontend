@@ -48,7 +48,8 @@ export class PerfilAliadoComponent implements OnInit {
   showPDF: boolean = false;
   showTexto: boolean = false;
   Number = Number;
-
+  tiempoEspera = 1800;
+  showEditButton = false;
 
   constructor(
     private router: Router,
@@ -84,6 +85,7 @@ export class PerfilAliadoComponent implements OnInit {
     this.verEditarBanners();
     this.tipoDato();
     this.obtenerValorBaseDatos();
+    this.initializeFormState();
 
     console.log('Tipos de dato disponibles:', this.tipoDeDato);
     this.aliadoForm.get('id_tipo_dato')?.valueChanges.subscribe(() => {
@@ -130,20 +132,28 @@ export class PerfilAliadoComponent implements OnInit {
   }
 
   eliminarBanner(id_aliado: number): void {
-    this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
-      data=>{
-        this.alertService.successAlert('Exito', data.message);
-        //console.log("eliminaaa", data)
-        location.reload();
-      },
-      error => {
-       // console.error(error);
-        this.alertService.successAlert('Error', error.error.message);
+    this.alertService.alertaActivarDesactivar('¿Estas seguro de eliminar el banner?, no se mostrara en la pagina principal', 'question').then((result) => {
+      if (result.isConfirmed) {
+        this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
+          (data) => {
+            console.log('Response from server:', data);
+            setTimeout(function () {
+              location.reload();
+            }, this.tiempoEspera);
+            this.alertService.successAlert('Exito', data.message);
+          },
+          (error) => {
+            console.error('Error from server:', error);
+            this.alertService.errorAlert('Error', error.error.message);
+          }
+        );
       }
-    )
+    });
   }
 
-
+  onCancel(): void {
+    location.reload();
+  }
 
   get f() { return this.aliadoForm.controls; }
 
@@ -196,17 +206,17 @@ export class PerfilAliadoComponent implements OnInit {
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
         console.log('Mostrando Video');
         break;
-      case 3: // Imagen
+      case 2: // Imagen
         this.showImagen = true;
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
         console.log('Mostrando Imagen');
         break;
-      case 4: // PDF
+      case 3: // PDF
         this.showPDF = true;
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
         console.log('Mostrando PDF');
         break;
-      case 5: // Texto
+      case 4: // Texto
         this.showTexto = true;
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
         console.log('Mostrando Texto');
@@ -243,19 +253,46 @@ export class PerfilAliadoComponent implements OnInit {
     );
   }
 
+  initializeFormState(): void {
+    const fieldsToDisable = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato'];
+    fieldsToDisable.forEach(field => {
+      const control = this.aliadoForm.get(field);
+      if (control) {
+        control.disable();
+      }
+    });
+  }
+
+  /* Bloqueo de inputs */
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
-    const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'email', 'password', 'genero', 'fecha_nac', 'direccion', 'municipio'];
+    const fieldsToToggle = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato'];
+    
     fieldsToToggle.forEach(field => {
       const control = this.aliadoForm.get(field);
-      if (control && field !== 'nombretipodoc') {
+      if (control) {
         if (this.blockedInputs) {
           control.disable();
         } else {
           control.enable();
         }
+        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
+      } else {
+        console.warn(`Control for field ${field} not found in form`);
       }
     });
+  
+    // Force change detection
+    this.cdRef.detectChanges();
+  
+    // Log the entire form state
+    console.log('Form state after toggling:', this.aliadoForm);
+  }
+
+  onEdit() {
+    this.blockedInputs = false;
+    this.showEditButton = true;
+    this.toggleInputsLock();
   }
 
   verEditarBanners():void {
