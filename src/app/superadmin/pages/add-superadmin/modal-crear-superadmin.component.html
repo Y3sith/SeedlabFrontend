@@ -67,52 +67,52 @@
                                 <div *ngIf="submitted && f['nombre'].invalid"
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
+                                    <span *ngIf="f['nombre'].errors?.['pattern']">Solo se permiten letras *</span>
                                     <span *ngIf="f['nombre'].errors?.['required']">Este campo es requerido *</span>
                                 </div>
                             </div>
 
                             <!-- Apellido -->
-                            <div class="">
-                                <label for="apellidos" class="block text-sm font-medium text-gray-700">Apellido</label>
+                            <div>
+                                <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
                                 <input type="text" id="apellido" formControlName="apellido" name="apellido"
+                                  class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                <div *ngIf="submitted && f['apellido'].invalid" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                  <span *ngIf="f['apellido'].errors?.['pattern']">Solo se permiten letras *</span>
+                                  <span *ngIf="f['apellido'].errors?.['required']">Este campo es requerido *</span>
+                                </div>
+                              </div>
+
+                            <!-- Tipo documento -->
+                            <div>
+                                <label for="id_tipo_documento"
+                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tipo de
+                                    Documento</label>
+                                <select id="id_tipo_documento" formControlName="id_tipo_documento"
                                     class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <div *ngIf="submitted && f['apellido'].invalid"
+                                    <option value="" disabled selected>Selecciona el tipo de documento...</option>
+                                    <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{tipo.nombre}}
+                                    </option>
+                                </select>
+                                <div *ngIf="submitted && f['id_tipo_documento'].invalid"
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
-                                    <span *ngIf="f['apellido'].errors?.['required']">Este campo es requerido *</span>
+                                    <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es
+                                        requerido
+                                        *</span>
                                 </div>
                             </div>
-
-                           <!-- Tipo documento -->
-                           <div>
-                            <label for="id_tipo_documento"
-                                class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tipo de
-                                Documento</label>
-                            <select id="id_tipo_documento" formControlName="id_tipo_documento"
-                                class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                                <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{tipo.nombre}}
-                                </option>
-                            </select>
-                            <div *ngIf="submitted && f['id_tipo_documento'].invalid"
-                                class="text-sm text-red-500 mt-1" role="alert">
-                                <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es
-                                    requerido
-                                    *</span>
-                            </div>
-                        </div>
 
                             <!-- Documento -->
-                            <div class="">
+                            <div>
                                 <label for="documento" class="block text-sm font-medium text-gray-700">Documento</label>
                                 <input type="number" id="documento" formControlName="documento" name="documento"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <div *ngIf="submitted && f['documento'].invalid"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
+                                  class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                <div *ngIf="submitted && f['documento'].invalid" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                  <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
+                                  <span *ngIf="f['documento'].errors?.['minlength']">Debe tener al menos 5 caracteres*</span>
                                 </div>
-                            </div>
+                              </div>
 
                             <!-- Genero -->
                             <div>
@@ -128,15 +128,15 @@
 
                             <!-- Fecha nacimiento -->
                             <div>
-                                <label for="fechaNacimiento" class="block truncate">Fecha de Nacimiento:</label>
+                                <label for="fecha_nac" class="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
                                 <input type="date" id="fecha_nac" formControlName="fecha_nac"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm" />
-                                <div *ngIf="submitted && f['fecha_nac'].invalid"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['fecha_nac'].errors?.['required']">Este campo es requerido *</span>
+                                  class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                <div *ngIf="submitted && f['fecha_nac'].invalid" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                  <span *ngIf="f['fecha_nac'].errors?.['required']">Este campo es requerido *</span>
+                                  <span *ngIf="f['fecha_nac'].errors?.['underage']">Debes ser mayor de edad *</span>
+                                  <span *ngIf="f['fecha_nac'].errors?.['overage']">Fecha no válida *</span>
                                 </div>
-                            </div>
+                              </div>
                         </div>
                     </form>
                 </div>
@@ -162,14 +162,16 @@
                             <div>
                                 <label for="departamento"
                                     class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
-                                <select id="departamento" formControlName="id_departamento" (change)="onDepartamentoSeleccionado($event)"
+                                <select id="departamento" formControlName="id_departamento"
+                                    (change)="onDepartamentoSeleccionado($event)"
                                     class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
                                     <option value="" disabled selected>Seleccionar Departamento...</option>
                                     <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
                                         {{ departamento.name }}
                                     </option>
                                 </select>
-                                <div *ngIf="submitted && f['id_municipio'].invalid" class="text-sm text-red-500 mt-1"
+                                <div *ngIf="submitted && f['id_municipio'].invalid"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
                                     <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
                                         *</span>
@@ -187,7 +189,8 @@
                                         {{ municipio.nombre }}
                                     </option>
                                 </select>
-                                <div *ngIf="submitted && f['id_municipio'].invalid" class="text-sm text-red-500 mt-1"
+                                <div *ngIf="submitted && f['id_municipio'].invalid"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
                                     <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
                                         *</span>
@@ -215,6 +218,8 @@
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
                                     <span *ngIf="f['celular'].errors?.['required']">Este campo es requerido *</span>
+                                    <span *ngIf="f['celular'].errors?.['pattern']">Solo se permiten números *</span>
+
                                 </div>
                             </div>
 
@@ -249,9 +254,10 @@
                                 <div *ngIf="submitted && f['password'].invalid"
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
-                                    <span *ngIf="f['password'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8 caracteres
-                                        *</span>
+                                    <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8
+                                        caracteres*</span>
+                                    <span *ngIf="f['password'].errors?.['passwordStrength']">Debe contener al menos una
+                                        letra mayúscula y un carácter especial *</span>
                                 </div>
 
                             </div>

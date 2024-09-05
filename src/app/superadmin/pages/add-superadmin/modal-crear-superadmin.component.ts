@@ -46,19 +46,19 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
 
   superadminForm = this.fb.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    documento: ['', Validators.required],
+    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    documento: ['', [Validators.required, Validators.minLength(5)]],
     imagen_perfil: [null, Validators.required],
-    celular: ['', Validators.required],
+    celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/), Validators.minLength(10)]],
     genero: ['', Validators.required],
     direccion: [],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    email: ['', Validators.required],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    fecha_nac: ['', [Validators.required, this.dateValidator]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.minLength(8)],
     estado: true,
   });
 
@@ -232,6 +232,22 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
+  dateValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    if (control.value) {
+      const date = new Date(control.value);
+      const now = new Date();
+      const diff = now.getTime() - date.getTime();
+      const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+      
+      if (age < 18) {
+        return { 'underage': true };
+      }
+      if (age > 100) {
+        return { 'overage': true };
+      }
+    }
+    return null;
+  }
 
   /* Crear super admin o actualiza dependendiendo del adminId */
   addSuperadmin(): void {
