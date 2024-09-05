@@ -4,7 +4,7 @@ export class Actividad {
     descripcion: string | null;
     fuente: string | null;
     id_tipo_dato?: number;
-    id_asesor?:	number;
+    id_asesor?:	number | null;
     id_ruta?: number;
     id_aliado?:number;
 

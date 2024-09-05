@@ -33,7 +33,7 @@ export class AsesoriaAliadoComponent implements OnInit {
 
   page: number = 1; // Inicializa la página actual
   totalAsesorias: number = 0; // variable para almacenar el total de asesorias
-  itemsPerPage: number = 6; // Número de asesorias por página
+  itemsPerPage: number = 8; // Número de asesorias por página
   showAsignadasFlag: boolean = false; 
 
   constructor(
