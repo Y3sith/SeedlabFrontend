@@ -11,7 +11,7 @@ import Pica from 'pica';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { ChangeDetectorRef } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, faFilePdf, faPen, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
 import { data } from 'jquery';
 import { Console, error } from 'console';
@@ -55,11 +55,14 @@ export class AddAliadosComponent {
   faFileLines = faFileLines;
   fatrash = faTrashCan;
   fapaint = faPaintBrush;
+  fafile = faFilePdf;
+  fapencil = faPen;
   idAliado: string; ///
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   showFirstSection = true;
   showSecondSection = false;
+  tiempoEspera = 1800;
 
   showThirdSection = false;
   logoPreview: string | ArrayBuffer | null = null;
@@ -75,6 +78,7 @@ export class AddAliadosComponent {
   falupa = faCircleQuestion;
   faImages = faImage;
   @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInputs') fileInputs: ElementRef;
   listBanners: Banner[] =[];
   
   constructor(private aliadoService: AliadoService,
@@ -167,19 +171,32 @@ export class AddAliadosComponent {
     this.fileInput.nativeElement.click();
   }
 
-  eliminarBanner(id_aliado: number): void {
-    this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
-      data=>{
-        this.alertService.successAlert('Exito', data.message);
-        //console.log("eliminaaa", data)
-        location.reload();
-      },
-      error => {
-       // console.error(error);
-        this.alertService.successAlert('Error', error.error.message);
-      }
-    )
+  triggerFileInputs() {
+    this.fileInputs.nativeElement.click();
   }
+
+
+  eliminarBanner(id_aliado: number): void {
+    this.alertService.alertaActivarDesactivar('¿Estas seguro de eliminar el banner?, no se mostrara en la pagina principal', 'question').then((result) => {
+      if (result.isConfirmed) {
+        this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
+          (data) => {
+            console.log('Response from server:', data);
+            setTimeout(function () {
+              location.reload();
+            }, this.tiempoEspera);
+            this.alertService.successAlert('Exito', data.message);
+          },
+          (error) => {
+            console.error('Error from server:', error);
+            this.alertService.errorAlert('Error', error.error.message);
+          }
+        );
+      }
+    });
+  }
+
+  
 
   verEditarBanners():void {
     this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
@@ -356,36 +373,6 @@ mostrarToggle(): void {
     }
   }
 
-
-  //  onFileSelecteds(event: any, field: string){
-  //   if (event.target.files && event.target.files.length > 0) {
-  //     const file = event.target.files[0];
-  // try {
-  //   if (field === 'urlImagen') {
-  //     await this.validateImageDimensions(file, 800, 300, 8100, 3100); // Validar dimensiones para el banner
-  //     this.selectedBanner = file;
-  //     this.bannerForm.patchValue({ urlImagen: file });
-  //   } else {
-  //     await this.validateImageDimensions(file, 100, 100, 600, 600); // Validar dimensiones para el logo
-  //     this.selectedLogo = file;
-  //     this.aliadoForm.patchValue({ logo: file });
-  //   }
-  //   this.generateImagePreview(file);
-  // } catch (error) {
-  //   console.error(error);
-  //   alert(error);
-
-  //   // Limpiar el input file directamente en el DOM
-  //   if (field === 'urlImagen') {
-  //     this.selectedBanner = null;
-  //   } else {
-  //     this.selectedLogo = null;
-  //   }
-  //   event.target.value = ''; // Esta línea limpia el input de tipo file
-  // }
-  //   }
-  // }
-
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
     this.aliadoForm.get('ruta_multi').clearValidators();
@@ -394,16 +381,13 @@ mostrarToggle(): void {
       case '1': // Video
         this.aliadoForm.get('Video').setValidators([Validators.required]);
         break;
-      // case '2': // Multimedia
-      //   this.aliadoForm.get('Multimedia').setValidators([Validators.required,]);
-      //   break;
-      case '3': // Imagen
+      case '2': // Imagen
         this.aliadoForm.get('Imagen').setValidators([Validators.required,]);
         break;
-      case '4': // PDF
+      case '3': // PDF
         this.aliadoForm.get('PDF').setValidators([Validators.required,]);
         break;
-      case '5': // Texto
+      case '4': // Texto
         this.aliadoForm.get('Texto').setValidators([Validators.required]);
         break;
       default:
@@ -560,38 +544,13 @@ mostrarToggle(): void {
     });
   }
 
-  next() {
-    if (this.currentIndex === 0) {
-      this.showFirstSection = false;
-      this.showSecondSection = true;
-      this.showThirdSection = false;
-      this.currentIndex = 1;
-    } else if (this.currentIndex === 1) {
-      this.showFirstSection = false;
-      this.showSecondSection = false;
-      this.showThirdSection = true;
-      this.currentIndex = 2;
-    }
-  }
-  
-
   isFieldInvalid(fieldName: string): boolean {
     const field = this.aliadoForm.get(fieldName);
     return field && field.invalid && (field.dirty || field.touched);
   }
 
-  previous() {
-    if (this.currentIndex === 1) {
-      this.showFirstSection = true;
-      this.showSecondSection = false;
-      this.showThirdSection = false;
-      this.currentIndex = 0;
-    } else if (this.currentIndex === 2) {
-      this.showFirstSection = false;
-      this.showSecondSection = true;
-      this.showThirdSection = false;
-      this.currentIndex = 1;
-    }
+  cancel():void {
+    this.verEditar();
   }
   }
 

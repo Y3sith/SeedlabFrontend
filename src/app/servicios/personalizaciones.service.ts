@@ -24,7 +24,5 @@ export class PersonalizacionesService {
   createPersonalizacion(access_token: any, personalizaciones: Personalizaciones,): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(this.url + "personalizacion", personalizaciones, options);
-
-
   }
 }

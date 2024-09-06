@@ -1,6 +1,6 @@
 <form [formGroup]="perfiladminForm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <div class="container mx-auto py-6 md:py-12 ">
+    <div class="container mx-auto py-6 md:py-12 font-poppins">
         <!-- Encabezado -->
         <header class="flex md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
             <app-header [title] [subtitle]="'Perfil'"></app-header>
@@ -32,7 +32,7 @@
                         </div>
                         <div class=" rounded-lg p-4 h-full w-full">
                             <div class="w-full">
-                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center">Información Básica</h5>
+                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center font-poppins">Información Básica</h5>
 
                                 <label for="nombre" class="block mt-4 mb-2">Nombre(s)</label>
                                 <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
@@ -84,7 +84,7 @@
                 <div class="min-[860px]:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
                     <div class="w-full mt-0 pt-0">
 
-                        <h5 class="text-xl font-bold mb-4 text-center">Información de Personal</h5>
+                        <h5 class="text-xl font-bold mb-4 text-center font-poppins">Información de Personal</h5>
 
                         <label for="fechaNacimiento" class="block mb-2">Fecha de Nacimiento</label>
                         <input type="date" id="fecha_nac" formControlName="fecha_nac" [readonly]="blockedInputs"
@@ -112,7 +112,7 @@
                             </div>
                         </div>
 
-                        <h5 class="text-xl font-bold mt-6 mb-4 text-center">Información de Contacto</h5>
+                        <h5 class="text-xl font-bold mt-6 mb-4 text-center font-poppins">Información de Contacto</h5>
 
                         <label for="correo" class="block mb-2">Correo Electrónico</label>
                         <input type="text" id="correo" formControlName="email"  [readonly]="blockedInputs"
@@ -125,7 +125,7 @@
                     <div class="w-20"></div>
 
                     <div class="w-full">
-                        <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5">Dirección</h5>
+                        <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5 font-poppins">Dirección</h5>
 
                         <label for="id_departamento" class="block mb-2">Departamento</label>
                         <select id="id_departamento" name="id_departamento" formControlName="id_departamento" (change)="onDepartamentoSeleccionado($event)" [disabled]="blockedInputs"

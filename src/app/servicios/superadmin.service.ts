@@ -102,8 +102,8 @@ export class SuperadminService {
     return this.http.post(this.url + "personalizacion/"+ id, formData, options);
   }
 
-  getPersonalizacion(): Observable<any> {
-    return this.http.get(environment.apiUrl + "traerPersonalizacion");
+  getPersonalizacion(id: number): Observable<any> {
+    return this.http.get(environment.apiUrl + "traerPersonalizacion/"+id);
   }
 
   restorePersonalization(access_token: any, id):Observable<any>{

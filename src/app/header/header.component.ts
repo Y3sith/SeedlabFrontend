@@ -12,6 +12,7 @@ export class HeaderComponent implements AfterViewInit {
   @Input() title: string = 'Incubadora de Emprendimientos Tecnologicos';
   @Input() subtitle: string = '';
   logoUrl: string = '';
+  id: number = 1;
 
   constructor(
     private personalizacionService: SuperadminService
@@ -19,7 +20,7 @@ export class HeaderComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     //this.setHeaderText();
-    this.personalizacionService.getPersonalizacion().subscribe(
+    this.personalizacionService.getPersonalizacion(this.id).subscribe(
       data => {
         this.logoUrl = data.imagen_logo;
         //console.log('logoUrl', this.logoUrl);

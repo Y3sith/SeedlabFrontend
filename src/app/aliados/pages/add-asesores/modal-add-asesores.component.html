@@ -1,4 +1,4 @@
-<div class="container mx-auto p-0 pt-2 ">
+<div class="container mx-auto p-0 pt-2 font-poppins ">
     <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
         <app-header [title] [subtitle]="'Agregar Asesor'"></app-header>
     </header>
@@ -9,19 +9,19 @@
           <div *ngFor="let contenedor of [1, 2]; let i = index" class="contenedor mb-2 sm:mb-0"
             [class.active]="i === currentIndex">
             <div
-              class="step-number flex items-center justify-center w-8 h-8 border rounded-full mx-auto text-base md:text-xl"
+              class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto text-base md:text-xl"
               [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
               {{ i + 1 }}
             </div>
             <ng-container *ngIf="i === 0">
               <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                class=" text-base md:text-1xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate">
+                class=" text-base md:text-xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate font-poppins">
                         Información Personal
                     </h2>
                 </ng-container>
                 <ng-container *ngIf="i === 1">
                   <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                    class="text-base md:text-1xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">        
+                    class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate font-poppins">        
                         Ubicación y Datos ingreso
                     </h2>
                 </ng-container>
