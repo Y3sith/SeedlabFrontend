@@ -60,7 +60,7 @@ export class DashboardComponent implements AfterViewInit {
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.emprendedorPorDepartamento();
     this.graficaPuntajesFormulario();
-    
+
   }
 
   validateToken(): void {
@@ -103,7 +103,7 @@ export class DashboardComponent implements AfterViewInit {
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
       data => {
-        //console.log('Promedio de asesorías:', data);
+        console.log('Promedio de asesorías:', data);
 
         const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
@@ -237,7 +237,10 @@ export class DashboardComponent implements AfterViewInit {
           trigger: 'axis'
         },
         legend: {
-          data: ['Top Aliados']
+          orient: 'vertical',
+          left: 'left',
+          data: ['Top Aliados'],
+
         },
         toolbox: {
           show: true,
@@ -599,10 +602,10 @@ export class DashboardComponent implements AfterViewInit {
               type: 'radar',
               data: data.map(item => ({
                 value: [
-                  item.info_general, 
-                  item.info_tecnica, 
-                  item.info_trl, 
-                  item.info_mercado, 
+                  item.info_general,
+                  item.info_tecnica,
+                  item.info_trl,
+                  item.info_mercado,
                   item.info_financiera],
                 name: `Empresa ${item.documento_empresa}`
               }))

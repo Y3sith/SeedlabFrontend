@@ -298,7 +298,7 @@
             <div class="container px-4 py-12 mx-auto">
               <form [formGroup]="addApoyoEmpresaForm" (ngSubmit)="crearEmpresa()">
 
-                <div class="flex justify-center w-full">
+                <div class="flex justify-center w-full " *ngIf="id_documentoEmpresa">
 
                   <label for="tipodocumento" class="text-lg font-normal text-center text-amber-500">Seleccione apoyo a editar</label>
                 </div>
