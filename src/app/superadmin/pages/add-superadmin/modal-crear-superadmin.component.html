@@ -113,6 +113,8 @@
                                     role="alert">
                                     <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
                                     <span *ngIf="f['documento'].errors?.['minlength']">El documento debe tener al menos 5 caracteres</span>
+                                    <span *ngIf="f['documento'].errors?.['pattern']">El documento solo debe contener números</span>
+
                                 </div>
                             </div>
 

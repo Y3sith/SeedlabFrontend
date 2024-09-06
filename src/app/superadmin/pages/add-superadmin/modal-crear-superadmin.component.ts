@@ -48,7 +48,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   superadminForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    documento: ['', [Validators.required, Validators.minLength(5)]],
+    documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
     imagen_perfil: [null, Validators.required],
     celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
