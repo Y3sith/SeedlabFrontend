@@ -40,5 +40,10 @@ export class ActividadService {
     return this.http.post(this.url+'/editar_actividad/'+id,actividad,options)
   }
 
+  estadoActividad(access_token:any, idActividad:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.put(this.url+'/activar_desactivar_actividad/'+idActividad,options)
+  }
+
  
 }

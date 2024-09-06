@@ -1,11 +1,6 @@
 <div class="container mx-auto p-4 pt-2">
     <header class="flex flex-col md:flex-row justify-between items-center mb-6">
-        <!-- le podemos colocar el nombre de la ruta en un futuro -->
-        <app-header [title] [subtitle]="'Actividades'"></app-header>
         <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">
-            <!-- <input type="text" [(ngModel)]="userFilter.nombre"  --------cambiarlo despues
-                class="w-full max-md:w-full max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray"
-                placeholder="Buscar..." required /> -->
             <button class="absolute md:right-3 right-1 top-1.5 bg-sky-500 p-1.5 rounded-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -17,44 +12,46 @@
     </header>
 
     <div class="flex justify-end items-center mb-4">
-
-        <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900;">Agregar Actividad</span>
+        <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900">Agregar Actividad</span>
         <!--agrega nuevas actividades para esa ruta,toca pasarle el id -->
         <button class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center">
-            <span class="text-3xl font-semibold leading-none ">+</span>
+            <span class="text-3xl font-semibold leading-none">+</span>
         </button>
     </div>
-
-    <!-- Spinner -->
-    <!-- <div class="flex justify-center" *ngIf="isLoading">
-        <div class="spinner"></div>
-    </div> -->
-
     <div class="bg-gray-100 rounded-lg shadow-md p-4 mb-6">
         <div class="overflow-x-auto">
-            <table class="lg:w-4/6 md:5/6  md:mx-auto">
+            <table class="lg:w-4/6 md:5/6 md:mx-auto">
                 <thead>
                     <tr>
                         <th class="text-left p-2">Nombre Actividad</th>
                         <th class="text-left p-2">Aliado</th>
                         <th class="text-left p-2">Asesor</th>
-                        <th class="text-left p-2 text-center">Estado</th>
+                        <th class="text-left p-2">Estado</th>
+                        <th class="text-left p-2 text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="space-y-6">
                     <ng-container *ngFor="let contenido of listAcNiLeCo">
                         <ng-container *ngFor="let actividad of contenido.actividades">
                             <tr class="bg-gray-300 my-5 rounded-xl">
-                                <td class="p-2 rounded-s-lg">{{actividad.nombre}}</td>
-                                <td class="p-2 ">{{actividad.id_aliado}}</td>
-                                <td class="p-2 ">{{actividad.id_asesor}}</td>
-                                <!-- <td class="p-2 text-center">{{actividad.estado}}</td> -->
-                                 <td class="p-2 text-center">
-                                    <label class="switch">
-                                        <input type="checkbox" [checked]="actividad.estado" (change)="toggleEstado(actividad)">
-                                        <span class="slider round"></span>
-                                      </label>
+                                <td class="p-2 rounded-s-lg">{{ actividad.nombre }}</td>
+                                <td class="p-2">{{ actividad.id_aliado }}</td>
+                                <td class="p-2">{{ actividad.id_asesor }}</td>
+                                <!-- <td class="p-2 ">{{ actividad.estado }}</td> -->
+                                 <td class="p-2">
+                                    <label class="inline-flex items-center cursor-pointer md:mt-6">
+                                        <input type="checkbox" class="sr-only peer"
+                                        [checked]="actividad.estado"
+                                        (change)="toggleActive(actividad)"/>
+                                        <div
+                                        class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                        </div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                            {{ actividad.estado ? "Activo" : "Inactivo" }}
+                                        </span>
+                                    </label>
                                  </td>
+                                
                                 <td class="p-2 rounded-e-lg">
                                     <button type="button" class="text-blue-500" (click)="EditarActividad(actividad.id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4"
@@ -65,12 +62,10 @@
                                     </button>
                                 </td>
                             </tr>
-                            <tr class="h-2"></tr>
                         </ng-container>
                     </ng-container>
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
