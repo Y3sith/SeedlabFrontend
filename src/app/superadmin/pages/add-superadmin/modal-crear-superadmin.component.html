@@ -108,16 +108,15 @@
                                 <input type="text" id="documento" formControlName="documento" name="documento"
                                     class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                     [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}">
+                                
+                                <!-- Contenedor de errores -->
                                 <div *ngIf="f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['documento'].errors?.['minlength']">El documento debe tener al menos 5 caracteres</span>
-                                    <span *ngIf="f['documento'].errors?.['pattern']">El documento solo debe contener números</span>
-
+                                    class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg" role="alert">
+                                    <span *ngIf="f['documento'].errors?.['required']" class="block mt-1">Este campo es requerido *</span>
+                                    <span *ngIf="f['documento'].errors?.['minlength']" class="block mt-1">El documento debe tener al menos 5 caracteres</span>
+                                    <span *ngIf="f['documento'].errors?.['pattern']" class="block mt-1">El documento solo debe contener números</span>
                                 </div>
                             </div>
-
                             <!-- Genero -->
                             <div>
                                 <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>

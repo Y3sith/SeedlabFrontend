@@ -57,7 +57,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     fecha_nac: [''],
-    email: ['', [Validators.email]],
+    email: ['', [Validators.required,Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });
@@ -257,7 +257,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
         edad--;
       }
       if (edad < 18 || edad > 100) {
-        this.alertService.errorAlert('Error', 'La edad debe estar entre 18 y 100 años.');
+        this.alertService.errorAlert('Error', 'Debes ser mayor de edad');
         return;
       }
     }
