@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
         const password = this.loginForm.get('password')?.value;
 
         if (!email) {
-            this.alertService.errorAlert('Error', "El campo de usuario es requerido");
+            this.alertService.errorAlert('Error', "El campo de Correo es requerido");
             this.isSubmitting = false;
             return;
         }

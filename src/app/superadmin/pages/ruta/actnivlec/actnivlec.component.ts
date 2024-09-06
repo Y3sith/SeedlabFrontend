@@ -75,33 +75,33 @@ export class ActnivlecComponent implements OnInit {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: ['', Validators.required],
+    id_asesor: [],
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
   ////anadir nivel
 
   nivelForm = this.fb.group({
-    nombre: ['', Validators.required],
-    id_actividad: ['', Validators.required]
+    nombre: [{value:'',disabled:true}, Validators.required],
+    id_actividad: [{value:'',disabled:true}, Validators.required]
   })
   mostrarNivelForm: boolean = false;
 
   ///// añadir leccion
   leccionForm = this.fb.group({
-    nombre: ['', Validators.required],
-    id_nivel: ['', Validators.required]
+    nombre: [{value:'',disabled:true}, Validators.required],
+    id_nivel: [{value:'',disabled:true}, Validators.required]
   })
   mostrarLeccionForm: boolean = false;
 
   ///añadir contenido por leccion
 
   contenidoLeccionForm = this.fb.group({
-    titulo: ['', Validators.required],
-    descripcion: ['', Validators.required],
-    fuente_contenido: ['', Validators.required],
-    id_tipo_dato: ['', Validators.required],
-    id_leccion: ['', Validators.required]
+    titulo: [{value:'',disabled:true}, Validators.required],
+    descripcion: [{value:'',disabled:true}, Validators.required],
+    fuente_contenido: [{value:'',disabled:true}, Validators.required],
+    id_tipo_dato: [{value:'',disabled:true}, Validators.required],
+    id_leccion: [{value:'',disabled:true}, Validators.required]
   })
   mostrarContenidoLeccionForm: boolean = false;
   constructor(
@@ -132,27 +132,6 @@ export class ActnivlecComponent implements OnInit {
     this.listaAliado();
     this.onAliadoChange();
     this.bloquearBotones();
-
-    this.nivelForm = this.fb.group({// Campo deshabilitado
-      nombre: [{ value: '', disabled: true }], 
-      id_actividad: [{ value: '', disabled: true }]
-  });
-
-  this.leccionForm = this.fb.group({
-    nombre: [{ value: '', disabled: true }], 
-    id_nivel: [{ value: '', disabled: true }]
-  });
-
-  this.contenidoLeccionForm = this.fb.group({
-    titulo: [{ value: '', disabled: true }], 
-    descripcion: [{ value: '', disabled: true }], 
-    fuente_contenido: [{ value: '', disabled: true }], 
-    id_tipo_dato: [{ value: '', disabled: true }], 
-    id_leccion: [{ value: '', disabled: true }]
-  })
-  
-
-
   }
 
   validateToken(): void {
@@ -183,8 +162,9 @@ export class ActnivlecComponent implements OnInit {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
-          this.listarTipoDato = data;
-          console.log('tipo de dato:', data);
+
+          this.listarTipoDato = data.filter((tipo:any) => tipo.nombre === 'Imagen'); //solo me muestra imagen en el select tipo dato
+          console.log('tipo de dato:', this.listarTipoDato);
         },
         error => {
           console.log(error);
@@ -294,8 +274,13 @@ export class ActnivlecComponent implements OnInit {
   }
 
   addActividadSuperAdmin(): void {
+    this.submitted = true;
     const formData = new FormData();
     let estadoValue: string;
+    if (this.actividadForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+      return;
+    }
     if (this.idactividad == null) {
       estadoValue = 'true'
     } else {
@@ -303,10 +288,12 @@ export class ActnivlecComponent implements OnInit {
     formData.append('nombre', this.actividadForm.get('nombre')?.value);
     formData.append('descripcion', this.actividadForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
-    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value);
+    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
+
+    console.log('datos: ',this.actividadForm.value);
 
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
@@ -359,72 +346,84 @@ export class ActnivlecComponent implements OnInit {
 
   activarformularios(): void {
     this.nivelForm.enable(); // Habilita el formulario de niveles
-    this.leccionForm.enable(); 
+    this.leccionForm.enable();
     this.contenidoLeccionForm.enable();
-}
+  }
 
-bloquearBotones(): void{
-  const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+  bloquearBotones(): void {
+    const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
     if (agregarNivelBtn) {
-        agregarNivelBtn.style.pointerEvents = 'none'; 
-        agregarNivelBtn.style.opacity = '0.5'; 
-    }
-  
-    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
-    if (agregarLeccionBtn) {
-        agregarLeccionBtn.style.pointerEvents = 'none';
-        agregarLeccionBtn.style.opacity = '0.5'; 
-    }
-
-    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
-    if (agregarContenidoBtn) {
-        agregarContenidoBtn.style.pointerEvents = 'none';
-        agregarContenidoBtn.style.opacity = '0.5'; 
-    }
-}
-habilitarBotones(): void{
-  const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
-    if (agregarNivelBtn) {
-        agregarNivelBtn.style.pointerEvents = 'auto'; 
-        agregarNivelBtn.style.opacity = '1';
+      agregarNivelBtn.style.pointerEvents = 'none';
+      agregarNivelBtn.style.opacity = '0.5';
     }
 
     const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
     if (agregarLeccionBtn) {
-        agregarLeccionBtn.style.pointerEvents = 'auto'; 
-        agregarLeccionBtn.style.opacity = '1';
+      agregarLeccionBtn.style.pointerEvents = 'none';
+      agregarLeccionBtn.style.opacity = '0.5';
     }
 
     const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
     if (agregarContenidoBtn) {
-        agregarContenidoBtn.style.pointerEvents = 'auto'; 
-        agregarContenidoBtn.style.opacity = '1';
+      agregarContenidoBtn.style.pointerEvents = 'none';
+      agregarContenidoBtn.style.opacity = '0.5';
     }
-  
-}
+  }
+  habilitarBotones(): void {
+    const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+    if (agregarNivelBtn) {
+      agregarNivelBtn.style.pointerEvents = 'auto';
+      agregarNivelBtn.style.opacity = '1';
+    }
+
+    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
+    if (agregarLeccionBtn) {
+      agregarLeccionBtn.style.pointerEvents = 'auto';
+      agregarLeccionBtn.style.opacity = '1';
+    }
+
+    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
+    if (agregarContenidoBtn) {
+      agregarContenidoBtn.style.pointerEvents = 'auto';
+      agregarContenidoBtn.style.opacity = '1';
+    }
+
+  }
 
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
-    if (this.actividadForm.invalid) {
+    //this.submitted = true;
+    const nombreNivel = this.nivelForm.get('nombre')?.value;
+    // Validación de longitud del nombre
+    if (nombreNivel && nombreNivel.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+        return; // Salir de la función si la validación falla
+    }
+    if (this.nivelForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
+
     const nivel: any = {
-      nombre: this.nivelForm.value.nombre,
+      //nombre: this.nivelForm.value.nombre,
+      nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
     }
     console.log('nivel data', nivel);
     this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos', data);
         this.leccionForm.patchValue({ id_nivel: data.id })
         this.verNivel();
         this.mostrarLeccionForm = true;
         this.nivelForm.reset();
+        this.submittedNivel = false;
         this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
-        this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
-        //console.log('id nivel: ', data.id);
+        //this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     )
@@ -432,23 +431,33 @@ habilitarBotones(): void{
 
   agregarOtroNivel(): void {
     this.submittedNivel = true;
+    const nombreNivel = this.nivelForm.get('nombre')?.value;
+    if (nombreNivel && nombreNivel.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.nivelForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
       return;
     }
     const nivel: any = {
-      nombre: this.nivelForm.value.nombre,
+      //nombre: this.nivelForm.value.nombre,
+      nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
     };
     console.log('nivel data', nivel);
     this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos', data);
         // Resetea el formulario para agregar otro nivel
         this.nivelForm.reset();
+        this.submittedNivel = false;
         this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
         this.verNivel();
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     );
@@ -456,26 +465,38 @@ habilitarBotones(): void{
 
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
-    if (this.actividadForm.invalid) {
+
+    const nombreLeccion = this.leccionForm.get('nombre')?.value;
+    if (nombreLeccion && nombreLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+        return; 
+    }
+    if (this.leccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
+      
     }
     //submittedLeccion
     const leccion: any = {
-      nombre: this.leccionForm.value.nombre,
+      //nombre: this.leccionForm.value.nombre,
+      nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
     console.log('leccion data', leccion);
     this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
       (data: any) => {
         console.log('datos recibidos', data);
+        this.alertServices.successAlert('Exito', data.message);
         this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
         this.verLeccicon();
         this.mostrarContenidoLeccionForm = true;
         this.leccionForm.reset();
+        this.submittedLeccion = false;
         this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
         console.log('id leccion: ', data.id);
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     )
@@ -483,22 +504,32 @@ habilitarBotones(): void{
 
   agregarOtraLeccion(): void {
     this.submittedLeccion = true;
+    const nombreLeccion = this.leccionForm.get('nombre')?.value;
+    if (nombreLeccion && nombreLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+        return; 
+    }
     if (this.leccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
     }
     const leccion: any = {
-      nombre: this.leccionForm.value.nombre,
+      //nombre: this.leccionForm.value.nombre,
+      nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     };
     console.log('leccion data', leccion);
     this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos', data);
         this.leccionForm.reset();
+        this.submittedLeccion = false;
         this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
         this.verLeccicon();
       },
       error => {
+        this.alertServices.errorAlert('Error', error.error.message);
         console.log(error);
       }
     );
@@ -527,6 +558,25 @@ habilitarBotones(): void{
   }
 
   addContenidoLeccionSuperAdmin(): void {
+    this.submittedContent = true
+    
+    if (this.contenidoLeccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
+      return;
+    }
+
+    const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
+    if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
+        this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
+        return; 
+    }
+
+    const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
+    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 470) {
+        this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 470 caracteres');
+        return; 
+    }
+
     const formData = new FormData();
     let estadoValue: string;
     if (this.idcontenidoLeccion == null) {
@@ -548,8 +598,10 @@ habilitarBotones(): void{
     }
     this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
       (data: any) => {
+        this.alertServices.successAlert('Exito', data.message);
         console.log('datos recibidos: ', data);
         this.contenidoLeccionForm.reset();
+        this.submittedContent = false;
         //location.reload();
       },
       error => {
@@ -565,10 +617,10 @@ habilitarBotones(): void{
     this.actividadForm.get('fuente').clearValidators();
 
     switch (tipoDatoId) {
-      case '1': // Video
+     // case '1': // Video
       case '2': // Imagen
-      case '3': // PDF
-      case '4': // Texto
+      //case '3': // PDF
+     // case '4': // Texto
         this.actividadForm.get('fuente').setValidators([Validators.required]);
         break;
       default:
@@ -701,7 +753,5 @@ habilitarBotones(): void{
   }
 
   ////////////////////////////////////////////////////////////////////////
-  // alinicio():void{
-  //   this.router.navigate(['/list-ruta']);
-  // }
+ 
 }

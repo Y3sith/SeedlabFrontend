@@ -4,6 +4,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AsesoriaService } from '../../../../servicios/asesoria.service';
 import { AliadoService } from '../../../../servicios/aliado.service';
+import { AlertService } from '../../../../servicios/alert.service';
+
 @Component({
   selector: 'app-dar-aliado-asesoria-modal',
   templateUrl: './dar-aliado-asesoria-modal.component.html',
@@ -25,7 +27,9 @@ export class DarAliadoAsesoriaModalComponent {
     private fb: FormBuilder,
     private asesoriaService: AsesoriaService,
     private aliadoService: AliadoService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
+
   ) {
     this.asignarForm = this.fb.group({
       nom_aliado: ['', Validators.required]
@@ -51,9 +55,11 @@ export class DarAliadoAsesoriaModalComponent {
       const nombreAliado = this.asignarForm.get('nom_aliado')?.value;
       this.asesoriaService.asignarAliado(this.token, this.data.id, nombreAliado).subscribe(
         response => {
+          this.alertService.successAlert('Exito',response.message);
           this.dialogRef.close(true); // Cerrar el modal y enviar un valor de éxito si lo deseas
         },
         error => {
+          this.alertService.errorAlert('Error', 'Error al asignar la asesoria');
           console.error('Error al asignar asesoría:', error);
         }
       );

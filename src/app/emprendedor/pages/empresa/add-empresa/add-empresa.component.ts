@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators, AbstractControl, MinLengthValidator } from '@angular/forms';
 import { EmprendedorService } from '../../../../servicios/emprendedor.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
@@ -71,30 +71,30 @@ export class AddEmpresaComponent {
     console.log("DOCUMENTO",this.id_documentoEmpresa)
 
     this.addEmpresaForm = this.fb.group({
-      nombre: ['', Validators.required],
-      correo: ['', [Validators.required, Validators.email]],
+      nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
+      correo: ['', [Validators.required, Validators.email, this.emailValidator]],
       id_tipo_documento: ['', Validators.required],
-      documento: ['', Validators.required],
+      documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
       razonSocial: ['', Validators.required],
       id_departamento: ['', Validators.required],
       id_municipio: ['', Validators.required],
-      telefono: [''],
-      celular: ['', Validators.required],
-      url_pagina: ['', Validators.required],
+      telefono: ['', [Validators.maxLength(7), this.noLettersValidator]],
+      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
+      url_pagina: [''],
       direccion: ['', Validators.required],
-      profesion: ['', Validators.required],
-      cargo: ['', Validators.required],
+      profesion: ['', [Validators.required, this.noNumbersValidator]],
+      cargo: ['', [Validators.required, this.noNumbersValidator]],
       experiencia: ['', Validators.required],
       funciones: ['', Validators.required],
     });
   
     this.addApoyoEmpresaForm = this.fb.group({
-      documento: ['', Validators.required],
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
+      documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
+      nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
+      apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       cargo: ['', Validators.required],
       telefono: [''],
-      celular: ['', Validators.required],
+      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
       email: ['', [Validators.required, Validators.email]],
       id_tipo_documento: ['', Validators.required],
     });
@@ -324,7 +324,7 @@ export class AddEmpresaComponent {
         this.router.navigate(['list-empresa']);
       },
       error => {
-        this.alertService.errorAlert('Error', error.message);
+        this.alertService.errorAlert('Error', 'Ha ocurrido un error inesperado');
         console.log('Respuesta de la API ERROR:', error);
       }
     );
@@ -344,9 +344,9 @@ export class AddEmpresaComponent {
       response => {
         console.log('Datos actualizados:', response);
         setTimeout(function () {
-          location.reload();
         }, this.tiempoEspera);
         this.alertService.successAlert('Exito', 'Empresa editado con exito');
+        this.router.navigate(['list-empresa']);
       },
       error => {
         console.error('Error al actualizar:', error);
@@ -529,7 +529,46 @@ export class AddEmpresaComponent {
 
   }
 
+  noNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasNumbers = /\d/.test(value);
 
+    if (hasNumbers) {
+      return { hasNumbers: 'El campo no debe contener números *' };
+    } else {
+      return null;
+    }
+  }
+
+  documentoValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 13) {
+      return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
+    }
+    return null;
+  }
+
+  emailValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasAtSymbol = /@/.test(value);
+
+    if (!hasAtSymbol) {
+      return { emailInvalid: 'El correo debe ser válido *' };
+    } else {
+      return null;
+    }
+  }
+
+  noLettersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasLetters = /[a-zA-Z]/.test(value);
+  
+    if (hasLetters) {
+      return { hasLetters: 'El campo no debe contener letras *' };
+    } else {
+      return null;
+    }
+  }
 }
 
 

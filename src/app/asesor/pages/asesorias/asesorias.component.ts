@@ -29,7 +29,7 @@ export class AsesoriasComponent implements OnInit {
   conHorarioCount: number = 0;
   totalAsesorias: number = 0; // variable para almacenar el total de asesorias
   page: number = 1;
-  itemsPerPage: number = 6; // Puedes ajustar este valor según la cantidad de ítems por página
+  itemsPerPage: number = 8; // Puedes ajustar este valor según la cantidad de ítems por página
 
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
