@@ -50,16 +50,16 @@ export class ModalCrearOrientadorComponent implements OnInit {
   orientadorForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    documento: ['', [Validators.required, Validators.minLength(5)]],
+    documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
     imagen_perfil: [null, Validators.required],
     celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
-    direccion: [],
+    direccion: [''],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     fecha_nac: [''],
-    email: ['', [Validators.email]],
+    email: ['', [Validators.required,Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });
@@ -217,33 +217,64 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
 
   addOrientador(): void {
+    // Validaciones permanentes
+    if (this.orientadorForm.get('nombre').invalid || 
+        this.orientadorForm.get('apellido').invalid || 
+        this.orientadorForm.get('documento').invalid || 
+        this.orientadorForm.get('celular').invalid) {
+      this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+      return;
+    }
+  
+    // Validaciones opcionales
+    const fechaNacControl = this.orientadorForm.get('fecha_nac');
+    if (fechaNacControl.value) {
+      const fechaNac = new Date(fechaNacControl.value);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - fechaNac.getFullYear();
+      const mes = hoy.getMonth() - fechaNac.getMonth();
+      if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+        edad--;
+      }
+      if (edad < 18 || edad > 100) {
+        this.alerService.errorAlert('Error', 'Debes ser mayor de edad');
+        return;
+      }
+    }
+  
+    const emailControl = this.orientadorForm.get('email');
+    if (emailControl.value && !emailControl.valid) {
+      this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      return;
+    }
+  
+    // El resto de tu código existente
     const formData = new FormData();
     let estadoValue: string;
     if (this.idOrientador == null) {
       estadoValue = '1';
     } else {
       // Es una edición, usar el valor del formulario
-      //estadoValue = this.asesorForm.get('estado')?.value ? 'true' : 'false';
     }
+  
     formData.append('nombre', this.orientadorForm.get('nombre')?.value);
     formData.append('apellido', this.orientadorForm.get('apellido')?.value);
     formData.append('documento', this.orientadorForm.get('documento')?.value);
-    formData.append('id_tipo_documento', this.orientadorForm.get('id_tipo_documento')?.value);
-    formData.append('genero', this.orientadorForm.get('genero')?.value);
-    const direccion = this.orientadorForm.get('direccion')?.value;
-    if (direccion) {
-      formData.append('direccion', direccion);
-    }
-    //formData.append('direccion', this.orientadorForm.get('direccion')?.value);
     formData.append('celular', this.orientadorForm.get('celular')?.value);
+    formData.append('genero', this.orientadorForm.get('genero')?.value);
+  
+    if (this.orientadorForm.get('direccion')?.value) {
+      formData.append('direccion', this.orientadorForm.get('direccion')?.value);
+    }
+  
+    formData.append('id_tipo_documento', this.orientadorForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.orientadorForm.get('id_departamento')?.value);
     formData.append('municipio', this.orientadorForm.get('id_municipio')?.value);
     formData.append('email', this.orientadorForm.get('email')?.value);
     formData.append('password', this.orientadorForm.get('password')?.value);
-
-    Object.keys(this.orientadorForm.controls).forEach(key => {
+  
+    Object.keys(this.orientadorForm.controls).forEach((key) => {
       const control = this.orientadorForm.get(key);
-
       if (control?.value !== null && control?.value !== undefined) {
         if (key === 'fecha_nac') {
           if (control.value) {
@@ -252,31 +283,31 @@ export class ModalCrearOrientadorComponent implements OnInit {
               formData.append(key, date.toISOString().split('T')[0]);
             }
           }
-        }
+        } 
         else if (key === 'estado') {
           formData.append(key, control.value ? '1' : '0');
-        } else if (key !== 'imagen_perfil') {
+        }
+        else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
         }
       }
     });
-
+  
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
     console.log('Datos del formulario:', this.orientadorForm.value);
-
-     /* Actualiza orientador */
+  
+    /* Actualiza orientador */
     if (this.idOrientador != null) {
       this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
         if (result.isConfirmed) {
           this.orientadorServices.updateOrientador(this.token, this.idOrientador, formData).subscribe(
             data => {
-              setTimeout(function () {
-                //location.reload();
+              setTimeout(() => {
+                this.router.navigate(['/list-orientador']);
+                this.alerService.successAlert('Exito', data.message);
               }, this.tiempoEspera);
-              this.router.navigate(['/list-orientador']);
-              this.alerService.successAlert('Exito', data.message);
             },
             error => {
               this.alerService.errorAlert('Error', error.error.message);
@@ -289,16 +320,15 @@ export class ModalCrearOrientadorComponent implements OnInit {
     } else {
       this.orientadorServices.createOrientador(this.token, formData).subscribe(
         data => {
-          console.log(data); // Verifica el mensaje de éxito
+          console.log(data);
           this.alerService.successAlert('Exito', data.message);
-          
-            this.router.navigate(['/list-orientador']);
-          this.alerService.successAlert('Exito', data.message);
+          this.router.navigate(['/list-orientador']);
         },
         error => {
-          //this.alerService.errorAlert('Error', error.error.message);
-          //console.error('Error', error.error.message);
           console.log(error);
+          if (error.status === 400) {
+            this.alerService.errorAlert('Error', error.error.message);
+          }
         });
     }
   }
