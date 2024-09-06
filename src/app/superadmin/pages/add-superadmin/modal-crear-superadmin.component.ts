@@ -46,23 +46,21 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
 
   superadminForm = this.fb.group({
-    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    documento: ['', [Validators.required, Validators.minLength(5)]],
+    nombre: ['', Validators.required],
+    apellido: ['', Validators.required],
+    documento: ['', Validators.required],
     imagen_perfil: [null, Validators.required],
-    celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
+    celular: ['', Validators.required],
     genero: ['', Validators.required],
     direccion: [],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: ['', [this.fechaNacimientoValidator]],
-    email: ['', [Validators.required, Validators.email]],
+    fecha_nac: ['', Validators.required],
+    email: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });
-
-
 
   constructor(//public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
     //@Inject(MAT_DIALOG_DATA) public data: any,
@@ -81,25 +79,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
   }
 
-  fechaNacimientoValidator(control) {
-    if (!control.value) {
-      return null; // La fecha es opcional, así que si está vacía, no hay error
-    }
-    const fechaNac = new Date(control.value);
-    const hoy = new Date();
-    let edad = hoy.getFullYear() - fechaNac.getFullYear();
-    const mes = hoy.getMonth() - fechaNac.getMonth();
-
-    if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
-      edad--;
-    }
-
-    if (edad < 18 || edad > 100) {
-      return { fechaInvalida: true };
-    }
-
-    return null;
-  }
   /* Inicializa con esas funciones al cargar la pagina, 
   con los validator verificando cuando es editando y cuando es creando para que no salga error el campo vacio */
   ngOnInit(): void {
@@ -290,6 +269,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
           }
         } 
         else if (key === 'estado') {
+          // const estadoValue = control.value ? '1' : '0';
+          // formData.append(key, estadoValue);
+          // console.log('Estado enviado:', estadoValue);
+          // Convertir el valor booleano a 1 o 0
           formData.append(key, control.value ? '1' : '0');
         }
          else if (key !== 'imagen_perfil') {
@@ -304,12 +287,16 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
     /* Actualiza superadmin */
     if (this.idSuperAdmin != null) {
+      // let confirmationText = this.isActive
+      //   ? "¿Estas seguro de guardar los cambios"
+      //   : "¿Estas seguro de guardar los cambios?";
 
       this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
         if (result.isConfirmed) {
           this.superadminService.updateAdmin(this.token, this.idSuperAdmin, formData).subscribe(
             (data) => {
               setTimeout(function (){
+                //location.reload();
               }, this.tiempoEspera);
               this.router.navigate(['/list-superadmin']);
               this.alertService.successAlert('Exito', data.message)
@@ -328,9 +315,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
       this.superadminService.createSuperadmin(this.token, formData).subscribe(
         data => {
           setTimeout(function () {
+            //location.reload();
           },this.tiempoEspera);
           this.alertService.successAlert('Exito', data.message);
           this.router.navigate(['/list-superadmin']);
+          //console.log('datos: ', data);
         },
         error => {
           console.error(error);
