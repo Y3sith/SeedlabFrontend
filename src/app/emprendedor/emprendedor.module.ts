@@ -16,8 +16,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterModule } from '@angular/router';
 import { ModalActividadComponent } from './pages/modal-actividad/modal-actividad.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
-import { CursoRutaEmprendedorComponent } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
-
+import { CursoRutaEmprendedorComponent} from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
+import { SafePipe } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
 
 
 
@@ -38,7 +38,8 @@ import { CursoRutaEmprendedorComponent } from './pages/curso-ruta-emprendedor/cu
     PerfilEmprendedorComponent,
     ModalActividadComponent,
     ReportesComponent,
-    CursoRutaEmprendedorComponent,
+    CursoRutaEmprendedorComponent, 
+    SafePipe,
   ],
   imports: [
     CommonModule,

@@ -17,84 +17,97 @@
 <div class="container mx-auto p-4 font-poppins">
 
     <div class="md:w-1/2 pr-8">
-        <h1 class="mb-0 font-bold text-5xl font-poppins leading-tight" [style.color]="getColor()">{{ actividad.nombre }}</h1>
+        <h1 class="mb-0 font-bold text-5xl font-poppins leading-tight" [style.color]="getColor()">{{ actividad.nombre }}
+        </h1>
         <h3 class="italic"></h3>
-      </div>
+    </div>
     <div class="flex flex-col lg:flex-row">
         <!-- Lista de niveles y lecciones -->
         <div class="w-full lg:w-1/3 bg-white mr-0 lg:mr-4 lg:mb-0 h-full">
-
             <ul class="divide-y divide-gray-200" [style.background-color]="getColor()">
-                <li class="p-2" *ngFor="let nivel of niveles; let i = index">
+              <li class="p-2" *ngFor="let nivel of niveles; let i = index">
+                <button class="w-full text-left p-2 hover:bg-gray-100 focus:outline-none flex items-center"
+                        (click)="toggleNivel(i)"
+                        [style.color]="getTextColor()">
+                  <span class="bg-sky-400 rounded-xl h-6 w-6 p-2 flex items-center justify-center text-white">{{i + 1}}</span>
+                  <span class="ml-2">{{nivel.nombre}}</span>
+                  <span class="ml-auto" *ngIf="nivel.lecciones?.length">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </span>
+                </button>
+                <ul *ngIf="nivel.expanded" class="pl-6 mt-2">
+                  <li class="p-2" *ngFor="let leccion of nivel.lecciones; let j = index">
                     <button class="w-full text-left p-2 hover:bg-gray-100 focus:outline-none flex items-center"
-                        (click)="toggleNivel(i)">
-                        <span class="bg-sky-400 rounded-xl h-6 w-6 p-2 flex items-center justify-center text-white">{{i
-                            + 1}}</span>
-                        <span class="ml-2 text-white">{{nivel.nombre}}</span>
-                        <span class="ml-auto" *ngIf="nivel.lecciones?.length">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </span>
+                            (click)="toggleLeccion(i, j)"
+                            [style.color]="getTextColor()">
+                      <span class="bg-sky-400 rounded-xl h-6 w-6 p-2 flex items-center justify-center text-white">{{j + 1}}</span>
+                      <span class="ml-3">{{leccion.nombre}}</span>
+                      <span class="ml-auto" *ngIf="leccion.contenido_lecciones?.length">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                      </span>
                     </button>
-                    <ul *ngIf="nivel.expanded" class="pl-6 mt-2">
-                        <li class="p-2" *ngFor="let leccion of nivel.lecciones">
-                            <button class="w-full text-left p-2 hover:bg-gray-100 focus:outline-none"
-                                (click)="selectLeccion(leccion)">
-                                {{leccion.nombre}}
-                            </button>
-                        </li>
+                    <ul *ngIf="leccion.expanded" class="pl-6 mt-2">
+                      <li class="p-2" *ngFor="let contenido of leccion.contenido_lecciones">
+                        <button class="w-full text-left p-2 hover:bg-gray-100 focus:outline-none"
+                                (click)="selectContenido(contenido)"
+                                [style.color]="getTextColor()">
+                          {{contenido.titulo}}
+                        </button>
+                      </li>
                     </ul>
-                </li>
+                  </li>
+                </ul>
+              </li>
             </ul>
-        </div>
+          </div>
         <!-- Contenido dinámico -->
         <div class="w-full lg:w-2/3 bg-white shadow rounded-lg p-4">
-            <!-- <div *ngFor="let content of selectedContent; let i = index" class="mb-4">
-                <ng-container [ngSwitch]="content.type">
-                    <div *ngSwitchCase="'video'">
-                        <h2 class="text-lg font-semibold">Video {{i + 1}}</h2>
-                        <div class="relative" style="padding-top: 56.25%;">
-                            <iframe class="absolute top-0 left-0 w-full h-full" [src]="getSafeVideoUrl(content.url)"
+            <div *ngIf="selectedContenido">
+                <h2>{{ contenidoForm.get('nombre')?.value }}</h2>
+
+                <div class="mb-4">
+                    <h3>{{ contenido.titulo }}</h3>
+                    <p>{{ contenido.descripcion }}</p>
+
+                    <ng-container [ngSwitch]="getContentType(contenido)">
+                        <div *ngSwitchCase="'video'" class="relative" style="padding-top: 56.25%;">
+                            <iframe class="absolute top-0 left-0 w-full h-full"
+                                [src]="getYouTubeEmbedUrl(contenido.fuente_contenido) | safe: 'resourceUrl'"
                                 frameborder="0" allowfullscreen></iframe>
                         </div>
-                        <div class="flex items-center mt-2" *ngIf="content.progress !== undefined">
-                            <span>{{content.progress}}%</span>
-                            <div class="w-full bg-gray-200 h-2 ml-2">
-                                <div class="bg-blue-500 h-2" [style.width]="content.progress + '%'"></div>
-                            </div>
+
+                        <div *ngSwitchCase="'image'" class="relative">
+                            <img [src]="getCorrectFileUrl(contenido.fuente_contenido) | safe: 'url'"
+                                class="w-full h-auto bg-gray-200 mb-2" [alt]="contenido.titulo"
+                                (error)="handleImageError($event)">
                         </div>
-                    </div>
-                    <div *ngSwitchCase="'image'">
-                        <h2 class="text-lg font-semibold">Imagen {{i + 1}}</h2>
-                        <img [src]="content.url" class="w-full h-auto bg-gray-200 mb-2" alt="Imagen">
-                    </div>
-                    <div *ngSwitchCase="'text'">
-                        <h2 class="text-lg font-semibold">Texto {{i + 1}}</h2>
-                        <p class="w-full bg-gray-200 mb-2 p-4">{{content.content}}</p>
-                    </div>
-                    <div *ngSwitchCase="'pdf'">
-                        <h2 class="text-lg font-semibold">PDF {{i + 1}}</h2>
-                        <div class="relative" style="padding-top: 75%;">
-                            <embed class="absolute top-0 left-0 w-full h-full" [src]="content.url"
+
+                        <div *ngSwitchCase="'text'">
+                            <p class="w-full bg-gray-200 mb-2 p-4">{{ contenido.fuente_contenido }}</p>
+                        </div>
+
+                        <div *ngSwitchCase="'pdf'" class="relative" style="padding-top: 75%;">
+                            <object class="absolute top-0 left-0 w-full h-full"
+                                [data]="getCorrectFileUrl(contenido.fuente_contenido) | safe: 'resourceUrl'"
                                 type="application/pdf">
+                                <p>Este navegador no soporta la visualización de PDFs. Puedes <a
+                                        [href]="getCorrectFileUrl(contenido.fuente_contenido)">descargar el PDF</a> en
+                                    su lugar.</p>
+                            </object>
                         </div>
-                    </div>
-                    <div *ngSwitchCase="'form'">
-                        <h2 class="text-lg font-semibold">Formulario {{i + 1}}</h2>
-                        <form class="w-full bg-gray-200 mb-2 p-4">
-                            <div *ngFor="let field of content.fields">
-                                <label class="block mb-2">{{field.label}}</label>
-                                <input *ngIf="field.type === 'text'" type="text" class="w-full mb-2 p-2 border rounded">
-                                <input *ngIf="field.type === 'number'" type="number"
-                                    class="w-full mb-2 p-2 border rounded">
-                            </div>
-                        </form>
-                    </div>
-                </ng-container>
-            </div> -->
+
+                        <div *ngSwitchDefault>
+                            <p>Tipo de contenido no soportado</p>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
         </div>
     </div>
 </div>
