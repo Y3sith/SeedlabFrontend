@@ -20,7 +20,7 @@ export class ListActividadesComponent {
   user: User | null = null;
   id: number | null = null;
   currentRolId: number;
-  listAcNiLeCo: any [] = [];
+  listAcNiLeCo: [] = [];
   isActive: boolean = true;
   boton = true;
 
@@ -79,58 +79,26 @@ export class ListActividadesComponent {
       );
     }
   }
-  // editarEstado():void{
-  //   if (this.actividadForm.invalid) {
-  //     return;
-  //   }
-  //   const actividad: Actividad = {
-  //     nombre: this.actividadForm.get('nombre')?.value,
-  //     descripcion: this.actividadForm.get('descripcion')?.value,
-  //     fuente: this.actividadForm.get('fuente')?.value,
-  //     id_tipo_dato: this.actividadForm.get('id_tipo_dato')?.value,
-  //     id_asesor: this.actividadForm.get('id_asesor')?.value,
-  //     id_ruta: this.rutaId,
-  //     estado: this.actividadForm.get('estado')?.value
-  //   };
-  //   if (this.ActividadId !=null) {
-  //     this.alertService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result)=>{
-  //       if (result.isConfirmed) {
-  //         this.actividadService.updateActividad(this.token,this.ActividadId,actividad).subscribe(
-  //           data => {
-  //             this.alertService.successAlert('Exito', data.message);
-  //           },
-  //           error => {
-  //             console.log(error);
-  //           }
-  //         )
-  //       }
-  //     })
-  //   }
-  // }
-
-  toggleActive(actividad: any): void {
-    actividad.estado = !actividad.estado;
-
-    // Actualizar el estado en el backend
-    this.actividadService.updateActividad(this.token, actividad.id, { estado: actividad.estado }).subscribe(
-      (data) => {
-        this.alertService.successAlert('Estado actualizado', 'El estado de la actividad ha sido actualizado.');
-      },
-      (error) => {
-        console.error(error);
-        this.alertService.errorAlert('Error', 'Hubo un problema al actualizar el estado.');
+  editarEstado(ActividadId: number): void {
+    const estadoActual = this.actividadForm.get('estado')?.value;
+    this.alertService.alertaActivarDesactivar("¿Estás seguro de cambiar el estado de la actividad?", 'question').then((result) => {
+      if (result.isConfirmed) {
+        this.actividadService.estadoActividad(this.token, ActividadId, estadoActual).subscribe(
+          (data) => {
+            this.alertService.successAlert('Éxito', data.message);
+            this.ver();
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
       }
-    );
+    });
   }
-  // toggleActive(){
-  //   this.isActive = !this.isActive;
-  //   this.actividadForm.patchValue({ estado: this.isActive ? true : false });
-  // }
-  mostrarToggle():void {
-    if (this.ActividadId != null) {
-      this.boton = false;
-    }
-    this.boton = true;
+  toggleActive(ActividadId: number): void {
+    this.isActive = !this.isActive;
+    this.actividadForm.patchValue({ estado: this.isActive ? true : false });
+    this.editarEstado(ActividadId);
   }
   EditarActividad(ActividadId: number): void {
     this.router.navigate(['editar-act-ruta'], { queryParams: { id_actividad: ActividadId } });

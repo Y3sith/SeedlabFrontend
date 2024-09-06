@@ -1,5 +1,6 @@
-<div class="container mx-auto p-4 pt-2">
+<div class="container mx-auto p-4 pt-2 font-poppins">
     <header class="flex flex-col md:flex-row justify-between items-center mb-6">
+        <app-header [title] [subtitle]="'Actividades'"></app-header>
         <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">
             <button class="absolute md:right-3 right-1 top-1.5 bg-sky-500 p-1.5 rounded-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"
@@ -26,8 +27,7 @@
                         <th class="text-left p-2">Nombre Actividad</th>
                         <th class="text-left p-2">Aliado</th>
                         <th class="text-left p-2">Asesor</th>
-                        <th class="text-left p-2">Estado</th>
-                        <th class="text-left p-2 text-center">Acciones</th>
+                        <th class="text-left p-2 text-center">Estado</th>
                     </tr>
                 </thead>
                 <tbody class="space-y-6">
@@ -37,21 +37,19 @@
                                 <td class="p-2 rounded-s-lg">{{ actividad.nombre }}</td>
                                 <td class="p-2">{{ actividad.id_aliado }}</td>
                                 <td class="p-2">{{ actividad.id_asesor }}</td>
-                                <!-- <td class="p-2 ">{{ actividad.estado }}</td> -->
-                                 <td class="p-2">
-                                    <label class="inline-flex items-center cursor-pointer md:mt-6">
-                                        <input type="checkbox" class="sr-only peer"
-                                        [checked]="actividad.estado"
-                                        (change)="toggleActive(actividad)"/>
+                                <td class="p-2">{{ actividad.estado }}</td>
+                                <td class="p-2 text-center">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" [checked]="actividad.estado"
+                                            (change)="toggleActive(actividad.id)"/>
                                         <div
-                                        class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                            class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                         </div>
                                         <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                            {{ actividad.estado ? "Activo" : "Inactivo" }}
+                                            {{ actividad.estado ? 'Activo' : 'Inactivo' }}
                                         </span>
                                     </label>
-                                 </td>
-                                
+                                </td>
                                 <td class="p-2 rounded-e-lg">
                                     <button type="button" class="text-blue-500" (click)="EditarActividad(actividad.id)">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4"
@@ -62,6 +60,7 @@
                                     </button>
                                 </td>
                             </tr>
+                            <td class="h-2"></td>
                         </ng-container>
                     </ng-container>
                 </tbody>

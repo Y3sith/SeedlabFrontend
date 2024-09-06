@@ -10,14 +10,14 @@ export class ActividadService {
 
   constructor(private http: HttpClient) { }
 
-  private CreacionHeaders(access_token: any): HttpHeaders {
+  private CreacionHeaders(access_token: any): HttpHeaders { //normal
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + access_token
     });
   }
 
-  private CreacionHeaderss(access_token: any): HttpHeaders {
+  private CreacionHeaderss(access_token: any): HttpHeaders { //imagen
     return new HttpHeaders({
       'Authorization': 'Bearer ' + access_token
     });
@@ -40,9 +40,14 @@ export class ActividadService {
     return this.http.post(this.url+'/editar_actividad/'+id,actividad,options)
   }
 
-  estadoActividad(access_token:any, idActividad:number):Observable<any>{
+  estadoActividad(access_token:any, idActividad:number,estado:boolean):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.put(this.url+'/activar_desactivar_actividad/'+idActividad,options)
+    return this.http.put(this.url+'/activar_desactivar_actividad/'+idActividad,{estado},options)
+  }
+
+  ActiNivelLeccionContenido(access_token:any, idActividad:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/ActiNivelLeccionContenido/'+idActividad,options)
   }
 
  
