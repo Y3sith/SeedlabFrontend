@@ -11,13 +11,14 @@ export class AppComponent {
   title = 'SeedLabFrontend';
   mostrarMenu: boolean = true;
   titleText: string = '';
+  id: number = 1;
 
   constructor(
     private superadminService:SuperadminService
   ){}
 
   ngOnInit(): void {
-    this.superadminService.getPersonalizacion().subscribe(
+    this.superadminService.getPersonalizacion(this.id).subscribe(
       data => {
         this.titleText = data.nombre_sistema;
     });

@@ -27,6 +27,7 @@ export class MenuComponent {
   isMobile: boolean = false;
   iconColor: string = '#00B3ED';
   rolUser: String;
+  id: number = 1;
 
   constructor(private router: Router,
               private authservices: AuthService,
@@ -89,7 +90,7 @@ export class MenuComponent {
     }
     this.menuItems = this.menuService.getRoutesByRole(this.currentRolName); 
     //console.log(this.menuItems);
-    this.personalizacionService.getPersonalizacion().subscribe(
+    this.personalizacionService.getPersonalizacion(this.id).subscribe(
       data => {
         this.colorPrincipal = data.color_principal;
         this.colorSecundario = data.color_secundario;
