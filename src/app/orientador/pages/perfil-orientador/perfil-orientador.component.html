@@ -1,6 +1,6 @@
 <form [formGroup]="perfilorientadorForm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <div class="container mx-auto py-6 md:py-12 ">
+    <div class="container mx-auto py-6 md:py-12 font-poppins ">
         <!-- Encabezado -->
         <header class="flex md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
             <app-header [title] [subtitle]="'Perfil'"></app-header>
@@ -25,28 +25,46 @@
                             </ng-template>
                             <button class="edit-button" [class.hidden]="!showEditButton" id="editboton">
                                 <i class="fas fa-pencil-alt">
-                                    <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'imagen_perfil')"
-                                    accept="image/jpeg,image/png,image/jpg" class="absolute inset-0 opacity-0 cursor-pointer">
+                                    <input id="imagen_ruta" type="file"
+                                        (change)="onFileSelecteds($event, 'imagen_perfil')"
+                                        accept="image/jpeg,image/png,image/jpg"
+                                        class="absolute inset-0 opacity-0 cursor-pointer">
                                 </i>
                             </button>
                         </div>
                         <div class=" rounded-lg p-4 h-full w-full">
                             <div class="w-full">
-                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center">Información Básica</h5>
+                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center font-poppins ">Información Básica</h5>
 
                                 <label for="nombre" class="block mt-4 mb-2">Nombre(s)</label>
                                 <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
                                     class="p-2 h-12 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                <div *ngIf="submitted && f.nombre.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="f.nombre.errors.required">Este campo es requerido*</div>
+                                    <div *ngIf="f.nombre.errors.hasNumbers">Este campo no puede contener números*</div>
+                                    <div *ngIf="f.nombre.errors.minlength">El nombre debe tener al menos 4 caracteres*
+                                    </div>
+                                </div>
 
                                 <label for="apellido" class="block mb-2 mt-4">Apellido(s)</label>
                                 <input type="text" id="apellido" formControlName="apellido" [readonly]="blockedInputs"
                                     class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                <div *ngIf="submitted && f.apellido.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="f.apellido.errors.required">Este campo es requerido*</div>
+                                    <div *ngIf="f.apellido.errors.hasNumbers">Este campo no puede contener números*
+                                    </div>
+                                    <div *ngIf="f.apellido.errors.minlength">El nombre debe tener al menos 4 caracteres*
+                                    </div>
+                                </div>
 
                                 <div class="min-[860px]:flex gap-4 mt-4">
                                     <div class="">
 
                                         <label for="tipodocumento" class="block mb-2 md:w-20 ">Tipo de Documento</label>
-                                        <select id="id_tipo_documento" formControlName="id_tipo_documento" [disabled]="blockedInputs"
+                                        <select id="id_tipo_documento" formControlName="id_tipo_documento"
+                                            [disabled]="blockedInputs"
                                             class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"> 
                                             <option value="" disabled selected>Seleccionar tipo de documento...</option>
                                             <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{
@@ -57,9 +75,15 @@
                                         <label for="documento" class="block mb-2 max-md:mt-4">Número de
                                             Documento</label>
                                         <input type="number" id="documento" formControlName="documento"
-                                        [readonly]="blockedInputs"
+                                            [readonly]="blockedInputs"
                                             class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                                    </div>
+                                            <div *ngIf="submitted && f.documento.errors"
+                                                class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                                <div *ngIf="f.documento.errors.required">Este campo es requerido*</div>
+                                                <div *ngIf="f.documento.errors.lengthError">El número de documento debe tener entre 5 y 13 dígitos*</div>
+                                                <div *ngIf="f.documento.errors.hasLetters">El número de documento no puede contener letras*</div>
+                                            </div>
+                                        </div>
 
 
 
@@ -84,16 +108,22 @@
                 <div class="min-[860px]:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
                     <div class="w-full mt-0 pt-0">
 
-                        <h5 class="text-xl font-bold mb-4 text-center">Información de Personal</h5>
+                        <h5 class="text-xl font-bold mb-4 text-center font-poppins ">Información de Personal</h5>
 
                         <label for="fechaNacimiento" class="block mb-2">Fecha de Nacimiento</label>
                         <input type="date" id="fecha_nac" formControlName="fecha_nac" [readonly]="blockedInputs"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none" />
+                            <div *ngIf="submitted && f.fecha_nac.errors" class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                <div *ngIf="f.fecha_nac.errors.required">Este campo es requerido *</div>
+                                <div *ngIf="f.fecha_nac.errors.futureDate">La fecha no es válida*</div>
+                                <div *ngIf="f.fecha_nac.errors.tooOld">La fecha no es válida*</div>
+                                <div *ngIf="f.fecha_nac.errors.tooRecent">Debe tener al menos 18 años *</div>
+                            </div>
 
                         <label for="password" class="block mb-2 mt-4">Contraseña</label>
                         <div class="relative mb-2">
-                            <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password" [disabled]="blockedInputs"
-                                [readonly]="blockedInputs"
+                            <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
+                                [disabled]="blockedInputs" [readonly]="blockedInputs"
                                 class="p-2 h-12 w-full border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 placeholder-black" />
                             <!-- quité *ngIf="!blockedInputs" para que me dejara visualizar el campo de la contraseña -->
                             <button type="button"
@@ -105,18 +135,20 @@
                         </div>
                         <div *ngIf="submitted && f.password.errors"
                             class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                            <div *ngIf="f.password.errors.required">Este campo es requerido *</div>
                             <div *ngIf="f.password.errors.minlength">La contraseña debe tener al menos 10 caracteres *
-                            </div>
-                            <div *ngIf="f.password.errors.passwordStrength">{{ f.password.errors.passwordStrength }}
                             </div>
                         </div>
 
-                        <h5 class="text-xl font-bold mt-6 mb-4 text-center">Información de Contacto</h5>
+                        <h5 class="text-xl font-bold mt-6 mb-4 text-center font-poppins ">Información de Contacto</h5>
 
                         <label for="correo" class="block mb-2">Correo Electrónico</label>
-                        <input type="text" id="correo" formControlName="email"  [readonly]="blockedInputs"
+                        <input type="text" id="correo" formControlName="email" [readonly]="blockedInputs"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                            <div *ngIf="submitted && f.email.errors"
+                        class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                        <div *ngIf="f.email.errors.required">Este campo es requerido *</div>
+                        <div *ngIf="f.email.errors.emailInvalid">Ingrese un Correo valido</div>
+                      </div>                            
 
                         <label for="celular" class="block mb-2 mt-4">Celular</label>
                         <input type="number" id="celular" formControlName="celular" [readonly]="blockedInputs"
@@ -125,20 +157,21 @@
                     <div class="w-20"></div>
 
                     <div class="w-full">
-                        <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5">Dirección</h5>
+                        <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5 font-poppins ">Dirección</h5>
 
                         <label for="id_departamento" class="block mb-2">Departamento</label>
-                        <select id="id_departamento" name="id_departamento" formControlName="id_departamento" (change)="onDepartamentoSeleccionado($event)" [disabled]="blockedInputs"
+                        <select id="id_departamento" name="id_departamento" formControlName="id_departamento"
+                            (change)="onDepartamentoSeleccionado($event)" [disabled]="blockedInputs"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
-                            <option *ngFor="let departamento of listDepartamentos"
-                                [value]="departamento.id">
+                            <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
                                 {{ departamento.name }}
                             </option>
                         </select>
 
 
                         <label for="id_municipio" class="block mb-2 mt-4">Municipio</label>
-                        <select id="id_municipio" name="id_municipio" formControlName="id_municipio" [disabled]="blockedInputs"
+                        <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
+                            [disabled]="blockedInputs"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
                             <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
                                 {{ municipio.nombre }}
@@ -161,7 +194,8 @@
 
             <div class="flex ">
                 <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic"
-                    (click)="onCancel()" *ngIf="!blockedInputs" (click)="toggleInputsLock()" (click)="toggleEditButtonn()">
+                    (click)="onCancel()" *ngIf="!blockedInputs" (click)="toggleInputsLock()"
+                    (click)="toggleEditButtonn()">
                     Cancelar
                 </button>
                 <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
@@ -174,8 +208,8 @@
                 <div class="flex justify-start">
                 </div>
                 <button id="boton"
-                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic" (click)="onEdit()"
-                    *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
+                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
+                    (click)="onEdit()" *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
                 </button>
             </div>
         </div>

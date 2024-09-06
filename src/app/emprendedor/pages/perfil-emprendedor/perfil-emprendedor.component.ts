@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
@@ -75,19 +75,19 @@ export class PerfilEmprendedorComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
   ) { 
     this.emprendedorForm = this.fb.group({
-      nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
+      nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
+      apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       documento: ['', Validators.required],
       imagen_perfil: [Validators.required],
-      celular: ['', [Validators.required, Validators.maxLength(10)]],
+      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
       genero: ['', Validators.required],
       direccion: [],
       id_tipo_documento: [Validators.required],
       id_departamento: [Validators.required],
       id_municipio: [Validators.required],
-      fecha_nac: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
+      email: ['', Validators.required],
+      password: ['',  Validators.minLength(8)],
       estado: true,
     });
   }
@@ -172,17 +172,8 @@ export class PerfilEmprendedorComponent implements OnInit {
     if (this.token) {
       this.emprendedorService.getInfoEmprendedor(this.token, this.documento).subscribe(
         (data) => {
-          // Cargar el departamento primero
-          // this.emprendedorForm.patchValue({
-          //   departamento: data.id_departamento,
-          // });
           this.isActive = data.estado === 'Activo';
   
-          // Cargar municipios después de cargar el departamento
-          // if (data.id_departamento || data.id_tipo_documento) {
-          //   this.cargarMunicipios(data.id_departamento);
-          //   this.tipoDocumento();
-          // }
           console.log('trae la info',data);
           // Rellenar el formulario con los datos del emprendedor
           this.emprendedorForm.patchValue({
@@ -261,7 +252,14 @@ export class PerfilEmprendedorComponent implements OnInit {
 
  updateEmprendedor(): void {
   const formData = new FormData();
-  let estadoValue: string;
+  let estadoValue: string;  
+
+  if(this.emprendedorForm.invalid){
+    console.log("Formulario Invalido", this.emprendedorForm.value);
+    this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
+    this.submitted = true;
+    return
+  }
 
   // First pass: handle special cases and avoid duplication
   Object.keys(this.emprendedorForm.controls).forEach((key) => {
@@ -320,7 +318,7 @@ export class PerfilEmprendedorComponent implements OnInit {
         },
         (error) => {
           console.error('Error from server:', error);
-          this.alertService.errorAlert('Error', error.error.message);
+          this.alertService.errorAlert('Error', error.message);
         }
       );
     }
@@ -422,7 +420,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
-  get f() { return this.registerForm.controls; }
+  get f() { return this.emprendedorForm.controls; }
 
 
 
@@ -482,4 +480,79 @@ export class PerfilEmprendedorComponent implements OnInit {
     this.toggleInputsLock();
   }
 
+  getFormValidationErrors(form: FormGroup) {
+    const result: any = {};
+    Object.keys(form.controls).forEach(key => {
+      const controlErrors: ValidationErrors | null = form.get(key)?.errors;
+      if (controlErrors) {
+        result[key] = controlErrors;
+      }
+    });
+    return result;
+  }
+
+  noNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasNumbers = /\d/.test(value);
+
+    if (hasNumbers) {
+      return { hasNumbers: 'El campo no debe contener números *' };
+    } else {
+      return null;
+    }
+  }
+
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
+      return null; // Si no hay valor, no se valida
+    }
+  
+    const selectedDate = new Date(value);
+    const today = new Date();
+    const hundredYearsAgo = new Date();
+    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+  
+    if (selectedDate > today) {
+      return { futureDate: 'La fecha no es válida *' };
+    } else if (selectedDate < hundredYearsAgo) {
+      return { tooOld: 'La fecha no es válida *' };
+    } else if (selectedDate > eighteenYearsAgo) {
+      return { tooRecent: 'Debe tener al menos 18 años *' };
+    } else {
+      return null;
+    }
+  }
+
+  documentoValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 13) {
+      return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
+    }
+    return null;
+  }
+
+  noLettersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasLetters = /[a-zA-Z]/.test(value);
+  
+    if (hasLetters) {
+      return { hasLetters: 'El campo no debe contener letras *' };
+    } else {
+      return null;
+    }
+  }
+
+  emailValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasAtSymbol = /@/.test(value);
+
+    if (!hasAtSymbol) {
+      return { emailInvalid: 'El correo debe ser válido *' };
+    } else {
+      return null;
+    }
+  }
 }
