@@ -44,4 +44,10 @@ export class ReporteService {
     });
   }
 
+  getReporteFormulario(id_emprendedor:string): Observable<Blob> {
+    return this.http.get<Blob>(`${this.url}exportar-formExcel/${id_emprendedor}`, {
+      responseType: 'blob' as 'json' 
+    });
+  }
+
 }
