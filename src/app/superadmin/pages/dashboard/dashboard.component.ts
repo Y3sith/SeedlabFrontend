@@ -7,6 +7,7 @@ import * as echarts from 'echarts';
 
 import { DashboardsService } from '../../../servicios/dashboard.service';
 import { PuntajesService } from '../../../servicios/puntajes.service';
+import { EmpresaService } from '../../../servicios/empresa.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,10 +35,13 @@ export class DashboardComponent implements AfterViewInit {
   years: number[] = [];
   selectedYear: number;
   isLoading: boolean = false;
+  listEmpresas = [];
+  selectedEmpresa: string = '';
 
   constructor(
     private dashboardService: DashboardsService,
     private router: Router,
+    private empresaService: EmpresaService
   ) { }
 
   ngOnInit() {
@@ -48,8 +52,9 @@ export class DashboardComponent implements AfterViewInit {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
     this.selectedYear = currentYear;
+    this.getEmpresas();
     this.promedioAsesoriasMesAnio(this.selectedYear);
-    this.graficaPuntajesFormulario();
+    //this.graficaPuntajesFormulario();
     this.emprendedorPorDepartamento();
   }
 
@@ -59,7 +64,7 @@ export class DashboardComponent implements AfterViewInit {
     this.getRegistrosMensuales();
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.emprendedorPorDepartamento();
-    this.graficaPuntajesFormulario();
+    //this.graficaPuntajesFormulario();
 
   }
 
@@ -88,6 +93,26 @@ export class DashboardComponent implements AfterViewInit {
   onYearChange(year: number): void {
     this.selectedYear = year;
     this.promedioAsesoriasMesAnio(this.selectedYear);
+  }
+
+  getEmpresas() {
+    this.empresaService.getAllEmpresa(this.token).subscribe(
+      data => {
+        console.log('Empresas:', data);
+        this.listEmpresas = data;
+        this.selectedEmpresa = this.listEmpresas.length > 0 ? this.listEmpresas[0].documento_empresa : null;
+        this.graficaPuntajesFormulario();
+      },
+      error => {
+        console.error('Error al obtener empresas:', error);
+      }
+    )
+  }
+
+  onEmpresaChange(selectedId: string): void {
+    this.selectedEmpresa = selectedId;
+    console.log('id_empresas:', this.selectedEmpresa);
+    this.graficaPuntajesFormulario();
   }
 
   initEchartsPromedioAsesorias() {
@@ -579,7 +604,8 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   graficaPuntajesFormulario(): void {
-    this.dashboardService.graficaFormulario(this.token).subscribe(
+    console.log('selectedEmpresa:', this.selectedEmpresa);
+    this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa).subscribe(
       data => {
         console.log('data puntajes', data);
         this.getPuntajesForm = {
@@ -590,7 +616,7 @@ export class DashboardComponent implements AfterViewInit {
           radar: {
             indicator: [
               { name: 'General', max: 100 },
-              { name: 'Técnia', max: 100 },
+              { name: 'Técnica', max: 100 },
               { name: 'TRL', max: 100 },
               { name: 'Mercado', max: 100 },
               { name: 'Financiera', max: 100 }
@@ -600,15 +626,18 @@ export class DashboardComponent implements AfterViewInit {
             {
               name: 'Puntajes',
               type: 'radar',
-              data: data.map(item => ({
-                value: [
-                  item.info_general,
-                  item.info_tecnica,
-                  item.info_trl,
-                  item.info_mercado,
-                  item.info_financiera],
-                name: `Empresa ${item.documento_empresa}`
-              }))
+              data: [
+                {
+                  value: [
+                    parseFloat(data.info_general) || 0,
+                    parseFloat(data.info_tecnica) || 0,
+                    parseFloat(data.info_trl) || 0,
+                    parseFloat(data.info_mercado) || 0,
+                    parseFloat(data.info_financiera) || 0
+                  ],
+                  name: `Empresa ${this.selectedEmpresa}` // Cambia si es necesario
+                }
+              ]
             }
           ]
         }
