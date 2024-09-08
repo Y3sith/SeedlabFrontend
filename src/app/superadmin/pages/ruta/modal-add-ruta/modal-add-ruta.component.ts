@@ -175,17 +175,19 @@ export class ModalAddRutaComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  addActividad(): void {
-    // En la vista inicial, obtén el token del almacenamiento local
-    const token = localStorage.getItem('token');
-    //this.router.navigate(['/actnivlec'], { queryParams: { id_ruta: this.rutaId, token: token } });
+  // addActividad(): void {
+  //   // En la vista inicial, obtén el token del almacenamiento local
+  //   const token = localStorage.getItem('token');
+  //   //this.router.navigate(['/actnivlec'], { queryParams: { id_ruta: this.rutaId, token: token } });
 
-    this.router.navigate(['/actnivlec'], { queryParams: { id_ruta: this.rutaId } });
-    this.dialogRef.close();
-    //location.reload();
-  }
-  EditarActividad(): void {
-    this.router.navigate(['editar-act-ruta'], { queryParams: { id_ruta: this.rutaId } });
-    this.dialogRef.close();
-  }
+  //   this.router.navigate(['/actnivlec'], { queryParams: { id_ruta: this.rutaId } });
+  //   this.dialogRef.close();
+  //   //location.reload();
+  // } ############################### ya no me sirve porque crea es en la vista de listar actividades
+
+
+  // EditarActividad(): void {
+  //   this.router.navigate(['editar-act-ruta'], { queryParams: { id_ruta: this.rutaId } });
+  //   this.dialogRef.close();
+  // }  ############## ya no me sirve porque el editar actividad esta en el list-actividad es en la vista de listar actividades
 }

@@ -25,7 +25,6 @@ import { Contenido_Leccion } from '../../../../Modelos/contenido-leccion.model';
   styleUrl: './actnivlec.component.css'
 })
 export class ActnivlecComponent implements OnInit {
-  ////
   token: string | null = null;
   user: User | null = null;
   id: number | null = null;
@@ -43,7 +42,6 @@ export class ActnivlecComponent implements OnInit {
   rutaId: number | null = null;
   nivelSeleccionado: any | null;
   ////
-  // currentSubSectionIndex: number = 0;
   currentIndex: number = 0;
   /////
   faImages = faImage;
@@ -57,8 +55,6 @@ export class ActnivlecComponent implements OnInit {
   idactividad: string | null;
   idcontenidoLeccion: string;
   camposDeshabilitados: boolean = false;
-
-
   ////
   fuente: string = '';
   fuente_contenido: string = '';
@@ -68,7 +64,6 @@ export class ActnivlecComponent implements OnInit {
   submittedContent = false;
   submitted = false;
   ////añadir actividad
-
   actividadForm = this.fb.group({
     id: [],
     nombre: ['', Validators.required],
@@ -121,9 +116,16 @@ export class ActnivlecComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.rutaId = +params['id_ruta'];
-      this.actividadForm.patchValue({ id_ruta: this.rutaId.toString() });
+      const idActividad = params['id_actividad'];
+      //this.actividadForm.patchValue({ id_ruta: this.rutaId.toString() });
+      if (idActividad) {
+        //this.cargarDatosActividad(idActividad);
+        this.camposDeshabilitados = false; // Habilitar campos para edición
+      } else {
+        this.actividadForm.patchValue({ id_ruta: this.rutaId.toString() });
+        this.camposDeshabilitados = true; // Deshabilitar campos si es nueva creación
+      }
     });
-
     this.validateToken();
     this.tipoDato();
     this.tipoDatoContenido();
@@ -133,7 +135,6 @@ export class ActnivlecComponent implements OnInit {
     this.onAliadoChange();
     this.bloquearBotones();
   }
-
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');

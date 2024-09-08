@@ -13,7 +13,8 @@ import { AlertService } from '../../../../servicios/alert.service';
   styleUrl: './list-actividades.component.css',
 })
 export class ListActividadesComponent {
-  userFilter: any = { nombre: '' };
+  userFilter: any = { nombre: '', estado: 'Activo', };
+  public page: number = 1;
   token: string | null = null;
   rutaId: number | null = null;
   ActividadId: any;
@@ -23,6 +24,7 @@ export class ListActividadesComponent {
   listAcNiLeCo: [] = [];
   isActive: boolean = true;
   boton = true;
+  isLoading: boolean = false;
 
   actividadForm = this.fb.group({
     estado: [true],
@@ -36,14 +38,12 @@ export class ListActividadesComponent {
     private actividadService: ActividadService,
     private alertService: AlertService,
   ) {}
-
   ngOnInit(): void {
     this.validateToken();
     this.route.queryParams.subscribe((params) => {
       this.rutaId = +params['id_ruta'];
       console.log('id ruta: ', this.rutaId);
     });
-
     this.ver();
   }
   validateToken(): void {
@@ -95,12 +95,47 @@ export class ListActividadesComponent {
       }
     });
   }
-  toggleActive(ActividadId: number): void {
-    this.isActive = !this.isActive;
-    this.actividadForm.patchValue({ estado: this.isActive ? true : false });
+  toggleActive(ActividadId: number, estadoActual: string): void {
+    const nuevoEstado = estadoActual === 'Activo' ? false : true;
+    this.actividadForm.patchValue({ estado: nuevoEstado });
     this.editarEstado(ActividadId);
   }
+
+  onEstadoChange(event: any):void{
+    this.ver();
+  }
+  canGoPrevious(): boolean {
+    return this.page > 1;
+  }
+  canGoNext(): boolean {
+    const totalItems = this.listAcNiLeCo.length;
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    return this.page < totalPages;
+  }
+  changePage(page: number | 'previous' | 'next'): void {
+    if (page === 'previous' && this.canGoPrevious()) {
+      this.page--;
+    } else if (page === 'next' && this.canGoNext()) {
+      this.page++;
+    } else if (typeof page === 'number') {
+      this.page = page;
+    }
+  }
+  getPages(): number[] {
+    const totalItems = this.listAcNiLeCo.length;
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
+  }
+
   EditarActividad(ActividadId: number): void {
-    this.router.navigate(['editar-act-ruta'], { queryParams: { id_actividad: ActividadId } });
+    this.router.navigate(['actnivlec'], { queryParams: { id_actividad: ActividadId } });
+  }
+
+  agregarActividadRuta(rutaId: number):void {
+    this.router.navigate(['actnivlec'], {
+      queryParams: { id_ruta : rutaId},
+    });
   }
 }

@@ -14,9 +14,9 @@
 
                 <!-- Toggle Field -->
                 <div *ngIf="isEditing">
-                    <div class="mt-4 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
+                    <div class="mt-4 block text-sm font-medium text-gray-700 ">Activar/Desactivar Ruta
                         <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-                            matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
+                            matTooltip="Esta funcion sirve para Activar/Desactivar la ruta.Si la desactivas no podra acceder a sus funciones y tendras que activarla."
                             matTooltipPosition="right" style="color: #adb7c7;"></fa-icon>
                     </div>
                     <label class="inline-flex items-center cursor-pointer md:mt-6">
@@ -28,15 +28,15 @@
                         <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ isActive ? 'Activo' :
                             'Inactivo' }}</span>
                     </label>
-                    <button type="button" (click)="addActividad()" 
+                    <!-- <button type="button" (click)="addActividad()" ############## ya no me sirve porque crea es en la vista de listar actividades
                         class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
-                        Agregar Actividad
-                    </button>
-
-                    <button type="button" (click)="EditarActividad()" 
+                        Agregar Actividad 
+                    </button> --> 
+                    <!-- <button type="button" (click)="EditarActividad()"  ############## ya no me sirve porque el editar actividad esta en el list-actividad es en la vista de listar actividades
                         class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
                         Editar Actividades
-                    </button>
+                    </button> --> 
+
                 </div>
                 <div class="flex flex-wrap justify-center mt-4">
                     <button type="button" (click)="closeModal()"
