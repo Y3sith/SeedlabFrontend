@@ -1424,9 +1424,11 @@ export class EncuestaEmpresaComponent {
         this.respuestasService.saveAnswers(this.token, payload).subscribe(
           (data: any) => {
             console.log(data);
+            this.alertService.successAlert('Éxito', data.message);
           },
           error => {
             console.log(error);
+            this.alertService.errorAlert('Error', error.message);
           }
         );
         const puntajes = {
@@ -1446,7 +1448,7 @@ export class EncuestaEmpresaComponent {
           },
           error => {
             console.error(error);
-            this.alertService.errorAlert('Error', 'Hubo un problema al guardar los puntajes.');
+            this.alertService.errorAlert('Error', error.message);
           }
         );
       },
