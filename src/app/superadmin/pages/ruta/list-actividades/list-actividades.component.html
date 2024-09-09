@@ -21,7 +21,6 @@
     </header>
     <div class="flex justify-end items-center mb-4">
         <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900">Agregar Actividad</span>
-        <!--agrega nuevas actividades para esa ruta,toca pasarle el id -->
         <button class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center" (click)="agregarActividadRuta(rutaId)" >
             <span class="text-3xl font-semibold leading-none">+</span>
         </button>
@@ -61,7 +60,7 @@
                                     </label>
                                 </td>
                                 <td class="p-2 rounded-e-lg">
-                                    <button type="button" class="text-blue-500" (click)="EditarActividad(actividad.id)">
+                                    <button type="button" class="text-blue-500" (click)="EditarActividad(actividad.id,rutaId)">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4"
                                             fill="currentColor">
                                             <path

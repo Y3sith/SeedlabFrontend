@@ -35,9 +35,9 @@ export class ActividadService {
     return this.http.get(this.url+'/verActividadAliado/'+id,options)
   }
 
-  updateActividad(access_token:any,id:number,actividad:any):Observable<any>{
+  updateActividad(access_token:any,idActividad:number,formData: FormData):Observable<any>{ ///editar actividad
     const options = { headers: this.CreacionHeaderss(access_token)};
-    return this.http.post(this.url+'/editar_actividad/'+id,actividad,options)
+    return this.http.post(this.url+'/editar_actividad/'+idActividad,formData,options)
   }
 
   estadoActividad(access_token:any, idActividad:number,estado:boolean):Observable<any>{

@@ -43,83 +43,20 @@
                                     <div *ngIf="a.id_tipo_dato.errors.required">Este campo es requerido *</div>
                                 </div>
                             </div>
-                            <!--  -->
-                            <div class="mb-4">
-                                <ng-container [ngSwitch]="actividadForm.get('id_tipo_dato').value">
-                                    <!--video-->
-                                    <!-- <div class="mb-4" *ngSwitchCase="'1'">
-                                        <label class="block text-sm font-medium text-gray-700 mb-1" for="nombre">Link
-                                            del video</label>
-                                        <input type="text" id="fuente" formControlName="fuente"
-                                            placeholder="Example http://example.com" (input)="onTextInput($event)"
-                                            class="w-full p-2 border rounded">
-                                        <div *ngIf="submitted && a.fuente.errors"
-                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
-                                        </div>
-                                        <div *ngIf="formSubmitted && actividadForm.get('fuente')?.invalid"
-                                            class="error text-red-700">
-                                            Este campo es obligatorio.
-                                        </div>
-                                    </div> -->
-                                    <!--imagen-->
-                                    <div class="mb-4" *ngSwitchCase="'2'">
-                                        <label
-                                            class="text-sm font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center"
-                                            for="nombre">
-                                            <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
-                                                (change)="onFileSelecteds($event, 'fuente')">
-                                            <span (click)="triggerFileInput()"
-                                                class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                                                Subir Imagen
-                                                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
-                                            </span>
-                                        </label>
-                                        <div *ngIf="submitted && a.fuente.errors"
-                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
-                                        </div>
-                                        <div *ngIf="actividadForm.get('fuente')?.value"
-                                            class="mt-2 text-gray-500 text-center">
-                                            Archivo seleccionado: {{ selectedfuente.name }}
-                                        </div>
-                                    </div>
-                                    <!--pdf-->
-                                    <!-- <div class="mb-4" *ngSwitchCase="'3'">
-                                        <label
-                                            class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center"
-                                            for="nombre">
-                                            <input type="file" id="fuente" class="hidden" accept="application/pdf"
-                                                #fileInput (change)="onFileSelecteds($event, 'fuente_documento')">
-                                            <span (click)="triggerFileInput()"
-                                                class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                                                Subir PDF
-                                                <fa-icon [icon]="faFile" class="text-md ml-2"></fa-icon>
-                                            </span>
-                                        </label>
-                                        <div *ngIf="submitted && a.fuente.errors"
-                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
-                                        </div>
-                                        <div *ngIf="actividadForm.get('fuente')?.value"
-                                            class="mt-2 text-gray-500 text-center">
-                                            Archivo seleccionado: {{ actividadForm.get('fuente')?.value?.name }}
-                                        </div>
-                                    </div> -->
-                                    <!--texto-->
-                                    <!-- <div class="mb-4" *ngSwitchCase="'4'">
-                                        <label class="text-xl font-normal flex-none justify-center"
-                                            for="nombre"></label>
-                                        <textarea type="text" id="fuente" formControlName="fuente"
-                                            (input)="onTextInput($event)" placeholder="Texto de la actividad"
-                                            class="w-full p-2 border rounded "></textarea>
-                                        <div *ngIf="submitted && a.fuente.errors"
-                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                            <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
-                                        </div>
-                                    </div> -->
-                                </ng-container>
-                            </div>
+                            <div class="mb-4" *ngIf="actividadForm.get('id_tipo_dato').value">
+                                <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center" for="nombre">
+                                  <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput (change)="onFileSelecteds($event, 'fuente')">
+                                  <span (click)="triggerFileInput()" class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                                    Subir Imagen
+                                  </span>
+                                </label>
+                                <div *ngIf="submitted && a.fuente.errors" class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
+                                </div>
+                                <div *ngIf="actividadForm.get('fuente')?.value" class="mt-2 text-gray-500 text-center">
+                                  Archivo seleccionado: {{ selectedfuente?.name }}
+                                </div>
+                              </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Aliado</label>
                                 <select formControlName="id_aliado" (change)="onAliadoChange($event)"
@@ -137,7 +74,7 @@
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Asesor</label>
                                 <select formControlName="id_asesor" class="w-full p-2 border rounded">
-                                    <option value="" >Ninguno</option>
+                                    <option value="">Ninguno</option>
                                     <option *ngFor="let asesor of listarAsesores" [value]="asesor.id">
                                         {{ asesor.nombre }} {{ asesor.apellido }}
                                     </option>
@@ -155,7 +92,6 @@
                             </div>
                         </form>
                     </div>
-
                     <!-- Nivel -->
                     <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Nivel</h2>

@@ -162,19 +162,19 @@ export class EditarActRutaComponent {
   }
 
 
-  updateActividad(): void {
-    const actividadData = this.actividadForm.value;
-    this.actividadService.updateActividad(this.token,this.actividadId,actividadData).subscribe(
-      (data) => {
-        console.log('actualización exitosa', data);
+  // updateActividad(): void {
+  //   const actividadData = this.actividadForm.value;
+  //   this.actividadService.updateActividad(this.token,this.actividadId,actividadData).subscribe(
+  //     (data) => {
+  //       console.log('actualización exitosa', data);
         
-      },
-      (error) => {
-        console.log('dasdasdasd',this.actividadId);
-        console.log('Error al actualizar', error);
-      }
-    )
-  }
+  //     },
+  //     (error) => {
+  //       console.log('dasdasdasd',this.actividadId);
+  //       console.log('Error al actualizar', error);
+  //     }
+  //   )
+  // }
 
   updateNivel(): void {
     const nivelData = this.nivelForm;

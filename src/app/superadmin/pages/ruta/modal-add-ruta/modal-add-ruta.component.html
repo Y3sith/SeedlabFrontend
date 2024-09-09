@@ -3,12 +3,11 @@
         <h1 class="text-start text-lg sm:text-xl font-bold mb-10">
             {{ isEditing ? 'Editar Ruta' : 'Crear Ruta' }}
         </h1>
-        <form [formGroup]= "rutaForm" (ngSubmit)="addRuta()">
+        <form [formGroup]="rutaForm" (ngSubmit)="addRuta()">
             <div>
                 <div class="relative mx-2 my-2">
                     <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input type="text" id="nombre" formControlName="nombre" required
-                        class="w-full p-2 border rounded">  
+                    <input type="text" id="nombre" formControlName="nombre" required class="w-full p-2 border rounded">
                 </div>
 
 
@@ -28,22 +27,13 @@
                         <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ isActive ? 'Activo' :
                             'Inactivo' }}</span>
                     </label>
-                    <!-- <button type="button" (click)="addActividad()" ############## ya no me sirve porque crea es en la vista de listar actividades
-                        class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
-                        Agregar Actividad 
-                    </button> --> 
-                    <!-- <button type="button" (click)="EditarActividad()"  ############## ya no me sirve porque el editar actividad esta en el list-actividad es en la vista de listar actividades
-                        class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
-                        Editar Actividades
-                    </button> --> 
-
                 </div>
                 <div class="flex flex-wrap justify-center mt-4">
                     <button type="button" (click)="closeModal()"
                         class="m-2 inline-block bg-gray-500 px-4 py-2 rounded text-white">
                         Cancelar
                     </button>
-                    <button type="submit" 
+                    <button type="submit"
                         class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
                         Confirmar
                     </button>
