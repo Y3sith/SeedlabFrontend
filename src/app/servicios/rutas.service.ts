@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
@@ -34,6 +34,13 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado) };
     return this.http.get(this.url+'/ruta', options);
+  }
+
+  descargarArchivo(contenidoId: number): Observable<HttpResponse<Blob>> {
+    return this.http.get(`/descargar-archivo/${contenidoId}`, {
+      responseType: 'blob',
+      observe: 'response'
+    });
   }
 
   rutasActivas(access_token:any): Observable<any>{

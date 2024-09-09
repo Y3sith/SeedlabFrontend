@@ -18,6 +18,7 @@ import { ModalActividadComponent } from './pages/modal-actividad/modal-actividad
 import { ReportesComponent } from './pages/reportes/reportes.component';
 import { CursoRutaEmprendedorComponent} from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
 import { SafePipe } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 
@@ -51,6 +52,7 @@ import { SafePipe } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.
     FilterPipeModule,
     NgxPaginationModule,
     RouterModule,
+    HttpClientModule,
 
   ]
 })

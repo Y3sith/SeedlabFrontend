@@ -11,7 +11,7 @@
         <div class="md:flex justify-between items-center md:px-5">
           <!-- Contenedor del título y texto -->
           <div class="md:w-1/2">
-            <h1 class="mb-0 font-bold text-5xl font-poppins leading-tight" [style.color]="getColor()">{{ actividad.nombre }}</h1>
+            <h1 class="mb-0 font-bold md:text-5xl text-4xl font-poppins leading-tight" [style.color]="getColor()">{{ actividad.nombre }}</h1>
             <h3 class="italic"></h3>
             <p class="mb-6 leading-relaxed text-base  text-gray-800 ">{{ actividad.descripcion }}</p>
             <button (click)="irAModulo()" [style.background-color]="getColor()"

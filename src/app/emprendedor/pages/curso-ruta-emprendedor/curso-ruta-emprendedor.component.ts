@@ -1,10 +1,12 @@
-import { Component, ElementRef, Input, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, Output, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Leccion } from '../../../Modelos/leccion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from '../../../../environment/env';
 import { Contenido_Leccion } from '../../../Modelos/contenido-leccion.model';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { RutaService } from '../../../servicios/rutas.service';
 
 @Pipe({
   name: 'safe'
@@ -29,6 +31,7 @@ export class SafePipe implements PipeTransform {
   styleUrl: './curso-ruta-emprendedor.component.css'
 })
 export class CursoRutaEmprendedorComponent {
+
   actividad: any;
   niveles: any[] = [];
   lecciones: any[] = [];
@@ -41,10 +44,16 @@ export class CursoRutaEmprendedorComponent {
   currentNivelIndex: number = 0;
   currentLeccionIndex: number = 0;
   currentContenidoIndex: number = 0;
+  buttonText: string = "Siguiente";
+  buttonPreviousDisabled: boolean = false;
+  colorIndex: number;
+  errorMessage: string = '';
 
   constructor(private router: Router,
     private sanitizer: DomSanitizer,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private http : HttpClient,
+    private rutaService: RutaService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -168,16 +177,16 @@ export class CursoRutaEmprendedorComponent {
     });
   }
   
-
   goToNextContent() {
     let foundNextContent = false;
   
+    // Buscar el siguiente contenido disponible
     for (let i = this.currentNivelIndex; i < this.niveles.length && !foundNextContent; i++) {
       const nivel = this.niveles[i];
       for (let j = (i === this.currentNivelIndex ? this.currentLeccionIndex : 0); j < nivel.lecciones.length && !foundNextContent; j++) {
         const leccion = nivel.lecciones[j];
         for (let k = (i === this.currentNivelIndex && j === this.currentLeccionIndex ? this.currentContenidoIndex + 1 : 0); k < leccion.contenido_lecciones.length; k++) {
-          // Avanzar al siguiente contenido
+          // Avanzar al siguiente contenido disponible
           this.currentNivelIndex = i;
           this.currentLeccionIndex = j;
           this.currentContenidoIndex = k;
@@ -190,7 +199,16 @@ export class CursoRutaEmprendedorComponent {
     if (foundNextContent) {
       this.updateSelectedContent();
     } else {
-      console.log('No more content available');
+      // Verificar si se ha recibido una nueva actividad
+      if (this.actividad) {
+        // Reiniciar los índices y actualizar los contenidos
+        this.initializeNiveles();
+        this.updateSelectedContent();
+        this.router.navigate(['/ruta']);
+      } else {
+        // Navegar a la nueva ruta
+        console.log("SI LLEGA AQUI");
+      }
     }
   }
   
@@ -211,8 +229,11 @@ export class CursoRutaEmprendedorComponent {
       this.currentLeccionIndex = previousNivel.lecciones.length - 1;
       const previousLeccion = previousNivel.lecciones[this.currentLeccionIndex];
       this.currentContenidoIndex = previousLeccion.contenido_lecciones.length - 1;
+    } else {
+      // No hay contenido anterior, deshabilitar el botón
+      this.buttonPreviousDisabled = true;
     }
-
+  
     this.updateSelectedContent();
   }
 
@@ -301,22 +322,44 @@ export class CursoRutaEmprendedorComponent {
     return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
   }
 
-//   getPdfViewerUrl(url: string): SafeResourceUrl {
-//   let fullUrl: string;
+  downloadPDF(contenidoId: number) {
+    console.log("ID CONTENIDO", contenidoId);
+    this.rutaService.descargarArchivo(contenidoId).subscribe({
+      next: (response: HttpResponse<Blob>) => {
+        const blob: Blob = response.body || new Blob();
+        const url = window.URL.createObjectURL(blob);
 
-//   if (url.startsWith('http://') || url.startsWith('https://')) {
-//     fullUrl = url;
-//   } else {
-//     const cleanUrl = url.replace(/^\/?(api\/)?(storage\/)?/, '');
-//     const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
-//     fullUrl = `${baseUrl}/storage/${cleanUrl}`;
-//   }
+        // Obtener el nombre del archivo del Content-Disposition header
+        const contentDisposition = response.headers.get('Content-Disposition') || '';
+        let filename = 'documento.pdf';
+        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        const matches = filenameRegex.exec(contentDisposition);
+        if (matches != null && matches[1]) {
+          filename = matches[1].replace(/['"]/g, '');
+        }
 
-//   // Usa un visor de PDF local en lugar de mozilla.github.io
-//   const pdfViewerUrl = `assets/pdfjs/web/viewer.html?file=${encodeURIComponent(fullUrl)}`;
-//   return this.sanitizer.bypassSecurityTrustResourceUrl(pdfViewerUrl);
-// }
-//const pdfViewerUrl = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(fullUrl)}`;
+        // Crear un elemento <a> para la descarga
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Liberar la URL creada
+        window.URL.revokeObjectURL(url);
+        this.errorMessage = ''; // Limpiar cualquier mensaje de error previo
+      },
+      error: (error: HttpErrorResponse) => {
+        console.error('Error al descargar el archivo', error);
+        if (error.status === 404) {
+          this.errorMessage = 'El archivo no se encontró.';
+        } else {
+          this.errorMessage = 'Hubo un error al descargar el archivo. Por favor, intente nuevamente.';
+        }
+      }
+    });
+  }
 
   handleIrAModulo(rutaId: number) {
     console.log('Ir a módulos de la ruta con ID:', rutaId);
