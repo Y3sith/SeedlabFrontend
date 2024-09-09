@@ -32,10 +32,9 @@
         <div *ngIf="currentSubSectionIndex === 0">
             <div class="space-y-8 max-w-full md:px-8">
                 <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-
-                    <form action="" [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
+                    <form [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-
+                            <!-- Imagen -->
                             <div class="sm:col-span-2 flex flex-col items-center mb-4 sm:mb-6">
                                 <label for="profilePicture" class="cursor-pointer text-center">
                                     <div
@@ -171,7 +170,7 @@
             <div class="space-y-8 max-w-full md:px-8">
                 <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
                     <div class="container mx-auto px-4 py-12">
-                        <form action="" [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
+                        <form [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <!-- Departamento -->
                                 <div>
@@ -292,14 +291,14 @@
                         </form>
                     </div>
                 </div>
-                <div class="flex justify-center h-10 space-x-4">
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 h-auto">
                     <button
-                        class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+                    class="w-3/4 md:w-auto py-1 px-8 md:px-16 bg-[#373435] text-lg md:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
                         (click)="previous()">
                         Anterior
                     </button>
                     <button (click)="addOrientador()"
-                        class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+                    class="w-3/4 md:w-auto py-1 px-8 md:px-16 bg-[#FA7D00] text-lg md:text-xl text-white font-bold rounded-full transition duration-300">
                         Guardar
                     </button>
                 </div>

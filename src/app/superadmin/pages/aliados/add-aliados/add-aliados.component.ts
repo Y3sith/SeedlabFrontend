@@ -96,15 +96,15 @@ export class AddAliadosComponent {
       descripcion: ['', Validators.required],
       logo: [null, Validators.required],
       ruta_multi: [null, Validators.required],
-      id_tipo_dato: [Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      id_tipo_dato: ['', Validators.required],
+      email: ['', [Validators.required,Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       estado: [true]
       
     });
 
     this.bannerForm = this.formBuilder.group({
-      urlImagen: [Validators.required],
+      urlImagen: ['', Validators.required],
       estadobanner: [1],
     });
     this.isActive = true;

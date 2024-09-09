@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Inject, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, NgForm, ValidationErrors, Validators } from '@angular/forms';
 import { User } from '../../../../Modelos/user.model';
 import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { Orientador } from '../../../../Modelos/orientador.model';
@@ -15,8 +15,7 @@ import { AuthService } from '../../../../servicios/auth.service';
 @Component({
   selector: 'app-modal-crear-orientador',
   templateUrl: './modal-crear-orientador.component.html',
-  styleUrls: ['./modal-crear-orientador.component.css'],
-  providers: [OrientadorService, AlertService]
+  styleUrl: './modal-crear-orientador.component.css'
 })
 export class ModalCrearOrientadorComponent implements OnInit {
   @Input() isEditing: boolean = false;
@@ -48,8 +47,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
   idOrientador: number = null;
 
   orientadorForm = this.fb.group({
-    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
+    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
     imagen_perfil: [null, Validators.required],
     celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
@@ -166,6 +165,18 @@ export class ModalCrearOrientadorComponent implements OnInit {
     );
   }
 
+  passwordValidator(control: AbstractControl) {
+    const value = control.value;
+    const hasUpperCase = /[A-Z]+/.test(value);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+
+    if (hasUpperCase && hasSpecialChar) {
+      return null;
+    } else {
+      return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
+    }
+  }
+
   verEditar(): void {
     if (this.idOrientador != null) {
       this.orientadorServices.getinformacionOrientador(this.token, this.idOrientador).subscribe(
@@ -185,17 +196,13 @@ export class ModalCrearOrientadorComponent implements OnInit {
             celular: data.celular,
             email: data.email,
             password: '',
-            estado: data.estado // Esto establece el valor del estado en el formulario
+            estado: data.estado 
           });
-          this.isActive = data.estado === 'Activo'; // Asegura que el estado booleano es correcto
-          // Forzar cambio de detección de Angular
+          this.isActive = data.estado === 'Activo'; 
           setTimeout(() => {
             this.orientadorForm.get('estado')?.setValue(this.isActive);
           });
-
-          // Cargar los departamentos y municipios
           this.cargarDepartamentos();
-
           setTimeout(() => {
             // Establecer el departamento seleccionado
             this.orientadorForm.patchValue({ id_municipio: data.id_departamentos });
@@ -254,7 +261,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     if (this.idOrientador == null) {
       estadoValue = '1';
     } else {
-      // Es una edición, usar el valor del formulario
     }
   
     formData.append('nombre', this.orientadorForm.get('nombre')?.value);
@@ -265,8 +271,9 @@ export class ModalCrearOrientadorComponent implements OnInit {
   
     if (this.orientadorForm.get('direccion')?.value) {
       formData.append('direccion', this.orientadorForm.get('direccion')?.value);
-    }
-  
+    } 
+    else { }  
+
     formData.append('id_tipo_documento', this.orientadorForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.orientadorForm.get('id_departamento')?.value);
     formData.append('municipio', this.orientadorForm.get('id_municipio')?.value);
@@ -276,23 +283,24 @@ export class ModalCrearOrientadorComponent implements OnInit {
     Object.keys(this.orientadorForm.controls).forEach((key) => {
       const control = this.orientadorForm.get(key);
       if (control?.value !== null && control?.value !== undefined) {
-        if (key === 'fecha_nac') {
-          if (control.value) {
-            const date = new Date(control.value);
-            if (!isNaN(date.getTime())) {
-              formData.append(key, date.toISOString().split('T')[0]);
+        if (key === 'direccion' && !control.value) {
+        } else {
+          if (key === 'fecha_nac') {
+            if (control.value) {
+              const date = new Date(control.value);
+              if (!isNaN(date.getTime())) {
+                formData.append(key, date.toISOString().split('T')[0]);
+              }
             }
+          } else if (key === 'estado') {
+            formData.append(key, control.value ? '1' : '0');
+          } else if (key !== 'imagen_perfil') {
+            formData.append(key, control.value);
           }
-        } 
-        else if (key === 'estado') {
-          formData.append(key, control.value ? '1' : '0');
-        }
-        else if (key !== 'imagen_perfil') {
-          formData.append(key, control.value);
         }
       }
     });
-  
+
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
@@ -303,24 +311,27 @@ export class ModalCrearOrientadorComponent implements OnInit {
       this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
         if (result.isConfirmed) {
           this.orientadorServices.updateOrientador(this.token, this.idOrientador, formData).subscribe(
-            data => {
-              setTimeout(() => {
+            (data) => {
+              setTimeout(function() {
+              }, this.tiempoEspera);
                 this.router.navigate(['/list-orientador']);
                 this.alerService.successAlert('Exito', data.message);
-              }, this.tiempoEspera);
             },
             error => {
-              this.alerService.errorAlert('Error', error.error.message);
-              console.error('Error', error.error.message);
-              console.log(error);
+              console.error(error);
+              if (error.status === 400) {
+                this.alertService.errorAlert('Error', error.error.message)
+              }
             }
           );
         }
       });
+
     } else {
       this.orientadorServices.createOrientador(this.token, formData).subscribe(
         data => {
-          console.log(data);
+          setTimeout(function () {
+          },this.tiempoEspera);
           this.alerService.successAlert('Exito', data.message);
           this.router.navigate(['/list-orientador']);
         },
@@ -329,7 +340,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
           if (error.status === 400) {
             this.alerService.errorAlert('Error', error.error.message);
           }
-        });
+        }
+      );
     }
   }
 
