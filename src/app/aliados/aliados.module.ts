@@ -16,6 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 
+
 import { NgChartsModule } from 'ng2-charts';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';

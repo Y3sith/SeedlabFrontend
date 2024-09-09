@@ -233,7 +233,7 @@ export class PersonalizacionesComponent implements OnInit {
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
-        console.log("Personalización restaurada", data);
+        console.log("Personalización restaurada!!!!!!", data);
         // this.personalizacionForm.patchValue({
         //   nombre_sistema: data.nombre_sistema,
         //   color_principal: data.color_principal,

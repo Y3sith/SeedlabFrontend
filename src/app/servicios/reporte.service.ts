@@ -50,4 +50,20 @@ export class ReporteService {
     });
   }
 
+  obtenerDatosAsesoriaAliado(tipo_reporte:string, id_aliado:number, fecha_inicio: string, fecha_fin:string): Observable<any>{
+    return this.http.get<any[]>(`${this.url}obtener_datos_aliados`, {
+      params: {
+        tipo_reporte,
+        id_aliado,
+        fecha_inicio,
+        fecha_fin
+      }
+    });
+  }
+
+  exportarReporteAsesoriaAliado(tipo_reporte:string, id_aliado:number, fecha_inicio:string, fecha_fin:string): Observable<Blob>{
+    const body = {tipo_reporte,id_aliado, fecha_inicio, fecha_fin};
+    return this.http.post(`${this.url}exportar_reporte_aliado`, body, { responseType: 'blob' });
+  }
+
 }

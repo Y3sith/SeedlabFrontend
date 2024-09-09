@@ -80,7 +80,7 @@ export class AddEmpresaComponent {
       razonSocial: ['', Validators.required],
       id_departamento: ['', Validators.required],
       id_municipio: ['', Validators.required],
-      telefono: ['', [Validators.maxLength(7), this.noLettersValidator]],
+      telefono: ['', [Validators.maxLength(10), this.noLettersValidator]],
       celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
       url_pagina: [''],
       direccion: ['', Validators.required],

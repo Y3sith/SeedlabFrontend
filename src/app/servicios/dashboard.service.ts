@@ -43,7 +43,7 @@ export class DashboardsService {
   //Aliados
   getDashboard(access_token: any, idAsesor: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}/dashboardAliado/${idAsesor}`, options);
+    return this.http.get<any>(`${this.url}dashboardAliado/${idAsesor}`, options);
   }
 
   graficaDatosGeneros(access_token: string): Observable<any> {

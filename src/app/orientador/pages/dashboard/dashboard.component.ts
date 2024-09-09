@@ -376,9 +376,9 @@ export class DashboardComponent implements AfterViewInit {
         console.log('data meses', data);
 
 
-        const emprendedoresData = data.promedios.map(item => parseInt(item.emprendedores));
-        const aliadosData = data.promedios.map(item => parseInt(item.aliados));
-        const meses = data.promedios.map(item => this.getMonthName(item.mes)); // Transforma el número del mes en nombre
+        const emprendedoresData = data?.map(item => parseInt(item.emprendedores));
+        const aliadosData = data?.map(item => parseInt(item.aliados));
+        const meses = data?.map(item => this.getMonthName(item.mes)); // Transforma el número del mes en nombre
 
         this.registrosEchartsOptions = {
           tooltip: {

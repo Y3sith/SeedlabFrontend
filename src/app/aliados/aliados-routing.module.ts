@@ -17,7 +17,7 @@ const routes: Routes = [
       {path: 'list-asesores', component:ListAsesoresComponent, data: {title: 'Asesores', showInMenu: true, icon: 'fa-solid fa-users'}},
       {path: 'list-asesorias', component: AsesoriaAliadoComponent, data: {title: 'Asesorias', showInMenu: true, icon: 'fa-solid fa-users-gear'}},
       {path: 'perfil-aliado', component: PerfilAliadoComponent, data: {title: 'Perfil', showInMenu: true, icon: 'fa-solid fa-circle-user'}},
-      {path: 'Reportes', component:ReportesComponent, data:{title: 'Reportes', showInMenu: true, icon: 'fa-regular fa-file-lines'}},
+      {path: 'Reportes-aliado', component:ReportesComponent, data:{title: 'Reportes', showInMenu: true, icon: 'fa-regular fa-file-lines'}},
       {path: 'add-asesor', component: ModalAddAsesoresComponent, data:{showInMenu:false}},
       {path: 'edit-asesor/:id', component: ModalAddAsesoresComponent, data:{  showInMenu: false } },
     ]
