@@ -39,7 +39,7 @@ import { SafePipe } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.
     ModalActividadComponent,
     ReportesComponent,
     CursoRutaEmprendedorComponent, 
-    SafePipe,
+    SafePipe, 
   ],
   imports: [
     CommonModule,
@@ -50,7 +50,7 @@ import { SafePipe } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.
     FormsModule,
     FilterPipeModule,
     NgxPaginationModule,
-    RouterModule
+    RouterModule,
 
   ]
 })

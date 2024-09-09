@@ -1,4 +1,4 @@
-import { Component, Pipe, PipeTransform } from '@angular/core';
+import { Component, ElementRef, Input, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Leccion } from '../../../Modelos/leccion.model';
@@ -38,6 +38,9 @@ export class CursoRutaEmprendedorComponent {
   selectedContenido: any = null;
   contenidoLeccion: any[] = [];
   fuente_contenido: string;
+  currentNivelIndex: number = 0;
+  currentLeccionIndex: number = 0;
+  currentContenidoIndex: number = 0;
 
   constructor(private router: Router,
     private sanitizer: DomSanitizer,
@@ -96,13 +99,32 @@ export class CursoRutaEmprendedorComponent {
     }));
   }
 
-  toggleNivel(index: number) {
-    this.niveles[index].expanded = !this.niveles[index].expanded;
+  toggleNivel(selectedNivelIndex: number) {
+    this.niveles.forEach((nivel, nivelIndex) => {
+      // Si el nivel es el seleccionado, se expande; si no, se colapsa
+      if (nivelIndex === selectedNivelIndex) {
+        nivel.expanded = !nivel.expanded;
+      } else {
+        nivel.expanded = false;  // Cierra todos los demás niveles
+      }
+  
+      // Colapsa todas las lecciones de los otros niveles
+      nivel.lecciones.forEach((leccion) => {
+        leccion.expanded = false;
+      });
+    });
   }
-
-  toggleLeccion(nivelIndex: number, leccionIndex: number) {
-    this.niveles[nivelIndex].lecciones[leccionIndex].expanded = 
-      !this.niveles[nivelIndex].lecciones[leccionIndex].expanded;
+  
+  toggleLeccion(selectedNivelIndex: number, selectedLeccionIndex: number) {
+    const nivel = this.niveles[selectedNivelIndex];
+    nivel.lecciones.forEach((leccion, leccionIndex) => {
+      // Si la lección es la seleccionada, se expande; si no, se colapsa
+      if (leccionIndex === selectedLeccionIndex) {
+        leccion.expanded = !leccion.expanded;
+      } else {
+        leccion.expanded = false;  // Cierra todas las demás lecciones dentro del mismo nivel
+      }
+    });
   }
 
   selectLeccion(leccion: any) {
@@ -110,10 +132,99 @@ export class CursoRutaEmprendedorComponent {
     this.leccionForm.patchValue(leccion);
   }
 
-  selectContenido(contenido: any) {
+  // selectContenido(contenido: any) {
+  //   this.selectedContenido = contenido;
+  //   this.contenidoForm.patchValue(contenido);
+  // }
+
+  selectContenido(contenido: any, nivelIndex: number, leccionIndex: number) {
     this.selectedContenido = contenido;
-    this.contenidoForm.patchValue(contenido);
+    this.currentNivelIndex = nivelIndex;
+    this.currentLeccionIndex = leccionIndex;
+    this.currentContenidoIndex = this.niveles[nivelIndex].lecciones[leccionIndex].contenido_lecciones.findIndex(c => c.id === contenido.id);
+    this.closeAllExceptSelected(nivelIndex, leccionIndex, contenido.id);
   }
+
+  closeAllExceptSelected(selectedNivelIndex: number, selectedLeccionIndex: number, selectedContenidoId: number) {
+    this.niveles.forEach((nivel, nivelIndex) => {
+      // Si el índice del nivel no es el seleccionado, lo colapsamos.
+      if (nivelIndex !== selectedNivelIndex) {
+        nivel.expanded = false;
+        nivel.lecciones.forEach((leccion) => {
+          leccion.expanded = false; // Colapsamos todas las lecciones en los niveles no seleccionados.
+        });
+      } else {
+        // Si es el nivel seleccionado, lo expandimos.
+        nivel.expanded = true;
+        nivel.lecciones.forEach((leccion, leccionIndex) => {
+          // Solo la lección seleccionada debe expandirse, el resto debe colapsarse.
+          if (leccionIndex !== selectedLeccionIndex) {
+            leccion.expanded = false;
+          } else {
+            leccion.expanded = true;
+          }
+        });
+      }
+    });
+  }
+  
+
+  goToNextContent() {
+    let foundNextContent = false;
+  
+    for (let i = this.currentNivelIndex; i < this.niveles.length && !foundNextContent; i++) {
+      const nivel = this.niveles[i];
+      for (let j = (i === this.currentNivelIndex ? this.currentLeccionIndex : 0); j < nivel.lecciones.length && !foundNextContent; j++) {
+        const leccion = nivel.lecciones[j];
+        for (let k = (i === this.currentNivelIndex && j === this.currentLeccionIndex ? this.currentContenidoIndex + 1 : 0); k < leccion.contenido_lecciones.length; k++) {
+          // Avanzar al siguiente contenido
+          this.currentNivelIndex = i;
+          this.currentLeccionIndex = j;
+          this.currentContenidoIndex = k;
+          foundNextContent = true;
+          break;
+        }
+      }
+    }
+  
+    if (foundNextContent) {
+      this.updateSelectedContent();
+    } else {
+      console.log('No more content available');
+    }
+  }
+  
+
+  goToPreviousContent() {
+    if (this.currentContenidoIndex > 0) {
+      // Ir al contenido anterior en la misma lección
+      this.currentContenidoIndex--;
+    } else if (this.currentLeccionIndex > 0) {
+      // Ir a la lección anterior
+      this.currentLeccionIndex--;
+      const previousLeccion = this.niveles[this.currentNivelIndex].lecciones[this.currentLeccionIndex];
+      this.currentContenidoIndex = previousLeccion.contenido_lecciones.length - 1;
+    } else if (this.currentNivelIndex > 0) {
+      // Ir al nivel anterior
+      this.currentNivelIndex--;
+      const previousNivel = this.niveles[this.currentNivelIndex];
+      this.currentLeccionIndex = previousNivel.lecciones.length - 1;
+      const previousLeccion = previousNivel.lecciones[this.currentLeccionIndex];
+      this.currentContenidoIndex = previousLeccion.contenido_lecciones.length - 1;
+    }
+
+    this.updateSelectedContent();
+  }
+
+  updateSelectedContent() {
+    const currentNivel = this.niveles[this.currentNivelIndex];
+    const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+    const currentContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
+    
+    this.selectContenido(currentContenido, this.currentNivelIndex, this.currentLeccionIndex);
+  }
+
+
 
   /////////////////////////////////////////////////////////////  /////////////////////////////////////////////////////////////
   /////////////////////////////////////////////////////////////   /////////////////////////////////////////////////////////////
@@ -175,14 +286,37 @@ export class CursoRutaEmprendedorComponent {
     return `${baseUrl}${relativePath}`;
   }
 
+  // getPdfUrl(url: string): SafeResourceUrl {
+  //   // Remove any leading slashes and 'storage' from the URL
+  //   const cleanUrl = url.replace(/^\/?(storage\/)?/, '');
+  //   // Construct the full URL
+  //   const fullUrl = `${environment.apiUrl}/storage/${cleanUrl}`;
+  //   // Sanitize the URL
+  //   return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
+  // }
+
   getPdfUrl(url: string): SafeResourceUrl {
-    // Remove any leading slashes and 'storage' from the URL
     const cleanUrl = url.replace(/^\/?(storage\/)?/, '');
-    // Construct the full URL
     const fullUrl = `${environment.apiUrl}/storage/${cleanUrl}`;
-    // Sanitize the URL
     return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
   }
+
+//   getPdfViewerUrl(url: string): SafeResourceUrl {
+//   let fullUrl: string;
+
+//   if (url.startsWith('http://') || url.startsWith('https://')) {
+//     fullUrl = url;
+//   } else {
+//     const cleanUrl = url.replace(/^\/?(api\/)?(storage\/)?/, '');
+//     const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
+//     fullUrl = `${baseUrl}/storage/${cleanUrl}`;
+//   }
+
+//   // Usa un visor de PDF local en lugar de mozilla.github.io
+//   const pdfViewerUrl = `assets/pdfjs/web/viewer.html?file=${encodeURIComponent(fullUrl)}`;
+//   return this.sanitizer.bypassSecurityTrustResourceUrl(pdfViewerUrl);
+// }
+//const pdfViewerUrl = `https://mozilla.github.io/pdf.js/web/viewer.html?file=${encodeURIComponent(fullUrl)}`;
 
   handleIrAModulo(rutaId: number) {
     console.log('Ir a módulos de la ruta con ID:', rutaId);
@@ -220,19 +354,33 @@ export class CursoRutaEmprendedorComponent {
     return brightness > 128 ? 'black' : 'white';
   }
 
+  getLighterColor(amount: number): string {
+    const color = this.getColor();
+    return this.lightenColor(color, amount);
+  }
+
+  lightenColor(color: string, amount: number): string {
+    const num = parseInt(color.replace("#", ""), 16);
+  
+    // Multiplica el valor de 'amount' para un efecto de aclarado más fuerte
+    const scaleFactor = 7; // Ajusta este factor según la claridad deseada
+  
+    const r = Math.min(255, ((num >> 16) + amount * scaleFactor));
+    const g = Math.min(255, (((num >> 8) & 0x00FF) + amount * scaleFactor));
+    const b = Math.min(255, ((num & 0x0000FF) + amount * scaleFactor));
+  
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  }
+
   getContentType(contenido: any): string {
     if (!contenido || !contenido.fuente_contenido) return 'unknown';
     const fuente = contenido.fuente_contenido.toLowerCase();
 
-    if (contenido.id_tipo_dato === 3) return 'video';
+    if (contenido.id_tipo_dato === 1) return 'video';
     if (fuente.includes('youtube.com') || fuente.includes('youtu.be')) return 'video';
     if (fuente.endsWith('.pdf')) return 'pdf';
     if (/\.(jpg|jpeg|png|gif)$/i.test(fuente)) return 'image';
     return 'text';
-  }
-
-  getSafeUrl(url: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
 
