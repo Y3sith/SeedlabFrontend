@@ -23,7 +23,9 @@ import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.compo
 import { AddBannerComponent } from './pages/add-banner/add-banner.component';
 
 import { ReportesComponent } from './pages/reportes/reportes.component';
+import { TodosLosAliadosComponent } from './pages/todos-los-aliados/todos-los-aliados.component';
 
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
@@ -41,7 +43,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
     PerfilAliadoComponent,
     AddBannerComponent,
     ReportesComponent,
-    
+    TodosLosAliadosComponent,
     
   ],
   imports: [
@@ -56,7 +58,8 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
     FontAwesomeModule,
     NgChartsModule,
     MatTooltipModule,
-    RouterModule
+    RouterModule,
+    MatToolbarModule
     
   ]
 })
