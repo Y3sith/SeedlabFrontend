@@ -7,10 +7,11 @@
   <div class="mb-6 font-poppins">
     <form [formGroup]="reporteForm" (ngSubmit)="mostrarReportes()">
       <div class="flex flex-wrap items-end gap-4">
-        <h2 class="text-lg font-semibold mr-4 mb-3 sm:mb-0">FILTROS</h2>
+        <h2 class="text-lg font-semibold mr-4 mb-3 sm:mb-0 font-poppins">FILTROS</h2>
         <div class="flex-grow flex flex-wrap gap-4">
           <div class="w-full sm:w-40 md:w-48">
-            <select class="w-full p-2 border rounded-md bg-gray-100 text-base" formControlName="tipo_reporte" (change)="onTipoReporteChange($event)">
+            <select class="w-full p-2 border rounded-md bg-gray-100 text-base" formControlName="tipo_reporte"
+              (change)="onTipoReporteChange($event)">
               <option value="" disabled selected>Selecione una opción</option>
               <option value="aliado">Aliados</option>
               <option value="emprendedor">Emprendedores</option>
@@ -71,29 +72,38 @@
               class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               {{ columna }}
             </th>
-            <th *ngIf="tipoReporteSeleccionado === 'emprendedor'" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th *ngIf="tipoReporteSeleccionado === 'emprendedor'"
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Exportar
             </th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <ng-container *ngIf="paginatedReportes.length > 0">
+          <ng-container *ngIf="paginatedReportes.length > 0; else noData">
             <tr *ngFor="let reporte of paginatedReportes" class="hover:bg-gray-50 transition-colors duration-200">
               <td *ngFor="let columna of columnas" class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
                 {{ reporte[columna] }}
               </td>
-              <td *ngIf="tipoReporteSeleccionado === 'emprendedor'" class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
+              <td *ngIf="tipoReporteSeleccionado === 'emprendedor'"
+                class="px-4 py-4 whitespace-nowrap text-sm text-gray-700">
                 <!-- Botón de Excel -->
                 <button (click)="getReporteFormulario(reporte.documento)" class="text-green-600 hover:text-green-800">
                   <i class="fas fa-file-excel"></i>
                 </button>
                 <!-- Botón de PDF -->
-                <button  class="text-red-600 hover:text-red-800 ml-2">
+                <!-- <button  class="text-red-600 hover:text-red-800 ml-2">
                   <i class="fas fa-file-pdf"></i>
-                </button>
+                </button> -->
               </td>
             </tr>
           </ng-container>
+          <ng-template #noData>
+            <tr>
+              <td colspan="100%" class="text-center py-4 text-gray-500">
+                No se encontraron datos para mostrar.
+              </td>
+            </tr>
+          </ng-template>
         </tbody>
       </table>
     </div>

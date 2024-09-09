@@ -2,8 +2,9 @@ import { Component } from '@angular/core';
 import { faPrint } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import { User } from '../../../Modelos/user.model';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReporteService } from '../../../servicios/reporte.service';
+import { AlertService } from '../../../servicios/alert.service';
 
 
 
@@ -32,12 +33,13 @@ export class ReportesComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private reporteService: ReporteService
+    private reporteService: ReporteService,
+    private alertService:AlertService
   ) {
     this.reporteForm = this.fb.group({
-      tipo_reporte: [''],
-      fecha_inicio: [''],
-      fecha_fin: ['']
+      tipo_reporte: ['', Validators.required],
+      fecha_inicio: ['', Validators.required],
+      fecha_fin: ['', Validators.required]
     })
   }
 
@@ -80,12 +82,15 @@ export class ReportesComponent {
           this.page = 1;
           this.updatePaginated();
           this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
+          if(data.length === 0){
+            this.alertService.successAlert('Info','No hay datos para mostrar');
+          }
         },
         (error) => console.error('Error al obtener datos del reporte', error)
       );
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      alert('Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
     }
   }
 
@@ -112,7 +117,7 @@ export class ReportesComponent {
       )
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      alert('Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
     }
   }
 
