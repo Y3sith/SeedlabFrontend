@@ -101,18 +101,18 @@ export class ReportesComponent implements OnInit {
   
 
 
-  getReportes() {
+  getReportes(formato:string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-      const id_aliado = this.currentRolId ? this.currentRolId : null;
-      this.reporteService.exportarReporteAsesoriaAliado(tipo_reporte,id_aliado, fecha_inicio, fecha_fin).subscribe(
+      const id_aliado = this.user.id ? this.user.id : null;
+      this.reporteService.exportarReporteAsesoriaAliado(tipo_reporte, id_aliado, fecha_inicio, fecha_fin, formato).subscribe(
         (data: Blob) => {
 
           const url = window.URL.createObjectURL(data);
 
           const a = document.createElement('a');
           a.href = url;
-          a.download = `asesorias_reporte.xlsx`;
+          a.download = `Reporte_${tipo_reporte}.${formato === 'pdf' ? 'pdf' : 'xlsx'}`;
           document.body.appendChild(a);
           a.click();
           window.URL.revokeObjectURL(url);
@@ -149,7 +149,7 @@ export class ReportesComponent implements OnInit {
 
     if (this.tipoReporteSeleccionado === 'emprendedor') {
       // Lógica adicional cuando se selecciona "Emprendedores"
-      this.getReportes(); // Llamada para cargar los reportes
+      this.getReportes('excel'); // Llamada para cargar los reportes
     }
   }
 
