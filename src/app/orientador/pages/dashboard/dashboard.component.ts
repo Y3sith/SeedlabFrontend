@@ -46,6 +46,7 @@ export class DashboardComponent implements AfterViewInit {
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
     this.selectedYear = currentYear;
     this.promedioAsesoriasMesAnio(this.selectedYear);
+    this.loadChartData();
   }
 
   ngAfterViewInit() {
@@ -53,7 +54,7 @@ export class DashboardComponent implements AfterViewInit {
     this.getDatosGenerosGrafica();
     this.getRegistrosMensuales();
     this.promedioAsesoriasMesAnio(this.selectedYear);
-
+    this.loadChartData();
   }
 
   validateToken(): void {
@@ -87,7 +88,7 @@ export class DashboardComponent implements AfterViewInit {
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
       data => {
-        console.log('Promedio de asesorías:', data);
+        //console.log('Promedio de asesorías:', data);
 
         const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
@@ -201,7 +202,7 @@ export class DashboardComponent implements AfterViewInit {
         // Inicializar el gráfico de Asesorías
         this.graficaTopAliados();
 
-        console.log(data);
+        //console.log(data);
 
         // Mover el isLoading aquí después de la inicialización de gráficos
         this.isLoading = false;
@@ -298,7 +299,7 @@ export class DashboardComponent implements AfterViewInit {
   getDatosGenerosGrafica(): void {
     this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
-        console.log('Datos de géneros recibidos:', data); // Verifica los datos aquí
+        //console.log('Datos de géneros recibidos:', data); // Verifica los datos aquí
         if (data && data.length > 0) {
           const dataGenero = data.map(item => item.total);
 
@@ -336,7 +337,6 @@ export class DashboardComponent implements AfterViewInit {
             ]
           };
 
-          console.log('Configuración del gráfico de género:', this.doughnutChartOption);
           this.initEChartsDoughnut();
         } else {
           console.error('No se recibieron datos válidos para el gráfico de géneros.');
@@ -351,7 +351,6 @@ export class DashboardComponent implements AfterViewInit {
   initEChartsDoughnut(): void {
     const chartDom = document.getElementById('echarts-doughnut');
     if (chartDom) {
-      console.log('Inicializando el gráfico de géneros en el contenedor:', chartDom);
       const myChart = echarts.init(chartDom);
       myChart.setOption(this.doughnutChartOption);
     } else {
@@ -373,12 +372,11 @@ export class DashboardComponent implements AfterViewInit {
   getRegistrosMensuales(): void {
     this.dashboardService.contarRegistrosMensual(this.token).subscribe(
       data => {
-        console.log('data meses', data);
-
+        //console.log('data meses', data);
 
         const emprendedoresData = data?.map(item => parseInt(item.emprendedores));
         const aliadosData = data?.map(item => parseInt(item.aliados));
-        const meses = data?.map(item => this.getMonthName(item.mes)); // Transforma el número del mes en nombre
+        const meses = data?.map(item => this.getMonthName(item.mes)); 
 
         this.registrosEchartsOptions = {
           tooltip: {
@@ -461,4 +459,72 @@ export class DashboardComponent implements AfterViewInit {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     return monthNames[monthNumber - 1];
   }
+
+  loadChartData() {
+    this.dashboardService.getDashboard(this.token, this.id).subscribe(
+      data => {
+        //console.log(data);
+        this.pendientesFinalizadasData[0].data = [
+          data['Asesorias Pendientes'] || 0,
+          data['Asesorias Finalizadas'] || 0,
+          data['Asesorias Sin Asignar'] || 0,
+          data['Asesorias Asignadas'] || 0
+        ];
+
+        // Inicializar la gráfica con los datos cargados
+        this.initEChartsPie();
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  initEChartsPie() {
+    const chartDom = document.getElementById('echarts-pie');
+    if (chartDom) {
+      echarts.dispose(chartDom); 
+      const myChart = echarts.init(chartDom);
+      const option = {
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          top: '5%',
+          left: 'center'
+        },
+        series: [
+          {
+            name: 'Asesorías',
+            type: 'pie',
+            radius: ['40%', '70%'],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 10
+            },
+            label: {
+              show: false,
+              position: 'center'
+            },
+            emphasis: {
+              label: {
+                show: false,
+              }
+            },
+            labelLine: {
+              show: false
+            },
+            data: this.pendientesFinalizadasLabels.map((label, index) => ({
+              value: this.pendientesFinalizadasData[0].data[index],
+              name: label
+            }))
+          }
+        ]
+      };
+      myChart.setOption(option);
+    } else {
+      console.error('No se pudo encontrar el elemento con id "echarts-pie"');
+    }
+  }
+
 }
