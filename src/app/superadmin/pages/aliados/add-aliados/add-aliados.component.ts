@@ -1,23 +1,19 @@
 
-import { FormGroup, FormControl, FormBuilder, Validators, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ValidationErrors } from '@angular/forms';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import { ActividadService } from '../../../../servicios/actividad.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { User } from '../../../../Modelos/user.model';
-import { Aliado } from '../../../../Modelos/aliado.model';
-import Pica from 'pica';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { ChangeDetectorRef } from '@angular/core';
-import { forkJoin } from 'rxjs';
 import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, faFilePdf, faPen, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
-import { data } from 'jquery';
-import { Console, error } from 'console';
 import { Banner } from '../../../../Modelos/banner.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddBannerModalComponent } from '../add-banner-modal/add-banner-modal.component';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
@@ -51,12 +47,6 @@ export class AddAliadosComponent {
   faEye = faEye;
   tipoDeDato: Actividad[] = [];
   faEyeSlash = faEyeSlash;
-  faFileUpload = faFileUpload;
-  faFileLines = faFileLines;
-  fatrash = faTrashCan;
-  fapaint = faPaintBrush;
-  fafile = faFilePdf;
-  fapencil = faPen;
   idAliado: string; ///
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
@@ -89,7 +79,9 @@ export class AddAliadosComponent {
     private imageCompress: NgxImageCompressService,
     public dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
-    private aRoute: ActivatedRoute) {
+    private aRoute: ActivatedRoute,
+    private location:Location
+  ) {
 
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
@@ -109,9 +101,11 @@ export class AddAliadosComponent {
     });
     this.isActive = true;
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');
-   // console.log("IDDDD",this.idAliado);
+   // console.log("IDDDD",this.idAliado); 
+  }
 
-   
+  goBack(): void {
+    this.location.back();
   }
 
   get f() { return this.aliadoForm.controls; }

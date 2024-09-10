@@ -1,16 +1,14 @@
-import { Component, OnInit, Input, Inject, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup,  ValidationErrors, Validators } from '@angular/forms';
 import { User } from '../../../../Modelos/user.model';
-import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
-import { Orientador } from '../../../../Modelos/orientador.model';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { OrientadorService } from '../../../../servicios/orientador.service';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SuperadminService } from '../../../../servicios/superadmin.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
 import { MunicipioService } from '../../../../servicios/municipio.service';
 import { AuthService } from '../../../../servicios/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-modal-crear-orientador',
@@ -75,7 +73,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     private authService: AuthService,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
-
+    private location:Location
   ) {
     //this.orientadorId = data.orientadorId;
   }
@@ -129,6 +127,10 @@ export class ModalCrearOrientadorComponent implements OnInit {
         }
       )
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   cargarDepartamentos(): void {

@@ -1,6 +1,5 @@
 import {ChangeDetectorRef,Component,Inject,Input,OnInit,} from '@angular/core';
 import {FormBuilder,FormGroup,ValidationErrors,Validators,} from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {faCircleQuestion,} from '@fortawesome/free-solid-svg-icons';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { AsesorService } from '../../../servicios/asesor.service';
@@ -8,10 +7,10 @@ import { User } from '../../../Modelos/user.model';
 import { Asesor } from '../../../Modelos/asesor.model';
 import { AlertService } from '../../../servicios/alert.service';
 import { AuthService } from '../../../servicios/auth.service';
-import { EmprendedorService } from '../../../servicios/emprendedor.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-modal-add-asesores',
@@ -69,8 +68,6 @@ export class ModalAddAsesoresComponent implements OnInit {
   });
 
   constructor(
-    //public dialogRef: MatDialogRef<ModalAddAsesoresComponent>,
-    //@Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
     private asesorService: AsesorService,
     private aliadoService: AliadoService,
@@ -82,9 +79,8 @@ export class ModalAddAsesoresComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-  ) {
-    //this.asesorId = data.asesorId;
-  }
+    private location: Location
+  ) {}
 
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
@@ -142,6 +138,10 @@ export class ModalAddAsesoresComponent implements OnInit {
         console.error('No se encontró información de identity en localStorage');
       }
     }
+  }
+
+  goBack(){
+    this.location.back();
   }
 
   tipoDocumento(): void {
