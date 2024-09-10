@@ -33,7 +33,7 @@
 
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato</label>
-                                <select class="w-full p-2 border rounded" formControlName="id_tipo_dato" 
+                                <select class="w-full p-2 border rounded" formControlName="id_tipo_dato"
                                     (change)="onTipoDatoChange()">
                                     <option *ngFor="let tipodato of listarTipoDato" [value]="tipodato.id">
                                         {{tipodato.nombre}}</option>
@@ -44,19 +44,24 @@
                                 </div>
                             </div>
                             <div class="mb-4" *ngIf="actividadForm.get('id_tipo_dato').value">
-                                <label class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center" for="nombre">
-                                  <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput (change)="onFileSelecteds($event, 'fuente')">
-                                  <span (click)="triggerFileInput()" class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                                    Subir Imagen
-                                  </span>
+                                <label
+                                    class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center"
+                                    for="nombre">
+                                    <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+                                        (change)="onFileSelecteds($event, 'fuente')">
+                                    <span (click)="triggerFileInput()"
+                                        class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                                        Subir Imagen
+                                    </span>
                                 </label>
-                                <div *ngIf="submitted && a.fuente.errors" class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                  <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
+                                <div *ngIf="submitted && a.fuente.errors"
+                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                    <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
                                 </div>
                                 <div *ngIf="actividadForm.get('fuente')?.value" class="mt-2 text-gray-500 text-center">
-                                  Archivo seleccionado: {{ selectedfuente?.name }}
+                                    Archivo seleccionado: {{ selectedfuente?.name }}
                                 </div>
-                              </div>
+                            </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Aliado</label>
                                 <select formControlName="id_aliado" (change)="onAliadoChange($event)"
@@ -94,8 +99,21 @@
                     </div>
                     <!-- Nivel -->
                     <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
+                        
+
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Nivel</h2>
                         <form [formGroup]="nivelForm">
+
+                            <!-- editar nivel -->
+                        <div *ngIf="niveles.length > 0">
+                            <h3 class="text-lg font-semibold mb-4">Niveles</h3>
+                            <select class="w-full p-2 border rounded" formControlName="id_nivel" (change)="onNivelSelect($event)">
+                                <option *ngFor="let nivel of niveles; let i = index" class="mb-4" [value]="nivel.id">{{ nivel.nombre }}</option>
+                                <option value="">Agregar nivel</option>
+                            </select>
+                        </div>
+
+
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del nivel</label>
                                 <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
@@ -109,13 +127,13 @@
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
                                     style="font-weight: 600;">Agregar nivel</span>
-                                <a id="agregarNivelBtn" (click)="agregarOtroNivel()" [routerLink]="'#'"
+                                <a id="agregarNivelBtn" (click)="addNivelSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
                                 </a>
                             </div>
                         </form>
-
+                        
                         <form [formGroup]="leccionForm">
                             <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
                                 Agregar lección</h2>
@@ -308,4 +326,3 @@
         </div>
     </div>
 </div>
-

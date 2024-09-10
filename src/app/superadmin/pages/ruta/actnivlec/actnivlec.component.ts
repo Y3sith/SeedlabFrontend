@@ -66,7 +66,10 @@ export class ActnivlecComponent implements OnInit {
   submittedContent = false;
   submitted = false;
 
-  nivel: any []=[];
+  niveles: any[] = [];
+  leccioon: any[] = [];
+
+
   ////añadir actividad
   actividadForm = this.fb.group({
     id: [],
@@ -81,6 +84,7 @@ export class ActnivlecComponent implements OnInit {
   ////anadir nivel
 
   nivelForm = this.fb.group({
+    id_nivel: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
     id_actividad: [{ value: '', disabled: true }, Validators.required]
   })
@@ -319,7 +323,6 @@ export class ActnivlecComponent implements OnInit {
           this.aliadoService.getinfoAsesor(this.token, data.id_aliado, this.userFilter.estado).subscribe(
             asesoresData => {
               this.listarAsesores = asesoresData;
-  
               // Actualizar el formulario de actividad
               this.actividadForm.patchValue({
                 nombre: data.nombre,
@@ -330,35 +333,9 @@ export class ActnivlecComponent implements OnInit {
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
               });
-              
-  
-              // Mostrar formularios de nivel, lección y contenido si hay datos
-              // if (data.nivel && data.nivel.length > 0) {
-              //   this.mostrarNivelForm = true;
-              //   data.nivel.forEach(nivel => {
-              //     this.nivelForm.patchValue({
-              //       nombre: nivel.nombre,
-              //       id_actividad: nivel.id_actividad
-              //     });
-                  // Para cada nivel, actualizar lecciones y contenidos
-                  // nivel.lecciones.forEach(leccion => {
-                  //   this.leccionForm.patchValue({
-                  //     nombre: leccion.nombre,
-                  //     id_nivel: leccion.id_nivel
-                  //   });
-                  //   leccion.contenido_lecciones.forEach(contenido => {
-                  //     this.contenidoLeccionForm.patchValue({
-                  //       titulo: contenido.titulo,
-                  //       descripcion: contenido.descripcion,
-                  //       fuente_contenido: contenido.fuente_contenido,
-                  //       id_tipo_dato: contenido.id_tipo_dato,
-                  //       id_leccion: contenido.id_leccion
-                  //     });
-                  //   });
-                  // });
-                // });
-              // }
-              
+              this.niveles = data.nivel;
+              this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
+
               this.activivarFormulariosBotones();
               console.log('Actividad: ', data);
             },
@@ -366,7 +343,6 @@ export class ActnivlecComponent implements OnInit {
               console.log('Error al cargar los asesores:', error);
             }
           );
-          
         },
         error => {
           console.log('Error al cargar la actividad: ', error);
@@ -374,7 +350,7 @@ export class ActnivlecComponent implements OnInit {
       );
     }
   }
-  
+
 
   addActividadSuperAdmin(): void {
     this.submitted = true;
@@ -472,8 +448,8 @@ export class ActnivlecComponent implements OnInit {
     this.contenidoLeccionForm.enable();
   }
 
-  activivarFormulariosBotones():void {
-    this.nivelForm.enable(); 
+  activivarFormulariosBotones(): void {
+    this.nivelForm.enable();
     this.leccionForm.enable();
     this.contenidoLeccionForm.enable();
     this.actividadForm.enable();
@@ -527,20 +503,17 @@ export class ActnivlecComponent implements OnInit {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
       return;
     }
-    if (this.nivelForm.invalid) {
-      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
-      return;
-    }
     const nivel: any = {
       nombre: nombreNivel,
-      id_actividad: this.nivelForm.value.id_actividad
+      //id_actividad: this.nivelForm.value.id_actividad
+      id_actividad: this.actividadId
     };
     if (this.nivelForm.get('id_nivel')?.value) {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
-          console.log('Nivel actualizado', data);
+          //console.log('Nivel actualizado', data);
           this.verNivel();
           this.nivelForm.reset();
           this.submittedNivel = false;
@@ -552,58 +525,88 @@ export class ActnivlecComponent implements OnInit {
         }
       );
     } else {
+      if (this.nivelForm.invalid) {
+        this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+        return;
+      }
       console.log('nivel data', nivel);
-    this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
-      (data: any) => {
-        this.alertServices.successAlert('Exito', data.message);
-        console.log('datos recibidos', data);
-        this.leccionForm.patchValue({ id_nivel: data.id })
-        this.verNivel();
-        this.mostrarLeccionForm = true;
-        this.nivelForm.reset();
-        this.submittedNivel = false;
-        this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
-        //this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
-      },
-      error => {
-        this.alertServices.errorAlert('Error', error.error.message);
-        console.log(error);
-      }
-    )
-    }
-  }
+      this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
+        (data: any) => {
 
-  agregarOtroNivel(): void {
-    this.submittedNivel = true;
-    const nombreNivel = this.nivelForm.get('nombre')?.value;
-    if (nombreNivel && nombreNivel.length > 70) {
-      this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
-      return;
+          this.alertServices.successAlert('Exito', data.message);
+          console.log('datos recibidos', data);
+          this.leccionForm.patchValue({ id_nivel: data.id })
+          this.verNivel();
+          this.mostrarLeccionForm = true;
+          this.nivelForm.reset();
+          this.submittedNivel = false;
+          this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
+          this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
+        },
+        error => {
+          this.alertServices.errorAlert('Error', error.error.message);
+          console.log(error);
+        }
+      )
     }
-    if (this.nivelForm.invalid) {
-      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
-      return;
-    }
-    const nivel: any = {
-      nombre: nombreNivel,
-      id_actividad: this.nivelForm.value.id_actividad
-    };
-    console.log('nivel data', nivel);
-    this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
-      (data: any) => {
-        this.alertServices.successAlert('Exito', data.message);
-        console.log('datos recibidos', data);
-        this.nivelForm.reset();
-        this.submittedNivel = false;
-        this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
-        this.verNivel();
-      },
-      error => {
-        this.alertServices.errorAlert('Error', error.error.message);
-        console.log(error);
-      }
-    );
   }
+  // refreshNiveles(): void {
+  //   this.verNivel();
+  //   this.nivelForm.reset();
+  //   this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
+  //   this.submittedNivel = false;
+  // }
+
+  // agregarOtroNivel(): void {
+  //   this.submittedNivel = true;
+  //   const nombreNivel = this.nivelForm.get('nombre')?.value;
+  //   if (nombreNivel && nombreNivel.length > 70) {
+  //     this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+  //     return;
+  //   }
+  //   if (this.nivelForm.invalid) {
+  //     this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+  //     console.log('zzzzzzzzz: ',this.nivelForm.invalid)
+  //     return;
+  //   }
+  //   const nivel: any = {
+  //     nombre: nombreNivel,
+  //     id_actividad: this.nivelForm.value.id_actividad
+  //   };
+  //   if (this.nivelForm.get('id_nivel')?.value) {
+  //     const nivelId = this.nivelForm.get('id_nivel')?.value;
+  //     this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
+  //       (data) => {
+  //         this.alertServices.successAlert('Exito', data.message);
+  //         console.log('Nivel actualizado', data);
+  //         this.verNivel();
+  //         this.nivelForm.reset();
+  //         this.submittedNivel = false;
+  //         this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
+  //       },
+  //       error => {
+  //         //this.alertServices.errorAlert('Error', error.error.message);
+  //         console.log(error);
+  //       }
+  //     );
+  //   } else {
+  //     console.log('nivel data', nivel);
+  //   this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
+  //     (data: any) => {
+  //       this.alertServices.successAlert('Exito', data.message);
+  //       console.log('datos recibidos', data);
+  //       this.nivelForm.reset();
+  //       this.submittedNivel = false;
+  //       this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
+  //       this.verNivel();
+  //     },
+  //     error => {
+  //       this.alertServices.errorAlert('Error', error.error.message);
+  //       console.log(error);
+  //     }
+  //   );
+  //   }
+  // }
 
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
@@ -681,7 +684,7 @@ export class ActnivlecComponent implements OnInit {
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
-        console.log('lecciones: ', data)
+        //console.log('lecciones: ', data)
       }
     )
   }
@@ -697,6 +700,33 @@ export class ActnivlecComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  // onNivelSelect(event: any): void {
+  //   const selectedNivelId = event.target.value;
+  //   const selectedNivel = this.niveles.find(nivel => nivel.id === parseInt(selectedNivelId));
+  //   if (selectedNivel) {
+  //     this.nivelForm.patchValue({
+  //       id_nivel: selectedNivel.id,
+  //       nombre: selectedNivel.nombre
+  //     });
+  //   }
+  // }
+  onNivelSelect(event: any): void {
+    const selectedNivelId = event.target.value;
+    if (selectedNivelId === '') {
+      // Opción "Agregar nivel" seleccionada
+      this.nivelForm.reset();
+      this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
+    } else {
+      const selectedNivel = this.niveles.find(nivel => nivel.id === parseInt(selectedNivelId));
+      if (selectedNivel) {
+        this.nivelForm.patchValue({
+          id_nivel: selectedNivel.id,
+          nombre: selectedNivel.nombre
+        });
+      }
+    }
   }
 
   addContenidoLeccionSuperAdmin(): void {
