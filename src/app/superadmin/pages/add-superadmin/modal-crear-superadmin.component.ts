@@ -1,16 +1,14 @@
-import { Component, OnInit, Input, Inject, ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SuperadminService } from '../../../servicios/superadmin.service';
-import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
-import { EmprendedorService } from '../../../servicios/emprendedor.service';
 import { AuthService } from '../../../servicios/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-modal-crear-superadmin',
@@ -46,24 +44,24 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
 
   superadminForm = this.fb.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    documento: ['', Validators.required],
+    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
     imagen_perfil: [null, Validators.required],
-    celular: ['', Validators.required],
+    celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
     direccion: [],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    email: ['', Validators.required],
+    fecha_nac: [''],
+    email: ['', [Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });
 
-  constructor(//public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
-    //@Inject(MAT_DIALOG_DATA) public data: any,
+
+  constructor(
     private fb: FormBuilder,
     private router: Router,
     private alertService: AlertService,
@@ -73,11 +71,14 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private authService: AuthService,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
-    
-  ) {
-    //this.adminId = data.adminId;
+    private location:Location
+  ) {}
 
+  goBack() {
+    this.location.back();
   }
+
+
 
   /* Inicializa con esas funciones al cargar la pagina, 
   con los validator verificando cuando es editando y cuando es creando para que no salga error el campo vacio */
@@ -233,8 +234,39 @@ export class ModalCrearSuperadminComponent implements OnInit {
   }
 
 
-  /* Crear super admin o actualiza dependendiendo del adminId */
   addSuperadmin(): void {
+    // Validaciones permanentes
+    if (this.superadminForm.get('nombre').invalid || 
+        this.superadminForm.get('apellido').invalid || 
+        this.superadminForm.get('documento').invalid || 
+        this.superadminForm.get('celular').invalid) {
+      this.alertService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+      return;
+    }
+  
+    // Validaciones opcionales
+    const fechaNacControl = this.superadminForm.get('fecha_nac');
+    if (fechaNacControl.value) {
+      const fechaNac = new Date(fechaNacControl.value);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - fechaNac.getFullYear();
+      const mes = hoy.getMonth() - fechaNac.getMonth();
+      if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+        edad--;
+      }
+      if (edad < 18 || edad > 100) {
+        this.alertService.errorAlert('Error', 'La edad debe estar entre 18 y 100 años.');
+        return;
+      }
+    }
+  
+    const emailControl = this.superadminForm.get('email');
+    if (emailControl.value && !emailControl.valid) {
+      this.alertService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      return;
+    }
+  
+    // El resto de tu código existente
     const formData = new FormData();
     let estadoValue: string;
     if (this.idSuperAdmin == null) {
@@ -246,17 +278,17 @@ export class ModalCrearSuperadminComponent implements OnInit {
     formData.append('documento', this.superadminForm.get('documento')?.value);
     formData.append('celular', this.superadminForm.get('celular')?.value);
     formData.append('genero', this.superadminForm.get('genero')?.value);
-
+  
     if (this.superadminForm.get('direccion')?.value) {
       formData.append('direccion', this.superadminForm.get('direccion')?.value);
     } else { }
-
+  
     formData.append('id_tipo_documento', this.superadminForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.superadminForm.get('id_departamento')?.value);
     formData.append('municipio', this.superadminForm.get('id_municipio')?.value);
     formData.append('email', this.superadminForm.get('email')?.value);
     formData.append('password', this.superadminForm.get('password')?.value);
-
+  
     Object.keys(this.superadminForm.controls).forEach((key) => {
       const control = this.superadminForm.get(key);
       if (control?.value !== null && control?.value !== undefined) {
@@ -269,10 +301,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
           }
         } 
         else if (key === 'estado') {
-          // const estadoValue = control.value ? '1' : '0';
-          // formData.append(key, estadoValue);
-          // console.log('Estado enviado:', estadoValue);
-          // Convertir el valor booleano a 1 o 0
           formData.append(key, control.value ? '1' : '0');
         }
          else if (key !== 'imagen_perfil') {
@@ -280,23 +308,19 @@ export class ModalCrearSuperadminComponent implements OnInit {
         }
       }
     });
-
-    if (this.selectedImagen_Perfil) {formData.append('imagen_perfil',this.selectedImagen_Perfil,this.selectedImagen_Perfil.name);
+  
+    if (this.selectedImagen_Perfil) {
+      formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
     console.log('Datos del formulario:', this.superadminForm.value);
-
+  
     /* Actualiza superadmin */
     if (this.idSuperAdmin != null) {
-      // let confirmationText = this.isActive
-      //   ? "¿Estas seguro de guardar los cambios"
-      //   : "¿Estas seguro de guardar los cambios?";
-
       this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
         if (result.isConfirmed) {
           this.superadminService.updateAdmin(this.token, this.idSuperAdmin, formData).subscribe(
             (data) => {
               setTimeout(function (){
-                //location.reload();
               }, this.tiempoEspera);
               this.router.navigate(['/list-superadmin']);
               this.alertService.successAlert('Exito', data.message)
@@ -310,25 +334,21 @@ export class ModalCrearSuperadminComponent implements OnInit {
           )
         }
       });
-      /* Crea superadmin */
+    /* Crea superadmin */
     } else {
       this.superadminService.createSuperadmin(this.token, formData).subscribe(
         data => {
           setTimeout(function () {
-            //location.reload();
           },this.tiempoEspera);
           this.alertService.successAlert('Exito', data.message);
           this.router.navigate(['/list-superadmin']);
-          //console.log('datos: ', data);
         },
         error => {
           console.error(error);
           if (error.status === 400) {
             this.alertService.errorAlert('Error', error.error.message)
           }
-
         }
-
       );
     }
   }

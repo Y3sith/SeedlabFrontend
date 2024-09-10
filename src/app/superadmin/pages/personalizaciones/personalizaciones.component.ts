@@ -3,9 +3,9 @@ import { ColorPickerDirective } from 'ngx-color-picker';
 import { User } from '../../../Modelos/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SuperadminService } from '../../../servicios/superadmin.service';
-import { Personalizaciones } from '../../../Modelos/personalizaciones.model';
 import { Router } from '@angular/router';
 import { faArrowRight, faImage } from '@fortawesome/free-solid-svg-icons';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-personalizaciones',
@@ -50,7 +50,9 @@ export class PersonalizacionesComponent implements OnInit {
   constructor(private fb: FormBuilder,
     private personalizacionesService: SuperadminService,
     private router: Router,
-    private cdRef: ChangeDetectorRef,) {
+    private cdRef: ChangeDetectorRef,
+    private location: Location
+  ) {
 
     this.personalizacionForm = this.fb.group({
       nombre_sistema: ['', Validators.required],
@@ -58,7 +60,6 @@ export class PersonalizacionesComponent implements OnInit {
       //logo_footer: ['', Validators.required],
       color_principal: ['', Validators.required],
       color_secundario: ['', Validators.required],
-      //color_terciario: ['#C2FFFB', Validators.required],
       descripcion_footer: ['', Validators.required],
       paginaWeb: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -72,6 +73,8 @@ export class PersonalizacionesComponent implements OnInit {
   ngOnInit(): void {
     this.validateToken();
   }
+
+  
 
   validateToken(): void {
     if (!this.token) {
@@ -92,6 +95,10 @@ export class PersonalizacionesComponent implements OnInit {
     if (!this.token) {
       this.router.navigate(['home']);
     }
+  }
+
+  goBack(){
+    this.location.back();
   }
 
   onColorChangePrincipal(color: string): void {

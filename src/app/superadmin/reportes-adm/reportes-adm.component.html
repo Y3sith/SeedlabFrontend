@@ -42,7 +42,7 @@
   <div class="bg-gray-50 rounded-lg shadow-md p-6 font-poppins">
     <!-- Botones de descarga -->
     <div class="flex justify-end space-x-4 mb-4">
-      <button (click)="getReportes()"
+      <button (click)="getReportes('excel')"
         class="flex items-center px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors duration-200">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg">
@@ -52,7 +52,7 @@
         </svg>
         Excel
       </button>
-      <button
+      <button (click)="getReportes('pdf')"
         class="flex items-center px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors duration-200">
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg">

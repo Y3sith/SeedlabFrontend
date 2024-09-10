@@ -15,6 +15,7 @@ import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import { PuntajesService } from '../../../servicios/puntajes.service';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -201,7 +202,8 @@ export class EncuestaEmpresaComponent {
     private alertService: AlertService,
     private router: Router,
     private route: ActivatedRoute,
-    private puntajeService: PuntajesService
+    private puntajeService: PuntajesService,
+    private location: Location
   ) { }
 
 
@@ -235,6 +237,10 @@ export class EncuestaEmpresaComponent {
     if (!this.token) {
       this.router.navigate(['home']);
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
 
@@ -1424,9 +1430,11 @@ export class EncuestaEmpresaComponent {
         this.respuestasService.saveAnswers(this.token, payload).subscribe(
           (data: any) => {
             console.log(data);
+            this.alertService.successAlert('Éxito', data.message);
           },
           error => {
             console.log(error);
+            this.alertService.errorAlert('Error', error.message);
           }
         );
         const puntajes = {
@@ -1446,7 +1454,7 @@ export class EncuestaEmpresaComponent {
           },
           error => {
             console.error(error);
-            this.alertService.errorAlert('Error', 'Hubo un problema al guardar los puntajes.');
+            this.alertService.errorAlert('Error', error.message);
           }
         );
       },

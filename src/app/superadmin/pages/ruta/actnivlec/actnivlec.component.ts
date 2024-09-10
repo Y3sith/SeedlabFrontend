@@ -277,6 +277,11 @@ export class ActnivlecComponent implements OnInit {
     this.submitted = true;
     const formData = new FormData();
     let estadoValue: string;
+    const nombreActividad = this.actividadForm.get('nombre')?.value;
+    if (nombreActividad && nombreActividad.length > 39) {
+        this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
+        return; 
+    }
     if (this.actividadForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
       return;
