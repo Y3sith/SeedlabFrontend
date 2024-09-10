@@ -16,7 +16,6 @@ import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador
 import { ModalCrearSuperadminComponent } from './pages/add-superadmin/modal-crear-superadmin.component';
 import { AddAllComponent } from './pages/ruta/add-all/add-all.component';
 import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
-import { title } from 'process';
 
 const routes: Routes = [
   {
