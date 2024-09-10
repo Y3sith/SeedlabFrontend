@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { User } from '../../Modelos/user.model';
+import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReporteService } from '../../servicios/reporte.service';
-import { data } from 'jquery';
-import { AlertService } from '../../servicios/alert.service';
+import { ReporteService } from '../../../servicios/reporte.service';
+import { AlertService } from '../../../servicios/alert.service';
 
 @Component({
   selector: 'app-reportes-adm',
