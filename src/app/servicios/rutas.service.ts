@@ -37,11 +37,26 @@ export class RutaService {
   }
 
   descargarArchivo(contenidoId: number): Observable<HttpResponse<Blob>> {
-    return this.http.get(`/descargar-archivo/${contenidoId}`, {
+    //const url = `${environment.apiUrl}aliado/${estado}`;
+    return this.http.get(`${environment.apiUrl}descargar-archivo/${contenidoId}`, {
+      observe: 'response',
       responseType: 'blob',
-      observe: 'response'
+      headers: new HttpHeaders({
+        'Accept': 'application/pdf'
+      })
     });
   }
+
+  // descargarArchivo(contenidoId: number): Observable<HttpResponse<Blob>> {
+  //   const backendUrl = 'http://127.0.0.1:8000';
+  //   return this.http.get(`${backendUrl}/descargar-archivo/${contenidoId}`, {
+  //     observe: 'response',
+  //     responseType: 'blob',
+  //     headers: new HttpHeaders({
+  //       'Accept': 'application/pdf'
+  //     })
+  //   });
+  // }
 
   rutasActivas(access_token:any): Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token) };

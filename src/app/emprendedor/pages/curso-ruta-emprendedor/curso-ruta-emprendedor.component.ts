@@ -1,12 +1,13 @@
-import { Component, ElementRef, Input, Output, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injectable, Input, Output, Pipe, PipeTransform, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Leccion } from '../../../Modelos/leccion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from '../../../../environment/env';
 import { Contenido_Leccion } from '../../../Modelos/contenido-leccion.model';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RutaService } from '../../../servicios/rutas.service';
+import { Observable, tap } from 'rxjs';
 
 @Pipe({
   name: 'safe'
@@ -323,40 +324,31 @@ export class CursoRutaEmprendedorComponent {
   }
 
   downloadPDF(contenidoId: number) {
-    console.log("ID CONTENIDO", contenidoId);
     this.rutaService.descargarArchivo(contenidoId).subscribe({
       next: (response: HttpResponse<Blob>) => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = 'documento.pdf';
+        if (contentDisposition) {
+          const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
+          if (filenameMatch && filenameMatch[1]) {
+            filename = filenameMatch[1].replace(/"/g, '').trim();
+            // Elimina cualquier guión bajo al final del nombre
+            filename = filename.replace(/_+$/, '');
+          }
+        }
+  
         const blob: Blob = response.body || new Blob();
         const url = window.URL.createObjectURL(blob);
-
-        // Obtener el nombre del archivo del Content-Disposition header
-        const contentDisposition = response.headers.get('Content-Disposition') || '';
-        let filename = 'documento.pdf';
-        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-        const matches = filenameRegex.exec(contentDisposition);
-        if (matches != null && matches[1]) {
-          filename = matches[1].replace(/['"]/g, '');
-        }
-
-        // Crear un elemento <a> para la descarga
+  
         const link = document.createElement('a');
         link.href = url;
         link.download = filename;
-        document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
-
-        // Liberar la URL creada
+  
         window.URL.revokeObjectURL(url);
-        this.errorMessage = ''; // Limpiar cualquier mensaje de error previo
       },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al descargar el archivo', error);
-        if (error.status === 404) {
-          this.errorMessage = 'El archivo no se encontró.';
-        } else {
-          this.errorMessage = 'Hubo un error al descargar el archivo. Por favor, intente nuevamente.';
-        }
+      error: (error) => {
+        console.error('Error al descargar el archivo:', error);
       }
     });
   }

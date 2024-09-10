@@ -93,16 +93,16 @@
               </div>
 
               <div *ngSwitchCase="'pdf'" class="relative" style="padding-top: 75%;">
-                <!-- <object class="absolute top-0 left-0 w-full h-full"
+                <object class="absolute top-0 left-0 w-full h-full"
                   [data]="getCorrectFileUrl(selectedContenido.fuente_contenido) | safe: 'resourceUrl'"
-                  type="application/pdf"> -->
+                  type="application/pdf">
                   <p>Este navegador no soporta la visualización de PDFs. Puedes
                     <a class="pdf-download-link" (click)="downloadPDF(selectedContenido.id)">
                       descargar el PDF
                     </a>
                     en su lugar.
                   </p>
-                <!-- </object> -->
+                </object>
               </div>
 
               <div *ngSwitchDefault>
