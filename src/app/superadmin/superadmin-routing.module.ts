@@ -11,7 +11,7 @@ import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.com
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
-import { ReportesAdmComponent } from './reportes-adm/reportes-adm.component';
+import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ModalCrearSuperadminComponent } from './pages/add-superadmin/modal-crear-superadmin.component';
 import { AddAllComponent } from './pages/ruta/add-all/add-all.component';
