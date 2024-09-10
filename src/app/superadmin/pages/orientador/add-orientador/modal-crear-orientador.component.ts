@@ -30,6 +30,9 @@ export class ModalCrearOrientadorComponent implements OnInit {
   currentRolId: number;
   orientadorId: any;
   hide = true;
+  errorMessage: string = '';
+
+
   //////
   listTipoDocumento: [] = [];
   listDepartamentos: any[] = [];
@@ -435,6 +438,21 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
 
   next() {
+    if (this.orientadorForm.invalid) {
+      // Marcar todos los campos como tocados para mostrar los errores
+      Object.keys(this.orientadorForm.controls).forEach(key => {
+        const control = this.orientadorForm.get(key);
+        control.markAsTouched();
+        control.markAsDirty();
+      });
+  
+      // Mostrar un mensaje de error general
+      this.showErrorMessage('Por favor, complete todos los campos correctamente antes de continuar.');
+  
+      return;
+    }
+  
+    // Si el formulario es válido, procede con la navegación
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
     } else {
@@ -443,9 +461,23 @@ export class ModalCrearOrientadorComponent implements OnInit {
         this.currentSubSectionIndex = 0;
       }
     }
-
+  
+    // Limpiar el mensaje de error si existe
+    this.clearErrorMessage();
   }
-
+  
+  // Función auxiliar para mostrar mensajes de error
+  private showErrorMessage(message: string) {
+    // Aquí puedes implementar la lógica para mostrar el mensaje de error
+    // Por ejemplo, usando un servicio de notificación o actualizando una variable en el componente
+    console.error(message);
+    this.errorMessage = message;
+  }
+  
+  // Función auxiliar para limpiar el mensaje de error
+  private clearErrorMessage() {
+    this.errorMessage = '';
+  }
   previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;
