@@ -66,4 +66,5 @@ export class ReporteService {
     return this.http.post(`${this.url}exportar_reporte_aliado`, body, { responseType: 'blob' });
   }
 
+  // obtenerDatosFormEmp($tip): Observable<Blob>{}
 }
