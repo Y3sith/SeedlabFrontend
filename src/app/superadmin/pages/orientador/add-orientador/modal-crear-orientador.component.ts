@@ -48,18 +48,18 @@ export class ModalCrearOrientadorComponent implements OnInit {
   idOrientador: number = null;
 
   orientadorForm = this.fb.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    documento: ['', Validators.required],
-    id_tipo_documento: ['', Validators.required],
+    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    documento: ['', [Validators.required, Validators.minLength(5)]],
     imagen_perfil: [null, Validators.required],
-    celular: ['', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(10)]],
+    celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
     direccion: [],
+    id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    fecha_nac: [''],
+    email: ['', [Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });

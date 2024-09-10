@@ -18,7 +18,8 @@ export class EditarActRutaComponent {
   user: User | null = null;
   id: number | null = null;
   currentRolId: number;
-  rutaId: number | null = null;
+  //rutaId: number | null = null;
+  ActividadId: number | null = null;
   actividadId: any;
   nivelId:any;
 
@@ -61,13 +62,6 @@ export class EditarActRutaComponent {
     id_tipo_dato: ['']
   });
 
-
-
-
-
-
-
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -82,10 +76,15 @@ export class EditarActRutaComponent {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.rutaId = +params['id_ruta'];
+    // this.route.queryParams.subscribe(params => {
+    //   this.rutaId = +params['id_ruta'];
+    //   console.log('xxxxxx: ',this.rutaId);
 
-    })
+    // })
+    this.route.queryParams.subscribe(params => {
+      this.ActividadId = +params['id_actividad'];
+      console.log('id actividad: ',this.ActividadId);
+    });
     this.validateToken();
     this.verEditar();
     
