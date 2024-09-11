@@ -45,7 +45,7 @@ export class PerfilOrientadorComponent {
   boton: boolean;
   id: number;
   selectedImagen: File | null = null;
-  orientadorId : number = 1;
+  orientadorId : number
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
   showEditButton = false;
@@ -99,7 +99,7 @@ export class PerfilOrientadorComponent {
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
-        this.id = this.user.id;
+        this.orientadorId = this.user.id;
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 2) {
           this.router.navigate(['home']);
@@ -114,7 +114,7 @@ export class PerfilOrientadorComponent {
 
   verEditar(): void {
     if (this.token) {
-      this.orientadorService.getinformacionOrientador(this.token, this.id).subscribe(
+      this.orientadorService.getinformacionOrientador(this.token, this.orientadorId).subscribe(
         (data) => {
           this.perfilorientadorForm.patchValue({
             documento: data.documento,
