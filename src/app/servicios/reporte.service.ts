@@ -22,7 +22,7 @@ export class ReporteService {
     });
   }
 
-  exportarReporte(tipo_reporte: string, fecha_inicio: string, fecha_fin: string, formato:string): Observable<Blob> {
+  exportarReporte(tipo_reporte: string, fecha_inicio: string, fecha_fin: string, formato: string): Observable<Blob> {
     const body = { tipo_reporte, fecha_inicio, fecha_fin, formato };
 
     return this.http.post(`${this.url}exportar_reporte`, body, { responseType: 'blob' });
@@ -44,13 +44,13 @@ export class ReporteService {
     });
   }
 
-  getReporteFormulario(id_emprendedor:string): Observable<Blob> {
+  getReporteFormulario(id_emprendedor: string): Observable<Blob> {
     return this.http.get<Blob>(`${this.url}exportar-formExcel/${id_emprendedor}`, {
-      responseType: 'blob' as 'json' 
+      responseType: 'blob' as 'json'
     });
   }
 
-  obtenerDatosAsesoriaAliado(tipo_reporte:string, id_aliado:number, fecha_inicio: string, fecha_fin:string): Observable<any>{
+  obtenerDatosAsesoriaAliado(tipo_reporte: string, id_aliado: number, fecha_inicio: string, fecha_fin: string): Observable<any> {
     return this.http.get<any[]>(`${this.url}obtener_datos_aliados`, {
       params: {
         tipo_reporte,
@@ -61,10 +61,19 @@ export class ReporteService {
     });
   }
 
-  exportarReporteAsesoriaAliado(tipo_reporte:string, id_aliado:number, fecha_inicio:string, fecha_fin:string, formato:string): Observable<Blob>{
-    const body = {tipo_reporte,id_aliado, fecha_inicio, fecha_fin, formato};
+  exportarReporteAsesoriaAliado(tipo_reporte: string, id_aliado: number, fecha_inicio: string, fecha_fin: string, formato: string): Observable<Blob> {
+    const body = { tipo_reporte, id_aliado, fecha_inicio, fecha_fin, formato };
     return this.http.post(`${this.url}exportar_reporte_aliado`, body, { responseType: 'blob' });
   }
 
-  // obtenerDatosFormEmp($tip): Observable<Blob>{}
+  obtenerDatosFormEmp(tipo_reporte: string, doc_emprendedor: string, empresa: string): Observable<any> {
+    let params = new HttpParams()
+      .set('tipo_reporte', tipo_reporte)
+      .set('doc_emprendedor', doc_emprendedor)
+      .set('empresa', empresa);
+
+    return this.http.get<any[]>(`${this.url}obtener_datos_formEmprendedor`, { params });
+  }
+
+
 }
