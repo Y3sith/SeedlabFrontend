@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/env';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -43,7 +43,7 @@ export class DashboardsService {
   //Aliados
   getDashboard(access_token: any, idAsesor: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}/dashboardAliado/${idAsesor}`, options);
+    return this.http.get<any>(`${this.url}dashboardAliado/${idAsesor}`, options);
   }
 
   graficaDatosGeneros(access_token: string): Observable<any> {
@@ -51,9 +51,16 @@ export class DashboardsService {
     return this.http.get<any>(this.url + "generoAliado", options)
   }
 
-  graficaFormulario(access_token: any): Observable<any> {
+  graficaFormulario(access_token: string, id_empresa: string): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url+"graficaFormulario", options);
+    return this.http.get<any>(`${this.url}graficaFormulario/${id_empresa}`, options)
+      .pipe(
+        map(response => {
+          console.log('Respuesta original del servidor:', response);
+          // Si la respuesta está dentro de un array 'items', toma el primer elemento
+          return response.items && response.items.length > 0 ? response.items[0] : response;
+        })
+      );
   }
 
 

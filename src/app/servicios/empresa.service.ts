@@ -55,5 +55,10 @@ export class EmpresaService {
     return this.http.get(`${this.url}/getApoyo/${id_documentoEmpresa}`, options);
   }
 
+  getAllEmpresa(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url+"/getAllEmpresa",options)
+  }
+
 }
 

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { User } from '../../Modelos/user.model';
+import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ReporteService } from '../../servicios/reporte.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReporteService } from '../../../servicios/reporte.service';
+import { AlertService } from '../../../servicios/alert.service';
 
 @Component({
   selector: 'app-reportes-adm',
@@ -14,29 +15,31 @@ export class ReportesAdmComponent {
   user: User | null = null;
   currentRolId: number;
   reporteForm: FormGroup;
-  reportes: any[] = []; 
+  reportes: any[] = [];
   columnas: string[] = [];
   public page: number = 1;
   public itemsPerPage: number = 5;
   public totalItems: number = 0;
   public paginatedReportes: string[] = [];
+  tipoReporteSeleccionado: string = '';
 
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private reporteService: ReporteService
-  ){
+    private reporteService: ReporteService,
+    private alertService: AlertService
+  ) {
     this.reporteForm = this.fb.group({
-      tipo_reporte:[''],
-      fecha_inicio: [''],
-      fecha_fin: ['']
+      tipo_reporte: ['', Validators.required],
+      fecha_inicio: ['', Validators.required],
+      fecha_fin: ['', Validators.required],
     })
   }
 
 
   ngOnInit(): void {
-    
+
   }
 
   validateToken(): void {
@@ -66,32 +69,36 @@ export class ReportesAdmComponent {
       this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
           this.reportes = data;
+          console.log(this.reportes);
+          
           this.totalItems = data.length;
           this.page = 1;
           this.updatePaginated();
           this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
-        },
-        (error) => console.error('Error al obtener datos del reporte', error)
+          if(data.length === 0){
+            this.alertService.successAlert('Info','No hay datos para mostrar');
+          }
+        },(error) => console.error('Error al obtener datos del reporte', error)
       );
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      alert('Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
     }
   }
-  
 
-  getReportes(){
-    if(this.reporteForm.valid){
-      const {tipo_reporte, fecha_inicio, fecha_fin} = this.reporteForm.value;
 
-      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
-       (data:Blob) =>{
+  getReportes(formato:string) {
+    if (this.reporteForm.valid) {
+      const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
+
+      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe(
+        (data: Blob) => {
           
           const url = window.URL.createObjectURL(data);
 
           const a = document.createElement('a');
           a.href = url;
-          a.download = `${tipo_reporte}_reporte.xlsx`;
+          a.download = `Reporte_${tipo_reporte}.${formato === 'pdf' ? 'pdf' : 'xlsx'}`;
           document.body.appendChild(a);
           a.click();
           window.URL.revokeObjectURL(url);
@@ -100,9 +107,35 @@ export class ReportesAdmComponent {
           console.error('Error al descargar el reporte', error);
         }
       )
-    }else{
+    } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      alert('Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
+    }
+  }
+
+  getReporteFormulario(id_emprendedor: string) {
+    this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
+      (data: Blob) => {
+        const url = window.URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Reporte_Formulario.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error => {
+        console.error('Error al descargar el reporte del formulario', error);
+      }
+    )
+  }
+
+  onTipoReporteChange(event: any) {
+    this.tipoReporteSeleccionado = event.target.value;
+    
+    if (this.tipoReporteSeleccionado === 'emprendedor') {
+      // Lógica adicional cuando se selecciona "Emprendedores"
+      this.getReportes('excel'); // Llamada para cargar los reportes
     }
   }
 
@@ -111,7 +144,7 @@ export class ReportesAdmComponent {
     const end = start + this.itemsPerPage;
 
     this.paginatedReportes = this.reportes.slice(start, end);
-    
+
   }
 
   changePage(page: number | string): void {
@@ -144,5 +177,5 @@ export class ReportesAdmComponent {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  
+
 }

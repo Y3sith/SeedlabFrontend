@@ -41,10 +41,6 @@
     /*background: rgb(45, 148, 216);*/
 }
 
-/* Estilo para el botón de logout */
-/* .btn-logout li a:hover {
-    background: rgb(72, 176, 245);
-} */
 
 /* Transición del toggle switch */
 .toggle-switch .switch {
@@ -75,6 +71,11 @@
   }
   .icon {
     fill: #FFFFFF; /* Color blanco para pantallas grandes */
+  }
+
+  .active-link {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
   }
 
 /* Estilos responsivos */

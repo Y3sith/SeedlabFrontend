@@ -22,8 +22,8 @@ export class ReporteService {
     });
   }
 
-  exportarReporte(tipo_reporte: string, fecha_inicio: string, fecha_fin: string): Observable<Blob> {
-    const body = { tipo_reporte, fecha_inicio, fecha_fin };
+  exportarReporte(tipo_reporte: string, fecha_inicio: string, fecha_fin: string, formato:string): Observable<Blob> {
+    const body = { tipo_reporte, fecha_inicio, fecha_fin, formato };
 
     return this.http.post(`${this.url}exportar_reporte`, body, { responseType: 'blob' });
   }
@@ -42,6 +42,28 @@ export class ReporteService {
         fecha_fin
       }
     });
+  }
+
+  getReporteFormulario(id_emprendedor:string): Observable<Blob> {
+    return this.http.get<Blob>(`${this.url}exportar-formExcel/${id_emprendedor}`, {
+      responseType: 'blob' as 'json' 
+    });
+  }
+
+  obtenerDatosAsesoriaAliado(tipo_reporte:string, id_aliado:number, fecha_inicio: string, fecha_fin:string): Observable<any>{
+    return this.http.get<any[]>(`${this.url}obtener_datos_aliados`, {
+      params: {
+        tipo_reporte,
+        id_aliado,
+        fecha_inicio,
+        fecha_fin
+      }
+    });
+  }
+
+  exportarReporteAsesoriaAliado(tipo_reporte:string, id_aliado:number, fecha_inicio:string, fecha_fin:string, formato:string): Observable<Blob>{
+    const body = {tipo_reporte,id_aliado, fecha_inicio, fecha_fin, formato};
+    return this.http.post(`${this.url}exportar_reporte_aliado`, body, { responseType: 'blob' });
   }
 
 }

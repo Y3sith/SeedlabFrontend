@@ -1,16 +1,14 @@
-import { Component, OnInit, Input, Inject, ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { faMagnifyingGlass, faPenToSquare, faPlus, faXmark, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SuperadminService } from '../../../servicios/superadmin.service';
-import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
-import { EmprendedorService } from '../../../servicios/emprendedor.service';
 import { AuthService } from '../../../servicios/auth.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-modal-crear-superadmin',
@@ -57,14 +55,13 @@ export class ModalCrearSuperadminComponent implements OnInit {
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     fecha_nac: [''],
-    email: ['', [Validators.email]],
+    email: ['', [Validators.required,Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });
 
 
-  constructor(//public dialogRef: MatDialogRef<ModalCrearSuperadminComponent>,
-    //@Inject(MAT_DIALOG_DATA) public data: any,
+  constructor(
     private fb: FormBuilder,
     private router: Router,
     private alertService: AlertService,
@@ -74,10 +71,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private authService: AuthService,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
-    
-  ) {
-    //this.adminId = data.adminId;
+    private location:Location
+  ) {}
 
+  goBack() {
+    this.location.back();
   }
 
 
@@ -257,7 +255,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
         edad--;
       }
       if (edad < 18 || edad > 100) {
-        this.alertService.errorAlert('Error', 'La edad debe estar entre 18 y 100 años.');
+        this.alertService.errorAlert('Error', 'Debes ser mayor de edad');
         return;
       }
     }

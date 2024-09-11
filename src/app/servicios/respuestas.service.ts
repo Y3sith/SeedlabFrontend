@@ -23,18 +23,18 @@ export class RespuestasService {
     return this.http.post(this.url+'/guardar-respuestas', payload, { headers });
   }
 
-  SaveAnswersRedis(access_token: string, sectionId: number, data:any):Observable<any>{
+  saveAnswersRedis(access_token: string,id_empresa:number, sectionId: number, data:any):Observable<any>{
     const headers = new HttpHeaders({
       'Authorization': 'Bearer '+ access_token
     });
-    return this.http.post(this.url+'/form/section/'+sectionId, JSON.stringify(data), { headers });
+    return this.http.post(`${this.url}/form/section/${id_empresa}/${sectionId}`, JSON.stringify(data), { headers });
   }
 
-  getAnwerRedis(access_token: string, sectionId:number): Observable<any>{
+  getAnwerRedis(access_token: string, id_empresa:number): Observable<any>{
     const headers = new HttpHeaders({
       'Authorization': 'Bearer '+ access_token
     });
-    return this.http.get(this.url+'/form/section/'+sectionId, {headers});
+    return this.http.get(this.url+'/getRespuestasRedis/'+id_empresa, {headers});
   }
 
 }

@@ -1,7 +1,13 @@
 <div class="container mx-auto p-0 pt-2 font-poppins">
-    <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
-        <app-header [title] [subtitle]="'SuperAdmin'"></app-header>
-    </header>
+    <header class="flex items-center justify-between mt-2 mb-6 md:pl-4 w-full">
+        <button (click)="goBack()" class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300 font-poppins">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Volver
+        </button>
+        <app-header [title] [subtitle]="'Agregar empresa y apoyos'"></app-header>
+      </header>
 
     <!-- transicion basada en el estado -->
     <div class="w-full flex items-center justify-center px-4">
@@ -108,16 +114,15 @@
                                 <input type="text" id="documento" formControlName="documento" name="documento"
                                     class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                     [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}">
+                                
+                                <!-- Contenedor de errores -->
                                 <div *ngIf="f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['documento'].errors?.['minlength']">El documento debe tener al menos 5 caracteres</span>
-                                    <span *ngIf="f['documento'].errors?.['pattern']">El documento solo debe contener números</span>
-
+                                    class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg" role="alert">
+                                    <span *ngIf="f['documento'].errors?.['required']" class="block mt-1">Este campo es requerido *</span>
+                                    <span *ngIf="f['documento'].errors?.['minlength']" class="block mt-1">El documento debe tener al menos 5 caracteres</span>
+                                    <span *ngIf="f['documento'].errors?.['pattern']" class="block mt-1">El documento solo debe contener números</span>
                                 </div>
                             </div>
-
                             <!-- Genero -->
                             <div>
                                 <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>

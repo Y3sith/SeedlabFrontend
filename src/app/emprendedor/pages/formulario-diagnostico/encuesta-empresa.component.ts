@@ -15,6 +15,7 @@ import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import { PuntajesService } from '../../../servicios/puntajes.service';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -47,6 +48,14 @@ export class EncuestaEmpresaComponent {
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
   listaRespuestas5: Respuesta[] = [];
+  
+  isSectionSaved: { [key: number]: boolean } = {
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false
+  };
 
   acumXSeccion1: number = 0;
   acumXSeccion2: number = 0;
@@ -193,7 +202,8 @@ export class EncuestaEmpresaComponent {
     private alertService: AlertService,
     private router: Router,
     private route: ActivatedRoute,
-    private puntajeService: PuntajesService
+    private puntajeService: PuntajesService,
+    private location: Location
   ) { }
 
 
@@ -229,6 +239,10 @@ export class EncuestaEmpresaComponent {
     }
   }
 
+  goBack(): void {
+    this.location.back();
+  }
+
 
   onSubmitSeccion1(): boolean {
 
@@ -236,6 +250,7 @@ export class EncuestaEmpresaComponent {
     let respCounter = 0;
     let isValidForm = true;
     this.listaRespuestas1 = [];
+    this.acumXSeccion1 = 0;
 
     let totalXpregunta: number = 0;
     //Mapeo de valores 
@@ -449,7 +464,7 @@ export class EncuestaEmpresaComponent {
       return false;
     }
     this.next();
-    this.saveSection1();
+    this.saveSection(1, this.listaRespuestas1);
     return isValidForm;
   }
 
@@ -462,6 +477,7 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas2 = [];
     let totalXpregunta: number = 0;
+    this.acumXSeccion2 = 0;
 
     const valorRespuesta26 = {
       'Ingreso superior al egreso': 15.0,
@@ -811,7 +827,7 @@ export class EncuestaEmpresaComponent {
     console.log('fuera del ciclo', this.listaRespuestas2);
     console.log(this.acumXSeccion2);
     this.next();
-    this.saveSection2();
+    this.saveSection(2, this.listaRespuestas2);
     return isValidForm;
 
   }
@@ -822,7 +838,8 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas3 = [];
     let totalXpregunta: number = 0;
-    
+    this.acumXSeccion3 = 0;
+
 
     this.respuesta66.valor = this.respuesta66.opcion === 'Si' ? 25 : this.respuesta66.opcion === 'Medio' ? 12.5 : 0;
     this.listaRespuestas3.push(this.respuesta66);
@@ -892,7 +909,7 @@ export class EncuestaEmpresaComponent {
     console.log('fuera del ciclo', this.listaRespuestas3);
     console.log('Acumulado seccion 3', this.acumXSeccion3);
     this.next();
-    this.saveSection3();
+    this.saveSection(3, this.listaRespuestas3);
     return isValidForm;
   }
 
@@ -913,9 +930,10 @@ export class EncuestaEmpresaComponent {
     let acumTrl8: number = 0;
     let acumTrl9: number = 0;
     let maxTrl = 0;
+    this.acumXTrl = 0;
 
 
-   
+
     //TRL 1
     this.respuesta78.valor = (this.respuesta78.opcion === 'Si') ? 0.7 : 0;
     this.listaRespuestas4.push(this.respuesta78);
@@ -997,12 +1015,12 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas4[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas4[respCounter].valor;
       this.acumXTrl += totalXpregunta;
-      console.log('acum TRl',this.acumXTrl);
+      console.log('acum TRl', this.acumXTrl);
 
       if (currentPregunta.isAffirmativeQuestion) {
         if (currentRespuesta.opcion === 'No') {
           // Si la respuesta es 'No', saltar la pregunta actual y todas las subpreguntas
-          if (i + 1 < 47) { 
+          if (i + 1 < 47) {
             const nextPregunta = PREGUNTAS[i + 1];
             if (nextPregunta.subPreguntas && nextPregunta.subPreguntas.length > 0) {
               // Saltar también las subpreguntas de la siguiente pregunta si las hay
@@ -1033,79 +1051,79 @@ export class EncuestaEmpresaComponent {
           totalXpregunta = respuestaSubPregunta.valor;
           this.acumXTrl += totalXpregunta;
 
-          if(subPregunta.id >=50 && subPregunta.id <=52){
+          if (subPregunta.id >= 50 && subPregunta.id <= 52) {
             acumTrl1 += totalXpregunta;
-            if(acumTrl1 <=2){
+            if (acumTrl1 <= 2) {
               trl = 1;
             }
-          }else if(subPregunta.id >=53 && subPregunta.id <=57){
+          } else if (subPregunta.id >= 53 && subPregunta.id <= 57) {
             acumTrl2 += totalXpregunta;
-            if(acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 2;
-            }else if(acumTrl2 < 4){
+            } else if (acumTrl2 < 4) {
               trl = 1;
             }
-          }else if(subPregunta.id >=58 && subPregunta.id <=60 ){
+          } else if (subPregunta.id >= 58 && subPregunta.id <= 60) {
             acumTrl3 += totalXpregunta;
-            if(acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 3;
-            } else if(acumTrl3 < 6){
+            } else if (acumTrl3 < 6) {
               trl = 1;
             }
-          }else if(subPregunta.id === 61){
+          } else if (subPregunta.id === 61) {
             acumTrl4 += totalXpregunta;
-            if(acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 4;
-            } else if(acumTrl4 < 8){
+            } else if (acumTrl4 < 8) {
               trl = 1;
             }
-          }else if(subPregunta.id >= 62 && subPregunta.id <= 64){
+          } else if (subPregunta.id >= 62 && subPregunta.id <= 64) {
             acumTrl5 += totalXpregunta;
-            if(acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 5;
-            } else if(acumTrl5 < 10){
+            } else if (acumTrl5 < 10) {
               trl = 1;
             }
-          }else if(subPregunta.id >=65 && subPregunta.id <= 67){
+          } else if (subPregunta.id >= 65 && subPregunta.id <= 67) {
             acumTrl6 += totalXpregunta;
-            if(acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 6;
-            } else if(acumTrl6 < 12){
+            } else if (acumTrl6 < 12) {
               trl = 1;
             }
-          }else if(subPregunta.id >= 68 && subPregunta.id <= 70){
+          } else if (subPregunta.id >= 68 && subPregunta.id <= 70) {
             acumTrl7 += totalXpregunta;
-            if(acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 7;
-            } else if(acumTrl7 < 15){
+            } else if (acumTrl7 < 15) {
               trl = 1;
             }
-          }else if(subPregunta.id >= 71 && subPregunta.id <= 73){
+          } else if (subPregunta.id >= 71 && subPregunta.id <= 73) {
             acumTrl8 += totalXpregunta;
-            if(acumTrl8 == 18 && acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl8 == 18 && acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 8;
-            } else if(acumTrl8 < 18){
+            } else if (acumTrl8 < 18) {
               trl = 1;
             }
-          }else if(subPregunta.id >=74 && subPregunta.id <=80){
+          } else if (subPregunta.id >= 74 && subPregunta.id <= 80) {
             acumTrl9 += totalXpregunta;
-            if(acumTrl9 == 25 && acumTrl8 == 18 && acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2){
+            if (acumTrl9 == 25 && acumTrl8 == 18 && acumTrl7 == 15 && acumTrl6 == 12 && acumTrl5 == 10 && acumTrl4 == 8 && acumTrl3 === 6 && acumTrl2 === 4 && acumTrl1 >= 2) {
               trl = 9;
-            } else if(acumTrl9 < 25){
+            } else if (acumTrl9 < 25) {
               trl = 1;
             }
           }
 
           if (trl > maxTrl) {
             maxTrl = trl;
-        }
+          }
 
           // Validar respuesta de subpregunta
           if (!respuestaSubPregunta.opcion || respuestaSubPregunta.opcion === '') {
             firstEmptySubPreguntaId = subPregunta.sub_id;
             isValidForm = false;
           }
-          
+
           if (!isValidForm) {
             break;
           }
@@ -1115,7 +1133,7 @@ export class EncuestaEmpresaComponent {
           this.alertService.errorAlert('Error', `La subpregunta ${firstEmptySubPreguntaId}, de la pregunta ${currentPregunta.id} está vacía.`);
           break;
         }
-    
+
         respCounter += currentPregunta.subPreguntas.length;
       } else {
         if (currentPregunta.isText) {
@@ -1134,10 +1152,10 @@ export class EncuestaEmpresaComponent {
         respCounter++;
       }
     }
-    console.log('TRL:',maxTrl);
+    console.log('TRL:', maxTrl);
     console.log('fuera del ciclo', this.listaRespuestas4);
     this.next();
-    this.saveSection4();
+    this.saveSection(4, this.listaRespuestas4);
     return isValidForm;
   }
 
@@ -1150,6 +1168,7 @@ export class EncuestaEmpresaComponent {
     this.id_empresa;
     this.listaRespuestas5 = [];
     let totalXpregunta: number = 0;
+    this.acumXTecnica = 0;
 
     //pregunta 43 
     this.respuesta109.opcion === 'Si' ? this.respuesta109.valor = 10 : 0;
@@ -1269,7 +1288,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas5[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas5[respCounter].valor;
       this.acumXTecnica += totalXpregunta;
-      console.log('acum Tecnica',this.acumXTecnica);
+      console.log('acum Tecnica', this.acumXTecnica);
 
       if (currentPregunta.id === 43) {
         if (!this.listaRespuestas5[respCounter].opcion || this.listaRespuestas5[respCounter].opcion === '') {
@@ -1338,6 +1357,9 @@ export class EncuestaEmpresaComponent {
 
     }
     if (isValidForm) {
+      if (!this.isSectionSaved[5]) {
+        this.saveSection(5, this.listaRespuestas5); 
+      }
       this.alertService.alertaActivarDesactivar('¿Esta seguro de enviar el formulario?', "warning").then((result) => {
         if (result.isConfirmed) {
           this.enviarRespuestasJson();
@@ -1346,7 +1368,6 @@ export class EncuestaEmpresaComponent {
         }
       });
     }
-    this.saveSection5();
     return isValidForm;
   }
 
@@ -1358,7 +1379,7 @@ export class EncuestaEmpresaComponent {
   enviarRespuestasJson() {
     let isFormValid = true;
 
-    // Validar cada sección antes de proceder
+    //Validar cada sección antes de finalizar
     if (!this.onSubmitSeccion1()) {
       isFormValid = false;
     }
@@ -1375,114 +1396,90 @@ export class EncuestaEmpresaComponent {
       isFormValid = false;
     }
 
-    // Si alguna sección no es válida, detener el flujo y no enviar las respuestas
+    // Si alguna sección no es válida, se detiene el flujo y no se envian las respuestas
     if (!isFormValid) {
       this.alertService.errorAlert('Error', 'El formulario contiene errores y no puede ser enviado.');
-      return; // Detiene la ejecución si hay errores
-    } else {
-      let totalRespuestas = [];
+      return; 
+    }
+    this.respuestasService.getAnwerRedis(this.token, this.id_empresa).subscribe(
+      (redisData: any) => {
+        let totalRespuestas = [];
 
-      if (this.listaRespuestas1 && this.listaRespuestas1.length > 0) {
-        totalRespuestas = totalRespuestas.concat(this.listaRespuestas1);
-      }
-      if (this.listaRespuestas2 && this.listaRespuestas2.length > 0) {
-        totalRespuestas = totalRespuestas.concat(this.listaRespuestas2);
-      }
-      if (this.listaRespuestas3 && this.listaRespuestas3.length > 0) {
-        totalRespuestas = totalRespuestas.concat(this.listaRespuestas3);
-      }
-      if (this.listaRespuestas4 && this.listaRespuestas4.length > 0) {
-        totalRespuestas = totalRespuestas.concat(this.listaRespuestas4);
-      }
-      if (this.listaRespuestas5 && this.listaRespuestas5.length > 0) {
-        totalRespuestas = totalRespuestas.concat(this.listaRespuestas5);
-      }
-
-      const payload = {
-        respuestas: totalRespuestas,
-        id_empresa: this.id_empresa
-      };
-      console.log('Payload a enviar:', payload);
-
-      this.respuestasService.saveAnswers(this.token, payload).subscribe(
-        (data: any) => {
-          console.log(data);
-        },
-        error => {
-          console.log(error);
+        // Combinar respuestas de Redis
+        if (redisData.seccion1) {
+          totalRespuestas = totalRespuestas.concat(redisData.seccion1);
         }
-      );
+        if (redisData.seccion2) {
+          totalRespuestas = totalRespuestas.concat(redisData.seccion2);
+        }
+        if (redisData.seccion3) {
+          totalRespuestas = totalRespuestas.concat(redisData.seccion3);
+        }
+        if (redisData.seccion4) {
+          totalRespuestas = totalRespuestas.concat(redisData.seccion4);
+        }
+        if (redisData.seccion5) {
+          totalRespuestas = totalRespuestas.concat(redisData.seccion5);
+        }
+        const payload = {
+          respuestas: totalRespuestas,
+          id_empresa: this.id_empresa
+        };
+        console.log('Payload a enviar:', payload);
 
-      const puntajes = {
-        info_general: this.acumXSeccion1,
-        info_financiera: this.acumXSeccion2,
-        info_mercado: this.acumXSeccion3,
-        info_trl: this.acumXTrl,
-        info_tecnica: this.acumXTecnica,
-        documento_empresa: this.id_empresa,
-        ver_form: true 
-    };
-    
-    this.puntajeService.savePuntajeSeccion(puntajes, this.id_empresa).subscribe(
-        data => {
-            console.log('puntajes',data);
+        this.respuestasService.saveAnswers(this.token, payload).subscribe(
+          (data: any) => {
+            console.log(data);
+            this.alertService.successAlert('Éxito', data.message);
+          },
+          error => {
+            console.log(error);
+            this.alertService.errorAlert('Error', error.message);
+          }
+        );
+        const puntajes = {
+          info_general: this.acumXSeccion1,
+          info_financiera: this.acumXSeccion2,
+          info_mercado: this.acumXSeccion3,
+          info_trl: this.acumXTrl,
+          info_tecnica: this.acumXTecnica,
+          documento_empresa: this.id_empresa,
+          ver_form: 1
+        };
+
+        this.puntajeService.savePuntajeSeccion(puntajes, this.id_empresa).subscribe(
+          data => {
+            console.log('puntajes', data);
             this.alertService.successAlert('Éxito', 'Los puntajes se han guardado correctamente.');
-        },
-        error => {
+          },
+          error => {
             console.error(error);
-            this.alertService.errorAlert('Error', 'Hubo un problema al guardar los puntajes.');
-        }
+            this.alertService.errorAlert('Error', error.message);
+          }
+        );
+      },
+      error => {
+        console.log('Error al recuperar los datos de Redis:', error);
+        this.alertService.errorAlert('Error', 'No se pudieron recuperar los datos guardados.');
+      }
     );
   }
+
+  saveSection(sectionId: number, respuestas: any[]): void {
+    if (this.isSectionSaved[sectionId]) {
+      return; 
+    }
+
+    this.respuestasService.saveAnswersRedis(this.token, sectionId, this.id_empresa, respuestas).subscribe(
+      data => {
+        console.log(`Guardado sección ${sectionId} en redis`, data);
+        this.isSectionSaved[sectionId] = true; 
+      },
+      error => {
+        console.error(error);
+      }
+    );
   }
-
-  saveSection1(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, 1, this.listaRespuestas1).subscribe(
-      data =>
-        console.log(data, 'Guadado seccion 1 en redis'),
-      error =>
-        console.error(error)
-    )
-  }
-
-  
-
-  saveSection2(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, 2, this.listaRespuestas2).subscribe(
-      data =>
-        console.log(data, 'Guadado seccion 2 en redis'),
-      error =>
-        console.error(error)
-    )
-  }
-
-  saveSection3(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, 3, this.listaRespuestas3).subscribe(
-      data =>
-        console.log(data, 'Guadado seccion 3 en redis'),
-      error =>
-        console.error(error)
-    )
-  }
-
-  saveSection4(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, 4, this.listaRespuestas4).subscribe(
-      data =>
-        console.log(data, 'Guadado seccion 4 en redis'),
-      error =>
-        console.error(error)
-    )
-  }
-
-  saveSection5(): void {
-    this.respuestasService.SaveAnswersRedis(this.token, 5, this.listaRespuestas5).subscribe(
-      data =>
-        console.log(data, 'Guadado seccion 5 en redis'),
-      error =>
-        console.error(error)
-    )
-  }
-
 
 
   updateProgress() {

@@ -1,0 +1,60 @@
+<div class="w-full overflow-x-hidden font-poppins ">
+    <div class="flex flex-col justify-between w-full m-10 lg:flex-row md:flex-row">
+        <mat-toolbar
+            class="flex flex-col items-center justify-between w-full px-4 py-2 bg-white app-header lg:flex-row md:flex-row md:items-center lg:py-20 md:py-20 lg:px-8 md:px-8">
+            <!-- Imagen -->
+            <img [src]="logoUrl" alt="Logo"
+                class="w-64 h-auto mb-4 lg:mb-0 md:mb-0 lg:ml-60 md:ml-2 max-sm:w-36 max-sm:ml-4 max-sm:mb-0">
+            <!-- Contenedor de los botones -->
+            <div *ngIf="!isLoggedIn"
+                class="flex flex-col items-center mt-4 space-y-4 lg:flex-row md:flex-col lg:items-center lg:space-x-8 md:space-x-4 lg:space-y-0 md:space-y-3 lg:mt-0 md:mt-0 lg:mr-60 md:mr-24 max-sm:ml-28 max-sm:space-y-3 max-sm:space-x-0">
+                <a routerLink="/auth/login" mat-button routerLinkActive="active"
+                    class="no-underline lg:text-base  max-sm:text-[12px] bg-[#373435] md:text-lg text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[24px] md:px-[26px] max-sm:text-sm max-sm:py-1 max-sm:px-[10px] max-sm:-mt-28">Iniciar
+                    sesión</a>
+                <a routerLink="/auth/registro" mat-button routerLinkActive="active"
+                    class="no-underline lg:text-base md:text-lg max-sm:text-[12px] bg-[#00B3ED] text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[28px] md:px-[30px]  max-sm:text-sm max-sm:py-1 max-sm:px-[10px]">Registrarse</a>
+            </div>
+        </mat-toolbar>
+    </div>
+
+    <div class="relative pt-56 pb-52 flex content-center items-center justify-center min-h-screen-75">
+        <div class="absolute top-0 w-full h-[70%] bg-center bg-cover mt-[-20px]"
+            style="background-image: url('assets/images/aliados.jpg');">
+            <div class="pr70 ml-[39%] mt-[7%]">
+                <p class="text-white text-5xl font-sans font-semibold inline">
+                    Nuestros
+                </p>
+                <p class="font-bold text-5xl italic text-white inline">Aliados</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-3 mt-[-5%] max-w-screen-lg mx-auto">
+        <div *ngFor="let aliado of listAliados" class="flex justify-center items-center">
+            <img [src]="aliado.logo" [alt]="aliado.nombre" class="w-full h-auto">
+        </div>
+    </div>
+
+    <footer class="bg-[#373435] text-white lg:py-8 max-sm:py-3">
+        <div
+            class="container flex items-center justify-between px-2 mx-auto mt-4 lg:px-4 max-lg:flex-col max-lg:text-center">
+            <div class="flex items-center max-lg:flex-col">
+                <img src="assets/images/logofooter.jpg" alt="logo_footer" class="mt-2 lg:h-20 h-14 max-lg:mb-4">
+                <p class="lg:text-sm max-w-md ml-3 max-lg:ml-0 max-sm:text-[12px]">
+                    {{ descripcion_footer }}
+                </p>
+            </div>
+            <div class="mt-4 lg:text-right lg:mt-0">
+                <p class="mb-1 text-lg lg:mb-2 lg:text-xl">Más información sobre Seed Lab</p>
+                <p class="text-orange-400 mb-2 lg:mb-4 text-[12px] lg:text-xl">{{ paginaWeb }}</p>
+                <h3 class="text-[12px] lg:text-3xl font-bold mb-1 lg:mb-2 italic">Atención al cliente</h3>
+                <div class="flex flex-wrap lg:block">
+                    <p class="text-[12px] lg:text-base w-1/2 lg:w-full">{{ telefono }}</p>
+                    <p class="text-[12px] lg:text-base w-1/2 lg:w-full">{{ email }}</p>
+                    <p class="text-[12px] lg:text-base w-1/2 lg:w-full">{{ direccion }}</p>
+                    <p class="text-[12px] lg:text-base w-1/2 lg:w-full">{{ ubicacion }}</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

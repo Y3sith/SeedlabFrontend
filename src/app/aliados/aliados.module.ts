@@ -16,13 +16,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 
+
 import { NgChartsModule } from 'ng2-charts';
 import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
 import { AddBannerComponent } from './pages/add-banner/add-banner.component';
 
 import { ReportesComponent } from './pages/reportes/reportes.component';
+import { TodosLosAliadosComponent } from './pages/todos-los-aliados/todos-los-aliados.component';
 
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
@@ -40,7 +43,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
     PerfilAliadoComponent,
     AddBannerComponent,
     ReportesComponent,
-    
+    TodosLosAliadosComponent,
     
   ],
   imports: [
@@ -55,7 +58,8 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
     FontAwesomeModule,
     NgChartsModule,
     MatTooltipModule,
-    RouterModule
+    RouterModule,
+    MatToolbarModule
     
   ]
 })
