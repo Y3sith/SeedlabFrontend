@@ -20,7 +20,7 @@
           <div class="w-full sm:w-40 md:w-48">
             <select  class="w-full p-2 border rounded-md bg-gray-100 text-base" formControlName="empresa">
               <option disabled selected>Selecione una opción</option>
-              <option [value]="empresa.nombre" *ngFor="let empresa of empresas">{{empresa.nombre}}</option>
+              <option [value]="empresa.documento" *ngFor="let empresa of empresas">{{empresa.nombre}}</option>
             </select>
           </div>
           <div class="w-full sm:w-auto ">

@@ -28,7 +28,7 @@ export class ReportesComponent {
   ) {
     this.reporteForm = this.fb.group({
       tipo_reporte: ['', Validators.required],
-      empresa: ['', Validators.required]
+      empresa: [, Validators.required]
     })
   }
 
@@ -63,6 +63,8 @@ export class ReportesComponent {
     this.empresaService.obtenerEmpresasPorEmprendedor(this.token, doc_emprendedor).subscribe(
       data => {
         this.empresas = data; 
+       
+        console.log(this.empresas);  
       },
       error => {
         console.error('Error al obtener las empresas:', error);
@@ -90,7 +92,8 @@ export class ReportesComponent {
 
   getReporteFormulario() {
     const id_emprendedor = this.user.emprendedor.documento; 
-    this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
+    const { empresa } = this.reporteForm.value;
+    this.reporteService.getReporteFormulario(id_emprendedor,empresa).subscribe(
       (data: Blob) => {
         const url = window.URL.createObjectURL(data);
         const a = document.createElement('a');

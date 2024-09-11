@@ -44,11 +44,16 @@ export class ReporteService {
     });
   }
 
-  getReporteFormulario(id_emprendedor: string): Observable<Blob> {
-    return this.http.get<Blob>(`${this.url}exportar-formExcel/${id_emprendedor}`, {
-      responseType: 'blob' as 'json'
-    });
+
+  getReporteFormulario(idEmprendedor: string, documentoEmpresa?: string): Observable<Blob> {
+    let url = `${this.url}exportar-formExcel/${idEmprendedor}`;
+    if (documentoEmpresa) {
+      url += `/${documentoEmpresa}`;
+    }
+
+    return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
   }
+
 
   obtenerDatosAsesoriaAliado(tipo_reporte: string, id_aliado: number, fecha_inicio: string, fecha_fin: string): Observable<any> {
     return this.http.get<any[]>(`${this.url}obtener_datos_aliados`, {
@@ -66,7 +71,7 @@ export class ReporteService {
     return this.http.post(`${this.url}exportar_reporte_aliado`, body, { responseType: 'blob' });
   }
 
-  obtenerDatosFormEmp(tipo_reporte: string, doc_emprendedor: string, empresa: string): Observable<any> {
+  obtenerDatosFormEmp(tipo_reporte: string, doc_emprendedor: string, empresa: number): Observable<any> {
     let params = new HttpParams()
       .set('tipo_reporte', tipo_reporte)
       .set('doc_emprendedor', doc_emprendedor)
