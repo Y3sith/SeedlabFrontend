@@ -51,7 +51,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
-    imagen_perfil: [null, Validators.required],
+    imagen_perfil: [null],
     celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
     direccion: [''],
@@ -63,6 +63,11 @@ export class ModalCrearOrientadorComponent implements OnInit {
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
   });
+  
+  sectionFields: string[][] = [
+    ['nombre', 'apellido', 'documento', 'id_tipo_documento','fecha_nac', 'genero'], // Sección 1
+    ['celular', 'email','id_departamento', 'id_municipio', 'direccion', 'password'], // Sección 2
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -439,22 +444,56 @@ export class ModalCrearOrientadorComponent implements OnInit {
     return result;
   }
 
+ 
+
   next() {
-    if (this.orientadorForm.invalid) {
-      // Marcar todos los campos como tocados para mostrar los errores
-      Object.keys(this.orientadorForm.controls).forEach(key => {
-        const control = this.orientadorForm.get(key);
+    const form = this.orientadorForm;
+    let sectionIsValid = true;
+  
+    // Obtener los campos de la sección actual
+    const currentSectionFields = this.sectionFields[this.currentIndex];
+  
+    currentSectionFields.forEach(field => {
+      const control = form.get(field);
+      if (control.invalid) {
         control.markAsTouched();
         control.markAsDirty();
-      });
+        sectionIsValid = false;
+      }
+    });
   
-      // Mostrar un mensaje de error general
-      this.showErrorMessage('Por favor, complete todos los campos correctamente antes de continuar.');
+    // Validaciones especiales
+    if (this.currentIndex === 1) { // Asumiendo que email y fecha_nac están en la sección 2
+      const emailControl = form.get('email');
+      if (emailControl.value && emailControl.invalid) {
+        emailControl.markAsTouched();
+        emailControl.markAsDirty();
+        sectionIsValid = false;
+      }
   
+      const fechaNacControl = form.get('fecha_nac');
+      if (fechaNacControl.value) {
+        const fechaNac = new Date(fechaNacControl.value);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+        const mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+          edad--;
+        }
+        if (edad < 18 || edad > 100) {
+          fechaNacControl.setErrors({ 'invalidAge': true });
+          fechaNacControl.markAsTouched();
+          sectionIsValid = false;
+        }
+      }
+    }
+  
+    if (!sectionIsValid) {
+      this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
       return;
     }
   
-    // Si el formulario es válido, procede con la navegación
+    // Si llegamos aquí, la sección actual es válida
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
     } else {
@@ -470,8 +509,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
   
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
-    // Aquí puedes implementar la lógica para mostrar el mensaje de error
-    // Por ejemplo, usando un servicio de notificación o actualizando una variable en el componente
     console.error(message);
     this.errorMessage = message;
   }
@@ -480,7 +517,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   private clearErrorMessage() {
     this.errorMessage = '';
   }
-  previous(): void {
+ previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;
     } else {
