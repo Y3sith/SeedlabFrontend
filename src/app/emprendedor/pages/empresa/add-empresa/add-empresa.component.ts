@@ -11,6 +11,7 @@ import { Empresa } from '../../../../Modelos/empresa.model';
 import { ApoyoEmpresa } from '../../../../Modelos/apoyo-empresa.modelo';
 import { ActivatedRoute, Router } from '@angular/router';
 import { data } from 'jquery';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -63,6 +64,7 @@ export class AddEmpresaComponent {
     private alertService: AlertService,
     private authService:AuthService,
     private route: ActivatedRoute, 
+    private location: Location
 
   ) {
     this.id_documentoEmpresa = this.route.snapshot.paramMap.get('documento');
@@ -78,7 +80,7 @@ export class AddEmpresaComponent {
       razonSocial: ['', Validators.required],
       id_departamento: ['', Validators.required],
       id_municipio: ['', Validators.required],
-      telefono: ['', [Validators.maxLength(7), this.noLettersValidator]],
+      telefono: ['', [Validators.maxLength(10), this.noLettersValidator]],
       celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
       url_pagina: [''],
       direccion: ['', Validators.required],
@@ -131,6 +133,10 @@ export class AddEmpresaComponent {
     if (!this.token) {
       this.router.navigate(['home']);
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
 
