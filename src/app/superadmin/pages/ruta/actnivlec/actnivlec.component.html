@@ -99,21 +99,20 @@
                     </div>
                     <!-- Nivel -->
                     <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
-                        
+
 
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Nivel</h2>
                         <form [formGroup]="nivelForm">
-
                             <!-- editar nivel -->
-                        <div *ngIf="niveles.length > 0">
-                            <h3 class="text-lg font-semibold mb-4">Niveles</h3>
-                            <select class="w-full p-2 border rounded" formControlName="id_nivel" (change)="onNivelSelect($event)">
-                                <option *ngFor="let nivel of niveles; let i = index" class="mb-4" [value]="nivel.id">{{ nivel.nombre }}</option>
-                                <option value="">Agregar nivel</option>
-                            </select>
-                        </div>
-
-
+                            <div *ngIf="niveles.length > 0">
+                                <h3 class="text-lg font-semibold mb-4">Niveles</h3>
+                                <select (change)="onNivelChange($event.target.value)" class="w-full p-2 border rounded"
+                                    formControlName="id_nivel" (change)="onNivelSelect($event)">
+                                    <option *ngFor="let nivel of niveles; let i = index" class="mb-4"
+                                        [value]="nivel.id">{{ nivel.nombre }}</option>
+                                    <option value="">Agregar nivel</option>
+                                </select>
+                            </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del nivel</label>
                                 <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
@@ -133,9 +132,9 @@
                                 </a>
                             </div>
                         </form>
-                        
+
                         <form [formGroup]="leccionForm">
-                            <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
+                            <!-- <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
                                 Agregar lección</h2>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para
@@ -149,7 +148,21 @@
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="l.id_nivel.errors.required">Este campo es requerido *</div>
                                 </div>
+                            </div> -->
+
+                            <!-- Nuevo select para lecciones -->
+                            <div *ngIf="listarLeccion && listarLeccion.length > 0" class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona una lección para
+                                    editar</label>
+                                <select (change)="onLeccionChange($event.target.value)"
+                                    class="w-full p-2 border rounded">
+                                    <option value="">Seleccione una lección</option>
+                                    <option *ngFor="let leccion of listarLeccion" [value]="leccion.id">{{ leccion.nombre
+                                        }}</option>
+                                </select>
                             </div>
+
+
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección</label>
                                 <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
@@ -163,7 +176,7 @@
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
                                     style="font-weight: 600;">Agregar Lección</span>
-                                <a id="agregarLeccionBtn" (click)="agregarOtraLeccion()" [routerLink]="'#'"
+                                <a id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
                                 </a>

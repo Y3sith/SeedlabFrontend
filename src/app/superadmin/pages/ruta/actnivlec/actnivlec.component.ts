@@ -70,6 +70,8 @@ export class ActnivlecComponent implements OnInit {
   leccioon: any[] = [];
 
 
+
+
   ////añadir actividad
   actividadForm = this.fb.group({
     id: [],
@@ -92,6 +94,7 @@ export class ActnivlecComponent implements OnInit {
 
   ///// añadir leccion
   leccionForm = this.fb.group({
+    id_leccion: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
     id_nivel: [{ value: '', disabled: true }, Validators.required]
   })
@@ -270,7 +273,7 @@ export class ActnivlecComponent implements OnInit {
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
         data => {
           this.listarNiveles = data;
-          //console.log('Niveles: ', data);
+          console.log('Niveles: ', data);
         },
         error => {
           console.log(error);
@@ -505,8 +508,8 @@ export class ActnivlecComponent implements OnInit {
     }
     const nivel: any = {
       nombre: nombreNivel,
-      //id_actividad: this.nivelForm.value.id_actividad
-      id_actividad: this.actividadId
+      id_actividad: this.nivelForm.value.id_actividad
+      //id_actividad: this.actividadId
     };
     if (this.nivelForm.get('id_nivel')?.value) {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
@@ -610,7 +613,6 @@ export class ActnivlecComponent implements OnInit {
 
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
-
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
@@ -619,22 +621,38 @@ export class ActnivlecComponent implements OnInit {
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
-
     }
-    //submittedLeccion
     const leccion: any = {
-      //nombre: this.leccionForm.value.nombre,
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
-    }
-    console.log('leccion data', leccion);
+    };
+    if (this.leccionForm.get('id_leccion')?.value) {
+      const leccionId = this.leccionForm.get('id_leccion')?.value;
+      this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
+        (data) => {
+          this.alertServices.successAlert('Exito', data.message);
+          this.onNivelChange(this.leccionForm.value.id_nivel);
+          //this.verLeccicon();
+          this.leccionForm.reset();
+          this.submittedLeccion = false;
+          this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
+          console.log('id leccion: ', data.id);
+        },
+        error => {
+          this.alertServices.errorAlert('Error', error.error.message);
+          console.log(error);
+        }
+      )
+    }else {
+      console.log('leccion data', leccion);
     this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
       (data: any) => {
         console.log('datos recibidos', data);
         this.alertServices.successAlert('Exito', data.message);
+        this.onNivelChange(this.leccionForm.value.id_nivel);
         this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
         this.verLeccicon();
-        this.mostrarContenidoLeccionForm = true;
+        //this.mostrarContenidoLeccionForm = true;
         this.leccionForm.reset();
         this.submittedLeccion = false;
         this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
@@ -645,61 +663,101 @@ export class ActnivlecComponent implements OnInit {
         console.log(error);
       }
     )
+    }
   }
 
-  agregarOtraLeccion(): void {
-    this.submittedLeccion = true;
-    const nombreLeccion = this.leccionForm.get('nombre')?.value;
-    if (nombreLeccion && nombreLeccion.length > 70) {
-      this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
-      return;
-    }
-    if (this.leccionForm.invalid) {
-      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
-      return;
-    }
-    const leccion: any = {
-      //nombre: this.leccionForm.value.nombre,
-      nombre: nombreLeccion,
-      id_nivel: this.leccionForm.value.id_nivel
-    };
-    console.log('leccion data', leccion);
-    this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
-      (data: any) => {
-        this.alertServices.successAlert('Exito', data.message);
-        console.log('datos recibidos', data);
-        this.leccionForm.reset();
-        this.submittedLeccion = false;
-        this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
-        this.verLeccicon();
-      },
-      error => {
-        this.alertServices.errorAlert('Error', error.error.message);
-        console.log(error);
-      }
-    );
-  }
+  // agregarOtraLeccion(): void {
+  //   this.submittedLeccion = true;
+  //   const nombreLeccion = this.leccionForm.get('nombre')?.value;
+  //   if (nombreLeccion && nombreLeccion.length > 70) {
+  //     this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+  //     return;
+  //   }
+  //   if (this.leccionForm.invalid) {
+  //     this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
+  //     return;
+  //   }
+  //   const leccion: any = {
+  //     //nombre: this.leccionForm.value.nombre,
+  //     nombre: nombreLeccion,
+  //     id_nivel: this.leccionForm.value.id_nivel
+  //   };
+  //   console.log('leccion data', leccion);
+  //   this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
+  //     (data: any) => {
+  //       this.alertServices.successAlert('Exito', data.message);
+  //       console.log('datos recibidos', data);
+  //       this.leccionForm.reset();
+  //       this.submittedLeccion = false;
+  //       this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
+  //       this.verLeccicon();
+  //     },
+  //     error => {
+  //       this.alertServices.errorAlert('Error', error.error.message);
+  //       console.log(error);
+  //     }
+  //   );
+  // }
 
   verLeccicon(): void {
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
-        //console.log('lecciones: ', data)
+        console.log('lecciones: ', data)
       }
     )
   }
 
+  // onNivelChange(id_nivel: string): void {
+  //   this.leccionForm.patchValue({ id_nivel: id_nivel }); // Actualizar el formulario con el nivel seleccionado
+  //   this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
+  //     data => {
+  //       this.listarLeccion = data;
+  //       console.log('Lecciones: ', data);
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     }
+  //   );
+  // }
   onNivelChange(id_nivel: string): void {
-    this.leccionForm.patchValue({ id_nivel: id_nivel }); // Actualizar el formulario con el nivel seleccionado
-    this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
-      data => {
-        this.listarLeccion = data;
-        console.log('Lecciones: ', data);
-      },
-      error => {
-        console.log(error);
+    this.nivelForm.patchValue({ id_nivel: id_nivel });
+    this.leccionForm.patchValue({ id_nivel: id_nivel });
+    
+    if (id_nivel) {
+      // Cargar las lecciones del nivel seleccionado
+      this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
+        data => {
+          this.listarLeccion = data;
+          console.log('Lecciones: ', data);
+        },
+        error => {
+          console.log('Error al cargar las lecciones:', error);
+        }
+      );
+    } else {
+      // Limpiar la lista de lecciones si no se selecciona ningún nivel
+      this.listarLeccion = [];
+    }
+  }
+
+  onLeccionChange(id_leccion: string): void {
+    if (id_leccion) {
+      const selectedLeccion = this.listarLeccion.find(leccion => leccion.id === parseInt(id_leccion));
+      if (selectedLeccion) {
+        this.leccionForm.patchValue({
+          id_leccion: selectedLeccion.id,
+          nombre: selectedLeccion.nombre
+          // Otros campos de la lección que quieras mostrar
+        });
       }
-    );
+    } else {
+      // Limpiar el formulario de lección si no se selecciona ninguna
+      this.leccionForm.patchValue({
+        id_leccion: null,
+        nombre: ''
+      });
+    }
   }
 
   // onNivelSelect(event: any): void {
@@ -712,6 +770,7 @@ export class ActnivlecComponent implements OnInit {
   //     });
   //   }
   // }
+
   onNivelSelect(event: any): void {
     const selectedNivelId = event.target.value;
     if (selectedNivelId === '') {
