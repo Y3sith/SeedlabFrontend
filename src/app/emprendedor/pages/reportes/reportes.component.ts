@@ -106,7 +106,7 @@ export class ReportesComponent {
       error => {
         console.error('Error al descargar el reporte del formulario', error);
       }
-    )
+    );
   }
   
   
