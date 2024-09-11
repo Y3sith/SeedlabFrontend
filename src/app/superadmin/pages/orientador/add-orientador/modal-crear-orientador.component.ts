@@ -239,19 +239,17 @@ export class ModalCrearOrientadorComponent implements OnInit {
       control.markAsTouched();
     });
   
-    if (this.orientadorForm.invalid) {
-      // Form is invalid, show error messages
-      let errorMessage = 'Por favor, complete correctamente el formulario';
-      Object.keys(this.orientadorForm.controls).forEach(key => {
-        const control = this.orientadorForm.get(key);
-        if (control.invalid && control.errors && key !== 'direccion' && 
-            !(key === 'password' && this.idOrientador)) {
-        }
-      });
-      if (errorMessage !== 'Por favor, complete correctamente el formulario') {
-        this.alerService.errorAlert('Error de validación', errorMessage);
-        return;
+    let errorMessage = 'Por favor, complete correctamente el formulario';
+    Object.keys(this.orientadorForm.controls).forEach(key => {
+      const control = this.orientadorForm.get(key);
+      if (control.invalid && control.errors && key !== 'direccion' && 
+          !(key === 'password' && this.idOrientador && !control.value)) {
+        // Add specific error messages here if needed
       }
+    });
+    if (errorMessage !== 'Por favor, complete correctamente el formulario') {
+      this.alerService.errorAlert('Error de validación', errorMessage);
+      return;
     }
   
     // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
@@ -259,8 +257,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
         this.orientadorForm.get('apellido').invalid || 
         this.orientadorForm.get('documento').invalid || 
         this.orientadorForm.get('celular').invalid || 
-        (this.orientadorForm.get('password').invalid && !this.idOrientador)) {
-      this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+        (this.orientadorForm.get('password').invalid && (!this.idOrientador || this.orientadorForm.get('password').value))) {
+          this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
       return;
     }
   
@@ -315,7 +313,12 @@ export class ModalCrearOrientadorComponent implements OnInit {
     // Agregamos la contraseña solo si tiene un valor o si es un nuevo orientador
     const passwordControl = this.orientadorForm.get('password');
     if (passwordControl && (passwordControl.value || !this.idOrientador)) {
-      formData.append('password', passwordControl.value);
+      if (passwordControl.valid) {
+        formData.append('password', passwordControl.value);
+      } else {
+        this.alerService.errorAlert('Error', 'La contraseña no cumple con los requisitos.');
+        return;
+      }
     }
   
     Object.keys(this.orientadorForm.controls).forEach((key) => {
