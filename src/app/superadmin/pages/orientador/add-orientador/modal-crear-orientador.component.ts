@@ -234,11 +234,32 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
 
   addOrientador(): void {
-    // Validaciones permanentes
+    // Mark all form controls as touched to trigger validation
+    Object.values(this.orientadorForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+  
+    if (this.orientadorForm.invalid) {
+      // Form is invalid, show error messages
+      let errorMessage = 'Por favor, complete correctamente el formulario';
+      Object.keys(this.orientadorForm.controls).forEach(key => {
+        const control = this.orientadorForm.get(key);
+        if (control.invalid && control.errors && key !== 'direccion' && 
+            !(key === 'password' && this.idOrientador)) {
+        }
+      });
+      if (errorMessage !== 'Por favor, complete correctamente el formulario') {
+        this.alerService.errorAlert('Error de validación', errorMessage);
+        return;
+      }
+    }
+  
+    // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
     if (this.orientadorForm.get('nombre').invalid || 
         this.orientadorForm.get('apellido').invalid || 
         this.orientadorForm.get('documento').invalid || 
-        this.orientadorForm.get('celular').invalid) {
+        this.orientadorForm.get('celular').invalid || 
+        (this.orientadorForm.get('password').invalid && !this.idOrientador)) {
       this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
       return;
     }
@@ -271,6 +292,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     if (this.idOrientador == null) {
       estadoValue = '1';
     } else {
+      // Aquí falta la lógica para el caso en que idOrientador no sea null
     }
   
     formData.append('nombre', this.orientadorForm.get('nombre')?.value);
@@ -279,38 +301,42 @@ export class ModalCrearOrientadorComponent implements OnInit {
     formData.append('celular', this.orientadorForm.get('celular')?.value);
     formData.append('genero', this.orientadorForm.get('genero')?.value);
   
-    if (this.orientadorForm.get('direccion')?.value) {
-      formData.append('direccion', this.orientadorForm.get('direccion')?.value);
-    } 
-    else { }  
-
+    // Agregamos la dirección solo si tiene un valor
+    const direccionControl = this.orientadorForm.get('direccion');
+    if (direccionControl && direccionControl.value) {
+      formData.append('direccion', direccionControl.value);
+    }
+  
     formData.append('id_tipo_documento', this.orientadorForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.orientadorForm.get('id_departamento')?.value);
     formData.append('municipio', this.orientadorForm.get('id_municipio')?.value);
     formData.append('email', this.orientadorForm.get('email')?.value);
-    formData.append('password', this.orientadorForm.get('password')?.value);
+  
+    // Agregamos la contraseña solo si tiene un valor o si es un nuevo orientador
+    const passwordControl = this.orientadorForm.get('password');
+    if (passwordControl && (passwordControl.value || !this.idOrientador)) {
+      formData.append('password', passwordControl.value);
+    }
   
     Object.keys(this.orientadorForm.controls).forEach((key) => {
       const control = this.orientadorForm.get(key);
       if (control?.value !== null && control?.value !== undefined) {
-        if (key === 'direccion' && !control.value) {
-        } else {
-          if (key === 'fecha_nac') {
-            if (control.value) {
-              const date = new Date(control.value);
-              if (!isNaN(date.getTime())) {
-                formData.append(key, date.toISOString().split('T')[0]);
-              }
+        if (key === 'fecha_nac') {
+          if (control.value) {
+            const date = new Date(control.value);
+            if (!isNaN(date.getTime())) {
+              formData.append(key, date.toISOString().split('T')[0]);
             }
-          } else if (key === 'estado') {
-            formData.append(key, control.value ? '1' : '0');
-          } else if (key !== 'imagen_perfil') {
-            formData.append(key, control.value);
           }
+        } else if (key === 'estado') {
+          formData.append(key, control.value ? '1' : '0');
+        } else if (key !== 'imagen_perfil' && key !== 'direccion' && 
+                   !(key === 'password' && this.idOrientador && !control.value)) {
+          formData.append(key, control.value);
         }
       }
     });
-
+  
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
@@ -322,10 +348,10 @@ export class ModalCrearOrientadorComponent implements OnInit {
         if (result.isConfirmed) {
           this.orientadorServices.updateOrientador(this.token, this.idOrientador, formData).subscribe(
             (data) => {
-              setTimeout(function() {
-              }, this.tiempoEspera);
+              setTimeout(() => {
                 this.router.navigate(['/list-orientador']);
                 this.alerService.successAlert('Exito', data.message);
+              }, this.tiempoEspera);
             },
             error => {
               console.error(error);
@@ -336,14 +362,13 @@ export class ModalCrearOrientadorComponent implements OnInit {
           );
         }
       });
-
     } else {
       this.orientadorServices.createOrientador(this.token, formData).subscribe(
         data => {
-          setTimeout(function () {
-          },this.tiempoEspera);
-          this.alerService.successAlert('Exito', data.message);
-          this.router.navigate(['/list-orientador']);
+          setTimeout(() => {
+            this.alerService.successAlert('Exito', data.message);
+            this.router.navigate(['/list-orientador']);
+          }, this.tiempoEspera);
         },
         error => {
           console.log(error);

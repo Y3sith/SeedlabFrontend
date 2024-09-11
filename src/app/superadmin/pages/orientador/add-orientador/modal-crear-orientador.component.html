@@ -6,7 +6,7 @@
           </svg>
           Volver
         </button>
-        <app-header [title] [subtitle]="'Agregar empresa y apoyos'"></app-header>
+        <app-header [title] [subtitle]="'Agregar Orientador'"></app-header>
       </header>
 
     <!-- transicion basada en el estado -->
@@ -252,26 +252,28 @@
                                     </div>
                                   </div>
 
-                                <!-- Contraseña -->
-                                <div>
+                                  <div>
                                     <label for="password" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Contraseña</label>
                                     <div class="relative">
-                                      <input [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
-                                          class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                          [ngClass]="{'border-red-500': f['password'].invalid && (f['password'].dirty || f['password'].touched)}">
-                                      <button type="button"
-                                          class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 w-10"
-                                          (click)="hide = !hide">
-                                          <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500 w-10"></i>
-                                          <i *ngIf="!hide" class="fa fa-eye text-cyan-500 w-10"></i>
-                                      </button>
+                                        <input [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
+                                            class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                            [ngClass]="{'border-red-500': f['password'].invalid && (f['password'].dirty || f['password'].touched) && !idOrientador}">
+                                        <button type="button"
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 w-10"
+                                            (click)="hide = !hide">
+                                            <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500 w-10"></i>
+                                            <i *ngIf="!hide" class="fa fa-eye text-cyan-500 w-10"></i>
+                                        </button>
                                     </div>
-                                    <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)"
+                                    <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched) && !idOrientador"
                                         class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                                         <span *ngIf="f['password'].errors?.['required']">Este campo es requerido *</span>
                                         <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8 caracteres *</span>
                                     </div>
-                                  </div>
+                                    <div *ngIf="idOrientador" class="mt-1 text-xs text-gray-500">
+                                        Deja este campo en blanco si no deseas cambiar la contraseña.
+                                    </div>
+                                </div>
 
                                 <!-- Toggle Field -->
                                 <div *ngIf="isEditing">
