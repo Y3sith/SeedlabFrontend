@@ -18,18 +18,18 @@ export class LeccionService {
     });
   }
 
-  
+
 
   url = environment.apiUrl + 'leccion'
 
-  updateLeccion(access_token: any,id:number,leccion:any):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.put(this.url+'/editar_leccion/'+id,leccion,options)
+  updateLeccion(access_token: any, id: number, leccion: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.put(this.url + '/editar_leccion/' + id, leccion, options)
   }
 
-  LeccionxNivel(access_token:any,idNivel:number):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.get(this.url+'/leccionXnivel/'+idNivel,options);
+  LeccionxNivel(access_token: any, idNivel: number): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url + '/leccionXnivel/' + idNivel, options);
   }
 
 }

@@ -19,7 +19,7 @@ export class ContenidoLeccionService {
 
   ulr = environment.apiUrl + 'contenido_por_leccion'
 
-  updateContenidoLeccion(access_token:any,id:number,contenidoLeccion:any):Observable<any>{
+  updateContenidoLeccion(access_token:any,id:number,contenidoLeccion:any):Observable<any>{ //toca cambiar el headers para imagen y demas
     const options = {headers: this.CreacionHeaders(access_token)};
     return this.htts.put(this.ulr+'/editarContenidoPorLeccion/'+id,contenidoLeccion,options)
   }
@@ -27,5 +27,10 @@ export class ContenidoLeccionService {
   getTipoDato(access_token:any): Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.htts.get(this.ulr+"/tipo_dato",options)
+  }
+
+  contenidoXleccion(access_token: any,idLeccion:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.htts.get(this.ulr+'/mostrarContenidoPorLeccion/'+idLeccion,options)
   }
 }

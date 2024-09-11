@@ -68,9 +68,8 @@ export class ActnivlecComponent implements OnInit {
 
   niveles: any[] = [];
   leccioon: any[] = [];
-
-
-
+  isEditing: any;
+  contenidoLeccion: any[] = [];
 
   ////añadir actividad
   actividadForm = this.fb.group({
@@ -94,7 +93,7 @@ export class ActnivlecComponent implements OnInit {
 
   ///// añadir leccion
   leccionForm = this.fb.group({
-    id_leccion: [],
+    id_leccion: [''],
     nombre: [{ value: '', disabled: true }, Validators.required],
     id_nivel: [{ value: '', disabled: true }, Validators.required]
   })
@@ -103,6 +102,7 @@ export class ActnivlecComponent implements OnInit {
   ///añadir contenido por leccion
 
   contenidoLeccionForm = this.fb.group({
+    id_contenido: [''],
     titulo: [{ value: '', disabled: true }, Validators.required],
     descripcion: [{ value: '', disabled: true }, Validators.required],
     fuente_contenido: [{ value: '', disabled: true }, Validators.required],
@@ -136,6 +136,11 @@ export class ActnivlecComponent implements OnInit {
       if (params['id_actividad']) {
         this.actividadId = +params['id_actividad'];
         this.actividadForm.patchValue({ id: this.actividadId.toString() });
+      }
+      if (params['isEditing']) {
+        this.isEditing = params['isEditing'] === 'true';
+        // Aquí puedes usar this.isEditing para determinar si estás en modo edición
+        // Por ejemplo, puedes cambiar el título de la página o habilitar/deshabilitar campos
       }
     });
     this.tipoDato();
@@ -273,7 +278,7 @@ export class ActnivlecComponent implements OnInit {
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
         data => {
           this.listarNiveles = data;
-          console.log('Niveles: ', data);
+          //console.log('Niveles: ', data);
         },
         error => {
           console.log(error);
@@ -281,43 +286,6 @@ export class ActnivlecComponent implements OnInit {
       )
     }
   }
-
-  // verEditar(): void {
-  //   if (this.actividadId !== null) {
-  //     this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
-  //       data => {
-  //         this.listActividadContenido = data;
-  //         this.aliadoService.getinfoAsesor(this.token, data.id_aliado, this.userFilter.estado).subscribe(
-  //           asesoresData => {
-  //             this.listarAsesores = asesoresData;
-
-  //             this.actividadForm.patchValue({
-  //               nombre: data.nombre,
-  //               descripcion: data.descripcion,
-  //               id_tipo_dato: data.id_tipo_dato,
-  //               id_asesor: data.id_asesor,
-  //               id_aliado: data.id_aliado,
-  //               fuente: data.fuente,
-  //               id_ruta: data.id_ruta,
-  //             });
-  //             this.activivarFormulariosBotones();
-  //             console.log('Actividad: ', data);
-  //           },
-  //           error => {
-  //             console.log('Error al cargar los asesores:', error);
-  //           }
-  //         );
-  //         this.nivelForm.patchValue({
-  //           nombre: data.nombre,
-  //           id_actividad: data.id_actividad
-  //         });
-  //       },
-  //       error => {
-  //         console.log('Error al cargar la actividad: ', error);
-  //       }
-  //     )
-  //   }
-  // }
   verEditar(): void {
     if (this.actividadId !== null) {
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
@@ -553,66 +521,9 @@ export class ActnivlecComponent implements OnInit {
       )
     }
   }
-  // refreshNiveles(): void {
-  //   this.verNivel();
-  //   this.nivelForm.reset();
-  //   this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
-  //   this.submittedNivel = false;
-  // }
-
-  // agregarOtroNivel(): void {
-  //   this.submittedNivel = true;
-  //   const nombreNivel = this.nivelForm.get('nombre')?.value;
-  //   if (nombreNivel && nombreNivel.length > 70) {
-  //     this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
-  //     return;
-  //   }
-  //   if (this.nivelForm.invalid) {
-  //     this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
-  //     console.log('zzzzzzzzz: ',this.nivelForm.invalid)
-  //     return;
-  //   }
-  //   const nivel: any = {
-  //     nombre: nombreNivel,
-  //     id_actividad: this.nivelForm.value.id_actividad
-  //   };
-  //   if (this.nivelForm.get('id_nivel')?.value) {
-  //     const nivelId = this.nivelForm.get('id_nivel')?.value;
-  //     this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
-  //       (data) => {
-  //         this.alertServices.successAlert('Exito', data.message);
-  //         console.log('Nivel actualizado', data);
-  //         this.verNivel();
-  //         this.nivelForm.reset();
-  //         this.submittedNivel = false;
-  //         this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
-  //       },
-  //       error => {
-  //         //this.alertServices.errorAlert('Error', error.error.message);
-  //         console.log(error);
-  //       }
-  //     );
-  //   } else {
-  //     console.log('nivel data', nivel);
-  //   this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
-  //     (data: any) => {
-  //       this.alertServices.successAlert('Exito', data.message);
-  //       console.log('datos recibidos', data);
-  //       this.nivelForm.reset();
-  //       this.submittedNivel = false;
-  //       this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
-  //       this.verNivel();
-  //     },
-  //     error => {
-  //       this.alertServices.errorAlert('Error', error.error.message);
-  //       console.log(error);
-  //     }
-  //   );
-  //   }
-  // }
-
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
+
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
@@ -621,13 +532,15 @@ export class ActnivlecComponent implements OnInit {
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
+
     }
     const leccion: any = {
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
-    };
-    if (this.leccionForm.get('id_leccion')?.value) {
-      const leccionId = this.leccionForm.get('id_leccion')?.value;
+    }
+    const leccionId = +this.leccionForm.get('id_leccion')?.value;
+    if (leccionId) {
+      console.log("leccionIddddddddd", leccionId);
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
@@ -643,113 +556,60 @@ export class ActnivlecComponent implements OnInit {
           console.log(error);
         }
       )
-    }else {
+    } else {
       console.log('leccion data', leccion);
-    this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
-      (data: any) => {
-        console.log('datos recibidos', data);
-        this.alertServices.successAlert('Exito', data.message);
-        this.onNivelChange(this.leccionForm.value.id_nivel);
-        this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
-        this.verLeccicon();
-        //this.mostrarContenidoLeccionForm = true;
-        this.leccionForm.reset();
-        this.submittedLeccion = false;
-        this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
-        console.log('id leccion: ', data.id);
-      },
-      error => {
-        this.alertServices.errorAlert('Error', error.error.message);
-        console.log(error);
-      }
-    )
+      this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
+        (data: any) => {
+          console.log('datos recibidos', data);
+          this.alertServices.successAlert('Exito', data.message);
+          this.onNivelChange(this.leccionForm.value.id_nivel);
+          this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
+          this.verLeccicon();
+          this.mostrarContenidoLeccionForm = true;
+          //this.mostrarContenidoLeccionForm = true;
+          this.leccionForm.reset();
+          this.submittedLeccion = false;
+          this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
+          console.log('id leccion: ', data.id);
+        },
+        error => {
+          this.alertServices.errorAlert('Error', error.error.message);
+          console.log(error);
+        }
+      )
     }
   }
-
-  // agregarOtraLeccion(): void {
-  //   this.submittedLeccion = true;
-  //   const nombreLeccion = this.leccionForm.get('nombre')?.value;
-  //   if (nombreLeccion && nombreLeccion.length > 70) {
-  //     this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
-  //     return;
-  //   }
-  //   if (this.leccionForm.invalid) {
-  //     this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
-  //     return;
-  //   }
-  //   const leccion: any = {
-  //     //nombre: this.leccionForm.value.nombre,
-  //     nombre: nombreLeccion,
-  //     id_nivel: this.leccionForm.value.id_nivel
-  //   };
-  //   console.log('leccion data', leccion);
-  //   this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
-  //     (data: any) => {
-  //       this.alertServices.successAlert('Exito', data.message);
-  //       console.log('datos recibidos', data);
-  //       this.leccionForm.reset();
-  //       this.submittedLeccion = false;
-  //       this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
-  //       this.verLeccicon();
-  //     },
-  //     error => {
-  //       this.alertServices.errorAlert('Error', error.error.message);
-  //       console.log(error);
-  //     }
-  //   );
-  // }
 
   verLeccicon(): void {
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
-        console.log('lecciones: ', data)
+        //console.log('lecciones: ', data)
       }
     )
   }
 
-  // onNivelChange(id_nivel: string): void {
-  //   this.leccionForm.patchValue({ id_nivel: id_nivel }); // Actualizar el formulario con el nivel seleccionado
-  //   this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
-  //     data => {
-  //       this.listarLeccion = data;
-  //       console.log('Lecciones: ', data);
-  //     },
-  //     error => {
-  //       console.log(error);
-  //     }
-  //   );
-  // }
   onNivelChange(id_nivel: string): void {
-    this.nivelForm.patchValue({ id_nivel: id_nivel });
-    this.leccionForm.patchValue({ id_nivel: id_nivel });
-    
-    if (id_nivel) {
-      // Cargar las lecciones del nivel seleccionado
-      this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
-        data => {
-          this.listarLeccion = data;
-          console.log('Lecciones: ', data);
-        },
-        error => {
-          console.log('Error al cargar las lecciones:', error);
-        }
-      );
-    } else {
-      // Limpiar la lista de lecciones si no se selecciona ningún nivel
-      this.listarLeccion = [];
-    }
+    this.leccionForm.patchValue({ id_nivel: id_nivel }); // Actualizar el formulario con el nivel seleccionado
+    this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
+      data => {
+        this.listarLeccion = data;
+        console.log('Lecciones: ', data);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
-
   onLeccionChange(id_leccion: string): void {
     if (id_leccion) {
       const selectedLeccion = this.listarLeccion.find(leccion => leccion.id === parseInt(id_leccion));
       if (selectedLeccion) {
         this.leccionForm.patchValue({
-          id_leccion: selectedLeccion.id,
+          id_leccion: selectedLeccion.id.toString(),
           nombre: selectedLeccion.nombre
-          // Otros campos de la lección que quieras mostrar
         });
+        this.cargarContenidoLeccion(parseInt(id_leccion));
       }
     } else {
       // Limpiar el formulario de lección si no se selecciona ninguna
@@ -758,6 +618,17 @@ export class ActnivlecComponent implements OnInit {
         nombre: ''
       });
     }
+  }
+  cargarContenidoLeccion(id_leccion: number):any{
+    this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
+      data => {
+        this.contenidoLeccion = data;
+        console.log('Contenido de la lección:', data);
+      },
+      error => {
+        console.error('Error al cargar el contenido de la lección:', error);
+      }
+    )
   }
 
   // onNivelSelect(event: any): void {
@@ -770,7 +641,6 @@ export class ActnivlecComponent implements OnInit {
   //     });
   //   }
   // }
-
   onNivelSelect(event: any): void {
     const selectedNivelId = event.target.value;
     if (selectedNivelId === '') {
@@ -790,24 +660,20 @@ export class ActnivlecComponent implements OnInit {
 
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
-
     if (this.contenidoLeccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
       return;
     }
-
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
       return;
     }
-
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
     if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 470) {
       this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 470 caracteres');
       return;
     }
-
     const formData = new FormData();
     let estadoValue: string;
     if (this.idcontenidoLeccion == null) {
@@ -827,37 +693,100 @@ export class ActnivlecComponent implements OnInit {
         formData.append('fuente_contenido', rutaMultiValues);
       }
     }
-    this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
-      (data: any) => {
-        this.alertServices.successAlert('Exito', data.message);
-        console.log('datos recibidos: ', data);
-        this.contenidoLeccionForm.reset();
-        this.submittedContent = false;
-        //location.reload();
-      },
-      error => {
-        console.log(error);
-      }
-    )
+    const contenidoLeccionId = +this.contenidoLeccionForm.get('id_contenido')?.value;
+    if (contenidoLeccionId) {
+      console.log("conteido", contenidoLeccionId)
+      this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
+        (data) => {
+          this.alertServices.successAlert('Exito', data.message);
+          console.log('datos recibidos: ', data);
+          this.contenidoLeccionForm.reset();
+          this.submittedContent = false;
+          //location.reload();
+        }
+      )
+    } else {
+      this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
+        (data: any) => {
+          this.alertServices.successAlert('Exito', data.message);
+          console.log('datos recibidos: ', data);
+          this.contenidoLeccionForm.reset();
+          this.submittedContent = false;
+          //location.reload();
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
   }
+
+  // onContenidoSelect(contenidoId: string): void {
+  //   if (contenidoId) {
+  //     const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
+  //     if (selectedContenido) {
+  //       this.contenidoLeccionForm.patchValue({
+  //         id_contenido: selectedContenido.id,
+  //         titulo: selectedContenido.titulo,
+  //         descripcion: selectedContenido.descripcion,
+  //         id_tipo_dato: selectedContenido.id_tipo_dato,
+  //         fuente_contenido: selectedContenido.fuente_contenido
+  //       });
+        
+  //       // Si tienes un campo para mostrar el nombre del archivo seleccionado
+  //       //this.selectedfuenteContenido = { name: selectedContenido.fuente_contenido.split('/').pop() };
+        
+  //       // Actualizar la vista del formulario
+  //       this.contenidoLeccionForm.get('id_tipo_dato').updateValueAndValidity();
+  //       this.contenidoLeccionForm.get('id_tipo_dato').markAsTouched();
+  //     }
+  //   } else {
+  //     // Limpiar el formulario si no se selecciona ningún contenido
+  //     this.contenidoLeccionForm.reset({
+  //       id_leccion: this.contenidoLeccionForm.get('id_leccion').value
+  //     });
+  //     this.selectedfuenteContenido = null;
+  //   }
+  // }
+  onContenidoSelect(contenidoId: string): void {
+    if (contenidoId) {
+      const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
+      if (selectedContenido) {
+        this.contenidoLeccionForm.patchValue({
+          id_contenido: selectedContenido.id,
+          titulo: selectedContenido.titulo,
+          descripcion: selectedContenido.descripcion,
+          id_tipo_dato: selectedContenido.id_tipo_dato,
+          fuente_contenido: selectedContenido.fuente_contenido
+        });
+        this.contenidoLeccionForm.get('fuente_contenido').enable();
+        console.log('Fuente de contenido seleccionada:', selectedContenido.fuente_contenido);
+
+  
+        // Habilitar los campos necesarios para editar
+        // this.contenidoLeccionForm.get('titulo')?.enable();
+        // this.contenidoLeccionForm.get('descripcion')?.enable();
+        // this.contenidoLeccionForm.get('fuente_contenido')?.enable();
+        // this.contenidoLeccionForm.get('id_tipo_dato')?.enable();
+        // this.contenidoLeccionForm.get('id_leccion')?.enable();
+  
+        // // Actualizar la vista del formulario
+        // this.contenidoLeccionForm.get('id_tipo_dato')?.updateValueAndValidity();
+        // this.contenidoLeccionForm.get('fuente_contenido')?.updateValueAndValidity();
+      }
+    } else {
+      // Limpiar el formulario si no se selecciona ningún contenido
+      this.contenidoLeccionForm.reset({
+        id_leccion: this.contenidoLeccionForm.get('id_leccion').value
+      });
+      this.selectedfuenteContenido = null;
+    }
+  }
+  
+
 
   ///////////////////////////////////////////////////////////////////////////////
 
-  // onTipoDatoChange(): void {
-  //   const tipoDatoId = this.actividadForm.get('id_tipo_dato').value;
-  //   this.resetFuenteField();
-  //   this.actividadForm.get('fuente').clearValidators();
-
-  //   switch (tipoDatoId) {
-  //     case '2': // Imagen
-  //       this.actividadForm.get('fuente').setValidators([Validators.required]);
-  //       break;
-  //     default:
-  //       this.actividadForm.get('fuente').clearValidators();
-  //       break;
-  //   }
-  //   this.actividadForm.get('fuente').updateValueAndValidity();
-  // }
   onTipoDatoChange(): void {
     this.resetFuenteField();
     this.actividadForm.get('fuente').setValidators([Validators.required]); // Siempre requerir fuente
@@ -872,32 +801,6 @@ export class ActnivlecComponent implements OnInit {
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
-
-  // onFileSelecteds(event: any, field: string) {
-  //   if (event.target.files && event.target.files.length > 0) {
-  //     const file = event.target.files[0];
-  //     let maxSize = 0;
-  //     if (field === 'fuente') {
-  //       maxSize = 5 * 1024 * 1024; // Tamaño máximo para imágenes
-  //     } else if (field === 'fuente_documento') {
-  //       maxSize = 18 * 1024 * 1024;
-  //     }
-
-  //     if (file.size > maxSize) {
-  //       const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
-  //       this.alertServices.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`)
-  //       this.resetFileField(field);
-  //       event.target.value = '';
-  //       return;
-  //     }
-  //     if (field === 'fuente' || field === 'fuente_documento') {
-  //       this.selectedfuente = file;
-  //       this.actividadForm.patchValue({ fuente: file });
-  //     }
-  //   } else {
-  //     this.resetFileField(field);
-  //   }
-  // }
   onFileSelecteds(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -917,14 +820,6 @@ export class ActnivlecComponent implements OnInit {
       this.resetFileField('fuente');
     }
   }
-
-  // resetFileField(field: string) {
-  //   if (field === 'fuente') {
-  //     this.actividadForm.patchValue({ fuente: null });
-  //     this.selectedfuente = null;
-  //     this.fuentePreview = null;
-  //   }
-  // }
   resetFileField(field: string) {
     this.actividadForm.patchValue({ fuente: null });
     this.selectedfuente = null;

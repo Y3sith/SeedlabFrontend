@@ -129,8 +129,8 @@ export class ListActividadesComponent {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  EditarActividad(ActividadId: number, rutaId: number): void {
-    this.router.navigate(['actnivlec'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId } });
+  EditarActividad(ActividadId: number, rutaId: number, isEditing: boolean): void {
+    this.router.navigate(['actnivlec'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
   }
 
   agregarActividadRuta(rutaId: number):void {
