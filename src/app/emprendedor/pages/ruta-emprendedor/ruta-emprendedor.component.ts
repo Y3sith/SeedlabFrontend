@@ -22,7 +22,8 @@ export class RutaEmprendedorComponent implements OnInit {
   selectedActividad: any = null;
   selectedRutaId: any = null;
   nombre: any = null;
-  rutaId: number | null = null;
+  rutaId: number;
+  ultimoElemento: any;
 
   actividadForm = this.fb.group({
     id:[null],

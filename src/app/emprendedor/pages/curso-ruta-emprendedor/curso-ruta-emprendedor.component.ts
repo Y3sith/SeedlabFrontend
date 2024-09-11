@@ -8,6 +8,8 @@ import { Contenido_Leccion } from '../../../Modelos/contenido-leccion.model';
 import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { RutaService } from '../../../servicios/rutas.service';
 import { Observable, tap } from 'rxjs';
+import { Ruta } from '../../../Modelos/ruta.modelo';
+import { AlertService } from '../../../servicios/alert.service';
 
 @Pipe({
   name: 'safe'
@@ -49,12 +51,23 @@ export class CursoRutaEmprendedorComponent {
   buttonPreviousDisabled: boolean = false;
   colorIndex: number;
   errorMessage: string = '';
+  token: string | null = null;
+  documento: string | null;
+  user: any = null;
+  currentRolId: number;
+  rutaId: number | null;
+  ultimoElemento: any;
+  rutaList: Ruta[] = [];
+  ultimoContenidoId: any;
+  currentLeccionFuente: any;
+  currentLeccionDescripcion: any;
 
   constructor(private router: Router,
     private sanitizer: DomSanitizer,
     private fb: FormBuilder,
-    private http : HttpClient,
+    private http: HttpClient,
     private rutaService: RutaService,
+    private alertService: AlertService,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -77,8 +90,13 @@ export class CursoRutaEmprendedorComponent {
   }
 
   ngOnInit() {
+    this.validateToken();
+    this.currentNivelIndex = 0;
+    this.currentLeccionIndex = 0;
+    this.currentContenidoIndex = -1; // Comenzar con la descripción de la primera lección
+    this.updateSelectedContent();
     this.loadYouTubeApi();
-
+    this.listarRutaActiva();
     if (this.actividad) {
       console.log('Actividad recibida:', this.actividad);
       // Aquí puedes usar this.actividad.nombre, this.actividad.nivel, etc.
@@ -86,6 +104,65 @@ export class CursoRutaEmprendedorComponent {
       console.error('No se recibió información de la actividad');
       // Manejar el caso en que no se recibió la actividad
     }
+  }
+
+  validateToken(): void {
+    this.token = localStorage.getItem("token");
+    let identityJSON = localStorage.getItem('identity');
+
+    if (identityJSON) {
+      let identity = JSON.parse(identityJSON);
+      this.user = identity;
+      this.currentRolId = this.user.id_rol;
+
+      if (this.currentRolId != 5) {
+        this.router.navigate(['home']);
+      } else {
+        this.documento = this.user.emprendedor.documento;
+      }
+    }
+
+    if (!this.token) {
+      this.router.navigate(['home']);
+    }
+  }
+
+  listarRutaActiva(): void {
+    if (this.token) {
+      this.rutaService.ruta(this.token).subscribe(
+        data => {
+          this.rutaList = data;
+          console.log('Rutas recibidas:', this.rutaList);
+
+          if (this.rutaList.length > 0) {
+            const primeraRuta = this.rutaList[0];
+            this.rutaId = primeraRuta.id;
+            console.log('ID de la primera ruta almacenado en this.rutaId:', this.rutaId);
+            // Si quieres llamar otra función después de recibir el ID
+            this.getUltimaActividad();
+          }
+        },
+        err => {
+          console.error('Error al obtener rutas:', err);
+        }
+      );
+    } else {
+      console.log('No hay token disponible');
+    }
+  }
+
+  getUltimaActividad() {
+    console.log("LA ID DE LA RUTA EN ULTIMA", this.rutaId);
+    this.rutaService.ultimaActividad(this.token, this.rutaId).subscribe(
+      (data) => {
+        this.ultimoElemento = data.ultimo_elemento;
+        this.ultimoContenidoId = data.ultimo_elemento.contenido_id;
+        console.log('Último elemento:', this.ultimoElemento);
+      },
+      (error) => {
+        console.error('Error fetching ultima actividad:', error);
+      }
+    );
   }
 
   ngAfterViewInit() {
@@ -117,14 +194,14 @@ export class CursoRutaEmprendedorComponent {
       } else {
         nivel.expanded = false;  // Cierra todos los demás niveles
       }
-  
+
       // Colapsa todas las lecciones de los otros niveles
       nivel.lecciones.forEach((leccion) => {
         leccion.expanded = false;
       });
     });
   }
-  
+
   toggleLeccion(selectedNivelIndex: number, selectedLeccionIndex: number) {
     const nivel = this.niveles[selectedNivelIndex];
     nivel.lecciones.forEach((leccion, leccionIndex) => {
@@ -177,42 +254,63 @@ export class CursoRutaEmprendedorComponent {
       }
     });
   }
-  
+
   goToNextContent() {
-    let foundNextContent = false;
-  
-    // Buscar el siguiente contenido disponible
-    for (let i = this.currentNivelIndex; i < this.niveles.length && !foundNextContent; i++) {
-      const nivel = this.niveles[i];
-      for (let j = (i === this.currentNivelIndex ? this.currentLeccionIndex : 0); j < nivel.lecciones.length && !foundNextContent; j++) {
-        const leccion = nivel.lecciones[j];
-        for (let k = (i === this.currentNivelIndex && j === this.currentLeccionIndex ? this.currentContenidoIndex + 1 : 0); k < leccion.contenido_lecciones.length; k++) {
-          // Avanzar al siguiente contenido disponible
-          this.currentNivelIndex = i;
-          this.currentLeccionIndex = j;
-          this.currentContenidoIndex = k;
-          foundNextContent = true;
-          break;
+    let isLastContentOfRoute = false;
+    let nextNivelIndex = this.currentNivelIndex;
+    let nextLeccionIndex = this.currentLeccionIndex;
+    let nextContenidoIndex = this.currentContenidoIndex;
+
+    const currentNivel = this.niveles[this.currentNivelIndex];
+    const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+
+    isLastContentOfRoute = (
+      this.currentNivelIndex === this.niveles.length - 1 &&
+      this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
+      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1
+    );
+
+    if (isLastContentOfRoute) {
+      this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['list-empresa']);
+        }
+      });
+    } else {
+      // Si estamos en la descripción de la lección, avanzar al primer contenido
+      if (this.currentContenidoIndex === -1) {
+        nextContenidoIndex = 0;
+      } else {
+        nextContenidoIndex++;
+      }
+
+      // Verificar si necesitamos pasar a la siguiente lección o nivel
+      if (nextContenidoIndex >= currentLeccion.contenido_lecciones.length) {
+        nextContenidoIndex = -1; // Comenzar con la descripción de la siguiente lección
+        nextLeccionIndex++;
+
+        if (nextLeccionIndex >= currentNivel.lecciones.length) {
+          nextLeccionIndex = 0;
+          nextNivelIndex++;
+
+          if (nextNivelIndex >= this.niveles.length) {
+            console.log("No hay más contenido disponible");
+            return;
+          }
         }
       }
-    }
-  
-    if (foundNextContent) {
+
+      this.currentNivelIndex = nextNivelIndex;
+      this.currentLeccionIndex = nextLeccionIndex;
+      this.currentContenidoIndex = nextContenidoIndex;
       this.updateSelectedContent();
-    } else {
-      // Verificar si se ha recibido una nueva actividad
-      if (this.actividad) {
-        // Reiniciar los índices y actualizar los contenidos
-        this.initializeNiveles();
-        this.updateSelectedContent();
-        this.router.navigate(['/ruta']);
-      } else {
-        // Navegar a la nueva ruta
-        console.log("SI LLEGA AQUI");
-      }
     }
   }
-  
+
+  onNextContentClick() {
+    this.goToNextContent();
+  }
+
 
   goToPreviousContent() {
     if (this.currentContenidoIndex > 0) {
@@ -234,7 +332,7 @@ export class CursoRutaEmprendedorComponent {
       // No hay contenido anterior, deshabilitar el botón
       this.buttonPreviousDisabled = true;
     }
-  
+
     this.updateSelectedContent();
   }
 
@@ -242,9 +340,27 @@ export class CursoRutaEmprendedorComponent {
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
     const currentContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
-    
+
     this.selectContenido(currentContenido, this.currentNivelIndex, this.currentLeccionIndex);
   }
+
+  // updateSelectedContent() {
+  //   const currentNivel = this.niveles[this.currentNivelIndex];
+  //   const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+  //   const currentContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
+  
+  //   if (this.currentContenidoIndex === -1) {
+  //     // Mostrar la descripción de la lección
+  //     this.selectedContenido = null;
+  //     this.currentLeccionDescripcion = currentLeccion.descripcion;
+  //     this.currentLeccionFuente = currentLeccion.fuente;
+  //   } else {
+  //     // Mostrar el contenido específico
+  //     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
+  //     this.currentLeccionDescripcion = null;
+  //     this.currentLeccionFuente = null;
+  //   }
+  // }
 
 
 
@@ -336,15 +452,15 @@ export class CursoRutaEmprendedorComponent {
             filename = filename.replace(/_+$/, '');
           }
         }
-  
+
         const blob: Blob = response.body || new Blob();
         const url = window.URL.createObjectURL(blob);
-  
+
         const link = document.createElement('a');
         link.href = url;
         link.download = filename;
         link.click();
-  
+
         window.URL.revokeObjectURL(url);
       },
       error: (error) => {
@@ -396,14 +512,14 @@ export class CursoRutaEmprendedorComponent {
 
   lightenColor(color: string, amount: number): string {
     const num = parseInt(color.replace("#", ""), 16);
-  
+
     // Multiplica el valor de 'amount' para un efecto de aclarado más fuerte
     const scaleFactor = 7; // Ajusta este factor según la claridad deseada
-  
+
     const r = Math.min(255, ((num >> 16) + amount * scaleFactor));
     const g = Math.min(255, (((num >> 8) & 0x00FF) + amount * scaleFactor));
     const b = Math.min(255, ((num & 0x0000FF) + amount * scaleFactor));
-  
+
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
   }
 

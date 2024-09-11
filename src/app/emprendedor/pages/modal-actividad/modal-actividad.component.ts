@@ -14,6 +14,8 @@ export class ModalActividadComponent implements OnInit {
   @Input() rutaId: number;
   @Output() close = new EventEmitter<void>();
   @Output() irAModuloClicked = new EventEmitter<number>();
+//  @Output() irAModuloClicked = new EventEmitter<{ actividad: any, ultimoElemento: any }>();
+
 
   imagenError: boolean = false;
   imagenUrl: string;

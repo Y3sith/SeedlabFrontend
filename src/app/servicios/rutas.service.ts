@@ -47,16 +47,11 @@ export class RutaService {
     });
   }
 
-  // descargarArchivo(contenidoId: number): Observable<HttpResponse<Blob>> {
-  //   const backendUrl = 'http://127.0.0.1:8000';
-  //   return this.http.get(`${backendUrl}/descargar-archivo/${contenidoId}`, {
-  //     observe: 'response',
-  //     responseType: 'blob',
-  //     headers: new HttpHeaders({
-  //       'Accept': 'application/pdf'
-  //     })
-  //   });
-  // }
+  ultimaActividad(access_token:any, rutaId: number):Observable<any>{
+    const options= { headers: this.CreacionHeaders(access_token)};
+    const url = `${environment.apiUrl}ultimaruta/${rutaId}`;
+    return this.http.get(url, options);
+  }
 
   rutasActivas(access_token:any): Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token) };
