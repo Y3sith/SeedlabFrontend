@@ -761,18 +761,6 @@ export class ActnivlecComponent implements OnInit {
         });
         this.contenidoLeccionForm.get('fuente_contenido').enable();
         console.log('Fuente de contenido seleccionada:', selectedContenido.fuente_contenido);
-
-  
-        // Habilitar los campos necesarios para editar
-        // this.contenidoLeccionForm.get('titulo')?.enable();
-        // this.contenidoLeccionForm.get('descripcion')?.enable();
-        // this.contenidoLeccionForm.get('fuente_contenido')?.enable();
-        // this.contenidoLeccionForm.get('id_tipo_dato')?.enable();
-        // this.contenidoLeccionForm.get('id_leccion')?.enable();
-  
-        // // Actualizar la vista del formulario
-        // this.contenidoLeccionForm.get('id_tipo_dato')?.updateValueAndValidity();
-        // this.contenidoLeccionForm.get('fuente_contenido')?.updateValueAndValidity();
       }
     } else {
       // Limpiar el formulario si no se selecciona ningún contenido
@@ -781,6 +769,11 @@ export class ActnivlecComponent implements OnInit {
       });
       this.selectedfuenteContenido = null;
     }
+  }
+
+  getTipoDatoNombre(id: string): string {
+    const tipoDato = this.listarTipoDatoContenido.find(t => t.id === +id);
+    return tipoDato ? tipoDato.fuente_contenido : '';
   }
   
 
