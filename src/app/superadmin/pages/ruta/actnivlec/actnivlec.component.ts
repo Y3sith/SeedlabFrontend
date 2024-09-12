@@ -71,6 +71,12 @@ export class ActnivlecComponent implements OnInit {
   isEditing: any;
   contenidoLeccion: any[] = [];
 
+  showVideo: boolean = false;
+  showImagen: boolean = false;
+  showPdf: boolean = false;
+  showTexto: boolean = false;
+  Number = Number;
+
   ////añadir actividad
   actividadForm = this.fb.group({
     id: [],
@@ -601,34 +607,98 @@ export class ActnivlecComponent implements OnInit {
       }
     );
   }
+  // onLeccionChange(id_leccion: string): void {
+  //   if (id_leccion && id_leccion !== '') {
+  //     const selectedLeccion = this.listarLeccion.find(leccion => leccion.id === parseInt(id_leccion));
+  //     if (selectedLeccion) {
+  //       this.leccionForm.patchValue({
+  //         id_leccion: selectedLeccion.id.toString(),
+  //         nombre: selectedLeccion.nombre
+  //       });
+  //       this.contenidoLeccionForm.patchValue({
+  //         id_leccion: selectedLeccion.id.toString()
+  //       }); 
+  //       this.cargarContenidoLeccion(parseInt(id_leccion));
+  //     }
+  //   } else {
+  //     // Limpiar el formulario de lección si no se selecciona ninguna
+  //     this.leccionForm.patchValue({
+  //       id_leccion: null,
+  //       nombre: ''
+  //     });
+  //     // this.contenidoLeccionForm.patchValue({
+  //     //   id_leccion: null
+  //     // });
+  //   }
+  //   console.log('id_leccion actual:', this.contenidoLeccionForm.get('id_leccion').value);
+  // }
   onLeccionChange(id_leccion: string): void {
-    if (id_leccion) {
+    if (id_leccion && id_leccion !== '') {
       const selectedLeccion = this.listarLeccion.find(leccion => leccion.id === parseInt(id_leccion));
       if (selectedLeccion) {
         this.leccionForm.patchValue({
           id_leccion: selectedLeccion.id.toString(),
           nombre: selectedLeccion.nombre
         });
+        
+        // Actualizar también el formulario de contenido
+        this.contenidoLeccionForm.patchValue({
+          id_leccion: selectedLeccion.id.toString()
+        });
+  
         this.cargarContenidoLeccion(parseInt(id_leccion));
       }
     } else {
-      // Limpiar el formulario de lección si no se selecciona ninguna
-      this.leccionForm.patchValue({
-        id_leccion: null,
-        nombre: ''
-      });
+      // Si no se selecciona ninguna lección, limpiar ambos formularios
+      // this.leccionForm.reset();
+      // this.contenidoLeccionForm.reset();
     }
+    
+    console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
+    console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
-  cargarContenidoLeccion(id_leccion: number):any{
+
+
+
+  // cargarContenidoLeccion(id_leccion: number):any{
+  //   this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
+  //     data => {
+  //       this.contenidoLeccion = data;
+  //       console.log('Contenido de la lección:', data);
+
+  //       const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
+  //       this.contenidoLeccionForm.patchValue({
+  //         id_leccion: currentIdLeccion,
+  //         id_tipo_dato: data.id_tipo_dato,
+  //         fuente_contenido: data.fuente_contenido
+  //       });
+
+  //       this.onTipoDatoChangeContenido();
+  //     },
+  //     error => {
+  //       console.error('Error al cargar el contenido de la lección:', error);
+  //     }
+  //   )
+  // }
+  cargarContenidoLeccion(id_leccion: number): void {
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
         console.log('Contenido de la lección:', data);
+  
+        // Mantener el id_leccion actual
+        this.contenidoLeccionForm.patchValue({
+          id_leccion: id_leccion.toString(),
+          id_tipo_dato: '',
+          fuente_contenido: ''
+        });
+  
+        this.onTipoDatoChangeContenido();
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);
       }
-    )
+    );
   }
 
   // onNivelSelect(event: any): void {
@@ -660,10 +730,12 @@ export class ActnivlecComponent implements OnInit {
 
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
-    if (this.contenidoLeccionForm.invalid) {
-      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
-      return;
-    }
+    // if (this.contenidoLeccionForm.invalid) {
+    //   this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
+    //   return;
+    // }
+    const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
+
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
@@ -675,6 +747,7 @@ export class ActnivlecComponent implements OnInit {
       return;
     }
     const formData = new FormData();
+    formData.append('id_leccion', idLeccion);
     let estadoValue: string;
     if (this.idcontenidoLeccion == null) {
       estadoValue = 'true'
@@ -683,7 +756,9 @@ export class ActnivlecComponent implements OnInit {
     formData.append('titulo', this.contenidoLeccionForm.get('titulo')?.value);
     formData.append('descripcion', this.contenidoLeccionForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.contenidoLeccionForm.get('id_tipo_dato')?.value);
-    formData.append('id_leccion', this.contenidoLeccionForm.get('id_leccion')?.value);
+    //formData.append('id_leccion', this.contenidoLeccionForm.get('id_leccion')?.value);
+    formData.append('id_leccion', idLeccion); 
+    console.log('id_leccion a enviar:', idLeccion);
 
     if (this.selectedfuenteContenido) {
       formData.append('fuente_contenido', this.selectedfuenteContenido, this.selectedfuenteContenido.name);
@@ -748,27 +823,65 @@ export class ActnivlecComponent implements OnInit {
   //     this.selectedfuenteContenido = null;
   //   }
   // }
+  // onContenidoSelect(contenidoId: string): void {
+  //   const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
+  //   if (contenidoId && contenidoId !== '') {
+  //     const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
+  //     if (selectedContenido) {
+  //       this.contenidoLeccionForm.patchValue({
+  //         id_leccion: selectedContenido.id_leccion,
+  //         id_contenido: selectedContenido.id,
+  //         titulo: selectedContenido.titulo,
+  //         descripcion: selectedContenido.descripcion,
+  //         id_tipo_dato: selectedContenido.id_tipo_dato,
+  //         fuente_contenido: selectedContenido.fuente_contenido
+  //       });
+  //       this.contenidoLeccionForm.get('fuente_contenido').enable();
+  //       console.log('Fuente de contenido seleccionada:', selectedContenido.fuente_contenido);
+  //     }
+  //   } else {
+  //     this.contenidoLeccionForm.reset({
+  //       id_leccion: currentIdLeccion, // Mantener el id_leccion actual
+  //       id_contenido: null,
+  //       titulo: '',
+  //       descripcion: '',
+  //       id_tipo_dato: '',
+  //       fuente_contenido: ''
+  //     });
+  //   //this.selectedfuenteContenido = null;
+  //   }
+  //   console.log('id_leccion después de seleccionar contenido:', this.contenidoLeccionForm.get('id_leccion').value);
+
+  // }
   onContenidoSelect(contenidoId: string): void {
-    if (contenidoId) {
+    // Guardar el id_leccion actual antes de cualquier cambio
+    const currentIdLeccion = this.leccionForm.get('id_leccion').value;
+  
+    if (contenidoId && contenidoId !== '') {
       const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
       if (selectedContenido) {
         this.contenidoLeccionForm.patchValue({
+          id_leccion: currentIdLeccion, // Usar el id_leccion del formulario de lección
           id_contenido: selectedContenido.id,
           titulo: selectedContenido.titulo,
           descripcion: selectedContenido.descripcion,
           id_tipo_dato: selectedContenido.id_tipo_dato,
           fuente_contenido: selectedContenido.fuente_contenido
         });
-        this.contenidoLeccionForm.get('fuente_contenido').enable();
-        console.log('Fuente de contenido seleccionada:', selectedContenido.fuente_contenido);
       }
     } else {
-      // Limpiar el formulario si no se selecciona ningún contenido
+      // Si se selecciona "Agregar un contenido Nuevo"
       this.contenidoLeccionForm.reset({
-        id_leccion: this.contenidoLeccionForm.get('id_leccion').value
+        id_leccion: currentIdLeccion, // Mantener el id_leccion actual
+        id_contenido: null,
+        titulo: '',
+        descripcion: '',
+        id_tipo_dato: '',
+        fuente_contenido: ''
       });
-      this.selectedfuenteContenido = null;
     }
+  
+    console.log('id_leccion después de seleccionar contenido:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
   getTipoDatoNombre(id: string): string {
@@ -826,24 +939,65 @@ export class ActnivlecComponent implements OnInit {
 
   ////////////////////////////////////////////////////////////////////////////////////////
 
+  // onTipoDatoChangeContenido(): void {
+  //   const tipoDatoIdContenido = this.contenidoLeccionForm.get('id_tipo_dato').value;
+  //   this.resetFuenteFieldContenido();
+  //   this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
+    
+  //   const tipoDatoIdnumber = Number(tipoDatoIdContenido);
+  //   switch (tipoDatoIdnumber) {
+  //     case 1: // Video
+  //     case 2: // Imagen
+  //     case 3: // PDF
+  //     case 4: // Texto
+  //       this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
+  //       break;
+  //     default:
+  //       // Si no es ninguno de los anteriores, elimina cualquier validador
+  //       this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
+  //       break;
+  //   }
+  //   this.contenidoLeccionForm.get('fuente_contenido').updateValueAndValidity();
+  // }
+
   onTipoDatoChangeContenido(): void {
     const tipoDatoIdContenido = this.contenidoLeccionForm.get('id_tipo_dato').value;
     this.resetFuenteFieldContenido();
     this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
-
-    switch (tipoDatoIdContenido) {
-      case '1': // Video
-      case '2': // Imagen
-      case '3': // PDF
-      case '4': // Texto
-        this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
-        break;
+  
+    // Resetear todos los flags de visibilidad
+    // this.showVideo = false;
+    // this.showImagen = false;
+    // this.showPdf = false;
+    // this.showTexto = false;
+  
+    const tipoDatoIdnumber = Number(tipoDatoIdContenido);
+    switch (tipoDatoIdnumber) {
+      case 1: // Video
+        // this.showVideo = true;
+        // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
+        // break;
+      case 2: // Imagen
+        // this.showImagen = true;
+        // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
+        // break;
+      case 3: // PDF
+        // this.showPdf = true;
+        // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
+        // break;
+      case 4: // Texto
+        // this.showTexto = true;
+        // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
+        // break;
       default:
         // Si no es ninguno de los anteriores, elimina cualquier validador
         this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
         break;
     }
     this.contenidoLeccionForm.get('fuente_contenido').updateValueAndValidity();
+    
+    // Forzar la detección de cambios
+    this.cdRef.detectChanges();
   }
 
   onTextInputContenido(event: Event): void {
@@ -876,6 +1030,12 @@ export class ActnivlecComponent implements OnInit {
       if (field === 'fuente_contenido' || field === 'fuente_documentos') {
         this.selectedfuenteContenido = file;
         this.contenidoLeccionForm.patchValue({ fuente_contenido: file });
+
+        const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.fuentePreviewContenido = e.target.result;  // Guarda la vista previa
+      };
+      reader.readAsDataURL(file);
       }
     } else {
       this.resetFileField(field);

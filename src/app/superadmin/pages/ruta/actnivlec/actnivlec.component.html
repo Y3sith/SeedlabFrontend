@@ -136,7 +136,6 @@
                         <form [formGroup]="leccionForm">
                             <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
                                 Agregar lección</h2>
-
                             <div class="mb-4" *ngIf="!isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para
                                     crear la lección</label>
@@ -150,7 +149,6 @@
                                     <div *ngIf="l.id_nivel.errors.required">Este campo es requerido *</div>
                                 </div>
                             </div>
-
                             <div class="mb-4" *ngIf="isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para
                                     editar</label>
@@ -191,8 +189,8 @@
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Contenido
                         </h2>
                         <form [formGroup]="contenidoLeccionForm">
-                            <h3 class="text-lg text-center font-semibold mb-2 font-poppins">Agregar contenido a la lección</h3>
-
+                            <h3 class="text-lg text-center font-semibold mb-2 font-poppins">Agregar contenido a la
+                                lección</h3>
                             <div class="mb-4" *ngIf="!isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para
                                     agregar Contenido</label>
@@ -209,16 +207,18 @@
                             <div class="mb-4" *ngIf="isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el Contenido para
                                     editar</label>
-                                <select formControlName="" (change)="onContenidoSelect($event.target.value)" class="w-full p-2 border rounded">
+                                <select formControlName="" (change)="onContenidoSelect($event.target.value)"
+                                    class="w-full p-2 border rounded">
                                     <option *ngFor="let contenido of contenidoLeccion" [value]="contenido.id">
                                         {{contenido.titulo}}</option>
-                                        <option value="">Agrega un contenido Nuevo</option>
+                                    <option value="">Agrega un contenido Nuevo</option>
                                 </select>
                                 <div *ngIf="submittedContent && cl.id_leccion.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="cl.id_leccion.errors.required">Este campo es requerido *</div>
                                 </div>
                             </div>
+                            <input type="hidden" id="id_leccion" formControlName="id_leccion">
 
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
@@ -237,7 +237,6 @@
                                     <div *ngIf="cl.descripcion.errors.required">Este campo es requerido *</div>
                                 </div>
                             </div>
-
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato</label>
                                 <select class="w-full p-2 border rounded" formControlName="id_tipo_dato"
@@ -253,9 +252,9 @@
                             </div>
                             <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
                             <div class="mb-4">
-                                <ng-container [ngSwitch]="contenidoLeccionForm.get('id_tipo_dato').value">
+                                <ng-container [ngSwitch]="Number(contenidoLeccionForm.get('id_tipo_dato').value)">
                                     <!--video-->
-                                    <div class="mb-4" *ngSwitchCase="'1'">
+                                    <div class="mb-4" *ngSwitchCase="1">
                                         <label class="block text-sm font-medium text-gray-700 mb-1" for="nombre">Link
                                             del video</label>
                                         <input type="text" id="fuente_contenido" formControlName="fuente_contenido"
@@ -268,7 +267,7 @@
                                         </div>
                                     </div>
                                     <!--imagen-->
-                                    <div class="mb-4" *ngSwitchCase="'2'">
+                                    <div class="mb-4" *ngSwitchCase="2">
                                         <label
                                             class="text-sm font-normal relative cursor-pointer flex flex-row items-center  flex-none justify-center"
                                             for="nombre">
@@ -292,7 +291,7 @@
                                         </div>
                                     </div>
                                     <!--pdf-->
-                                    <div class="mb-4" *ngSwitchCase="'3'">
+                                    <div class="mb-4" *ngSwitchCase="3">
                                         <label
                                             class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center"
                                             for="nombre">
@@ -317,7 +316,7 @@
                                         </div>
                                     </div>
                                     <!--texto-->
-                                    <div class="mb-4" *ngSwitchCase="'4'">
+                                    <div class="mb-4" *ngSwitchCase="4">
                                         <label class="text-xl font-normal flex-none justify-center"
                                             for="nombre"></label>
                                         <textarea type="text" id="fuente_contenido" formControlName="fuente_contenido"
@@ -332,7 +331,6 @@
                                     </div>
                                 </ng-container>
                             </div>
-                            <input type="hidden" id="id_leccion" formControlName="id_leccion">
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
