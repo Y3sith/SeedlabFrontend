@@ -75,8 +75,8 @@ export class PerfilEmprendedorComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
   ) { 
     this.emprendedorForm = this.fb.group({
-      nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
-      apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
+      nombre: ['', [Validators.required, this.noNumbersValidator]],
+      apellido: ['', [Validators.required, this.noNumbersValidator]],
       documento: ['', Validators.required],
       imagen_perfil: [Validators.required],
       celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
@@ -87,7 +87,7 @@ export class PerfilEmprendedorComponent implements OnInit {
       id_municipio: [Validators.required],
       fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
       email: ['', Validators.required],
-      password: ['',  Validators.minLength(8)],
+      password: ['',  [Validators.minLength(10), this.passwordValidator]],
       estado: true,
     });
   }
@@ -252,13 +252,14 @@ export class PerfilEmprendedorComponent implements OnInit {
 
  updateEmprendedor(): void {
   const formData = new FormData();
-  let estadoValue: string;  
+  let estadoValue: string;
 
-  if(this.emprendedorForm.invalid){
+  // Validación general
+  if (this.emprendedorForm.invalid) {
     console.log("Formulario Invalido", this.emprendedorForm.value);
-    this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
+    this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
     this.submitted = true;
-    return
+    return;
   }
 
   // First pass: handle special cases and avoid duplication
