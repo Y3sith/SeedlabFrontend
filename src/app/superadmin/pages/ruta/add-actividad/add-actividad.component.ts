@@ -48,7 +48,8 @@ export class AddActividadComponent implements OnInit {
     id_tipo_dato: ['', Validators.required],
     id_asesor: ['', Validators.required],
     id_ruta: ['', Validators.required],
-    id_aliado: ['', Validators.required]
+    id_aliado: ['', Validators.required],
+    estado: ['', Validators.required]
   })
 
 
@@ -133,24 +134,25 @@ export class AddActividadComponent implements OnInit {
     //   return;
     // }
     this.submitted = true;
-    const actividad: Actividad = {
-      nombre: this.actividadForm.value.nombre,
-      descripcion: this.actividadForm.value.descripcion,
-      fuente: this.actividadForm.value.fuente,
-      id_tipo_dato: parseInt(this.actividadForm.value.id_tipo_dato),
-      id_asesor: parseInt(this.actividadForm.value.id_asesor),
-      id_ruta: this.rutaSeleccionada.id,
-      id_aliado: this.user.id
-    }
-    this.aliadoService.crearActividad(this.token, actividad).subscribe(
-      data => {
-        location.reload();
-        console.log(data);
-      },
-      error => {
-        console.log(error);
-      }
-    )
+    // const actividad: Actividad = {
+    //   nombre: this.actividadForm.value.nombre,
+    //   descripcion: this.actividadForm.value.descripcion,
+    //   fuente: this.actividadForm.value.fuente,
+    //   id_tipo_dato: parseInt(this.actividadForm.value.id_tipo_dato),
+    //   id_asesor: parseInt(this.actividadForm.value.id_asesor),
+    //   id_ruta: this.rutaSeleccionada.id,
+    //   id_aliado: this.user.id
+    //   estado: this.actividadForm.value.estado,
+    // }
+    // this.aliadoService.crearActividad(this.token, actividad).subscribe(
+    //   data => {
+    //     location.reload();
+    //     console.log(data);
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // )
   }
 
   tipoDato(): void {

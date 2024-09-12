@@ -27,7 +27,7 @@ export class HeaderComponent implements AfterViewInit {
         //console.log("personalizaciones obtenidas", data);
       },
       error => {
-        console.error("no funciona", error);
+        //console.error("no funciona", error);
       });
   }
 

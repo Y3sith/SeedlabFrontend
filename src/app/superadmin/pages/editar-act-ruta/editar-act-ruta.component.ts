@@ -25,7 +25,7 @@ export class EditarActRutaComponent {
 
 
   ////
-  listRutaActNivLec: Ruta[] = [];
+  listRutaActNivLec: Actividad[] = [];
 
   actividadSeleccionada: any | null;
   rutaSeleccionada: any | null;
@@ -67,7 +67,6 @@ export class EditarActRutaComponent {
     private route: ActivatedRoute,
     private rutaService: RutaService,
     private fb: FormBuilder,
-
     private actividadService: ActividadService,
    // private nivelService: NivelService
   ) {
@@ -112,23 +111,24 @@ export class EditarActRutaComponent {
   }
 
   verEditar(): void {
-    // if (!this.token) {
-    this.rutaService.rutasActivas(this.token).subscribe(
+    if (this.ActividadId !== null) {
+      this.actividadService.ActiNivelLeccionContenido(this.token, this.ActividadId).subscribe(
       (data) => {
         this.listRutaActNivLec = data
-        console.log('Rutas:', this.listRutaActNivLec);
+        console.log('contenido de actividad:', this.listRutaActNivLec);
       },
       (error) => {
         console.log(error);
       }
     )
-    //}
+    }
   }
 
   selectRuta(ruta: any): void {
     this.rutaSeleccionada = ruta;
     console.log("la ruta seleccionada fue: ", this.rutaSeleccionada)
   }
+  
   actividadSelect(actividad: any): void {
     this.actividadSeleccionada = actividad;
     this.nivelSeleccionada = null;
@@ -162,19 +162,19 @@ export class EditarActRutaComponent {
   }
 
 
-  updateActividad(): void {
-    const actividadData = this.actividadForm.value;
-    this.actividadService.updateActividad(this.token,this.actividadId,actividadData).subscribe(
-      (data) => {
-        console.log('actualización exitosa', data);
+  // updateActividad(): void {
+  //   const actividadData = this.actividadForm.value;
+  //   this.actividadService.updateActividad(this.token,this.actividadId,actividadData).subscribe(
+  //     (data) => {
+  //       console.log('actualización exitosa', data);
         
-      },
-      (error) => {
-        console.log('dasdasdasd',this.actividadId);
-        console.log('Error al actualizar', error);
-      }
-    )
-  }
+  //     },
+  //     (error) => {
+  //       console.log('dasdasdasd',this.actividadId);
+  //       console.log('Error al actualizar', error);
+  //     }
+  //   )
+  // }
 
   updateNivel(): void {
     const nivelData = this.nivelForm;
