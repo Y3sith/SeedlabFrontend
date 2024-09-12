@@ -154,11 +154,7 @@ export class PerfilEmprendedorComponent implements OnInit {
         (data) => {
           this.listMunicipios = data;
         console.log("MUNICIPIOS",data);
-          // Establecer el municipio actual en el select después de cargar los municipios
-          //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
-          // if (municipioId) {
-          //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
-          // }
+         
         },
         (err) => {
           console.log('Error al cargar los municipios:', err);
@@ -302,10 +298,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
   }
 
-  // console.log('Data to be sent:');
-  // formData.forEach((value, key) => {
-  //   console.log(`${key}: ${value}`);
-  // });
+ 
 
   this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
     if (result.isConfirmed) {
@@ -409,8 +402,14 @@ export class PerfilEmprendedorComponent implements OnInit {
 
   // console.log("Texto de confirmación para desactivar:", confirmationText);
 
-  passwordValidator(control: AbstractControl) {
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
+
+    // Si el campo está vacío, consideramos que es válido
+    if (!value || value.trim() === '') {
+      return null;
+    }
+
     const hasUpperCase = /[A-Z]+/.test(value);
     const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
 
@@ -420,6 +419,7 @@ export class PerfilEmprendedorComponent implements OnInit {
       return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
     }
   }
+
 
   get f() { return this.emprendedorForm.controls; }
 
@@ -556,4 +556,5 @@ export class PerfilEmprendedorComponent implements OnInit {
       return null;
     }
   }
+  
 }

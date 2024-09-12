@@ -54,7 +54,7 @@
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
                                     <div *ngIf="f.apellido.errors.required">Este campo es requerido *</div>
-                                    <div *ngIf="f.apellido.errors.hasNumbers">Este campo no puede contener números</div>                                   
+                                    <div *ngIf="f.apellido.errors.hasNumbers">Este campo no puede contener números</div>
                                 </div>
                                 <div class="min-[860px]:flex gap-4 mt-4">
                                     <div class="">
@@ -121,7 +121,6 @@
                             <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
                                 [disabled]="blockedInputs" [readonly]="blockedInputs"
                                 class="p-2 h-12 w-full border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 placeholder-black" />
-                            <!-- quité *ngIf="!blockedInputs" para que me dejara visualizar el campo de la contraseña -->
                             <button type="button"
                                 class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500"
                                 (click)="hide = !hide">
@@ -129,11 +128,12 @@
                                 <i *ngIf="!hide" class="fa fa-eye text-cyan-500"></i>
                             </button>
                         </div>
-                        <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched) && f['password'].value !== ''"
+                        <div *ngIf="f['password'].dirty && f['password'].value !== '' && f['password'].invalid"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <div *ngIf="f.password.errors?.['minlength']">La contraseña debe tener al menos 10
                                 caracteres *</div>
-                            <div *ngIf="f.password.errors?.['passwordStrength']">{{ f.password.errors['passwordStrength'] }}</div>
+                            <div *ngIf="f.password.errors?.['passwordStrength']">{{
+                                f.password.errors['passwordStrength'] }}</div>
                         </div>
 
                         <h5 class="text-xl font-bold mt-6 mb-4 text-center font-poppins">Información de Contacto</h5>
@@ -146,9 +146,8 @@
                         <label for="celular" class="block mb-2 mt-4">Celular</label>
                         <input type="text" id="celular" formControlName="celular" [readonly]="blockedInputs"
                             class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                            <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
-                            class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                            role="alert">
+                        <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
+                            class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
                             <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos
                             </div>
@@ -177,6 +176,11 @@
                             <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
                                 {{ municipio.nombre }}
                             </option>
+                            <div *ngIf="f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)"
+                                class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                role="alert"> >
+                                <div *ngIf="f.id_municipio.errors.required">Este campo es requerido *</div>
+                            </div>
                         </select>
 
                         <label for="direccion" class="block mb-2 mt-4">Dirección</label>

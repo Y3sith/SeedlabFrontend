@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators, ValidationErrors, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
@@ -48,19 +48,19 @@ export class PerfilSuperadminComponent {
 
 
   perfiladminForm = this.fb.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    documento: '',
-    imagen_perfil: [null, Validators.required],
-    celular: ['', Validators.required],
+    nombre: ['', [Validators.required, this.noNumbersValidator]],
+    apellido: ['', [Validators.required, this.noNumbersValidator]],
+    documento: ['', Validators.required],
+    imagen_perfil: [Validators.required],
+    celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
     genero: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    direccion: ['', Validators.required],
-    id_municipio: ['', Validators.required],
-    id_departamento: ['', Validators.required],
-    id_tipo_documento: new FormControl({ value: '', disabled: false }, Validators.required),
+    direccion: [],
+    id_tipo_documento: [Validators.required],
+    id_departamento: [Validators.required],
+    id_municipio: [Validators.required],
+    fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
     email: ['', Validators.required],
-    password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
+    password: ['', [Validators.minLength(10), this.passwordValidator]],
     estado: true,
   });
 
@@ -148,7 +148,15 @@ export class PerfilSuperadminComponent {
   updateAdministrador(): void {
     const formData = new FormData();
     let estadoValue: string;
-  
+
+    // Validación general
+    if (this.perfiladminForm.invalid) {
+      console.log("Formulario Inválido", this.perfiladminForm.value);
+      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
+      this.submitted = true;
+      return;
+    }
+
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfiladminForm.controls).forEach((key) => {
       const control = this.perfiladminForm.get(key);
@@ -170,7 +178,7 @@ export class PerfilSuperadminComponent {
         }
       }
     });
-  
+
     // Append specific fields (this will overwrite any duplicates from the first pass)
     const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
     specificFields.forEach(field => {
@@ -179,100 +187,60 @@ export class PerfilSuperadminComponent {
         formData.append(field, value);
       }
     });
-  
-   
+
     if (this.perfiladminForm.get('direccion')?.value) {
       formData.append('direccion', this.perfiladminForm.get('direccion')?.value);
     }
-  
+
     if (this.selectedImagen_perfil) {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
-  
-        //   this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
-        //     data => {
-        //       console.log("personalizacion creada", data);
-        //       location.reload();
-        //     },
-        //     error => {
-        //       console.error("no funciona", error);
-        //     }
-        //   );
-        // }
 
-        this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
-          if (result.isConfirmed) {
-            this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
-              (data) => {
-                console.log('Response from server:', data);
-                setTimeout(function () {
-                  location.reload();
-                }, this.tiempoEspera);
-                this.alertService.successAlert('Exito', data.message);
-              },
-              (error) => {
-                console.error('Error from server:', error);
-                this.alertService.errorAlert('Error', error.error.message);
-              }
-            );
+    this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+      if (result.isConfirmed) {
+        this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
+          (data) => {
+            console.log('Response from server:', data);
+            setTimeout(function () {
+              location.reload();
+            }, this.tiempoEspera);
+            this.alertService.successAlert('Exito', data.message);
+          },
+          (error) => {
+            console.error('Error from server:', error);
+            this.alertService.errorAlert('Error', error.error.message);
           }
-        });
+        );
       }
+    });
+  }
 
-          // this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
-          //   data => {
-          //     console.log("personalizacion creada", data);
-          //     // console.log("Imagen en base64:", this.personalizacionForm.value.imagen_Logo);
-          //     // alert("Imagen en base64:\n");
+ 
 
-          //     location.reload();
-          //   },
-          //   error => {
-          //     console.error("no funciona", error);
-          //   }
-          // );
-        
-    
 
-    logFormErrors(): void {
-      Object.keys(this.perfiladminForm.controls).forEach(key => {
-        const controlErrors = this.perfiladminForm.get(key)?.errors;
-        if (controlErrors) {
-          console.error(`Error en el control ${key}:`, controlErrors);
-        }
-      });
-    }
-  //   const perfil: Superadmin = {
-  //     nombre: this.perfiladminForm.get('nombre')?.value,
-  //     apellido: this.perfiladminForm.get('apellido')?.value,
-  //     documento: this.perfiladminForm.get('documento')?.value,
-  //     celular: this.perfiladminForm.get('celular')?.value,
-  //     genero: this.perfiladminForm.get('genero')?.value,
-  //     direccion: this.perfiladminForm.get('direccion')?.value,
-  //     id_tipo_documento: this.perfiladminForm.get('nombretipodoc')?.value,
-  //     email: this.perfiladminForm.get('email')?.value,
-  //     password: this.perfiladminForm.get('password')?.value,
-  //     fecha_nac: this.perfiladminForm.get('fecha_nac')?.value,
-  //     id_departamento: this.perfiladminForm.get('departamento')?.value,
-  //     id_municipio: this.perfiladminForm.get('municipio')?.value,
-  //   }
-  //   this.superadminService.updateAdmin(this.token,perfil, this.id).subscribe(
-  //     (data) => {
-  //       location.reload();
-  //     },
-  //     (err) => {
-  //       console.log(err);
-  //     }
-  //   )
-  // }
+  logFormErrors(): void {
+    Object.keys(this.perfiladminForm.controls).forEach(key => {
+      const controlErrors = this.perfiladminForm.get(key)?.errors;
+      if (controlErrors) {
+        console.error(`Error en el control ${key}:`, controlErrors);
+      }
+    });
+  }
+  
 
   get f() {
     return this.perfiladminForm.controls;
   }
 
   /* Validaciones la contraseña */
-  passwordValidator(control: AbstractControl) {
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
+
+    // Si el campo está vacío, consideramos que es válido
+    if (!value || value.trim() === '') {
+      return null;
+    }
+
     const hasUpperCase = /[A-Z]+/.test(value);
     const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
 
@@ -297,7 +265,7 @@ export class PerfilSuperadminComponent {
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
     const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
-    
+
     fieldsToToggle.forEach(field => {
       const control = this.perfiladminForm.get(field);
       if (control) {
@@ -311,35 +279,35 @@ export class PerfilSuperadminComponent {
         console.warn(`Control for field ${field} not found in form`);
       }
     });
-  
+
     // Force change detection
     this.cdRef.detectChanges();
-  
+
     // Log the entire form state
     console.log('Form state after toggling:', this.perfiladminForm);
   }
 
-    /* Restaura los datos originales */
-    onCancel(): void {
-      location.reload();
-    }
-  
-    /*muestra boton de guardar cambios*/ 
-    mostrarGuardarCambios(): void {
-      this.boton = false;
-    }
-  
-    onEdit() {
-      this.blockedInputs = false;
-      this.showEditButton = true;
-      this.toggleInputsLock();
-    }
+  /* Restaura los datos originales */
+  onCancel(): void {
+    location.reload();
+  }
+
+  /*muestra boton de guardar cambios*/
+  mostrarGuardarCambios(): void {
+    this.boton = false;
+  }
+
+  onEdit() {
+    this.blockedInputs = false;
+    this.showEditButton = true;
+    this.toggleInputsLock();
+  }
 
   //Funcion para cargar los departamentos
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
-        console.log("DEPARTAMENTO",data);
+        console.log("DEPARTAMENTO", data);
         this.listDepartamentos = data;
         //this.cdRef.detectChanges(); // Forzar la detección de cambios
       },
@@ -364,12 +332,7 @@ export class PerfilSuperadminComponent {
     this.municipioService.getMunicipios(departamentoId).subscribe(
       (data) => {
         this.listMunicipios = data;
-      console.log("MUNICIPIOS",data);
-        // Establecer el municipio actual en el select después de cargar los municipios
-        //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
-        // if (municipioId) {
-        //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
-        // }
+        console.log("MUNICIPIOS", data);
       },
       (err) => {
         console.log('Error al cargar los municipios:', err);
@@ -389,21 +352,21 @@ export class PerfilSuperadminComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      
+
       let maxSize = 0;
-  
+
       if (field === 'imagen_perfil') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
-      } 
-  
+      }
+
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-  
+
         //Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-  
+
         // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'imagen_perfil') {
           this.perfiladminForm.patchValue({ imagen_perfil: null });
@@ -415,15 +378,15 @@ export class PerfilSuperadminComponent {
       }
 
       const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const previewUrl = e.target.result;
-      if (field === 'imagen_perfil') {
-        this.perfiladminForm.patchValue({ imagen_perfil: previewUrl });
-        this.perfilPreview = previewUrl;
-      }
-    };
-    reader.readAsDataURL(file);
-  
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.perfiladminForm.patchValue({ imagen_perfil: previewUrl });
+          this.perfilPreview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
       // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
 
@@ -431,10 +394,10 @@ export class PerfilSuperadminComponent {
         this.selectedImagen_perfil = file;
         this.perfiladminForm.patchValue({ imagen_perfil: file });
       }
-      
-  } else {
-    this.resetFileField(field);
-  }
+
+    } else {
+      this.resetFileField(field);
+    }
   }
 
   generateImagePreview(file: File, field: string) {
@@ -460,5 +423,50 @@ export class PerfilSuperadminComponent {
         console.log(error);
       }
     )
+  }
+  noLettersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasLetters = /[a-zA-Z]/.test(value);
+  
+    if (hasLetters) {
+      return { hasLetters: 'El campo no debe contener letras *' };
+    } else {
+      return null;
+    }
+  }
+
+  noNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasNumbers = /\d/.test(value);
+
+    if (hasNumbers) {
+      return { hasNumbers: 'El campo no debe contener números *' };
+    } else {
+      return null;
+    }
+  }
+
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
+      return null; // Si no hay valor, no se valida
+    }
+  
+    const selectedDate = new Date(value);
+    const today = new Date();
+    const hundredYearsAgo = new Date();
+    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+  
+    if (selectedDate > today) {
+      return { futureDate: 'La fecha no es válida *' };
+    } else if (selectedDate < hundredYearsAgo) {
+      return { tooOld: 'La fecha no es válida *' };
+    } else if (selectedDate > eighteenYearsAgo) {
+      return { tooRecent: 'Debe tener al menos 18 años *' };
+    } else {
+      return null;
+    }
   }
 }
