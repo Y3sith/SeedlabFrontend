@@ -15,7 +15,7 @@ export class PuntajesService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.post<any>(`${this.url}/enviarFormulario/${documentoEmpresa}`,puntajes, { headers });
+    return this.http.post<any>(`${this.url}/${documentoEmpresa}`,puntajes, { headers });
   }
 
   getPuntajes(id_empresa:number): Observable<any> {
