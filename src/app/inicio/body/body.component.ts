@@ -33,6 +33,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
   telefono: string;
   direccion: string;
   ubicacion: string;
+  id: number = 1;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -111,7 +112,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
   }
 
   getPersonalizacion() {
-    this.personalizacionesService.getPersonalizacion().subscribe(
+    this.personalizacionesService.getPersonalizacion(this.id).subscribe(
       data => {
         this.logoUrl = data.imagen_logo;
         this.sidebarColor = data.color_principal;

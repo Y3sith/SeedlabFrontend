@@ -7,6 +7,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
 import { ModalAddAsesoresComponent } from './pages/add-asesores/modal-add-asesores.component';
+import { TodosLosAliadosComponent } from './pages/todos-los-aliados/todos-los-aliados.component';
 import { data } from 'jquery';
 
 const routes: Routes = [
@@ -17,9 +18,10 @@ const routes: Routes = [
       {path: 'list-asesores', component:ListAsesoresComponent, data: {title: 'Asesores', showInMenu: true, icon: 'fa-solid fa-users'}},
       {path: 'list-asesorias', component: AsesoriaAliadoComponent, data: {title: 'Asesorias', showInMenu: true, icon: 'fa-solid fa-users-gear'}},
       {path: 'perfil-aliado', component: PerfilAliadoComponent, data: {title: 'Perfil', showInMenu: true, icon: 'fa-solid fa-circle-user'}},
-      {path: 'Reportes', component:ReportesComponent, data:{title: 'Reportes', showInMenu: true, icon: 'fa-regular fa-file-lines'}},
+      {path: 'Reportes-aliado', component:ReportesComponent, data:{title: 'Reportes', showInMenu: true, icon: 'fa-regular fa-file-lines'}},
       {path: 'add-asesor', component: ModalAddAsesoresComponent, data:{showInMenu:false}},
       {path: 'edit-asesor/:id', component: ModalAddAsesoresComponent, data:{  showInMenu: false } },
+      {path: 'todos-los-aliados', component: TodosLosAliadosComponent, data:{  showInMenu: false } },
     ]
   }
 ];  

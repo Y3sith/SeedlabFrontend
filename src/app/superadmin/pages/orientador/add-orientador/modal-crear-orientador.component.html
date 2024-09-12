@@ -1,26 +1,32 @@
-<div class="container mx-auto p-0 pt-2 ">
-    <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+<div class="container mx-auto p-0 pt-2 font-poppins">
+    <header class="flex items-center justify-between mt-2 mb-6 md:pl-4 w-full">
+        <button (click)="goBack()" class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300 font-poppins">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Volver
+        </button>
         <app-header [title] [subtitle]="'Agregar Orientador'"></app-header>
-    </header>
+      </header>
 
     <!-- transicion basada en el estado -->
     <div class="w-full flex items-center justify-center px-4">
         <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
             <div *ngFor="let contenedor of [1, 2]; let i = index" class="contenedor mb-2 sm:mb-0"
                 [class.active]="i === currentIndex">
-                <div class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto text-base md:text-xl"
+                <div class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto font-bold text-base md:text-xl"
                     [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
                     {{ i + 1 }}
                 </div>
                 <ng-container *ngIf="i === 0">
                     <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                        class=" text-base md:text-xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate">
+                        class=" text-base md:text-xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate font-poppins">
                         Información Personal
                     </h2>
                 </ng-container>
                 <ng-container *ngIf="i === 1">
                     <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                        class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate">
+                        class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate font-poppins">
                         Ubicación y Datos ingreso
                     </h2>
                 </ng-container>
@@ -32,10 +38,9 @@
         <div *ngIf="currentSubSectionIndex === 0">
             <div class="space-y-8 max-w-full md:px-8">
                 <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-
-                    <form action="" [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
+                    <form [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-
+                            <!-- Imagen -->
                             <div class="sm:col-span-2 flex flex-col items-center mb-4 sm:mb-6">
                                 <label for="profilePicture" class="cursor-pointer text-center">
                                     <div
@@ -61,79 +66,80 @@
 
                             <!-- Nombre -->
                             <div>
-                                <label for="nombre"
-                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                                <input type="text" id="nombre" name="nombre" formControlName="nombre"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <div *ngIf="submitted && orientadorForm.controls['nombre'].invalid"
-                                    class="text-xs sm:text-sm text-red-500 mt-1" role="alert">
-                                    <span *ngIf="orientadorForm.controls['nombre'].errors?.['required']">Este campo
-                                        es
-                                        requerido*</span>
+                                <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                                <input type="text" id="nombre" formControlName="nombre" name="nombre"
+                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                    [ngClass]="{'border-red-500': f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)}">
+                                <div *ngIf="f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
+                                    <span *ngIf="f['nombre'].errors?.['required']">Este campo es requerido *</span>
+                                    <span *ngIf="f['nombre'].errors?.['pattern']">Solo se permiten letras y espacios</span>
                                 </div>
                             </div>
 
                             <!-- Apellidos -->
                             <div>
-                                <label for="apellido"
-                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Apellidos</label>
-                                <input type="text" id="apellido" formControlName="apellido"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <div *ngIf="submitted && orientadorForm.controls['apellido'].invalid"
-                                    class="text-sm text-red-500 mt-1" role="alert">
-                                    <span *ngIf="orientadorForm.controls['apellido'].errors?.['required']">Este
-                                        campo es
-                                        requerido*</span>
+                                <label for="apellido" class="block text-sm font-medium text-gray-700 mb-1">Apellidos</label>
+                                <input type="text" id="apellido" formControlName="apellido" name="apellido"
+                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                    [ngClass]="{'border-red-500': f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)}">
+                                <div *ngIf="f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
+                                    <span *ngIf="f['apellido'].errors?.['required']">Este campo es requerido *</span>
+                                    <span *ngIf="f['apellido'].errors?.['pattern']">Solo se permiten letras y espacios</span>
                                 </div>
                             </div>
 
                             <!-- Tipo documento -->
                             <div>
-                                <label for="id_tipo_documento"
-                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Tipo de
-                                    Documento</label>
+                                <label for="id_tipo_documento" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Documento</label>
                                 <select id="id_tipo_documento" formControlName="id_tipo_documento"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                    [ngClass]="{'border-red-500': f['id_tipo_documento'].invalid && (f['id_tipo_documento'].dirty || f['id_tipo_documento'].touched)}">
                                     <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                                    <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre
-                                        }}
-                                    </option>
+                                    <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
                                 </select>
-                                <div *ngIf="submitted && f['id_tipo_documento'].invalid"
-                                    class="text-sm text-red-500 mt-1" role="alert">
-                                    <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es
-                                        requerido
-                                        *</span>
+                                <div *ngIf="f['id_tipo_documento'].invalid && (f['id_tipo_documento'].dirty || f['id_tipo_documento'].touched)"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
+                                    <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es requerido *</span>
                                 </div>
                             </div>
 
 
                             <!-- Documento -->
                             <div>
-                                <label for="documento"
-                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Documento</label>
-                                <input type="number" id="documento" formControlName="documento"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <div *ngIf="submitted && f['documento'].invalid" class="text-sm text-red-500 mt-1"
-                                    role="alert">
-                                    <span *ngIf="f['documento'].errors?.['required']">Este campo es requerido
-                                        *</span>
+                                <label for="documento" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Documento</label>
+                                <input type="text" id="documento" formControlName="documento"
+                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                    [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}">
+                                
+                                <!-- Contenedor de errores -->
+                                <div *ngIf="f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)"
+                                    class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg" role="alert">
+                                    <span *ngIf="f['documento'].errors?.['required']" class="block mt-1">Este campo es requerido *</span>
+                                    <span *ngIf="f['documento'].errors?.['minlength']" class="block mt-1">El documento debe tener al menos 5 caracteres</span>
+                                    <span *ngIf="f['documento'].errors?.['pattern']" class="block mt-1">El documento solo debe contener números</span>
                                 </div>
                             </div>
 
                             <!-- Genero -->
                             <div>
-                                <label for="genero"
-                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Género</label>
+                                <label for="genero" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Género</label>
                                 <select id="genero" formControlName="genero"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                    <option value="" disabled selected>Seleccionar Género...</option>
+                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                    [ngClass]="{'border-red-500': f['genero'].invalid && (f['genero'].dirty || f['genero'].touched)}">
+                                    <option value="" disabled>Seleccionar Género...</option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Femenino">Femenino</option>
                                     <option value="Otro">Otro</option>
                                 </select>
-                                <div *ngIf="submitted && f['genero'].invalid" class="text-sm text-red-500 mt-1"
-                                    role="alert">
+                                
+                                <!-- Contenedor de errores -->
+                                <div *ngIf="f['genero'].invalid && (f['genero'].dirty || f['genero'].touched)"
+                                    class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg" role="alert">
                                     <span *ngIf="f['genero'].errors?.['required']">Este campo es requerido *</span>
                                 </div>
                             </div>
@@ -170,110 +176,102 @@
             <div class="space-y-8 max-w-full md:px-8">
                 <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
                     <div class="container mx-auto px-4 py-12">
-                        <form action="" [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
+                        <form [formGroup]="orientadorForm" (ngSubmit)="addOrientador()">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <!-- Departamento -->
                                 <div>
-                                    <label for="departamento"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
+                                    <label for="departamento" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
                                     <select id="departamento" formControlName="id_departamento" (change)="onDepartamentoSeleccionado($event)"
-                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['id_departamento'].invalid && (f['id_departamento'].dirty || f['id_departamento'].touched)}">
                                         <option value="" disabled selected>Seleccionar Departamento...</option>
-                                        <option *ngFor="let departamento of listDepartamentos"
-                                            [value]="departamento.id">
+                                        <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
                                             {{ departamento.name }}
                                         </option>
                                     </select>
-                                    <div *ngIf="submitted && f['id_municipio'].invalid"
-                                        class="text-sm text-red-500 mt-1" role="alert">
-                                        <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
-                                            *</span>
+                                    <div *ngIf="f['id_departamento'].invalid && (f['id_departamento'].dirty || f['id_departamento'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                        <span *ngIf="f['id_departamento'].errors?.['required']">Este campo es requerido *</span>
                                     </div>
-                                </div>
+                                  </div>
 
                                 <!-- Municipio -->
                                 <div>
-                                    <label for="municipio"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Municipio</label>
+                                    <label for="municipio" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Municipio</label>
                                     <select id="municipio" formControlName="id_municipio"
-                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)}">
                                         <option value="" disabled selected>Seleccionar Municipio...</option>
                                         <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
                                             {{ municipio.nombre }}
                                         </option>
                                     </select>
-                                    <div *ngIf="submitted && f['id_municipio'].invalid"
-                                        class="text-sm text-red-500 mt-1" role="alert">
-                                        <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
-                                            *</span>
+                                    <div *ngIf="f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                        <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido *</span>
                                     </div>
-                                </div>
+                                  </div>
 
                                 <!-- Direccion -->
-                                <div>
-                                    <label for="direccion"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                                    <input type="text" id="direccion" formControlName="direccion"
+                                <div class="">
+                                    <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
+                                    <input type="text" id="direccion" formControlName="direccion" name="direccion" required
                                         class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                    <div *ngIf="submitted && f['direccion'].invalid" class="text-sm text-red-500 mt-1"
+                                    <div *ngIf="submitted && f['direccion'].invalid"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                         role="alert">
-                                        <span *ngIf="f['direccion'].errors?.['required']">Este campo es requerido
-                                            *</span>
                                     </div>
                                 </div>
 
                                 <!-- Numero celular -->
                                 <div>
-                                    <label for="celular"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Número de
-                                        Celular</label>
+                                    <label for="celular" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Celular</label>
                                     <input type="text" id="celular" formControlName="celular"
-                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                    <div *ngIf="submitted && orientadorForm.controls['celular'].invalid"
-                                        class="text-sm text-red-500 mt-1" role="alert">
-                                        <span *ngIf="orientadorForm.controls['celular'].errors?.['required']">Este campo
-                                            es
-                                            requerido*</span>
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)}">
+                                    
+                                    <!-- Contenedor de errores -->
+                                    <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
+                                        class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg" role="alert">
+                                        <span *ngIf="f['celular'].errors?.['required']" class="block mt-1">Este campo es requerido *</span>
+                                        <span *ngIf="f['celular'].errors?.['pattern']" class="block mt-1">El celular solo debe contener números</span>
                                     </div>
                                 </div>
 
                                 <!-- Correo -->
                                 <div>
-                                    <label for="email"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Correo</label>
+                                    <label for="email" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Correo</label>
                                     <input type="email" id="email" formControlName="email"
                                         class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                        placeholder="user@gmail.com">
-                                    <div *ngIf="submitted && orientadorForm.controls['email'].invalid"
-                                        class="text-sm text-red-500 mt-1" role="alert">
-                                        <span *ngIf="orientadorForm.controls['email'].errors?.['required']">Este campo
-                                            es
-                                            requerido*</span>
+                                        placeholder="user@gmail.com"
+                                        [ngClass]="{'border-red-500': f['email'].invalid && (f['email'].dirty || f['email'].touched)}">
+                                    <div *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                        <span *ngIf="f['email'].errors?.['required']">Este campo es requerido *</span>
+                                        <span *ngIf="f['email'].errors?.['email']">Correo no válido *</span>
                                     </div>
-                                </div>
-
+                                  </div>
                                 <!-- Contraseña -->
                                 <div>
-                                    <label for="password"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                                    <label for="password" class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Contraseña</label>
                                     <div class="relative">
-                                        <input [type]="hide ? 'password' : 'text'" id="password"
-                                            formControlName="password"
-                                            class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                        <input [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
+                                            class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                            [ngClass]="{'border-red-500': f['password'].invalid && (f['password'].dirty || f['password'].touched) && (!idOrientador || f['password'].value)}">
                                         <button type="button"
-                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500"
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 w-10"
                                             (click)="hide = !hide">
-                                            <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500"></i>
-                                            <i *ngIf="!hide" class="fa fa-eye text-cyan-500"></i>
+                                            <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500 w-10"></i>
+                                            <i *ngIf="!hide" class="fa fa-eye text-cyan-500 w-10"></i>
                                         </button>
                                     </div>
-                                    <div *ngIf="submitted && f['password'].invalid" class="text-sm text-red-500 mt-1"
-                                        role="alert">
-                                        <span *ngIf="f['password'].errors?.['required']">Este campo es requerido
-                                            *</span>
-                                        <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8
-                                            caracteres
-                                            *</span>
+                                    <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched) && (!idOrientador || f['password'].value)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                        <span *ngIf="f['password'].errors?.['required']">Este campo es requerido *</span>
+                                        <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8 caracteres *</span>
+                                    </div>
+                                    <div *ngIf="idOrientador" class="mt-1 text-xs text-gray-500">
+                                        Deja este campo en blanco si no deseas cambiar la contraseña.
                                     </div>
                                 </div>
 
@@ -301,14 +299,14 @@
                         </form>
                     </div>
                 </div>
-                <div class="flex justify-center h-10 space-x-4">
+                <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 h-auto">
                     <button
-                        class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+                    class="w-3/4 md:w-auto py-1 px-8 md:px-16 bg-[#373435] text-lg md:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
                         (click)="previous()">
                         Anterior
                     </button>
                     <button (click)="addOrientador()"
-                        class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+                    class="w-3/4 md:w-auto py-1 px-8 md:px-16 bg-[#FA7D00] text-lg md:text-xl text-white font-bold rounded-full transition duration-300">
                         Guardar
                     </button>
                 </div>

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators, FormGroup} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, Validators, ValidationErrors, FormGroup} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { OrientadorService } from '../../../servicios/orientador.service';
@@ -9,6 +9,7 @@ import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../servicios/auth.service';
+import { error } from 'node:console';
 @Component({
   selector: 'app-perfil-orientador',
   templateUrl: './perfil-orientador.component.html',
@@ -44,22 +45,22 @@ export class PerfilOrientadorComponent {
   boton: boolean;
   id: number;
   selectedImagen: File | null = null;
-  orientadorId : number = 1;
+  orientadorId : number
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
   showEditButton = false;
   tiempoEspera = 1800;
 
   perfilorientadorForm = this.fb.group({
-    documento: ['', Validators.required],
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    celular: ['', [Validators.required, Validators.maxLength(10)]],
+    documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
+    nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
+    apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
+    celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
     imagen_perfil: [null ,Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(10), this.passwordValidator]],
+    email: ['', [Validators.required, Validators.email, this.emailValidator]],
+    password: ['', [Validators.minLength(8)]],
     genero: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
+    fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
     direccion: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
@@ -98,7 +99,7 @@ export class PerfilOrientadorComponent {
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
-        this.id = this.user.id;
+        this.orientadorId = this.user.id;
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 2) {
           this.router.navigate(['home']);
@@ -113,7 +114,7 @@ export class PerfilOrientadorComponent {
 
   verEditar(): void {
     if (this.token) {
-      this.orientadorService.getinformacionOrientador(this.token, this.id).subscribe(
+      this.orientadorService.getinformacionOrientador(this.token, this.orientadorId).subscribe(
         (data) => {
           this.perfilorientadorForm.patchValue({
             documento: data.documento,
@@ -177,6 +178,17 @@ export class PerfilOrientadorComponent {
   updateOrientador(): void {
     const formData = new FormData();
     let estadoValue: string;
+
+    if(this.perfilorientadorForm.invalid){
+      console.log("Formulario Invalido", this.perfilorientadorForm.value);
+      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
+      this.submitted = true;
+    }
+    error=>{
+      console.log("Error al actualizar", error);
+    
+      return
+    }
   
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfilorientadorForm.controls).forEach((key) => {
@@ -260,19 +272,9 @@ export class PerfilOrientadorComponent {
       });
     }
 
-  passwordValidator(control: AbstractControl) {
-    const value = control.value;
-    const hasUpperCase = /[A-Z]+/.test(value);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+  
 
-    if (hasUpperCase && hasSpecialChar) {
-      return null;
-    } else {
-      return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
-    }
-  }
-
-  get f() { return this.registerForm.controls; }
+  get f() { return this.perfilorientadorForm.controls; }
 
   initializeFormState(): void {
     const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
@@ -452,6 +454,71 @@ export class PerfilOrientadorComponent {
             console.log(error);
           }
         )
+      }
+    }
+
+    noNumbersValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      const hasNumbers = /\d/.test(value);
+  
+      if (hasNumbers) {
+        return { hasNumbers: 'El campo no debe contener números *' };
+      } else {
+        return null;
+      }
+    }
+
+    noLettersValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      const hasLetters = /[a-zA-Z]/.test(value);
+    
+      if (hasLetters) {
+        return { hasLetters: 'El campo no debe contener letras *' };
+      } else {
+        return null;
+      }
+    }
+
+    dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      if (!value) {
+        return null; // Si no hay valor, no se valida
+      }
+    
+      const selectedDate = new Date(value);
+      const today = new Date();
+      const hundredYearsAgo = new Date();
+      hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+    
+      if (selectedDate > today) {
+        return { futureDate: 'La fecha no es válida *' };
+      } else if (selectedDate < hundredYearsAgo) {
+        return { tooOld: 'La fecha no es válida *' };
+      } else if (selectedDate > eighteenYearsAgo) {
+        return { tooRecent: 'Debe tener al menos 18 años *' };
+      } else {
+        return null;
+      }
+    }
+
+    documentoValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value ? control.value.toString() : '';
+      if (value.length < 5 || value.length > 13) {
+        return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
+      }
+      return null;
+    }
+
+    emailValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      const hasAtSymbol = /@/.test(value);
+  
+      if (!hasAtSymbol) {
+        return { emailInvalid: 'El correo debe ser válido *' };
+      } else {
+        return null;
       }
     }
   //   desactivarEmprendedor(): void {

@@ -62,13 +62,13 @@
 }
 
 .content h3 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 700;
   margin: 0;
 }
 
 .content .actividad-secundaria {
-  font-size: 1rem;
+  font-size: 0.9rem;
   margin: 5px 0 0;
 }
 
@@ -100,7 +100,19 @@
   }
   
   .content {
-    margin-left: -35px;
+    margin-left: -20px; /* Reduced from -35px */
     margin-right: 0;
+    padding-left: 60px; /* Added to move text to the right */
+    padding-right: 20px; /* Added to balance the padding */
+    text-align: left; /* Align text to the left */
+    align-items: flex-start; /* Align items to the left */
+  }
+  
+  .content h3 {
+    font-size: 1rem;
+  }
+  
+  .content .actividad-secundaria {
+    font-size: 0.8rem;
   }
 }

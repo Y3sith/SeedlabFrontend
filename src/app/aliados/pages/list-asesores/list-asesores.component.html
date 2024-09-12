@@ -1,4 +1,4 @@
-<div class="container mx-auto p-4 pt-2">
+<div class="container mx-auto p-4 pt-2 font-poppins">
   <header class="flex flex-col md:flex-row justify-between items-center mb-6">
     <app-header [title] [subtitle]="'Asesores'"></app-header>
     <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">
@@ -31,9 +31,9 @@
   </div>
 
   <!-- Tabla -->
-  <div class="bg-gray-100 rounded-lg shadow-md p-4 mb-6" *ngIf="!isLoading">
+  <div class="bg-form-gray rounded-lg shadow-md p-4 mb-6" *ngIf="!isLoading">
     <div class="overflow-x-auto">
-      <table class="w-auto lg:w-4/6 md:5/6  md:mx-auto">
+      <table class="w-full max-w-full lg:w-5/6 md:5/6 md:mx-auto">
         <thead>
           <tr>
             <th class="text-left p-2">Nombre</th>
@@ -46,7 +46,7 @@
         <tbody class="space-y-6">
           <ng-container
             *ngFor="let asesor of listaAsesores | filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index">
-            <tr class="bg-gray-300 my-5 rounded-xl">
+            <tr class="bg-line-gray my-5 rounded-xl">
               <td class="p-2 rounded-s-lg">{{ asesor.nombre }} {{ asesor.apellido }}</td>
               <td class="p-2">{{ asesor.email }}</td> <!-- paque oscar vea -->
               <td class="p-2 hidden sm:table-cell">{{ asesor.celular }}</td>
@@ -75,37 +75,43 @@
   <div *ngIf="!isLoading">
     <div class="text-center">
       <nav aria-label="Page navigation example">
-        <ul class="inline-flex space-x-2 text-sm pl-0">
+        <ul class="inline-flex space-x-2 text-sm items-center pl-0">
           <li>
-            <a href="javascript:void(0)"
-              class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
-              (click)="changePage('previous')" [class.opacity-50]="!canGoPrevious()"
-              [class.cursor-not-allowed]="!canGoPrevious()">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white mr-1 ml-2"
-                fill="currentColor">
-                <path
-                  d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
+            <a 
+              href="javascript:void(0)" 
+              class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline" 
+              (click)="changePage('previous')" 
+              [class.opacity-50]="!canGoPrevious()" 
+              [class.cursor-not-allowed]="!canGoPrevious()"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
               </svg>
             </a>
           </li>
           <ng-container *ngFor="let pageNumber of getPages()">
-            <a class="no-underline text-white" href="javascript:void(0)" (click)="changePage(pageNumber)"
-              [class.active]="page === pageNumber">
-              <li
-                class="items-center justify-center w-6 h-6 bg-amber-500 rounded-md hover:bg-gray-300 focus:outline-none mx-1">
+            <li>
+              <a 
+                href="javascript:void(0)" 
+                class="inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 border-amber-500 text-amber-500 hover:bg-amber-100 focus:outline-none no-underline font-bold" 
+                (click)="changePage(pageNumber)" 
+                [class.bg-amber-500]="page === pageNumber" 
+                [class.text-white]="page === pageNumber"
+              >
                 {{ pageNumber }}
-              </li>
-            </a>
+              </a>
+            </li>
           </ng-container>
-
           <li>
-            <a href="javascript:void(0)"
-              class="inline-flex items-center justify-center w-6 h-6 bg-gray-500 rounded-md hover:bg-gray-300 focus:outline-none"
-              (click)="changePage('next')" [class.opacity-50]="!canGoNext()" [class.cursor-not-allowed]="!canGoNext()">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-3 w-3 text-white ml-1 p-0 "
-                fill="currentColor">
-                <path
-                  d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+            <a 
+              href="javascript:void(0)" 
+              class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline" 
+              (click)="changePage('next')" 
+              [class.opacity-50]="!canGoNext()" 
+              [class.cursor-not-allowed]="!canGoNext()"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>
               </svg>
             </a>
           </li>
@@ -113,6 +119,7 @@
       </nav>
     </div>
   </div>
+  
 
 
 </div>

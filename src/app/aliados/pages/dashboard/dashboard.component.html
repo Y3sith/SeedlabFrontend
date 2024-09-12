@@ -1,4 +1,4 @@
-<div class="container mx-auto p-0 pt-2 ">
+<div class="container mx-auto p-0 pt-2 font-poppins ">
   <!-- Encabezado -->
   <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
     <app-header [title] [subtitle]="'Dashboard'"></app-header>
@@ -9,190 +9,65 @@
     <div class="spinner"></div>
   </div>
 
-  <div class=" p-4 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">  
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-        <!-- Super Admins -->
-        <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-          <div class="absolute -top-5 left-4">
-            <div class="bg-orange-500 rounded-lg p-3 shadow-md">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                </path>
-              </svg>
-            </div>
-          </div>
-          <div class="pt-8 pb-0">
-            <p class="text-xl text-gray-500">Super Admins</p>
-          </div>
-          <div class="border-t border-gray-200 pt-1">
-            <div class="flex justify-between text-center">
-              <div class="w-1/2 pr-1">
-                <p class="text-md font-semibold">Activos</p>
-                <p class="text-lg font-bold text-green-600">{{ totalSuperAdmin['activos'] }}</p>
-              </div>
-              <div class="w-px bg-gray-200 self-stretch"></div>
-              <div class="w-1/2 pl-1">
-                <p class="text-md font-semibold">Inactivos</p>
-                <p class="text-lg font-bold text-red-600">{{totalSuperAdmin['inactivos']}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <!-- Orientadores -->
-        <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-          <div class="absolute -top-5 left-4">
-            <div class="bg-green-500 rounded-lg p-3 shadow-md">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                </path>
-              </svg>
-            </div>
-          </div>
-    
-          <div class="pt-8 pb-0">
-            <p class="text-xl text-gray-500">Orientadores</p>
-          </div>
-    
-          <div class="border-t border-gray-200 pt-1">
-            <div class="flex justify-between text-center">
-              <div class="w-1/2 pr-1">
-                <p class="text-md font-semibold">Activos</p>
-                <p class="text-lg font-bold text-green-600">{{ totalOrientador['activos'] }}</p>
-              </div>
-              <div class="w-px bg-gray-200 self-stretch"></div>
-              <div class="w-1/2 pl-1">
-                <p class="text-md font-semibold">Inactivos</p>
-                <p class="text-lg font-bold text-red-600">{{totalOrientador['inactivos']}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <!-- Aliados -->
-        <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-          <div class="absolute -top-5 left-4">
-            <div class="bg-red-500 rounded-lg p-3 shadow-md">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                </path>
-              </svg>
-            </div>
-          </div>
-          <div class="pt-8 pb-0">
-            <p class="text-xl text-gray-500">Aliados</p>
-          </div>
-          <div class="border-t border-gray-200 pt-1">
-            <div class="flex justify-between text-center">
-              <div class="w-1/2 pr-1">
-                <p class="text-md font-semibold">Activos</p>
-                <p class="text-lg font-bold text-green-600">{{totalAliados['activos']}}</p>
-              </div>
-              <div class="w-px bg-gray-200 self-stretch"></div>
-              <div class="w-1/2 pl-1">
-                <p class="text-md font-semibold">Inactivos</p>
-                <p class="text-lg font-bold text-red-600">{{totalAliados['inactivos']}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <!-- Asesores -->
-        <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-          <div class="absolute -top-5 left-4">
-            <div class="bg-blue-500 rounded-lg p-3 shadow-md">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                </path>
-              </svg>
-            </div>
-          </div>
-          <div class="pt-8 pb-0">
-            <p class="text-xl text-gray-500">Asesores</p>
-          </div>
-          <div class="border-t border-gray-200 pt-1">
-            <div class="flex justify-between text-center">
-              <div class="w-1/2 pr-1">
-                <p class="text-md font-semibold">Activos</p>
-                <p class="text-lg font-bold text-green-600">{{totalAsesores['activos']}}</p>
-              </div>
-              <div class="w-px bg-gray-200 self-stretch"></div>
-              <div class="w-1/2 pl-1">
-                <p class="text-md font-semibold">Inactivos</p>
-                <p class="text-lg font-bold text-red-600">{{totalAsesores['inactivos']}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-    
-        <!-- Emprendedores -->
-        <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-          <div class="absolute -top-5 left-4">
-            <div class="bg-purple-500 rounded-lg p-3 shadow-md">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                </path>
-              </svg>
-            </div>
-          </div>
-          <div class="pt-8 pb-0">
-            <p class="text-xl text-gray-500">Emprendedores</p>
-          </div>
-          <div class="border-t border-gray-200 pt-1">
-            <div class="flex justify-between text-center">
-              <div class="w-1/2 pr-1">
-                <p class="text-md font-semibold">Activos</p>
-                <p class="text-lg font-bold text-green-600">{{totalEmprendedores['activos']}}</p>
-              </div>
-              <div class="w-px bg-gray-200 self-stretch"></div>
-              <div class="w-1/2 pl-1">
-                <p class="text-md font-semibold">Inactivos</p>
-                <p class="text-lg font-bold text-red-600">{{totalEmprendedores['inactivos']}}</p>
-              </div>
-            </div>
-          </div>
+  <div class=" p-4 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">
+    <div class="bg-white rounded-lg shadow-lg p-3 relative w-full">
+      <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div class="bg-blue-500 rounded-lg p-3 shadow-md items-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+            </path>
+          </svg>
         </div>
       </div>
-    
-    
-    
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-14">
-          <!-- Top Aliados -->
-        <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
-          <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorias</h2>
-          <!-- Chart placeholder -->
-           <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full" >
-            <div id="echarts-bar" style="width: 100%; height:100%;"></div>
-           </div>
-        </div>
-    
-        <!-- Asesorias asignas y sin asignar -->
-        <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
-          <h2 class="text-lg font-semibold mb-4">Asesorias</h2>
-          <!-- Chart placeholder -->
-           <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
-            <div id="echarts-pie" style="width: 100%; height: 100%;"></div>
-           </div>
-        </div>
-    
-        <!-- Asesorias por mes -->
-        <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
-          <h2 class="text-lg font-semibold mb-4">Generos Emprendedores</h2>
-          <!-- Chart placeholder -->
-           <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
-            <div id="echarts-doughnut" style="width: 100%; height: 100%;"></div>
-           </div>
+      <div class="pt-8 pb-0">
+        <p class="text-xl text-gray-500 text-center">Asesores</p>
+      </div>
+      <div class="border-t border-gray-200 pt-1">
+        <div class="flex justify-between text-center">
+          <div class="w-1/2 pr-1">
+            <p class="text-xl  font-bold ">Activos</p>
+            <p class="text-lg font-bold text-green-600">{{totalAsesores['activos']}}</p>
+          </div>
+          <div class="w-px bg-gray-200 self-stretch"></div>
+          <div class="w-1/2 pl-1">
+            <p class="text-xl font-semibold">Inactivos</p>
+            <p class="text-lg font-bold text-red-600">{{totalAsesores['inactivos']}}</p>
+          </div>
         </div>
       </div>
     </div>
+
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-14">
+      <!-- Top Aliados -->
+      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
+        <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorias</h2>
+        <!-- Chart placeholder -->
+        <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
+          <div id="echarts-bar" style="width: 100%; height:100%;"></div>
+        </div>
+      </div>
+
+      <!-- Asesorias asignas y sin asignar -->
+      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
+        <h2 class="text-lg font-semibold mb-4">Asesorias</h2>
+        <!-- Chart placeholder -->
+        <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
+          <div id="echarts-pie" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- Asesorias por mes -->
+      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
+        <h2 class="text-lg font-semibold mb-4">Generos Emprendedores</h2>
+        <!-- Chart placeholder -->
+        <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
+          <div id="echarts-doughnut" style="width: 100%; height: 100%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

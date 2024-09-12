@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-import { ReporteService } from '../../../servicios/reporte.service';
+import { Component } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReporteService } from '../../../servicios/reporte.service';
 import { AlertService } from '../../../servicios/alert.service';
 
 @Component({
-  selector: 'app-reportes',
-  templateUrl: './reportes.component.html',
-  styleUrl: './reportes.component.css'
+  selector: 'app-reportes-adm',
+  templateUrl: './reportes-adm.component.html',
+  styleUrl: './reportes-adm.component.css'
 })
-export class ReportesComponent implements OnInit {
+export class ReportesAdmComponent {
   token: string | null = null;
   user: User | null = null;
   currentRolId: number;
@@ -40,7 +39,7 @@ export class ReportesComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.validateToken();
+
   }
 
   validateToken(): void {
@@ -52,8 +51,7 @@ export class ReportesComponent implements OnInit {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.currentRolId = this.user.id_rol;
-        console.log(this.user.id);
-        if (this.currentRolId != 3) {
+        if (this.currentRolId != 1) {
           this.router.navigate(['home']);
         }
       }
@@ -65,24 +63,14 @@ export class ReportesComponent implements OnInit {
 
   mostrarReportes() {
     if (this.reporteForm.valid) {
-      const {tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-  
-      const id_aliado = this.user.id ? this.user.id : null;
-  
-      if (!id_aliado) {
-        console.error('El ID del aliado no está disponible.');
-        return;
-      }
-  
-      // Depuración: Imprime la URL o los parámetros
-      console.log('Parámetros enviados:', { id_aliado, fecha_inicio, fecha_fin });
-  
+      const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
+
       // Obtener los datos del reporte para visualización
-      this.reporteService.obtenerDatosAsesoriaAliado(tipo_reporte, id_aliado, fecha_inicio, fecha_fin).subscribe(
+      this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
           this.reportes = data;
           console.log(this.reportes);
-  
+          
           this.totalItems = data.length;
           this.page = 1;
           this.updatePaginated();
@@ -90,24 +78,22 @@ export class ReportesComponent implements OnInit {
           if(data.length === 0){
             this.alertService.successAlert('Info','No hay datos para mostrar');
           }
-        },
-        (error) => console.error('Error al obtener datos del reporte', error)
+        },(error) => console.error('Error al obtener datos del reporte', error)
       );
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
       this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
     }
   }
-  
 
 
   getReportes(formato:string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-      const id_aliado = this.user.id ? this.user.id : null;
-      this.reporteService.exportarReporteAsesoriaAliado(tipo_reporte, id_aliado, fecha_inicio, fecha_fin, formato).subscribe(
-        (data: Blob) => {
 
+      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe(
+        (data: Blob) => {
+          
           const url = window.URL.createObjectURL(data);
 
           const a = document.createElement('a');
@@ -146,7 +132,7 @@ export class ReportesComponent implements OnInit {
 
   onTipoReporteChange(event: any) {
     this.tipoReporteSeleccionado = event.target.value;
-
+    
     if (this.tipoReporteSeleccionado === 'emprendedor') {
       // Lógica adicional cuando se selecciona "Emprendedores"
       this.getReportes('excel'); // Llamada para cargar los reportes

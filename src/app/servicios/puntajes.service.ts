@@ -11,11 +11,11 @@ export class PuntajesService {
   constructor(private http: HttpClient ) {}
   url = environment.apiUrl + 'puntajes';
 
-  savePuntajeSeccion(puntajes: any): Observable<any> {
+  savePuntajeSeccion(puntajes: any, documentoEmpresa: number): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.post<any>(this.url, puntajes, { headers });
+    return this.http.post<any>(`${this.url}/${documentoEmpresa}`,puntajes, { headers });
   }
 
   getPuntajes(id_empresa:number): Observable<any> {

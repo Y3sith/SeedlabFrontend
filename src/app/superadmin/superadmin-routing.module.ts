@@ -11,10 +11,11 @@ import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.com
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
-import { ReportesAdmComponent } from './reportes-adm/reportes-adm.component';
+import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ModalCrearSuperadminComponent } from './pages/add-superadmin/modal-crear-superadmin.component';
 import { AddAllComponent } from './pages/ruta/add-all/add-all.component';
+import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const routes: Routes = [
       { path: 'add-actividad', component: AddActividadComponent, data: { title: 'Actividad', icon: 'fa-solid fa-table-list', showInMenu: false } },
       { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
       { path: 'add-all', component: AddAllComponent, data: {title: 'Creación actividades', icon: 'fa-solid fa-table-list', showInMenu: false}},
+      { path: 'list-actividades', component: ListActividadesComponent, data: {title: 'Actividades', showInMenu: false}},
       /////
       { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}},
       ////
