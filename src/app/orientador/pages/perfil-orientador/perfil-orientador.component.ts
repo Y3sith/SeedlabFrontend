@@ -331,7 +331,8 @@ export class PerfilOrientadorComponent {
 
     // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
-
+    this.perfilorientadorForm.get('id_municipio')?.setValue(null);
+    this.listMunicipios = [];
     // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }

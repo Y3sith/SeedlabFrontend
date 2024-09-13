@@ -391,10 +391,10 @@ export class ModalAddAsesoresComponent implements OnInit {
     } else {
       this.asesorService.createAsesor(this.token, formData).subscribe(
         (data) => {
-          setTimeout(() => {
-            this.router.navigate(['/list-asesores']);
-            this.alerService.successAlert('Exito', data.message);
+          setTimeout(function() {
           }, this.tiempoEspera);
+            this.alerService.successAlert('Exito', data.message);
+            this.router.navigate(['/list-asesores']);
         },
         (error) => {
           console.error('Error al crear el asesor:', error);

@@ -56,8 +56,8 @@ export class PerfilSuperadminComponent {
     genero: ['', Validators.required],
     direccion: [],
     id_tipo_documento: [Validators.required],
-    id_departamento: [Validators.required],
-    id_municipio: [Validators.required],
+    id_departamento: ['', Validators.required],
+    id_municipio: ['', Validators.required],
     fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
     email: ['', Validators.required],
     password: ['', [Validators.minLength(10), this.passwordValidator]],
@@ -157,6 +157,12 @@ export class PerfilSuperadminComponent {
       return;
     }
 
+    const municipio = this.perfiladminForm.get('id_municipio');
+    if (!municipio || municipio.value === null || municipio.value === '') {
+        this.alertService.errorAlert('Error', 'Debes seleccionar un municipio');
+        return;
+    }
+
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfiladminForm.controls).forEach((key) => {
       const control = this.perfiladminForm.get(key);
@@ -182,10 +188,10 @@ export class PerfilSuperadminComponent {
     // Append specific fields (this will overwrite any duplicates from the first pass)
     const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
     specificFields.forEach(field => {
-      const value = this.perfiladminForm.get(field)?.value;
-      if (value !== null && value !== undefined && value !== '') {
-        formData.append(field, value);
-      }
+        const value = this.perfiladminForm.get(field)?.value;
+        if (value !== null && value !== undefined && value !== '') {
+            formData.append(field, value);
+        }
     });
 
     if (this.perfiladminForm.get('direccion')?.value) {
@@ -323,7 +329,8 @@ export class PerfilSuperadminComponent {
 
     // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
-
+    this.perfiladminForm.get('id_municipio')?.setValue(null);
+    this.listMunicipios = [];
     // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
