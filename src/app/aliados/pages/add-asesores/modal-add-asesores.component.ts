@@ -48,24 +48,31 @@ export class ModalAddAsesoresComponent implements OnInit {
   subSectionPerSection: number[] = [1, 1, 1];
   /////
   idAsesor: number = null;
+  errorMessage: string = '';
+
 
   asesorForm = this.fb.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    documento: ['', Validators.required],
-    imagen_perfil: [null, Validators.required],
-    celular: ['', [Validators.required, Validators.maxLength(10)]],
+    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
+    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
+    documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
+    imagen_perfil: [null],
+    celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
-    direccion: [],
-    aliado: ['', Validators.required],
+    direccion: [''],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    fecha_nac: [''],
+    email: ['', [Validators.required,Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
+    aliado: ['', Validators.required],
     estado: true,
   });
+
+  sectionFields: string[][] = [
+    ['nombre', 'apellido', 'documento', 'id_tipo_documento','fecha_nac', 'genero'], // Sección 1
+    ['celular', 'email','id_departamento', 'id_municipio', 'direccion', 'password'], // Sección 2
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -250,27 +257,92 @@ export class ModalAddAsesoresComponent implements OnInit {
   
   /* Crear asesor o actualiza dependendiendo del asesorId */
   addAsesor(): void {
+    // Mark all form controls as touched to trigger validation
+    Object.values(this.asesorForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+  
+    let errorMessage = 'Por favor, complete correctamente el formulario';
+    Object.keys(this.asesorForm.controls).forEach(key => {
+      const control = this.asesorForm.get(key);
+      if (control.invalid && control.errors && key !== 'direccion' && 
+          !(key === 'password' && this.idAsesor && !control.value)) {
+        // Add specific error messages here if needed
+      }
+    });
+    if (errorMessage !== 'Por favor, complete correctamente el formulario') {
+      this.alerService.errorAlert('Error de validación', errorMessage);
+      return;
+    }
+
+    // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
+    if (this.asesorForm.get('nombre').invalid || 
+        this.asesorForm.get('apellido').invalid || 
+        this.asesorForm.get('documento').invalid || 
+        this.asesorForm.get('celular').invalid ||
+        (this.asesorForm.get('password').invalid && (!this.idAsesor || this.asesorForm.get('password').value))) {
+      this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+      return;
+    }
+  
+    // Validaciones opcionales
+    const fechaNacControl = this.asesorForm.get('fecha_nac');
+    if (fechaNacControl.value) {
+      const fechaNac = new Date(fechaNacControl.value);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - fechaNac.getFullYear();
+      const mes = hoy.getMonth() - fechaNac.getMonth();
+      if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+        edad--;
+      }
+      if (edad < 18 || edad > 100) {
+        this.alerService.errorAlert('Error', 'Debes ser mayor de edad');
+        return;
+      }
+    }
+  
+    const emailControl = this.asesorForm.get('email');
+    if (emailControl.value && !emailControl.valid) {
+      this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      return;
+    }
+
     const formData = new FormData();
     let estadoValue: string;
     if (this.idAsesor == null) {
       estadoValue = '1';
     } else {
+      // Aquí falta la lógica para el caso en que idAsesor no sea null
     }
+
     formData.append('nombre', this.asesorForm.get('nombre')?.value);
     formData.append('apellido', this.asesorForm.get('apellido')?.value);
     formData.append('documento', this.asesorForm.get('documento')?.value);
     formData.append('celular', this.asesorForm.get('celular')?.value);
     formData.append('genero', this.asesorForm.get('genero')?.value);
-    if (this.asesorForm.get('direccion')?.value) {
-      formData.append('direccion', this.asesorForm.get('direccion')?.value);
-    } else { }
-    //formData.append('direccion', this.asesorForm.get('direccion')?.value);
+
+    // Agregamos la dirección solo si tiene un valor
+    const direccionControl = this.asesorForm.get('direccion');
+    if (direccionControl && direccionControl.value) {
+      formData.append('direccion', direccionControl.value);
+    }
+
     formData.append('aliado', this.nombreAliado);
     formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.asesorForm.get('id_departamento')?.value);
     formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
     formData.append('email', this.asesorForm.get('email')?.value);
-    formData.append('password', this.asesorForm.get('password')?.value);
+
+    // Agregamos la contraseña solo si tiene un valor o si es un nuevo asesor
+    const passwordControl = this.asesorForm.get('password');
+    if (passwordControl && (passwordControl.value || !this.idAsesor)) {
+      if (passwordControl.valid) {
+        formData.append('password', passwordControl.value);
+      } else {
+        this.alerService.errorAlert('Error', 'La contraseña no cumple con los requisitos.');
+        return;
+      }
+    }
 
     Object.keys(this.asesorForm.controls).forEach((key) => {
       const control = this.asesorForm.get(key);
@@ -283,64 +355,50 @@ export class ModalAddAsesoresComponent implements OnInit {
             }
           }
         } else if (key === 'estado') {
-          // Convertir el valor booleano a 1 o 0
           formData.append(key, control.value ? '1' : '0');
-        } else if (key !== 'imagen_perfil') {
+        } else if (key !== 'imagen_perfil' && key !== 'direccion' && 
+                   !(key === 'password' && this.idAsesor && !control.value)) {
           formData.append(key, control.value);
         }
       }
     });
-    // Agregar la imagen de perfil si se ha seleccionado una nueva
+
     if (this.selectedImagen_Perfil) {
-      formData.append(
-        'imagen_perfil',
-        this.selectedImagen_Perfil,
-        this.selectedImagen_Perfil.name
-      );
+      formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
-    // Alternativa para imprimir los valores del FormData
-    // console.log('Datos enviados en el FormData:');
-    // formData.forEach((value, key) => {
-    // console.log(`${key}: ${value}`);
-    // });
 
     console.log('Datos del formulario:', this.asesorForm.value);
 
-
     /* Actualiza asesor */
     if (this.idAsesor != null) {
-
       this.alerService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
         if (result.isConfirmed) {
           this.asesorService.updateAsesorxaliado(this.token, this.idAsesor, formData).subscribe(
             (data) => {
-              setTimeout(function () {
-                //location.reload();
+              setTimeout(() => {
+                this.router.navigate(['/list-asesores']);
+                this.alerService.successAlert('Exito', data.message);
               }, this.tiempoEspera);
-              this.router.navigate(['/list-asesores']);
-              this.alerService.successAlert('Exito', data.message);
             },
             (error) => {
               this.alerService.errorAlert('Error', error.error.message);
               console.error('Error', error.error.message);
-              //console.log('error: ', error)
             }
           );
         }
       });
-      /* Crea asesor */
+    /* Crea asesor */
     } else {
       this.asesorService.createAsesor(this.token, formData).subscribe(
         (data) => {
-          setTimeout(function () {
-            //location.reload();
+          setTimeout(function() {
           }, this.tiempoEspera);
-          this.router.navigate(['/list-asesores']);
-          this.alerService.successAlert('Exito', data.message);
+            this.alerService.successAlert('Exito', data.message);
+            this.router.navigate(['/list-asesores']);
         },
         (error) => {
           console.error('Error al crear el asesor:', error);
-          //this.alerService.errorAlert('Error', error.error.message);
+          this.alerService.errorAlert('Error', error.error.message);
         }
       );
     }
@@ -447,6 +505,53 @@ export class ModalAddAsesoresComponent implements OnInit {
 
 
   next() {
+    const form = this.asesorForm;
+    let sectionIsValid = true;
+  
+    // Obtener los campos de la sección actual
+    const currentSectionFields = this.sectionFields[this.currentIndex];
+  
+    currentSectionFields.forEach(field => {
+      const control = form.get(field);
+      if (control.invalid) {
+        control.markAsTouched();
+        control.markAsDirty();
+        sectionIsValid = false;
+      }
+    });
+  
+    // Validaciones especiales
+    if (this.currentIndex === 1) { // Asumiendo que email y fecha_nac están en la sección 2
+      const emailControl = form.get('email');
+      if (emailControl.value && emailControl.invalid) {
+        emailControl.markAsTouched();
+        emailControl.markAsDirty();
+        sectionIsValid = false;
+      }
+  
+      const fechaNacControl = form.get('fecha_nac');
+      if (fechaNacControl.value) {
+        const fechaNac = new Date(fechaNacControl.value);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+        const mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+          edad--;
+        }
+        if (edad < 18 || edad > 100) {
+          fechaNacControl.setErrors({ 'invalidAge': true });
+          fechaNacControl.markAsTouched();
+          sectionIsValid = false;
+        }
+      }
+    }
+  
+    if (!sectionIsValid) {
+      this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
+      return;
+    }
+  
+    // Si llegamos aquí, la sección actual es válida
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
     } else {
@@ -455,9 +560,21 @@ export class ModalAddAsesoresComponent implements OnInit {
         this.currentSubSectionIndex = 0;
       }
     }
-
+  
+    // Limpiar el mensaje de error si existe
+    this.clearErrorMessage();
   }
-
+  
+  // Función auxiliar para mostrar mensajes de error
+  private showErrorMessage(message: string) {
+    console.error(message);
+    this.errorMessage = message;
+  }
+  
+  // Función auxiliar para limpiar el mensaje de error
+  private clearErrorMessage() {
+    this.errorMessage = '';
+  }
   previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;

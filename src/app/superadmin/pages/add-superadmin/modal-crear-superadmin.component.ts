@@ -41,16 +41,18 @@ export class ModalCrearSuperadminComponent implements OnInit {
   currentSubSectionIndex: number = 0;
   subSectionPerSection: number[] = [1, 1, 1];
   idSuperAdmin: number = null;
+  errorMessage: string = '';
+
 
 
   superadminForm = this.fb.group({
-    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
-    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+    nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
+    apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
-    imagen_perfil: [null, Validators.required],
+    imagen_perfil: [null],
     celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
-    direccion: [],
+    direccion: [''],
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
@@ -60,6 +62,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     estado: true,
   });
 
+  sectionFields: string[][] = [
+    ['nombre', 'apellido', 'documento', 'id_tipo_documento','fecha_nac', 'genero'], // Sección 1
+    ['celular', 'email','id_departamento', 'id_municipio', 'direccion', 'password'], // Sección 2
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -235,11 +241,30 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
 
   addSuperadmin(): void {
-    // Validaciones permanentes
+    // Mark all form controls as touched to trigger validation
+    Object.values(this.superadminForm.controls).forEach(control => {
+      control.markAsTouched();
+    });
+  
+    let errorMessage = 'Por favor, complete correctamente el formulario';
+    Object.keys(this.superadminForm.controls).forEach(key => {
+      const control = this.superadminForm.get(key);
+      if (control.invalid && control.errors && key !== 'direccion' && 
+          !(key === 'password' && this.idSuperAdmin && !control.value)) {
+        // Add specific error messages here if needed
+      }
+    });
+    if (errorMessage !== 'Por favor, complete correctamente el formulario') {
+      this.alertService.errorAlert('Error de validación', errorMessage);
+      return;
+    }
+
+    // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
     if (this.superadminForm.get('nombre').invalid || 
         this.superadminForm.get('apellido').invalid || 
         this.superadminForm.get('documento').invalid || 
-        this.superadminForm.get('celular').invalid) {
+        this.superadminForm.get('celular').invalid ||
+        (this.superadminForm.get('password').invalid && (!this.idSuperAdmin || this.superadminForm.get('password').value))) {
       this.alertService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
       return;
     }
@@ -287,7 +312,17 @@ export class ModalCrearSuperadminComponent implements OnInit {
     formData.append('departamento', this.superadminForm.get('id_departamento')?.value);
     formData.append('municipio', this.superadminForm.get('id_municipio')?.value);
     formData.append('email', this.superadminForm.get('email')?.value);
-    formData.append('password', this.superadminForm.get('password')?.value);
+
+    // Agregamos la contraseña solo si tiene un valor o si es un nuevo superadmin
+    const passwordControl = this.superadminForm.get('password');
+    if (passwordControl && (passwordControl.value || !this.idSuperAdmin)) {
+      if (passwordControl.valid) {
+        formData.append('password', passwordControl.value);
+      } else {
+        this.alertService.errorAlert('Error', 'La contraseña no cumple con los requisitos.');
+        return;
+      }
+    }
   
     Object.keys(this.superadminForm.controls).forEach((key) => {
       const control = this.superadminForm.get(key);
@@ -303,7 +338,8 @@ export class ModalCrearSuperadminComponent implements OnInit {
         else if (key === 'estado') {
           formData.append(key, control.value ? '1' : '0');
         }
-         else if (key !== 'imagen_perfil') {
+         else if (key !== 'imagen_perfil' && key !== 'direccion' && 
+                  !(key === 'password' && this.idSuperAdmin && !control.value)) {
           formData.append(key, control.value);
         }
       }
@@ -440,6 +476,53 @@ export class ModalCrearSuperadminComponent implements OnInit {
   }
 
   next() {
+    const form = this.superadminForm;
+    let sectionIsValid = true;
+  
+    // Obtener los campos de la sección actual
+    const currentSectionFields = this.sectionFields[this.currentIndex];
+  
+    currentSectionFields.forEach(field => {
+      const control = form.get(field);
+      if (control.invalid) {
+        control.markAsTouched();
+        control.markAsDirty();
+        sectionIsValid = false;
+      }
+    });
+  
+    // Validaciones especiales
+    if (this.currentIndex === 1) { // Asumiendo que email y fecha_nac están en la sección 2
+      const emailControl = form.get('email');
+      if (emailControl.value && emailControl.invalid) {
+        emailControl.markAsTouched();
+        emailControl.markAsDirty();
+        sectionIsValid = false;
+      }
+  
+      const fechaNacControl = form.get('fecha_nac');
+      if (fechaNacControl.value) {
+        const fechaNac = new Date(fechaNacControl.value);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+        const mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+          edad--;
+        }
+        if (edad < 18 || edad > 100) {
+          fechaNacControl.setErrors({ 'invalidAge': true });
+          fechaNacControl.markAsTouched();
+          sectionIsValid = false;
+        }
+      }
+    }
+  
+    if (!sectionIsValid) {
+      this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
+      return;
+    }
+  
+    // Si llegamos aquí, la sección actual es válida
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
     } else {
@@ -448,7 +531,20 @@ export class ModalCrearSuperadminComponent implements OnInit {
         this.currentSubSectionIndex = 0;
       }
     }
-
+  
+    // Limpiar el mensaje de error si existe
+    this.clearErrorMessage();
+  }
+  
+  // Función auxiliar para mostrar mensajes de error
+  private showErrorMessage(message: string) {
+    console.error(message);
+    this.errorMessage = message;
+  }
+  
+  // Función auxiliar para limpiar el mensaje de error
+  private clearErrorMessage() {
+    this.errorMessage = '';
   }
 
   previous(): void {

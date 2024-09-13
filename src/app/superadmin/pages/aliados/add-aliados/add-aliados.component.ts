@@ -548,29 +548,5 @@ mostrarToggle(): void {
   }
   }
 
-  // isFirstSectionValid(): boolean {
-  //   const nombreValid = this.aliadoForm.get('nombre').valid;
-  //   const emailValid = this.aliadoForm.get('email').valid;
-  //   const passwordValid = this.aliadoForm.get('password').valid;
-    
-  //   // Marcar los campos como tocados para que se muestren los errores
-  //   if (!nombreValid) this.aliadoForm.get('nombre').markAsTouched();
-  //   if (!emailValid) this.aliadoForm.get('email').markAsTouched();
-  //   if (!passwordValid) this.aliadoForm.get('password').markAsTouched();
-    
-  //   return nombreValid && emailValid && passwordValid;
-  // }
-  
-  // isSecondSectionValid(): boolean {
-  //   const descripcionValid = this.aliadoForm.get('descripcion').valid;
-  //   const idTipoDatoValid = this.aliadoForm.get('id_tipo_dato').valid;
-  //   const rutaMultiValid = this.aliadoForm.get('ruta_multi').valid;
-    
-  //   // Marcar los campos como tocados para que se muestren los errores
-  //   if (!descripcionValid) this.aliadoForm.get('descripcion').markAsTouched();
-  //   if (!idTipoDatoValid) this.aliadoForm.get('id_tipo_dato').markAsTouched();
-  //   if (!rutaMultiValid) this.aliadoForm.get('ruta_multi').markAsTouched();
-    
-  //   return descripcionValid && idTipoDatoValid && rutaMultiValid;
-  // }
+
 
