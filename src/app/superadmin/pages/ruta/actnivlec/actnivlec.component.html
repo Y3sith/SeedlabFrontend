@@ -99,18 +99,16 @@
                     </div>
                     <!-- Nivel -->
                     <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
-
-
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Nivel</h2>
                         <form [formGroup]="nivelForm">
                             <!-- editar nivel -->
-                            <div *ngIf="niveles.length > 0">
-                                <h3 class="text-lg font-semibold mb-4">Niveles</h3>
+                            <div  *ngIf="isEditing">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel a editar</label>
                                 <select (change)="onNivelChange($event.target.value)" class="w-full p-2 border rounded"
                                     formControlName="id_nivel" (change)="onNivelSelect($event)">
                                     <option *ngFor="let nivel of niveles; let i = index" class="mb-4"
                                         [value]="nivel.id">{{ nivel.nombre }}</option>
-                                    <option value="">Agregar nivel</option>
+                                    <option value="0">Agregar nivel</option>
                                 </select>
                             </div>
                             <div class="mb-4">
@@ -132,7 +130,7 @@
                                 </a>
                             </div>
                         </form>
-
+                        
                         <form [formGroup]="leccionForm">
                             <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
                                 Agregar lección</h2>
@@ -203,7 +201,6 @@
                                     <div *ngIf="cl.id_leccion.errors.required">Este campo es requerido *</div>
                                 </div>
                             </div>
-
                             <div class="mb-4" *ngIf="isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el Contenido para
                                     editar</label>
@@ -219,7 +216,6 @@
                                 </div>
                             </div>
                             <input type="hidden" id="id_leccion" formControlName="id_leccion">
-
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
                                 <input formControlName="titulo" type="text" class="w-full p-2 border rounded">
