@@ -54,7 +54,7 @@
                 <ul *ngIf="leccion.expanded" class="pl-0">
                   <li class="p-2 h-auto mb-1" *ngFor="let contenido of leccion.contenido_lecciones; let k = index">
                     <button
-                      class="w-full text-left pl-3 py-2 border-b font-medium focus:outline-none transition-colors duration-200"
+                      class="rounded w-full text-left pl-3 py-2 border-b font-medium focus:outline-none transition-colors duration-200"
                       [ngClass]="getContentStyle(i, j, k)" (click)="selectContenido(contenido, i, j, k)">
                       {{contenido.titulo}}
                     </button>

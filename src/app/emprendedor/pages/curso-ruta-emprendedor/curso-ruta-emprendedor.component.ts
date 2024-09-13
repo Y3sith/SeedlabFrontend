@@ -177,16 +177,38 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
+  // initializeNiveles() {
+  //   this.niveles = this.actividad.nivel.map((nivel: any) => ({
+  //     ...nivel,
+  //     expanded: false,
+  //     lecciones: nivel.lecciones.map((leccion: any) => ({
+  //       ...leccion,
+  //       expanded: false,
+  //       contenido_lecciones: leccion.contenido_lecciones || []
+  //     }))
+  //   }));
+  // }
+
   initializeNiveles() {
-    this.niveles = this.actividad.nivel.map((nivel: any) => ({
-      ...nivel,
-      expanded: false,
-      lecciones: nivel.lecciones.map((leccion: any) => ({
-        ...leccion,
+    this.niveles = this.actividad.nivel
+      .map((nivel: any) => ({
+        ...nivel,
         expanded: false,
-        contenido_lecciones: leccion.contenido_lecciones || []
+        lecciones: nivel.lecciones
+          .filter((leccion: any) => {
+            // Filtrar lecciones que tienen contenido_lecciones no vacío
+            return leccion.contenido_lecciones && leccion.contenido_lecciones.length > 0;
+          })
+          .map((leccion: any) => ({
+            ...leccion,
+            expanded: false,
+            contenido_lecciones: leccion.contenido_lecciones || []
+          }))
       }))
-    }));
+      .filter((nivel: any) => {
+        // Filtrar niveles que tienen al menos una lección con contenido
+        return nivel.lecciones.length > 0;
+      });
   }
 
   toggleNivel(selectedNivelIndex: number) {
@@ -284,7 +306,7 @@ export class CursoRutaEmprendedorComponent {
       } else {
         const lastContentId = currentLeccion.contenido_lecciones[currentLeccion.contenido_lecciones.length - 1].id;
         if (lastContentId === this.ultimoContenidoId) {
-          this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
+          this.alertService.alertainformativa('¡Felicitaciones por haber completado la ruta! Ahora es momento de volver a llenar la encuesta de maduración. Esta te permitirá evaluar cuánto has avanzado con tu emprendimiento y cómo han influido los conocimientos que has adquirido en este tiempo. Es una gran oportunidad para reflexionar sobre tu progreso y seguir mejorando. ¡Sigue adelante!', 'success').then((result) => {
             if (result.isConfirmed) {
               this.router.navigate(['list-empresa']);
             }
@@ -354,6 +376,8 @@ export class CursoRutaEmprendedorComponent {
       'hover:bg-slate-100': !isCurrent
     };
   }
+
+
 
   goToPreviousContent() {
     if (this.currentContenidoIndex > 0) {
