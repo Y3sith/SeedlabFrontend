@@ -80,17 +80,17 @@ export class CrearAsesoriaModalComponent {
     );
   }
 
-  // Método para controlar el cambio en el checkbox
+  // Método que se ejecuta al cambiar la casilla de verificación
   onCheckboxChange(event: any) {
     const isChecked = event.target.checked;
-    const nomAliadoContainer = document.getElementById('nomAliadoContainer') as HTMLSelectElement; // Cambiar el tipo de nomAliadoContainer
     
     if (isChecked) {
-      nomAliadoContainer.style.display = 'none';
-      nomAliadoContainer.value = null; // Asignar valor null al contenedor
+      // Des-seleccionar el aliado y deshabilitar el select
+      this.asesoriaForm.get('nom_aliado')?.setValue(''); // Des-selecciona el select
+      this.asesoriaForm.get('nom_aliado')?.disable(); // Deshabilita el select
     } else {
-      nomAliadoContainer.style.display = 'block';
-      nomAliadoContainer.value = ''; // Restaurar valor por defecto
+      // Habilitar el select
+      this.asesoriaForm.get('nom_aliado')?.enable();
     }
   }
   

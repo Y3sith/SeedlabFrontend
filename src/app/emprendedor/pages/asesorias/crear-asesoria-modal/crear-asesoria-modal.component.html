@@ -14,19 +14,19 @@
 
     <div class="flex flex-col lg:flex-row mb-4 font-poppins">
       <div class="lg:w-3/4 mb-4 lg:mb-0 lg:mr-4">
-        <label for="nom_aliado" class="block mb-2 text-black">Con quién quiere la asesoría?</label>
+        <label for="nom_aliado" class="block mb-2 text-black">¿Con quién quiere la asesoría?</label>
         <select id="nom_aliado" formControlName="nom_aliado" class="w-full border rounded-md px-2 py-2 bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
           <option value="" disabled selected hidden>Seleccione</option>
           <option *ngFor="let aliado of aliados" [value]="aliado.nombre">{{ aliado.nombre }}</option>
         </select>
       </div>
       <div class="flex items-center font-poppins">
-        <input type="checkbox" id="isorientador" formControlName="isorientador" class="custom-checkbox hidden">
+        <input type="checkbox" id="isorientador" formControlName="isorientador" (change)="onCheckboxChange($event)" class="custom-checkbox hidden">
         <label for="isorientador" class="flex items-center cursor-pointer relative">
-            <span class="w-6 h-6 mr-2 rounded border border-gray-300 bg-white flex-shrink-0 flex items-center justify-center custom-checkbox-span relative"></span>
-            <span class="ml-1 font-bold">No sé</span>
+          <span class="w-6 h-6 mr-2 rounded border border-gray-300 bg-white flex-shrink-0 flex items-center justify-center custom-checkbox-span relative"></span>
+          <span class="ml-1 font-bold">No sé</span>
         </label>
-    </div>
+      </div>
     </div>
 
     <div class="flex flex-col md:flex-row justify-center mt-4 space-y-2 md:space-y-0 md:space-x-2 font-poppins">

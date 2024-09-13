@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { AsesoriaService } from '../../../servicios/asesoria.service';
@@ -26,7 +26,7 @@ export class HorarioModalComponent implements OnInit {
     private alertService: AlertService
   ) {
     this.asignarForm = this.fb.group({
-      fecha: ['', Validators.required],
+      fecha: ['', [this.dateRangeValidator, Validators.required]],
       observaciones: ['']
     });
   }
@@ -75,4 +75,26 @@ export class HorarioModalComponent implements OnInit {
   cancelarCrerAsesoria() {
     this.dialogRef.close();
   }
+dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
+      return null; // Si no hay valor, no se valida
+    }
+  
+    const selectedDate = new Date(value);
+    const today = new Date();
+    
+    // Normalizamos la fecha de hoy para no tener en cuenta la hora
+    today.setHours(0, 0, 0, 0);
+  
+    // Validación: No permitir fechas anteriores a hoy
+    if (selectedDate <= today) {
+      return { pastDate: 'No se permiten fechas anteriores a hoy *' };
+    }
+  
+    return null; // Si la fecha es válida
+  }
+
+  get f() { return this.asignarForm.controls; }
+
 }
