@@ -10,6 +10,8 @@ import { RutaService } from '../../../servicios/rutas.service';
 import { Observable, tap } from 'rxjs';
 import { Ruta } from '../../../Modelos/ruta.modelo';
 import { AlertService } from '../../../servicios/alert.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CrearAsesoriaModalComponent } from '../asesorias/crear-asesoria-modal/crear-asesoria-modal.component';
 
 @Pipe({
   name: 'safe'
@@ -70,7 +72,8 @@ export class CursoRutaEmprendedorComponent {
     private http: HttpClient,
     private rutaService: RutaService,
     private alertService: AlertService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    public dialog: MatDialog,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -377,7 +380,19 @@ export class CursoRutaEmprendedorComponent {
     };
   }
 
+  openCrearAsesoriaModal() {
+    const dialogRef = this.dialog.open(CrearAsesoriaModalComponent, {
+      width: '400px',
+      data: {}
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Asesoría creada:', result);
+        //this.listarAsesorias();
+      }
+    });
+  }
 
   goToPreviousContent() {
     if (this.currentContenidoIndex > 0) {
@@ -594,6 +609,5 @@ export class CursoRutaEmprendedorComponent {
     if (/\.(jpg|jpeg|png|gif)$/i.test(fuente)) return 'image';
     return 'text';
   }
-
 
 }
