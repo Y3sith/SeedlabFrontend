@@ -97,7 +97,7 @@ export class CursoRutaEmprendedorComponent {
     this.currentNivelIndex = 0;
     this.currentLeccionIndex = 0;
     this.currentContenidoIndex = -1;
-    this.expandCurrentPath();
+    //this.expandCurrentPath();
     this.updateSelectedContent();
     this.loadYouTubeApi();
     this.listarRutaActiva();
@@ -268,51 +268,6 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
-  // goToNextContent() {
-  //   if (this.showActivityDescription) {
-  //     // Si estamos mostrando la descripción de la actividad, pasamos al primer contenido
-  //     this.showActivityDescription = false;
-  //     this.currentNivelIndex = 0;
-  //     this.currentLeccionIndex = 0;
-  //     this.currentContenidoIndex = 0;
-  //   } else {
-  //     const currentNivel = this.niveles[this.currentNivelIndex];
-  //     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
-  //     const nextContenidoIndex = this.currentContenidoIndex + 1;
-  
-  //     // Verificar si el siguiente contenido es el último
-  //     if (nextContenidoIndex < currentLeccion.contenido_lecciones.length) {
-  //       // Si no es el último, simplemente avanzamos
-  //       this.currentContenidoIndex = nextContenidoIndex;
-  //     } else {
-  //       // Si es el último, verificamos si es el ultimoContenidoId
-  //       const lastContentId = currentLeccion.contenido_lecciones[currentLeccion.contenido_lecciones.length - 1].id;
-  //       if (lastContentId === this.ultimoContenidoId) {
-  //         this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
-  //           if (result.isConfirmed) {
-  //             this.router.navigate(['list-empresa']);
-  //           }
-  //         });
-  //         return;
-  //       }
-  
-  //       // Si no es el ultimoContenidoId, avanzamos a la siguiente lección o nivel
-  //       this.currentLeccionIndex++;
-  //       if (this.currentLeccionIndex >= currentNivel.lecciones.length) {
-  //         this.currentLeccionIndex = 0;
-  //         this.currentNivelIndex++;
-  //         if (this.currentNivelIndex >= this.niveles.length) {
-  //           this.router.navigate(['ruta']);
-  //           return;
-  //         }
-  //       }
-  //       this.currentContenidoIndex = 0;
-  //     }
-  //   }
-  //   this.expandCurrentPath();
-  //   this.updateSelectedContent();
-  // }
-
   goToNextContent() {
     if (this.showActivityDescription) {
       this.showActivityDescription = false;
@@ -357,7 +312,6 @@ export class CursoRutaEmprendedorComponent {
   
     // Llamar a closeAllExceptSelected con los nuevos índices
     this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
-  
     this.selectedContenido = newCurrentContenido;
     this.updateSelectedContent();
   }
@@ -401,7 +355,6 @@ export class CursoRutaEmprendedorComponent {
     };
   }
 
-
   goToPreviousContent() {
     if (this.currentContenidoIndex > 0) {
       // Ir al contenido anterior en la misma lección
@@ -422,41 +375,24 @@ export class CursoRutaEmprendedorComponent {
       // No hay contenido anterior, deshabilitar el botón
       this.buttonPreviousDisabled = true;
     }
-
+    const newCurrentNivel = this.niveles[this.currentNivelIndex];
+    const newCurrentLeccion = newCurrentNivel.lecciones[this.currentLeccionIndex];
+    const newCurrentContenido = newCurrentLeccion.contenido_lecciones[this.currentContenidoIndex];
+  
+    this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
     this.updateSelectedContent();
+    
   }
 
   updateSelectedContent() {
     
-    
     if (this.showActivityDescription) {
       return; // No hacemos nada si estamos mostrando la descripción de la actividad
     }
-
-
-    if (this.showActivityDescription) {
-      return; // No hacemos nada si estamos mostrando la descripción de la actividad
-    }
-
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
     
-    if (this.showActivityDescription) {
-      return; // No hacemos nada si estamos mostrando la descripción de la actividad
-    }
-
-    // if (this.currentContenidoIndex === -1) {
-    //   // Mostrar la descripción de la lección
-    //   this.selectedContenido = null;
-    //   this.currentLeccionDescripcion = currentLeccion.descripcion;
-    //   this.currentLeccionFuente = currentLeccion.fuente;
-    // } else {
-    //   // Mostrar el contenido específico
-    //   this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
-    //   this.currentLeccionDescripcion = null;
-    //   this.currentLeccionFuente = null;
-    // }
 
     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
     this.currentLeccionDescripcion = null;
