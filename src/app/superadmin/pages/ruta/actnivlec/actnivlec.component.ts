@@ -331,7 +331,9 @@ export class ActnivlecComponent implements OnInit {
     if (nombreActividad && nombreActividad.length > 39) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
       return;
-    } if (this.actividadId != null) {
+    } 
+    
+    if (this.actividadId != null) {
       if (this.actividadForm.invalid) {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
         return;
@@ -389,6 +391,7 @@ export class ActnivlecComponent implements OnInit {
             },
             error => {
               console.log(error);
+              const errorMessage = error.error?.error || 'Ocurrió un error inesperado';
               this.alertServices.errorAlert('Error', error.error.message);
             }
           )
