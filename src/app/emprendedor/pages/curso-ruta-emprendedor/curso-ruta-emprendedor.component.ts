@@ -94,10 +94,10 @@ export class CursoRutaEmprendedorComponent {
 
   ngOnInit() {
     this.validateToken();
-    this.getUltimaActividad();
     this.currentNivelIndex = 0;
     this.currentLeccionIndex = 0;
     this.currentContenidoIndex = -1;
+    this.expandCurrentPath();
     this.updateSelectedContent();
     this.loadYouTubeApi();
     this.listarRutaActiva();
@@ -156,7 +156,6 @@ export class CursoRutaEmprendedorComponent {
   }
 
   getUltimaActividad() {
-    console.log("LA ID DE LA RUTA EN ULTIMA", this.rutaId);
     this.rutaService.ultimaActividad(this.token, this.rutaId).subscribe(
       (data) => {
         this.ultimoElemento = data.ultimo_elemento;
@@ -238,109 +237,128 @@ export class CursoRutaEmprendedorComponent {
 
   closeAllExceptSelected(selectedNivelIndex: number, selectedLeccionIndex: number, selectedContenidoId: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
-      // Si el índice del nivel no es el seleccionado, lo colapsamos.
-      if (nivelIndex !== selectedNivelIndex) {
+      if (nivelIndex < selectedNivelIndex) {
+        // Colapsar todos los niveles anteriores al seleccionado
         nivel.expanded = false;
-        nivel.lecciones.forEach((leccion) => {
-          leccion.expanded = false; // Colapsamos todas las lecciones en los niveles no seleccionados.
+        nivel.lecciones.forEach(leccion => {
+          leccion.expanded = false;
         });
-      } else {
-        // Si es el nivel seleccionado, lo expandimos.
+      } else if (nivelIndex === selectedNivelIndex) {
+        // Expandir el nivel seleccionado
         nivel.expanded = true;
         nivel.lecciones.forEach((leccion, leccionIndex) => {
-          // Solo la lección seleccionada debe expandirse, el resto debe colapsarse.
-          if (leccionIndex !== selectedLeccionIndex) {
+          if (leccionIndex < selectedLeccionIndex) {
+            // Colapsar todas las lecciones anteriores a la seleccionada
             leccion.expanded = false;
-          } else {
+          } else if (leccionIndex === selectedLeccionIndex) {
+            // Expandir la lección seleccionada
             leccion.expanded = true;
+          } else {
+            // Colapsar todas las lecciones posteriores a la seleccionada
+            leccion.expanded = false;
           }
+        });
+      } else {
+        // Colapsar todos los niveles posteriores al seleccionado
+        nivel.expanded = false;
+        nivel.lecciones.forEach(leccion => {
+          leccion.expanded = false;
         });
       }
     });
   }
 
+  // goToNextContent() {
+  //   if (this.showActivityDescription) {
+  //     // Si estamos mostrando la descripción de la actividad, pasamos al primer contenido
+  //     this.showActivityDescription = false;
+  //     this.currentNivelIndex = 0;
+  //     this.currentLeccionIndex = 0;
+  //     this.currentContenidoIndex = 0;
+  //   } else {
+  //     const currentNivel = this.niveles[this.currentNivelIndex];
+  //     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+  //     const nextContenidoIndex = this.currentContenidoIndex + 1;
+  
+  //     // Verificar si el siguiente contenido es el último
+  //     if (nextContenidoIndex < currentLeccion.contenido_lecciones.length) {
+  //       // Si no es el último, simplemente avanzamos
+  //       this.currentContenidoIndex = nextContenidoIndex;
+  //     } else {
+  //       // Si es el último, verificamos si es el ultimoContenidoId
+  //       const lastContentId = currentLeccion.contenido_lecciones[currentLeccion.contenido_lecciones.length - 1].id;
+  //       if (lastContentId === this.ultimoContenidoId) {
+  //         this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
+  //           if (result.isConfirmed) {
+  //             this.router.navigate(['list-empresa']);
+  //           }
+  //         });
+  //         return;
+  //       }
+  
+  //       // Si no es el ultimoContenidoId, avanzamos a la siguiente lección o nivel
+  //       this.currentLeccionIndex++;
+  //       if (this.currentLeccionIndex >= currentNivel.lecciones.length) {
+  //         this.currentLeccionIndex = 0;
+  //         this.currentNivelIndex++;
+  //         if (this.currentNivelIndex >= this.niveles.length) {
+  //           this.router.navigate(['ruta']);
+  //           return;
+  //         }
+  //       }
+  //       this.currentContenidoIndex = 0;
+  //     }
+  //   }
+  //   this.expandCurrentPath();
+  //   this.updateSelectedContent();
+  // }
+
   goToNextContent() {
     if (this.showActivityDescription) {
-      // Si estamos mostrando la descripción de la actividad, pasamos al primer contenido
       this.showActivityDescription = false;
       this.currentNivelIndex = 0;
       this.currentLeccionIndex = 0;
       this.currentContenidoIndex = 0;
-      // this.updateSelectedContent();
-      // this.isMenuOpen = true; // Abrimos el menú lateral
-      // this.expandCurrentPath(); // Expandimos el camino actual en el menú
-      //return;
     } else {
-      // Lógica para avanzar al siguiente contenido
-      this.currentContenidoIndex++;
-
-      // Verificar si necesitamos pasar a la siguiente lección o nivel
-      if (this.currentContenidoIndex >= this.niveles[this.currentNivelIndex].lecciones[this.currentLeccionIndex].contenido_lecciones.length) {
-        this.currentContenidoIndex = 0;
+      const currentNivel = this.niveles[this.currentNivelIndex];
+      const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+      const nextContenidoIndex = this.currentContenidoIndex + 1;
+  
+      if (nextContenidoIndex < currentLeccion.contenido_lecciones.length) {
+        this.currentContenidoIndex = nextContenidoIndex;
+      } else {
+        const lastContentId = currentLeccion.contenido_lecciones[currentLeccion.contenido_lecciones.length - 1].id;
+        if (lastContentId === this.ultimoContenidoId) {
+          this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
+            if (result.isConfirmed) {
+              this.router.navigate(['list-empresa']);
+            }
+          });
+          return;
+        }
+  
         this.currentLeccionIndex++;
-        
-        if (this.currentLeccionIndex >= this.niveles[this.currentNivelIndex].lecciones.length) {
+        if (this.currentLeccionIndex >= currentNivel.lecciones.length) {
           this.currentLeccionIndex = 0;
           this.currentNivelIndex++;
-
           if (this.currentNivelIndex >= this.niveles.length) {
-            console.log("No hay más contenido disponible");
+            this.router.navigate(['ruta']);
             return;
           }
         }
+        this.currentContenidoIndex = 0;
       }
     }
-    // this.updateSelectedContent();
-    // this.isMenuOpen = true;
-    // this.expandCurrentPath();
-
-    const currentNivel = this.niveles[this.currentNivelIndex];
-    const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
-
-    // Función para obtener el ID del contenido actual
-    const getCurrentContentId = () => {
-      if (this.currentContenidoIndex >= 0 && this.currentContenidoIndex < currentLeccion.contenido_lecciones.length) {
-        return currentLeccion.contenido_lecciones[this.currentContenidoIndex].id;
-      }
-      return null;
-    };
-
-    // Comparar el ID del contenido actual con ultimoContenidoId
-    if (getCurrentContentId() === this.ultimoContenidoId) {
-      this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
-        if (result.isConfirmed) {
-          this.router.navigate(['list-empresa']);
-        }
-      });
-      return;
-    }
-
-    // Lógica para avanzar al siguiente contenido
-    // if (this.currentContenidoIndex === -1) {
-    //   this.currentContenidoIndex = 0;
-    // } else {
-    //   this.currentContenidoIndex++;
-    // }
-
-    this.currentContenidoIndex++;
-
-    // Verificar si necesitamos pasar a la siguiente lección o nivel
-    if (this.currentContenidoIndex >= currentLeccion.contenido_lecciones.length) {
-      // this.currentContenidoIndex = -1;
-      this.currentLeccionIndex++;
-
-      if (this.currentLeccionIndex >= currentNivel.lecciones.length) {
-        this.currentLeccionIndex = 0;
-        this.currentNivelIndex++;
-
-        if (this.currentNivelIndex >= this.niveles.length) {
-          this.router.navigate(['ruta']);
-          return;
-        }
-      }
-      this.currentContenidoIndex = 0;
-    }
-   this.expandCurrentPath();
+  
+    // Obtener el contenido actual después de actualizar los índices
+    const newCurrentNivel = this.niveles[this.currentNivelIndex];
+    const newCurrentLeccion = newCurrentNivel.lecciones[this.currentLeccionIndex];
+    const newCurrentContenido = newCurrentLeccion.contenido_lecciones[this.currentContenidoIndex];
+  
+    // Llamar a closeAllExceptSelected con los nuevos índices
+    this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
+  
+    this.selectedContenido = newCurrentContenido;
     this.updateSelectedContent();
   }
 
@@ -410,6 +428,12 @@ export class CursoRutaEmprendedorComponent {
 
   updateSelectedContent() {
     
+    
+    if (this.showActivityDescription) {
+      return; // No hacemos nada si estamos mostrando la descripción de la actividad
+    }
+
+
     if (this.showActivityDescription) {
       return; // No hacemos nada si estamos mostrando la descripción de la actividad
     }
@@ -417,6 +441,10 @@ export class CursoRutaEmprendedorComponent {
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
+    
+    if (this.showActivityDescription) {
+      return; // No hacemos nada si estamos mostrando la descripción de la actividad
+    }
 
     // if (this.currentContenidoIndex === -1) {
     //   // Mostrar la descripción de la lección
