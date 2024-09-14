@@ -65,6 +65,7 @@ export class CursoRutaEmprendedorComponent {
   currentLeccionDescripcion: any;
   showActivityDescription: boolean = true;
   isMenuOpen = true;
+  botonAsesoria: boolean = false;
 
   constructor(private router: Router,
     private sanitizer: DomSanitizer,
@@ -322,6 +323,7 @@ export class CursoRutaEmprendedorComponent {
           this.currentLeccionIndex = 0;
           this.currentNivelIndex++;
           if (this.currentNivelIndex >= this.niveles.length) {
+            this.botonAsesoria = true;
             this.router.navigate(['ruta']);
             return;
           }
@@ -341,6 +343,21 @@ export class CursoRutaEmprendedorComponent {
     this.updateSelectedContent();
   }
 
+  boton() {
+    const currentNivel = this.niveles[this.currentNivelIndex];
+    const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+  
+    // Verificar si estamos en el último contenido de la última lección del último nivel
+    if (
+      this.currentNivelIndex === this.niveles.length - 1 &&
+      this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
+      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1
+    ) {
+      this.botonAsesoria = true;
+    }
+  }
+  
+  
   onNextContentClick() {
     this.goToNextContent();
   }

@@ -25,6 +25,7 @@ export class RutaEmprendedorComponent implements OnInit {
   rutaId: number;
   ultimoElemento: any;
   listRespuestaId:any []=[];
+  ishidden: boolean = true;
 
   actividadForm = this.fb.group({
     id:[null],
@@ -44,7 +45,6 @@ export class RutaEmprendedorComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateToken();
-    this.listarRutaActiva();
     this.idRespuesta();
   }
 
@@ -78,8 +78,8 @@ export class RutaEmprendedorComponent implements OnInit {
         // Verifica si la lista de respuestas es válida y si el ID no es 0, null o undefined
         if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
           console.log('ID de respuesta válido:', this.listRespuestaId[0].id);
-          
           // Llamar a las demás funciones solo si el ID es válido
+          this.ishidden = false;
           this.listarRutaActiva();
         } else {
           console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
@@ -91,9 +91,6 @@ export class RutaEmprendedorComponent implements OnInit {
     );
   }
   
-
-  
-
   listarRutaActiva(): void {
     if (this.token) {
       this.rutaService.ruta(this.token).subscribe(

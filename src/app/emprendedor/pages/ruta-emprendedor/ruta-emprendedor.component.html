@@ -3,27 +3,34 @@
     <app-header [title] [subtitle]="'Ruta de actividades'"></app-header>
   </header>
 </div>
-<div class="route-container">
-  <ng-container *ngFor="let ruta of rutaLista; let i = index">
-    <ng-container *ngFor="let actividad of ruta.actividades || []; let j = index">
-      <div class="route-item" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)" (click)="openModal(actividad, i * (ruta.actividades?.length || 0) + j)">
-        <div class="circle" [ngClass]="getCirclePositionClass(i * ruta.actividades.length + j)" [style.border-color]="getItemColor(i * ruta.actividades.length + j)">
-          <div class="number" [style.color]="getItemColor(i * ruta.actividades.length + j)">{{ (i * ruta.actividades.length + j + 1).toString().padStart(2, '0') }}</div>
-        </div>
-        <div class="content" [style.background-color]="getItemColor(i * ruta.actividades.length + j)">
-          <h3>{{ actividad.nombre }}</h3>
-        </div>
-      </div>
-    </ng-container>
-  </ng-container>
-</div>
-<!-- [ultimoElemento]="ultimoElemento" -->
 
-<app-modal-actividad 
-  *ngIf="selectedActividad"
-  [actividad]="selectedActividad" 
-  [rutaId]="selectedRutaId"
-  [visible]="modalVisible" 
-  (close)="closeModal()"
-  (irAModuloClicked)="handleIrAModulo($event)">
-</app-modal-actividad>
+<div *ngIf="ishidden">
+<Label>ffffffffffffffffffffffffffff</Label>
+</div>
+
+<div>
+  <div class="route-container">
+    <ng-container *ngFor="let ruta of rutaLista; let i = index">
+      <ng-container *ngFor="let actividad of ruta.actividades || []; let j = index">
+        <div class="route-item" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)" (click)="openModal(actividad, i * (ruta.actividades?.length || 0) + j)">
+          <div class="circle" [ngClass]="getCirclePositionClass(i * ruta.actividades.length + j)" [style.border-color]="getItemColor(i * ruta.actividades.length + j)">
+            <div class="number" [style.color]="getItemColor(i * ruta.actividades.length + j)">{{ (i * ruta.actividades.length + j + 1).toString().padStart(2, '0') }}</div>
+          </div>
+          <div class="content" [style.background-color]="getItemColor(i * ruta.actividades.length + j)">
+            <h3>{{ actividad.nombre }}</h3>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+  <!-- [ultimoElemento]="ultimoElemento" -->
+  
+  <app-modal-actividad 
+    *ngIf="selectedActividad"
+    [actividad]="selectedActividad" 
+    [rutaId]="selectedRutaId"
+    [visible]="modalVisible" 
+    (close)="closeModal()"
+    (irAModuloClicked)="handleIrAModulo($event)">
+  </app-modal-actividad>
+</div>
