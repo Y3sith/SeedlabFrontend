@@ -78,6 +78,7 @@ export class ActnivlecComponent implements OnInit {
   Number = Number;
 
   selectedNivelId: any | null = null;
+  selectedLeccion: any | null = null;
 
   ////añadir actividad
   actividadForm = this.fb.group({
@@ -147,8 +148,6 @@ export class ActnivlecComponent implements OnInit {
       }
       if (params['isEditing']) {
         this.isEditing = params['isEditing'] === 'true';
-        // Aquí puedes usar this.isEditing para determinar si estás en modo edición
-        // Por ejemplo, puedes cambiar el título de la página o habilitar/deshabilitar campos
       }
     });
     this.tipoDato();
@@ -347,7 +346,7 @@ export class ActnivlecComponent implements OnInit {
         id_nivel: primerNivel.id,
         nombre: primerNivel.nombre
       });
-      this.nivelForm.get('nombre')?.disable();
+      //this.nivelForm.disable();
 
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
@@ -357,7 +356,7 @@ export class ActnivlecComponent implements OnInit {
         id_nivel: '',
         nombre: ''
       });
-      this.nivelForm.get('nombre')?.enable();
+      this.nivelForm.get('nombre')?.disable();
     } 
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
@@ -415,7 +414,7 @@ export class ActnivlecComponent implements OnInit {
             (data: any) => {
               const actividadCreada = data[0];
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-              this.mostrarNivelForm = true;
+              //this.mostrarNivelForm = true;
               this.alertServices.successAlert('Exito', data.message);
               this.desactivarcamposActividad();
               console.log('datos enviados: ', data)
@@ -448,13 +447,11 @@ export class ActnivlecComponent implements OnInit {
 
   desactivarcamposActividad(): void {
     this.actividadForm.disable();
-
     const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
     if (guardarBtn) {
       guardarBtn.disabled = true;
       guardarBtn.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
     }
-
     const fuente = document.getElementById('fuente') as HTMLButtonElement;
     if (fuente) {
       fuente.disabled = true;
@@ -501,19 +498,16 @@ export class ActnivlecComponent implements OnInit {
       agregarNivelBtn.style.pointerEvents = 'auto';
       agregarNivelBtn.style.opacity = '1';
     }
-
     const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
     if (agregarLeccionBtn) {
       agregarLeccionBtn.style.pointerEvents = 'auto';
       agregarLeccionBtn.style.opacity = '1';
     }
-
     const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
     if (agregarContenidoBtn) {
       agregarContenidoBtn.style.pointerEvents = 'auto';
       agregarContenidoBtn.style.opacity = '1';
     }
-
   }
 
   addNivelSuperAdmin(): void {
@@ -584,6 +578,7 @@ export class ActnivlecComponent implements OnInit {
       )
     } 
   }
+
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
@@ -600,9 +595,11 @@ export class ActnivlecComponent implements OnInit {
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
+    //const leccionId = +this.leccionForm.get('id_leccion')?.value;
     const leccionId = +this.leccionForm.get('id_leccion')?.value;
     if (leccionId) {
-      console.log("leccionIddddddddd", leccionId);
+      //console.log("leccionIddddddddd", leccionId);
+      const leccionId = +this.leccionForm.get('id_leccion')?.value;
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
@@ -626,8 +623,8 @@ export class ActnivlecComponent implements OnInit {
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
-          this.verLeccicon();
-          this.mostrarContenidoLeccionForm = true;
+          //this.verLeccicon();
+          //this.mostrarContenidoLeccionForm = true;
           //this.mostrarContenidoLeccionForm = true;
           this.leccionForm.reset();
           this.submittedLeccion = false;
@@ -673,7 +670,7 @@ export class ActnivlecComponent implements OnInit {
     this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
-        if (data.length > 0) {
+        if (this.isEditing && data.length > 0) {
           // Seleccionar la primera lección si existe
           const primeraLeccion = data[0];
           this.leccionForm.patchValue({
@@ -716,7 +713,6 @@ export class ActnivlecComponent implements OnInit {
         nombre: ''
       });
     }
-
     console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
     console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
@@ -743,6 +739,7 @@ export class ActnivlecComponent implements OnInit {
   //     }
   //   )
   // }
+
   cargarContenidoLeccion(id_leccion: number): void {
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
