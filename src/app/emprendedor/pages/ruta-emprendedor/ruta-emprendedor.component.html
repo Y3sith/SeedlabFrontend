@@ -19,7 +19,7 @@
   <div class="route-container">
     <ng-container *ngFor="let ruta of rutaLista; let i = index">
       <ng-container *ngFor="let actividad of ruta.actividades || []; let j = index">
-        <div class="route-item" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)" (click)="openModal(actividad, i * (ruta.actividades?.length || 0) + j)">
+        <div class="route-item cursor-pointer" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)" (click)="openModal(actividad, i * (ruta.actividades?.length || 0) + j)">
           <div class="circle" [ngClass]="getCirclePositionClass(i * ruta.actividades.length + j)" [style.border-color]="getItemColor(i * ruta.actividades.length + j)">
             <div class="number" [style.color]="getItemColor(i * ruta.actividades.length + j)">{{ (i * ruta.actividades.length + j + 1).toString().padStart(2, '0') }}</div>
           </div>

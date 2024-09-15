@@ -70,6 +70,10 @@ export class AddAliadosComponent {
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('fileInputs') fileInputs: ElementRef;
   listBanners: Banner[] =[];
+  showVideo: boolean = false;
+  showImagen: boolean = false;
+  showPDF: boolean = false;
+  showTexto: boolean = false;
   
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -88,6 +92,7 @@ export class AddAliadosComponent {
       descripcion: ['', Validators.required],
       logo: [null, Validators.required],
       ruta_multi: [null, Validators.required],
+      urlpagina: ['', Validators.required],
       id_tipo_dato: ['', Validators.required],
       email: ['', [Validators.required,Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -114,6 +119,7 @@ export class AddAliadosComponent {
     this.validateToken();
     this.tipoDato();
     this.verEditar();
+    this.obtenerValorBaseDatos();
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
@@ -231,16 +237,18 @@ export class AddAliadosComponent {
           descripcion: data.descripcion,
           logo: data.logo,
           //ruta_multi: data.ruta_multi,
+          urlpagina: data.urlpagina,
           id_tipo_dato: data.id_tipo_dato,
           email: data.email,
           password: '',
           estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
-        console.log("aaaa",data);
+        console.log("ALIADOOOO",data);
         this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
         this.aliadoForm.patchValue({ estado: this.isActive });
 
         console.log("Estado cargado:", this.isActive);
+        this.onTipoDatoChange();
       },
       error => {
         console.log(error);
@@ -284,6 +292,7 @@ export class AddAliadosComponent {
     
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
     formData.append('descripcion', this.aliadoForm.get('descripcion')?.value);
+    formData.append('urlpagina', this.aliadoForm.get('urlpagina')?.value);
     formData.append('id_tipo_dato', this.aliadoForm.get('id_tipo_dato')?.value);
     formData.append('email', this.aliadoForm.get('email')?.value);
     formData.append('password', this.aliadoForm.get('password')?.value);
@@ -359,11 +368,28 @@ mostrarToggle(): void {
         data => {
           this.tipoDeDato = data;
           console.log("DATO",data);
+          this.obtenerValorBaseDatos();
         },
         error => {
           console.log(error);
         }
       )
+    }
+  }
+
+  obtenerValorBaseDatos(): void {
+    if (this.idAliado) {
+      this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
+        data => {
+          if (data && data.id_tipo_dato) {
+            this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
+            this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
+          }
+        },
+        error => {
+          console.log('Error al obtener el valor de la base de datos:', error);
+        }
+      );
     }
   }
 

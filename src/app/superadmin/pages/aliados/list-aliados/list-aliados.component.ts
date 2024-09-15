@@ -51,6 +51,7 @@ export class ListAliadosComponent implements OnInit {
               item.descripcion,
               item.logo,
               item.ruta_multi,
+              item.urlpagina,
               item.id_tipo_dato,
               item.email,
               item.password,

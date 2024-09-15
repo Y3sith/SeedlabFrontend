@@ -35,7 +35,7 @@
             </div>
             <span class="text-xs sm:text-sm text-gray-600">Logo</span>
             <input type="file" id="imagen_ruta" name="profilePicture" class="hidden"
-              (change)="onFileSelecteds($event, 'logo')" accept="image/*" formControlName="logo">
+              (change)="onFileSelecteds($event, 'logo')" accept="image/*">
           </label>
           <div *ngIf="formSubmitted && aliadoForm.get('logo')?.invalid" class="text-center w-full mt-2">
             <span class="inline-block p-1 text-sm text-red-500 rounded-lg bg-red-50">
@@ -120,9 +120,19 @@
             </div>
           </div>
 
+          <div class="text-xl font-normal mt-3">
+            <label class="text-xl font-normal" for="urlpagina">Url Pagina web</label>
+            <input type="text" formControlName="urlpagina"
+              class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+            <div *ngIf="formSubmitted && aliadoForm.get('urlpagina')?.invalid"
+              class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+              Este campo es requerido*.
+            </div>
+          </div>
+
           <!-- Campo Tipo de archivo -->
           <div class="text-xl font-normal mt-3">
-            <label class="text-xl font-normal" for="id_tipo_dato">Tipo de archivo</label>
+            <label class="text-xl font-normal" for="id_tipo_dato">Contenido didáctico</label>
             <select id="id_tipo_dato" formControlName="id_tipo_dato"
               class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
               [ngClass]="{'border-red-500': formSubmitted && aliadoForm.get('id_tipo_dato')?.errors}">
@@ -138,66 +148,63 @@
 
           <ng-container [ngSwitch]="aliadoForm.get('id_tipo_dato').value">
             <!-- Campo video -->
-            <div class="mt-3" *ngSwitchCase="'1'">
-              <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
-                (input)="onTextInput($event)"
-                class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
-                class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido*.
+            <div class="mt-3" *ngSwitchCase="1">
+              <div *ngIf="showVideo">
+                <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
+                  (input)="onTextInput($event)"
+                  class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
+                  class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+                  Este campo es requerido*.
+                </div>
               </div>
             </div>
 
             <!-- Campo imagen -->
-            <div class="mt-3 w-full flex-none justify-center text-xl" *ngSwitchCase="'2'">
-              <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
-                (change)="onFileSelecteds($event, 'ruta_multi')">
-              <span (click)="triggerFileInput()"
-                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                Subir Imagen
-                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
-              </span>
-
-              <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
-                class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
-                class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
-              <div>
-
-              </div>
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
-                class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido*.
+            <div class="mt-3 w-full flex-none justify-center text-xl" *ngSwitchCase="2">
+              <div *ngIf="showImagen">
+                <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+                  (change)="onFileSelecteds($event, 'ruta_multi')">
+                <span (click)="triggerFileInput()"
+                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                  Subir Imagen
+                  <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+                </span>
+  
+                <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
+                  class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
+                  class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
+                <div>
+  
+                </div>
+                <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
+                  class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+                  Este campo es requerido*.
+                </div>
               </div>
             </div>
 
             <!-- Campo pdf -->
-            <div class="mt-3 text-xl" *ngSwitchCase="'3'">
-              <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
-                (change)="onFileSelecteds($event, 'ruta_documento')">
-              <span (click)="triggerFileInput()"
-                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                Subir PDF
-                <fa-icon [icon]="fafile" class="text-md ml-2"></fa-icon>
-              </span>
-
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
-                class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido*.
-              </div>
-              <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
-                Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
-              </div>
-            </div>
-
-            <!-- Campo texto -->
-            <div class="mt-3" *ngSwitchCase="'4'">
-              <input type="text" id="fuente" formControlName="ruta_multi" (input)="onTextInput($event)"
-                class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
-                class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido*.
+            <div class="mt-3 text-xl" *ngSwitchCase="3">
+              <div *ngIf="showPDF">
+                <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
+                  (change)="onFileSelecteds($event, 'ruta_documento')">
+                <span (click)="triggerFileInput()"
+                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                  Subir PDF
+                  <fa-icon [icon]="fafile" class="text-md ml-2"></fa-icon>
+                </span>
+  
+                <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
+                  class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+                  Este campo es requerido*.
+                </div>
+                <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
+                  Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
+                </div>
               </div>
             </div>
+            
           </ng-container>
 
           <!-- Campo banner -->
