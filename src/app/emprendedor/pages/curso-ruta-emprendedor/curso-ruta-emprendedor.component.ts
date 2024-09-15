@@ -12,6 +12,7 @@ import { Ruta } from '../../../Modelos/ruta.modelo';
 import { AlertService } from '../../../servicios/alert.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CrearAsesoriaModalComponent } from '../asesorias/crear-asesoria-modal/crear-asesoria-modal.component';
+import { Location } from '@angular/common';
 
 @Pipe({
   name: 'safe'
@@ -75,6 +76,7 @@ export class CursoRutaEmprendedorComponent {
     private alertService: AlertService,
     private changeDetectorRef: ChangeDetectorRef,
     public dialog: MatDialog,
+    private location: Location,
   ) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
@@ -341,6 +343,10 @@ export class CursoRutaEmprendedorComponent {
     this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
     this.selectedContenido = newCurrentContenido;
     this.updateSelectedContent();
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   boton() {
