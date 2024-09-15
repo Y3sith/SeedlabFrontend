@@ -1,5 +1,5 @@
 import {ChangeDetectorRef,Component,Inject,Input,OnInit,} from '@angular/core';
-import {FormBuilder,FormGroup,ValidationErrors,Validators,} from '@angular/forms';
+import {AbstractControl, FormBuilder,FormGroup,ValidationErrors,Validators,} from '@angular/forms';
 import {faCircleQuestion,} from '@fortawesome/free-solid-svg-icons';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { AsesorService } from '../../../servicios/asesor.service';
@@ -106,11 +106,9 @@ export class ModalAddAsesoresComponent implements OnInit {
     if (this.asesorId != null) {
       this.isEditing = true;
       this.asesorForm.get('password')?.setValidators([Validators.minLength(8)]);
-      this.verEditar(); /* Llama a verEditar si estás editando un asesor */
+      // this.verEditar(); /* Llama a verEditar si estás editando un asesor */
     } else {
-      this.asesorForm
-      .get('password')
-      ?.setValidators([Validators.required, Validators.minLength(8)]);
+      this.asesorForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
     
     this.asesorForm.get('password')?.updateValueAndValidity();
@@ -199,6 +197,18 @@ export class ModalAddAsesoresComponent implements OnInit {
         console.log('Error al cargar los municipios:', err);
       }
     );
+  }
+
+  passwordValidator(control: AbstractControl) {
+    const value = control.value;
+    const hasUpperCase = /[A-Z]+/.test(value);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+
+    if (hasUpperCase && hasSpecialChar) {
+      return null;
+    } else {
+      return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
+    }
   }
 
   /* Trae la informacion del asesor cuando el asesorId no sea nulo */
