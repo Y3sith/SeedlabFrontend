@@ -315,7 +315,7 @@ export class ActnivlecComponent implements OnInit {
                 nombre: data.nombre,
                 descripcion: data.descripcion,
                 id_tipo_dato: data.id_tipo_dato,
-                id_asesor: data.id_asesor,
+                id_asesor: data.id_asesor ? data.id_asesor : '',
                 id_aliado: data.id_aliado,
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
