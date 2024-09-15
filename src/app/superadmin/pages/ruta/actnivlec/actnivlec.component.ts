@@ -288,20 +288,7 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-  verNivel(): void {
-    if (this.token) {
-      this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
-        data => {
-          this.listarNiveles = data;
-          this.niveles = data;
-          console.log('Niveles: ', data);
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    }
-  }
+  
   verEditar(): void {
     if (this.actividadId !== null) {
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
@@ -512,6 +499,28 @@ export class ActnivlecComponent implements OnInit {
       agregarContenidoBtn.style.opacity = '1';
     }
   }
+  verNivel(): void {
+    if (this.token) {
+      this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
+        data => {
+          this.listarNiveles = data;
+          this.niveles = data;
+          console.log('Niveles: ', data);
+
+
+          if (this.isEditing && this.niveles && this.niveles.length > 0) {
+            this.nivelForm.patchValue({
+              id_nivel: this.niveles[0].id,
+              nombre: this.niveles[0].nombre
+            });
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
 
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
@@ -526,11 +535,12 @@ export class ActnivlecComponent implements OnInit {
       //id_actividad: this.actividadId
     };
     console.log("idnivel", this.selectedNivelId);
-    if (this.selectedNivelId) {
+    if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', 'Nivel actualizado correctamente');
+          this.verNivel();
           this.niveles.push({
             id: data.id,
             nombre: data.nombre
@@ -538,7 +548,6 @@ export class ActnivlecComponent implements OnInit {
           this.nivelForm.patchValue({
             id_nivel: data.id
           });
-          this.verNivel();
           this.nivelForm.reset();
           this.submittedNivel = false;
           this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
