@@ -712,7 +712,16 @@ export class ActnivlecComponent implements OnInit {
         //id_leccion: '',
         nombre: ''
       });
-    }
+      this.contenidoLeccionForm.patchValue({
+        titulo: '',
+        descripcion: '',
+        id_contenido: '',
+        id_leccion: '',
+        id_tipo_dato: ''
+      })
+      this.contenidoLeccion = [];
+    } 
+
     console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
     console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
@@ -745,14 +754,22 @@ export class ActnivlecComponent implements OnInit {
       data => {
         this.contenidoLeccion = data;
         console.log('Contenido de la lección:', data);
-
-        // Mantener el id_leccion actual
-        this.contenidoLeccionForm.patchValue({
-          id_leccion: id_leccion.toString(),
-          id_tipo_dato: '',
-          fuente_contenido: ''
-        });
-
+        if (this.isEditing && data.length > 0) {
+          const primerContenido = data[0];
+          this.contenidoLeccionForm.patchValue({
+            id_leccion: id_leccion.toString(),
+            id_contenido: primerContenido.id.toString(),
+            titulo: primerContenido.titulo,
+            descripcion: primerContenido.descripcion,
+            id_tipo_dato: primerContenido.id_tipo_dato,
+            fuente_contenido: primerContenido.fuente_contenido
+          });
+        } else {
+          // Limpiar todos los campos excepto id_leccion
+          this.contenidoLeccionForm.reset({
+            id_leccion: id_leccion.toString(), // Mantén solo el id_leccion
+          });
+        }
         this.onTipoDatoChangeContenido();
       },
       error => {
@@ -777,6 +794,14 @@ export class ActnivlecComponent implements OnInit {
     if (selectedNivelId === '0' ) {
       this.nivelForm.patchValue({ nombre: '', id_nivel: 0 });
       this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
+      this.contenidoLeccionForm.patchValue({
+        titulo: '',
+        descripcion: '',
+        id_contenido: '',
+        id_leccion: '',
+        id_tipo_dato: ''
+      })
+      this.contenidoLeccion = [];
     } else {
       const selectedNivel = this.niveles.find(nivel => nivel.id === parseInt(selectedNivelId));
       if (selectedNivel) {
@@ -835,6 +860,7 @@ export class ActnivlecComponent implements OnInit {
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           console.log('datos recibidos: ', data);
+          this.cargarContenidoLeccion(contenidoLeccionId);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();
@@ -845,8 +871,10 @@ export class ActnivlecComponent implements OnInit {
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
           console.log('datos recibidos: ', data);
+          this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
+          
           //location.reload();
         },
         error => {
@@ -913,35 +941,61 @@ export class ActnivlecComponent implements OnInit {
   //   console.log('id_leccion después de seleccionar contenido:', this.contenidoLeccionForm.get('id_leccion').value);
 
   // }
-  onContenidoSelect(contenidoId: string): void {
-    // Guardar el id_leccion actual antes de cualquier cambio
-    const currentIdLeccion = this.leccionForm.get('id_leccion').value;
+  // onContenidoSelect(contenidoId: string): void {
+  //   // Guardar el id_leccion actual antes de cualquier cambio
+  //   const currentIdLeccion = this.leccionForm.get('id_leccion').value;
 
-    if (contenidoId && contenidoId !== '') {
-      const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
+  //   if (contenidoId && contenidoId !== '') {
+  //     const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
+  //     if (selectedContenido) {
+  //       this.contenidoLeccionForm.patchValue({
+  //         id_leccion: currentIdLeccion, // Usar el id_leccion del formulario de lección
+  //         id_contenido: selectedContenido.id.toString(),
+  //         titulo: selectedContenido.titulo,
+  //         descripcion: selectedContenido.descripcion,
+  //         id_tipo_dato: selectedContenido.id_tipo_dato,
+  //         fuente_contenido: selectedContenido.fuente_contenido
+  //       });
+  //     }
+  //   } else {
+  //     // Si se selecciona "Agregar un contenido Nuevo"
+  //     this.contenidoLeccionForm.reset({
+  //       id_leccion: currentIdLeccion, // Mantener el id_leccion actual
+  //       id_contenido: null,
+  //       titulo: '',
+  //       descripcion: '',
+  //       id_tipo_dato: '',
+  //       fuente_contenido: ''
+  //     });
+  //   }
+  //   console.log('id_leccion después de seleccionar contenido:', this.contenidoLeccionForm.get('id_leccion').value);
+  // }
+  onContenidoSelect(contenidoId: string): void {
+    const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
+  
+    if (contenidoId === 'nuevo') {
+      // Si se selecciona "Agregar contenido nuevo"
+      this.contenidoLeccionForm.patchValue({
+        id_leccion: currentIdLeccion,
+        id_contenido: 'nuevo',
+        titulo: '',
+        descripcion: '',
+        id_tipo_dato: '',
+        fuente_contenido: ''
+      });
+    } else if (contenidoId) {
+      const selectedContenido = this.contenidoLeccion.find(c => c.id.toString() === contenidoId);
       if (selectedContenido) {
         this.contenidoLeccionForm.patchValue({
-          id_leccion: currentIdLeccion, // Usar el id_leccion del formulario de lección
-          id_contenido: selectedContenido.id,
+          id_leccion: currentIdLeccion,
+          id_contenido: selectedContenido.id.toString(),
           titulo: selectedContenido.titulo,
           descripcion: selectedContenido.descripcion,
           id_tipo_dato: selectedContenido.id_tipo_dato,
           fuente_contenido: selectedContenido.fuente_contenido
         });
       }
-    } else {
-      // Si se selecciona "Agregar un contenido Nuevo"
-      this.contenidoLeccionForm.reset({
-        id_leccion: currentIdLeccion, // Mantener el id_leccion actual
-        id_contenido: null,
-        titulo: '',
-        descripcion: '',
-        id_tipo_dato: '',
-        fuente_contenido: ''
-      });
     }
-
-    console.log('id_leccion después de seleccionar contenido:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
   getTipoDatoNombre(id: string): string {

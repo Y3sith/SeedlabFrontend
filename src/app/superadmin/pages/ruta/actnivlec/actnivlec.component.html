@@ -204,11 +204,11 @@
                             <div class="mb-4" *ngIf="isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el Contenido para
                                     editar</label>
-                                <select formControlName="" (change)="onContenidoSelect($event.target.value)"
+                                <select formControlName="id_contenido" (change)="onContenidoSelect($event.target.value)"
                                     class="w-full p-2 border rounded">
                                     <option *ngFor="let contenido of contenidoLeccion" [value]="contenido.id">
                                         {{contenido.titulo}}</option>
-                                    <option value="">Agrega un contenido Nuevo</option>
+                                    <option value="nuevo">Agrega un contenido Nuevo</option>
                                 </select>
                                 <div *ngIf="submittedContent && cl.id_leccion.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
