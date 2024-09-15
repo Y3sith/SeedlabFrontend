@@ -83,8 +83,8 @@ export class PerfilEmprendedorComponent implements OnInit {
       genero: ['', Validators.required],
       direccion: [],
       id_tipo_documento: [Validators.required],
-      id_departamento: [Validators.required],
-      id_municipio: [Validators.required],
+      id_departamento: ['', Validators.required],
+      id_municipio: ['', Validators.required],
       fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
       email: ['', Validators.required],
       password: ['',  [Validators.minLength(10), this.passwordValidator]],
@@ -144,7 +144,8 @@ export class PerfilEmprendedorComponent implements OnInit {
   
       // Guarda el departamento seleccionado en el localStorage
       localStorage.setItem('departamento', selectedDepartamento);
-  
+      this.emprendedorForm.get('id_municipio')?.setValue(null);
+      this.listMunicipios = [];
       // Llama a cargarMunicipios si es necesario
       this.cargarMunicipios(selectedDepartamento);
     }

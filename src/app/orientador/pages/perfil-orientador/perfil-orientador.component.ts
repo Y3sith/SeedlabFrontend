@@ -227,16 +227,6 @@ export class PerfilOrientadorComponent {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
   
-        //   this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
-        //     data => {
-        //       console.log("personalizacion creada", data);
-        //       location.reload();
-        //     },
-        //     error => {
-        //       console.error("no funciona", error);
-        //     }
-        //   );
-        // }
 
         this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
           if (result.isConfirmed) {
@@ -331,7 +321,8 @@ export class PerfilOrientadorComponent {
 
     // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
-
+    this.perfilorientadorForm.get('id_municipio')?.setValue(null);
+    this.listMunicipios = [];
     // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }

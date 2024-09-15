@@ -73,8 +73,8 @@ export class AddEmpresaComponent {
     console.log("DOCUMENTO",this.id_documentoEmpresa)
 
     this.addEmpresaForm = this.fb.group({
-      nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
-      correo: ['', [Validators.required, Validators.email, this.emailValidator]],
+      nombre: ['', [Validators.required, this.noNumbersValidator]],
+      correo: ['', [Validators.required, Validators.email]],
       id_tipo_documento: ['', Validators.required],
       documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
       razonSocial: ['', Validators.required],
@@ -274,9 +274,11 @@ export class AddEmpresaComponent {
 
     if (this.addEmpresaForm.invalid) {
       console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
-      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos de la empresa');
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del formulario');
       return;
     }
+
+    
 
     const empresa: any = {
       documento: this.addEmpresaForm.get('documento')?.value,
@@ -552,17 +554,6 @@ export class AddEmpresaComponent {
       return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
     }
     return null;
-  }
-
-  emailValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    const hasAtSymbol = /@/.test(value);
-
-    if (!hasAtSymbol) {
-      return { emailInvalid: 'El correo debe ser válido *' };
-    } else {
-      return null;
-    }
   }
 
   noLettersValidator(control: AbstractControl): ValidationErrors | null {

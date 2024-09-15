@@ -1,20 +1,23 @@
 <div class="container mx-auto p-0 pt-2 font-poppins ">
   <header class="flex items-center justify-between mt-2 mb-6 md:pl-4 w-full">
-    <button (click)="goBack()" class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300 font-poppins">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <button (click)="goBack()"
+      class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300 font-poppins">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
       Volver
     </button>
-    <app-header [title] [subtitle]="'Agregar empresa y apoyos'"></app-header>
+    <app-header [title] [subtitle]="'Personalización'"></app-header>
   </header>
-  
+
   <!-- transicion basada en el estado -->
   <div class="w-full flex items-center justify-center px-4">
     <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
       <div *ngFor="let contenedor of [1, 2]; let i = index" class="contenedor mb-2 sm:mb-0"
         [class.active]="i === currentIndex">
-        <div class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto text-base md:text-xl font-bold "
+        <div
+          class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto text-base md:text-xl font-bold "
           [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
           {{ i + 1 }}
         </div>
@@ -49,64 +52,99 @@
                   <label for="descripcion_footer" class="text-lg font-medium text-gray-700">
                     Descripción del Sistema
                   </label>
-                  <input type="text" id="descripcion_footer" name="descripcion_footer"
-                    formControlName="descripcion_footer" class="p-2 w-full h-10 border border-blue-300 rounded-lg bg-gray-200 
-                           appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 
-                           transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  <div class="text-sm text-red-500" role="alert"></div>
+                  <input type="text" id="descripcion_footer" name="descripcion_footer" formControlName="descripcion_footer"
+                    class="p-2 w-full h-10 border border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <div
+                    *ngIf="personalizacionForm.get('descripcion_footer').invalid && (personalizacionForm.get('descripcion_footer').dirty || personalizacionForm.get('descripcion_footer').touched)"
+                    class="inline-block max-w-max p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('descripcion_footer').errors?.['required']">Este campo es requerido *</span>
+                  </div>
                 </div>
-
+                
                 <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="paginaWeb" class="text-lg font-normal">Pagina Web</label>
                   <input type="text" id="paginaWeb" name="paginaWeb" formControlName="paginaWeb"
-                    class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <div
+                    *ngIf="personalizacionForm.get('paginaWeb').invalid && (personalizacionForm.get('paginaWeb').dirty || personalizacionForm.get('paginaWeb').touched)"
+                    class="inline-block max-w-max p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('paginaWeb').errors?.['required']">Este campo es requerido *</span>
                   </div>
                 </div>
+                
 
                 <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="email" class="text-lg font-normal">Correo de contacto</label>
                   <input type="text" id="email" name="email" formControlName="email"
-                    class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <div
+                    *ngIf="personalizacionForm.get('email').invalid && (personalizacionForm.get('email').dirty || personalizacionForm.get('email').touched)"
+                    class="inline-block max-w-max p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('email').errors?.['required']">Este campo es requerido *</span>
+                    <span *ngIf="personalizacionForm.get('email').errors?.['email']">Ingrese un correo electrónico válido</span>
                   </div>
                 </div>
 
                 <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="telefono" class="text-lg font-normal">Telefono</label>
-                  <input type="text" id="telefono" name="telefono" formControlName="telefono"
-                    class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                  <input type="number" id="telefono" name="telefono" formControlName="telefono"
+                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <div
+                    *ngIf="personalizacionForm.get('telefono').invalid && (personalizacionForm.get('telefono').dirty || personalizacionForm.get('telefono').touched)"
+                    class="inline-block max-w-max p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('telefono').errors?.['required']">Este campo es requerido *</span>
                   </div>
                 </div>
+
                 <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="direccion" class="text-lg font-normal">Dirección</label>
                   <input type="text" id="direccion" name="direccion" formControlName="direccion"
-                    class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <div
+                    *ngIf="personalizacionForm.get('direccion').invalid && (personalizacionForm.get('direccion').dirty || personalizacionForm.get('direccion').touched)"
+                    class="inline-block max-w-max p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('direccion').errors?.['required']">Este campo es requerido *</span>
                   </div>
                 </div>
+
                 <div class="flex flex-col space-y-1 max-w-xs">
                   <label for="ubicacion" class="text-lg font-normal">Ubicación</label>
                   <input type="text" id="ubicacion" name="ubicacion" formControlName="ubicacion"
-                    class=" p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  <div class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <div
+                    *ngIf="personalizacionForm.get('ubicacion').invalid && (personalizacionForm.get('ubicacion').dirty || personalizacionForm.get('ubicacion').touched)"
+                    class="inline-block max-w-max p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('ubicacion').errors?.['required']">Este campo es requerido *</span>
                   </div>
                 </div>
               </div>
             </form>
           </div>
         </div>
-        <div class="flex justify-center h-auto space-x-4">
+        <div class="flex justify-center space-x-4 items-center h-auto">
           <button type="button" (click)="next()"
             class="py-2 px-4 sm:px-16 bg-[#FA7D00] mb-4 text-base sm:text-xl text-white font-bold rounded-full transition duration-300">
             <span class="px-2">Siguiente</span>
+          </button>
+        </div>
+        <div class="flex justify-center items-center lg:justify-end">
+          <span class="mr-3 text-[#FA7D00] text-[20px] italic mb-1" style="font-weight: 900;">Restaurar</span>
+          <button type="button" (click)="restorePersonalizacion()"
+            class="flex items-center py-2 px-4 sm:px-16 bg-[#FA7D00] rounded-full transition duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+              class="h-5 w-5 sm:h-6 sm:w-6 fill-current text-white">
+              <path
+                d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z" />
+            </svg>
           </button>
         </div>
       </div>
     </div>
   </ng-container>
 
+
+
+<!-- segunda seccion -->
   <ng-container *ngIf="currentIndex === 1">
     <div *ngIf="currentSubSectionIndex === 0">
       <div class="space-y-8 max-w-full md:px-8">
@@ -115,10 +153,7 @@
             <form action="" [formGroup]="personalizacionForm" (ngSubmit)="addPersonalizacion()">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <!-- Logo -->
-                <div class="col-span-1 max-md:mb-4
-                
-                
-                ">
+                <div class="col-span-1 max-md:mb-4">
                   <label class="text-lg font-normal">Logo</label>
                   <div class="bg-white p-4 rounded-lg shadow-lg h-full">
                     <label class="relative cursor-pointer flex flex-row items-center">
@@ -135,19 +170,34 @@
                         <img [src]="previewUrl" alt="Logo preview" *ngIf="previewUrl"
                           class="imagen w-full rounded-lg bg-zinc-200" />
                       </div>
+                      <div
+                        *ngIf="personalizacionForm.get('imagen_logo').invalid && (personalizacionForm.get('imagen_logo').dirty || personalizacionForm.get('imagen_logo').touched)"
+                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                        <span *ngIf="personalizacionForm.get('imagen_logo').errors?.['required']">Este campo es
+                          requerido *</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              
+
                 <!-- Nombre de la empresa -->
                 <div class="col-span-1 mt-12 lg:mt-20">
-                  <label for="nombre" class="text-lg font-normal">Nombre de la empresa</label>
-                  <input type="text" id="nombre_sistema" name="nombre_sistema" formControlName="nombre_sistema"
-                    class="p-2 w-full h-10 mb-6 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-                  
+                  <div>
+                    <label for="nombre" class="text-lg font-normal">Nombre de la empresa</label>
+                    <input type="text" id="nombre_sistema" name="nombre_sistema" formControlName="nombre_sistema"
+                      class="p-2 w-full h-10 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                    <!-- Error message -->
+                    <div
+                      *ngIf="personalizacionForm.get('nombre_sistema').invalid && (personalizacionForm.get('nombre_sistema').dirty || personalizacionForm.get('nombre_sistema').touched)"
+                      class="inline-block p-1 mt-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                      <span *ngIf="personalizacionForm.get('nombre_sistema').errors?.['required']">Este campo es
+                        requerido *</span>
+                    </div>
+                  </div>
+
                   <!-- Color Principal -->
                   <label class="text-lg font-normal">Color Principal - Para Menu lateral</label>
-                  <div class="flex content-center mb-2 md:mb-0 w-full">
+                  <div class="flex content-center w-full">
                     <div class="w-24 h-10 rounded-l" [style.background]="selectedColorPrincipal"
                       [(colorPicker)]="selectedColorPrincipal" [cpOKButton]="true"
                       (colorPickerChange)="onColorChangePrincipal($event)"
@@ -155,14 +205,21 @@
                       [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
                       [cpCancelButtonText]="'Cancelar'"></div>
                     <input type="text"
-                      class="p-2 w-full h-10 mb-6 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                      class="p-2 w-full h-10 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
                       id="color_principal" name="color_principal" formControlName="color_principal"
                       [value]="selectedColorPrincipal" readonly>
                   </div>
-              
+                  <!-- Error message -->
+                  <div
+                    *ngIf="personalizacionForm.get('color_principal').invalid && (personalizacionForm.get('color_principal').dirty || personalizacionForm.get('color_principal').touched)"
+                    class="inline-block p-1 mt-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('color_principal').errors?.['required']">Este campo es
+                      requerido *</span>
+                  </div>
+
                   <!-- Color Secundario -->
                   <label class="text-lg font-normal">Color Secundario - Linea del menu lateral</label>
-                  <div class="flex content-center mb-6 md:mb-2 w-full">
+                  <div class="flex content-center mb-2 w-full">
                     <div class="w-24 h-10 rounded-l" [style.background]="selectedColorSecundario"
                       [(colorPicker)]="selectedColorSecundario" [cpOKButton]="true"
                       (colorPickerChange)="onColorChangeSecundario($event)"
@@ -170,23 +227,20 @@
                       [cpCancelButton]="true" [cpCancelButtonClass]="'bg-red-500 rounded-lg text-sm'"
                       [cpCancelButtonText]="'Cancelar'"></div>
                     <input type="text"
-                      class="p-2 w-full h-10 mb-6 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+                      class="p-2 w-full h-10 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
                       id="color_secundario" formControlName="color_secundario" name="color_secundario"
                       [value]="selectedColorSecundario" readonly>
+                  </div>
+                  <!-- Error message -->
+                  <div
+                    *ngIf="personalizacionForm.get('color_secundario').invalid && (personalizacionForm.get('color_secundario').dirty || personalizacionForm.get('color_secundario').touched)"
+                    class="inline-block p-1 mt-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                    <span *ngIf="personalizacionForm.get('color_secundario').errors?.['required']">Este campo es
+                      requerido *</span>
                   </div>
                 </div>
               </div>
             </form>
-          </div>
-          <div class="flex justify-center items-center lg:justify-end">
-            <span class="mr-3 text-[#FA7D00] text-[20px] italic mb-1" style="font-weight: 900;">Restaurar</span>
-            <button type="button" (click)="restorePersonalizacion()"
-              class="flex items-center py-2 px-4 sm:px-16 bg-[#FA7D00] rounded-full transition duration-300">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-5 w-5 sm:h-6 sm:w-6 fill-current text-white">
-                <path
-                  d="M0 224c0 17.7 14.3 32 32 32s32-14.3 32-32c0-53 43-96 96-96H320v32c0 12.9 7.8 24.6 19.8 29.6s25.7 2.2 34.9-6.9l64-64c12.5-12.5 12.5-32.8 0-45.3l-64-64c-9.2-9.2-22.9-11.9-34.9-6.9S320 19.1 320 32V64H160C71.6 64 0 135.6 0 224zm512 64c0-17.7-14.3-32-32-32s-32 14.3-32 32c0 53-43 96-96 96H192V352c0-12.9-7.8-24.6-19.8-29.6s-25.7-2.2-34.9 6.9l-64 64c-12.5 12.5-12.5 32.8 0 45.3l64 64c9.2 9.2 22.9 11.9 34.9 6.9s19.8-16.6 19.8-29.6V448H352c88.4 0 160-71.6 160-160z" />
-              </svg>
-            </button>
           </div>
           
         </div>

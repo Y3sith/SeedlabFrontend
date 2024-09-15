@@ -67,7 +67,7 @@ export class PerfilAliadoComponent implements OnInit {
       ruta_multi: [null, Validators.required],
       id_tipo_dato: [Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [Validators.minLength(8)]], 
       estado: [true]
       
     });
@@ -308,29 +308,16 @@ export class PerfilAliadoComponent implements OnInit {
   }
 
   upadateAliado(): void {
-    if (this.idAliado == null){
-      if (this.aliadoForm.invalid || this.bannerForm.invalid) {
-        // Mostrar alert si algún formulario es inválido
-        this.alertService.errorAlert('Error', 'Por favor, completa todos los campos requeridos.');
-  
-        this.formSubmitted = true;
-  
-      if (this.aliadoForm.invalid) {
-        this.formSubmitted = true;
-        console.log("aqui",this.formSubmitted)   
-        return; // Detiene la ejecución si el formulario es inválido
-      }
-        
-        console.error('Formulario inválido');
-        console.log('Errores aliadoForm:', this.getFormValidationErrors(this.aliadoForm));
-        console.log('Errores bannerForm:', this.getFormValidationErrors(this.bannerForm));
-        return;
-       }
+    if (this.aliadoForm.invalid || this.bannerForm.invalid) {
+      console.log("Formulario Invalido", this.aliadoForm.value);
+      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos.');
+      this.formSubmitted = true;
+      return; // Detener si el formulario es inválido
     }
-
-    
+  
     const formData = new FormData();
     let estadoValue: string;
+  
     if (this.idAliado == null) {
       // Es un nuevo aliado, forzar el estado a 'true'
       estadoValue = 'true';
@@ -339,44 +326,64 @@ export class PerfilAliadoComponent implements OnInit {
       estadoValue = this.aliadoForm.get('estado')?.value ? 'true' : 'false';
     }
   
-    console.log('Estado antes de crear FormData:', estadoValue);
-    
-    formData.append('nombre', this.aliadoForm.get('nombre')?.value);
-    formData.append('descripcion', this.aliadoForm.get('descripcion')?.value);
-    formData.append('id_tipo_dato', this.aliadoForm.get('id_tipo_dato')?.value);
-    formData.append('email', this.aliadoForm.get('email')?.value);
-    formData.append('password', this.aliadoForm.get('password')?.value);
-    formData.append('estado', estadoValue);
-
-
+    // Manejar los campos especiales y evitar duplicaciones
+    Object.keys(this.aliadoForm.controls).forEach((key) => {
+      const control = this.aliadoForm.get(key);
+      if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
+        if (key === 'password') {
+          // Solo incluir la contraseña si no está vacía
+          if (control.value.trim() !== '') {
+            formData.append(key, control.value);
+          }
+        } else if (key === 'estado') {
+          formData.append(key, control.value ? 'true' : 'false');
+        } else {
+          formData.append(key, control.value);
+        }
+      }
+    });
+  
+    // Agregar campos específicos que se deben asegurar que estén en el FormData
+    const specificFields = ['nombre', 'descripcion', 'email', 'id_tipo_dato'];
+    specificFields.forEach(field => {
+      const value = this.aliadoForm.get(field)?.value;
+      if (value !== null && value !== undefined && value !== '') {
+        formData.append(field, value);
+      }
+    });
+  
     if (this.selectedLogo) {
       formData.append('logo', this.selectedLogo, this.selectedLogo.name);
     }
-
-
-    
+  
     if (this.selectedruta) {
       formData.append('ruta_multi', this.selectedruta, this.selectedruta.name);
-    } else{
+    } else {
       const rutaMultiValue = this.aliadoForm.get('ruta_multi')?.value;
       if (rutaMultiValue) {
         formData.append('ruta_multi', rutaMultiValue);
+      }
     }
+  
+    // Mostrar alerta de confirmación antes de proceder con la actualización
+    this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
+      if (result.isConfirmed) {
+        this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
+          (data) => {
+            console.log('Respuesta del servidor:', data);
+            setTimeout(() => {
+              location.reload();
+            }, this.tiempoEspera);
+            this.alertService.successAlert('Éxito', data.message);
+          },
+          (error) => {
+            console.error('Error desde el servidor:', error);
+            this.alertService.errorAlert('Error', error.error.message);
+          }
+        );
+      }
+    });
   }
-   
-    this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
-      data =>{
-        console.log("ACTUALIZAAAAAA", data);
-        this.alertService.successAlert('Exito', data.message);
-        location.reload();
-      },
-      error => {
-        console.error(error);
-        this.alertService.successAlert('Error', error.error.message);
-
-      });
-  }
-
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }

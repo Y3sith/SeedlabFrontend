@@ -188,13 +188,16 @@
 
 
                         <label for="id_municipio" class="block mb-2 mt-4">Municipio</label>
-                        <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
-                            [disabled]="blockedInputs"
-                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
-                            <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
-                                {{ municipio.nombre }}
-                            </option>
-                        </select>
+                            <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
+                                [disabled]="blockedInputs"
+                                class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
+                                <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
+                                    {{ municipio.nombre }}
+                                </option>
+                            </select>
+                            <div *ngIf="submitted && f['id_municipio'].errors" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                <div *ngIf="f['id_municipio'].errors['required']">Este campo es requerido *</div>
+                            </div>
 
                         <label for="direccion" class="block mb-2 mt-4">Dirección</label>
                         <input type="text" id="direccion" formControlName="direccion" [readonly]="blockedInputs"

@@ -6,7 +6,7 @@
       </svg>
       Volver
     </button>
-    <app-header [title] [subtitle]="'Agregar empresa y apoyos'"></app-header>
+    <app-header [title] [subtitle]="'Aliados'"></app-header>
   </header>
 
 
@@ -39,7 +39,7 @@
           </label>
           <div *ngIf="formSubmitted && aliadoForm.get('logo')?.invalid" class="text-center w-full mt-2">
             <span class="inline-block p-1 text-sm text-red-500 rounded-lg bg-red-50">
-              Este campo es requerido.
+              Este campo es requerido*.
             </span>
           </div>
         </div>
@@ -56,7 +56,7 @@
               class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
             <div *ngIf="formSubmitted && aliadoForm.get('nombre')?.invalid"
               class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-              Este campo es requerido.
+              Este campo es requerido*.
             </div>
           </div>
           <!-- Campo Correo Electrónico -->
@@ -66,7 +66,7 @@
               class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
             <div *ngIf="formSubmitted && aliadoForm.get('email')?.invalid"
               class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-              Este campo es requerido.
+              Este campo es requerido*.
             </div>
           </div>
           <!-- Campo Contraseña -->
@@ -84,7 +84,7 @@
                 </div>
                 <div *ngIf="formSubmitted && aliadoForm.get('password')?.invalid"
                   class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                  Este campo es requerido.
+                  Este campo es requerido*.
                 </div>
               </div>
             </div>
@@ -116,7 +116,7 @@
               class=" mt-1 w-full px-2 py-1 h-40 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200  hover:bg-blue-100 focus:bg-blue-100"></textarea>
             <div *ngIf="formSubmitted && aliadoForm.get('descripcion')?.invalid"
               class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-              Este campo es requerido.
+              Este campo es requerido*.
             </div>
           </div>
 
@@ -131,7 +131,7 @@
             </select>
             <div *ngIf="formSubmitted && aliadoForm.get('id_tipo_dato')?.errors?.['required']"
               class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-              Este campo es requerido.
+              Este campo es requerido*.
             </div>
           </div>
 
@@ -144,7 +144,7 @@
                 class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
                 class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido.
+                Este campo es requerido*.
               </div>
             </div>
 
@@ -166,7 +166,7 @@
               </div>
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
                 class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido.
+                Este campo es requerido*.
               </div>
             </div>
 
@@ -182,7 +182,7 @@
 
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
                 class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido.
+                Este campo es requerido*.
               </div>
               <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
                 Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
@@ -195,7 +195,7 @@
                 class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
               <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
                 class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
-                Este campo es requerido.
+                Este campo es requerido*.
               </div>
             </div>
           </ng-container>
@@ -215,7 +215,7 @@
 
                 <div *ngIf="formSubmitted && bannerForm.get('urlImagen')?.invalid"
                   class="mt-2 px-2 py-1 text-sm text-red-500 bg-red-50 rounded-lg self-start">
-                  Este campo es requerido.
+                  Este campo es requerido*.
                 </div>
               </div>
 
