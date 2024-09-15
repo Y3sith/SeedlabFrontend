@@ -133,7 +133,7 @@
                         
                         <form [formGroup]="leccionForm">
                             <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
-                                Agregar lección</h2>
+                                {{ isEditing ? 'Lección' : 'Agregar Lección' }}</h2>
                             <div class="mb-4" *ngIf="!isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para
                                     crear la lección</label>
@@ -173,7 +173,7 @@
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">Agregar Lección</span>
+                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar Lección' }}</span>
                                 <a id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
@@ -330,7 +330,7 @@
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">Agregar Contenido</span>
+                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar Contenido' }}</span>
                                 <a id="agregarContenidoBtn" (click)="addContenidoLeccionSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
