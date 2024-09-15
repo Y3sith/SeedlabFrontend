@@ -227,16 +227,6 @@ export class PerfilOrientadorComponent {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
   
-        //   this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
-        //     data => {
-        //       console.log("personalizacion creada", data);
-        //       location.reload();
-        //     },
-        //     error => {
-        //       console.error("no funciona", error);
-        //     }
-        //   );
-        // }
 
         this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
           if (result.isConfirmed) {
