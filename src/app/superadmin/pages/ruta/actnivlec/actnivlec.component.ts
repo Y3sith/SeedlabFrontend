@@ -70,6 +70,7 @@ export class ActnivlecComponent implements OnInit {
   leccioon: any[] = [];
   isEditing: any;
   contenidoLeccion: any[] = [];
+  selectedFromInput:any;
 
   showVideo: boolean = false;
   showImagen: boolean = false;
@@ -87,7 +88,7 @@ export class ActnivlecComponent implements OnInit {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: [],
+    id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
@@ -164,6 +165,7 @@ export class ActnivlecComponent implements OnInit {
   if (idLeccion) {
     this.onLeccionChange(idLeccion); // Llama la función que carga las lecciones
   }
+  this.selectedFromInput = false;
   }
   validateToken(): void {
     if (!this.token) {
@@ -318,9 +320,10 @@ export class ActnivlecComponent implements OnInit {
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
               });
+              
               this.niveles = data.nivel;
               this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
-
+              this.selectedFromInput = false;
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
@@ -914,6 +917,7 @@ export class ActnivlecComponent implements OnInit {
       }
 
       this.selectedfuente = file;
+      this.selectedFromInput = true;
       this.actividadForm.patchValue({ fuente: file });
     } else {
       this.resetFileField('fuente');

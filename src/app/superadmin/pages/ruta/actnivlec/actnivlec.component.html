@@ -58,7 +58,7 @@
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
                                 </div>
-                                <div *ngIf="actividadForm.get('fuente')?.value" class="mt-2 text-gray-500 text-center">
+                                <div *ngIf="actividadForm.get('fuente')?.value && selectedFromInput" class="mt-2 text-gray-500 text-center">
                                     Archivo seleccionado: {{ selectedfuente?.name }}
                                 </div>
                             </div>
