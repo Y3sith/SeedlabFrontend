@@ -56,7 +56,7 @@ export class PerfilOrientadorComponent {
     nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
     apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
     celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
-    imagen_perfil: [null ,Validators.required],
+    imagen_perfil: [Validators.required],
     email: ['', [Validators.required, Validators.email, this.emailValidator]],
     password: ['', [Validators.minLength(8)]],
     genero: ['', Validators.required],
@@ -183,10 +183,6 @@ export class PerfilOrientadorComponent {
       console.log("Formulario Invalido", this.perfilorientadorForm.value);
       this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
       this.submitted = true;
-    }
-    error=>{
-      console.log("Error al actualizar", error);
-    
       return
     }
   
@@ -209,6 +205,7 @@ export class PerfilOrientadorComponent {
         } else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
         }
+
       }
     });
   
@@ -334,7 +331,8 @@ export class PerfilOrientadorComponent {
 
     // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
-
+    this.perfilorientadorForm.get('id_municipio')?.setValue(null);
+    this.listMunicipios = [];
     // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
