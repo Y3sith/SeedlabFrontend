@@ -78,6 +78,12 @@ export class RutaService {
     return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
   }
 
+  
+  actividadCompletaxruta(access_token:any, idRuta: number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/actividadcompleta/'+idRuta,options)
+  }
+
   ruta(access_token:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.http.get(this.url+'/rutas',options)

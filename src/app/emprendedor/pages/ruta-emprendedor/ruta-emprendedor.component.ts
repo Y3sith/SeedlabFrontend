@@ -117,7 +117,7 @@ export class RutaEmprendedorComponent implements OnInit {
 
   listarRutas():void {
     console.log('RUTAAAAAAAAAAAAAAAAA:', this.rutaId);
-    this.rutaService.actnivleccontXruta(this.token, this.rutaId).subscribe(
+    this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
       data=> {
         this.rutaLista = data;
         console.log('Rutas activas:', this.rutaLista);
