@@ -26,6 +26,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
 import { TodosLosAliadosComponent } from './pages/todos-los-aliados/todos-los-aliados.component';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { RutaAliadoComponent } from './pages/ruta-aliado/ruta-aliado.component';
 
 
 
@@ -44,6 +45,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     AddBannerComponent,
     ReportesComponent,
     TodosLosAliadosComponent,
+    RutaAliadoComponent,
     
   ],
   imports: [
