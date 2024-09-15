@@ -58,7 +58,7 @@
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
                                 </div>
-                                <div *ngIf="actividadForm.get('fuente')?.value" class="mt-2 text-gray-500 text-center">
+                                <div *ngIf="actividadForm.get('fuente')?.value && selectedFromInput" class="mt-2 text-gray-500 text-center">
                                     Archivo seleccionado: {{ selectedfuente?.name }}
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">Agregar nivel</span>
+                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar nivel' }}</span>
                                 <a id="agregarNivelBtn" (click)="addNivelSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
@@ -133,7 +133,7 @@
                         
                         <form [formGroup]="leccionForm">
                             <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
-                                Agregar lección</h2>
+                                {{ isEditing ? 'Lección' : 'Agregar Lección' }}</h2>
                             <div class="mb-4" *ngIf="!isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para
                                     crear la lección</label>
@@ -173,7 +173,7 @@
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">Agregar Lección</span>
+                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar Lección' }}</span>
                                 <a id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
@@ -187,7 +187,7 @@
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Contenido
                         </h2>
                         <form [formGroup]="contenidoLeccionForm">
-                            <h3 class="text-lg text-center font-semibold mb-2 font-poppins">Agregar contenido a la
+                            <h3 *ngIf="!isEditing" class="text-lg text-center font-semibold mb-2 font-poppins">Agregar contenido a la
                                 lección</h3>
                             <div class="mb-4" *ngIf="!isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para
@@ -204,11 +204,11 @@
                             <div class="mb-4" *ngIf="isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el Contenido para
                                     editar</label>
-                                <select formControlName="" (change)="onContenidoSelect($event.target.value)"
+                                <select formControlName="id_contenido" (change)="onContenidoSelect($event.target.value)"
                                     class="w-full p-2 border rounded">
                                     <option *ngFor="let contenido of contenidoLeccion" [value]="contenido.id">
                                         {{contenido.titulo}}</option>
-                                    <option value="">Agrega un contenido Nuevo</option>
+                                    <option value="nuevo">Agrega un contenido Nuevo</option>
                                 </select>
                                 <div *ngIf="submittedContent && cl.id_leccion.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
@@ -330,7 +330,7 @@
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">Agregar Contenido</span>
+                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar Contenido' }}</span>
                                 <a id="agregarContenidoBtn" (click)="addContenidoLeccionSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>

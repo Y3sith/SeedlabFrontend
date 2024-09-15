@@ -70,6 +70,7 @@ export class ActnivlecComponent implements OnInit {
   leccioon: any[] = [];
   isEditing: any;
   contenidoLeccion: any[] = [];
+  selectedFromInput:any;
 
   showVideo: boolean = false;
   showImagen: boolean = false;
@@ -78,6 +79,7 @@ export class ActnivlecComponent implements OnInit {
   Number = Number;
 
   selectedNivelId: any | null = null;
+  selectedLeccion: any | null = null;
 
   ////añadir actividad
   actividadForm = this.fb.group({
@@ -86,7 +88,7 @@ export class ActnivlecComponent implements OnInit {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: [],
+    id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
@@ -147,8 +149,6 @@ export class ActnivlecComponent implements OnInit {
       }
       if (params['isEditing']) {
         this.isEditing = params['isEditing'] === 'true';
-        // Aquí puedes usar this.isEditing para determinar si estás en modo edición
-        // Por ejemplo, puedes cambiar el título de la página o habilitar/deshabilitar campos
       }
     });
     this.tipoDato();
@@ -165,6 +165,7 @@ export class ActnivlecComponent implements OnInit {
   if (idLeccion) {
     this.onLeccionChange(idLeccion); // Llama la función que carga las lecciones
   }
+  this.selectedFromInput = false;
   }
   validateToken(): void {
     if (!this.token) {
@@ -287,20 +288,7 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-  verNivel(): void {
-    if (this.token) {
-      this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
-        data => {
-          this.listarNiveles = data;
-          this.niveles = data;
-          console.log('Niveles: ', data);
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    }
-  }
+  
   verEditar(): void {
     if (this.actividadId !== null) {
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
@@ -314,14 +302,15 @@ export class ActnivlecComponent implements OnInit {
                 nombre: data.nombre,
                 descripcion: data.descripcion,
                 id_tipo_dato: data.id_tipo_dato,
-                id_asesor: data.id_asesor,
+                id_asesor: data.id_asesor ? data.id_asesor : '',
                 id_aliado: data.id_aliado,
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
               });
+              
               this.niveles = data.nivel;
               this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
-
+              this.selectedFromInput = false;
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
@@ -347,7 +336,7 @@ export class ActnivlecComponent implements OnInit {
         id_nivel: primerNivel.id,
         nombre: primerNivel.nombre
       });
-      this.nivelForm.get('nombre')?.disable();
+      //this.nivelForm.disable();
 
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
@@ -357,7 +346,7 @@ export class ActnivlecComponent implements OnInit {
         id_nivel: '',
         nombre: ''
       });
-      this.nivelForm.get('nombre')?.enable();
+      this.nivelForm.get('nombre')?.disable();
     } 
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
@@ -417,7 +406,7 @@ export class ActnivlecComponent implements OnInit {
             (data: any) => {
               const actividadCreada = data[0];
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-              this.mostrarNivelForm = true;
+              //this.mostrarNivelForm = true;
               this.alertServices.successAlert('Exito', data.message);
               this.desactivarcamposActividad();
               console.log('datos enviados: ', data)
@@ -451,13 +440,11 @@ export class ActnivlecComponent implements OnInit {
 
   desactivarcamposActividad(): void {
     this.actividadForm.disable();
-
     const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
     if (guardarBtn) {
       guardarBtn.disabled = true;
       guardarBtn.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
     }
-
     const fuente = document.getElementById('fuente') as HTMLButtonElement;
     if (fuente) {
       fuente.disabled = true;
@@ -504,19 +491,38 @@ export class ActnivlecComponent implements OnInit {
       agregarNivelBtn.style.pointerEvents = 'auto';
       agregarNivelBtn.style.opacity = '1';
     }
-
     const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
     if (agregarLeccionBtn) {
       agregarLeccionBtn.style.pointerEvents = 'auto';
       agregarLeccionBtn.style.opacity = '1';
     }
-
     const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
     if (agregarContenidoBtn) {
       agregarContenidoBtn.style.pointerEvents = 'auto';
       agregarContenidoBtn.style.opacity = '1';
     }
+  }
+  verNivel(): void {
+    if (this.token) {
+      this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
+        data => {
+          this.listarNiveles = data;
+          this.niveles = data;
+          console.log('Niveles: ', data);
 
+
+          if (this.isEditing && this.niveles && this.niveles.length > 0) {
+            this.nivelForm.patchValue({
+              id_nivel: this.niveles[0].id,
+              nombre: this.niveles[0].nombre
+            });
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
   }
 
   addNivelSuperAdmin(): void {
@@ -532,11 +538,12 @@ export class ActnivlecComponent implements OnInit {
       //id_actividad: this.actividadId
     };
     console.log("idnivel", this.selectedNivelId);
-    if (this.selectedNivelId) {
+    if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', 'Nivel actualizado correctamente');
+          this.verNivel();
           this.niveles.push({
             id: data.id,
             nombre: data.nombre
@@ -544,7 +551,6 @@ export class ActnivlecComponent implements OnInit {
           this.nivelForm.patchValue({
             id_nivel: data.id
           });
-          this.verNivel();
           this.nivelForm.reset();
           this.submittedNivel = false;
           this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
@@ -587,6 +593,7 @@ export class ActnivlecComponent implements OnInit {
       )
     } 
   }
+
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
@@ -603,9 +610,11 @@ export class ActnivlecComponent implements OnInit {
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
+    //const leccionId = +this.leccionForm.get('id_leccion')?.value;
     const leccionId = +this.leccionForm.get('id_leccion')?.value;
     if (leccionId) {
-      console.log("leccionIddddddddd", leccionId);
+      //console.log("leccionIddddddddd", leccionId);
+      const leccionId = +this.leccionForm.get('id_leccion')?.value;
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
@@ -629,8 +638,8 @@ export class ActnivlecComponent implements OnInit {
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
-          this.verLeccicon();
-          this.mostrarContenidoLeccionForm = true;
+          //this.verLeccicon();
+          //this.mostrarContenidoLeccionForm = true;
           //this.mostrarContenidoLeccionForm = true;
           this.leccionForm.reset();
           this.submittedLeccion = false;
@@ -676,7 +685,7 @@ export class ActnivlecComponent implements OnInit {
     this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
-        if (data.length > 0) {
+        if (this.isEditing && data.length > 0) {
           // Seleccionar la primera lección si existe
           const primeraLeccion = data[0];
           this.leccionForm.patchValue({
@@ -718,47 +727,41 @@ export class ActnivlecComponent implements OnInit {
         //id_leccion: '',
         nombre: ''
       });
-    }
+      this.contenidoLeccionForm.patchValue({
+        titulo: '',
+        descripcion: '',
+        id_contenido: '',
+        id_leccion: '',
+        id_tipo_dato: ''
+      })
+      this.contenidoLeccion = [];
+    } 
 
     console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
     console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
-
-
-  // cargarContenidoLeccion(id_leccion: number):any{
-  //   this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
-  //     data => {
-  //       this.contenidoLeccion = data;
-  //       console.log('Contenido de la lección:', data);
-
-  //       const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
-  //       this.contenidoLeccionForm.patchValue({
-  //         id_leccion: currentIdLeccion,
-  //         id_tipo_dato: data.id_tipo_dato,
-  //         fuente_contenido: data.fuente_contenido
-  //       });
-
-  //       this.onTipoDatoChangeContenido();
-  //     },
-  //     error => {
-  //       console.error('Error al cargar el contenido de la lección:', error);
-  //     }
-  //   )
-  // }
   cargarContenidoLeccion(id_leccion: number): void {
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
         console.log('Contenido de la lección:', data);
-
-        // Mantener el id_leccion actual
-        this.contenidoLeccionForm.patchValue({
-          id_leccion: id_leccion.toString(),
-          id_tipo_dato: '',
-          fuente_contenido: ''
-        });
-
+        if (this.isEditing && data.length > 0) {
+          const primerContenido = data[0];
+          this.contenidoLeccionForm.patchValue({
+            id_leccion: id_leccion.toString(),
+            id_contenido: primerContenido.id.toString(),
+            titulo: primerContenido.titulo,
+            descripcion: primerContenido.descripcion,
+            id_tipo_dato: primerContenido.id_tipo_dato,
+            fuente_contenido: primerContenido.fuente_contenido
+          });
+        } else {
+          // Limpiar todos los campos excepto id_leccion
+          this.contenidoLeccionForm.reset({
+            id_leccion: id_leccion.toString(), // Mantén solo el id_leccion
+          });
+        }
         this.onTipoDatoChangeContenido();
       },
       error => {
@@ -766,23 +769,20 @@ export class ActnivlecComponent implements OnInit {
       }
     );
   }
-
-  // onNivelSelect(event: any): void {
-  //   const selectedNivelId = event.target.value;
-  //   const selectedNivel = this.niveles.find(nivel => nivel.id === parseInt(selectedNivelId));
-  //   if (selectedNivel) {
-  //     this.nivelForm.patchValue({
-  //       id_nivel: selectedNivel.id,
-  //       nombre: selectedNivel.nombre
-  //     });
-  //   }
-  // }
   onNivelSelect(event: any): void {
     const selectedNivelId = event.target.value;
     this.selectedNivelId = selectedNivelId !== '0' ? parseInt(selectedNivelId) : null;
     if (selectedNivelId === '0' ) {
       this.nivelForm.patchValue({ nombre: '', id_nivel: 0 });
       this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
+      this.contenidoLeccionForm.patchValue({
+        titulo: '',
+        descripcion: '',
+        id_contenido: '',
+        id_leccion: '',
+        id_tipo_dato: ''
+      })
+      this.contenidoLeccion = [];
     } else {
       const selectedNivel = this.niveles.find(nivel => nivel.id === parseInt(selectedNivelId));
       if (selectedNivel) {
@@ -841,6 +841,7 @@ export class ActnivlecComponent implements OnInit {
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           console.log('datos recibidos: ', data);
+          this.cargarContenidoLeccion(contenidoLeccionId);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();
@@ -851,8 +852,10 @@ export class ActnivlecComponent implements OnInit {
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
           console.log('datos recibidos: ', data);
+          this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
+          
           //location.reload();
         },
         error => {
@@ -861,93 +864,32 @@ export class ActnivlecComponent implements OnInit {
       )
     }
   }
-
-  // onContenidoSelect(contenidoId: string): void {
-  //   if (contenidoId) {
-  //     const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
-  //     if (selectedContenido) {
-  //       this.contenidoLeccionForm.patchValue({
-  //         id_contenido: selectedContenido.id,
-  //         titulo: selectedContenido.titulo,
-  //         descripcion: selectedContenido.descripcion,
-  //         id_tipo_dato: selectedContenido.id_tipo_dato,
-  //         fuente_contenido: selectedContenido.fuente_contenido
-  //       });
-
-  //       // Si tienes un campo para mostrar el nombre del archivo seleccionado
-  //       //this.selectedfuenteContenido = { name: selectedContenido.fuente_contenido.split('/').pop() };
-
-  //       // Actualizar la vista del formulario
-  //       this.contenidoLeccionForm.get('id_tipo_dato').updateValueAndValidity();
-  //       this.contenidoLeccionForm.get('id_tipo_dato').markAsTouched();
-  //     }
-  //   } else {
-  //     // Limpiar el formulario si no se selecciona ningún contenido
-  //     this.contenidoLeccionForm.reset({
-  //       id_leccion: this.contenidoLeccionForm.get('id_leccion').value
-  //     });
-  //     this.selectedfuenteContenido = null;
-  //   }
-  // }
-  // onContenidoSelect(contenidoId: string): void {
-  //   const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
-  //   if (contenidoId && contenidoId !== '') {
-  //     const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
-  //     if (selectedContenido) {
-  //       this.contenidoLeccionForm.patchValue({
-  //         id_leccion: selectedContenido.id_leccion,
-  //         id_contenido: selectedContenido.id,
-  //         titulo: selectedContenido.titulo,
-  //         descripcion: selectedContenido.descripcion,
-  //         id_tipo_dato: selectedContenido.id_tipo_dato,
-  //         fuente_contenido: selectedContenido.fuente_contenido
-  //       });
-  //       this.contenidoLeccionForm.get('fuente_contenido').enable();
-  //       console.log('Fuente de contenido seleccionada:', selectedContenido.fuente_contenido);
-  //     }
-  //   } else {
-  //     this.contenidoLeccionForm.reset({
-  //       id_leccion: currentIdLeccion, // Mantener el id_leccion actual
-  //       id_contenido: null,
-  //       titulo: '',
-  //       descripcion: '',
-  //       id_tipo_dato: '',
-  //       fuente_contenido: ''
-  //     });
-  //   //this.selectedfuenteContenido = null;
-  //   }
-  //   console.log('id_leccion después de seleccionar contenido:', this.contenidoLeccionForm.get('id_leccion').value);
-
-  // }
   onContenidoSelect(contenidoId: string): void {
-    // Guardar el id_leccion actual antes de cualquier cambio
-    const currentIdLeccion = this.leccionForm.get('id_leccion').value;
-
-    if (contenidoId && contenidoId !== '') {
-      const selectedContenido = this.contenidoLeccion.find(c => c.id === parseInt(contenidoId));
+    const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
+  
+    if (contenidoId === 'nuevo') {
+      // Si se selecciona "Agregar contenido nuevo"
+      this.contenidoLeccionForm.patchValue({
+        id_leccion: currentIdLeccion,
+        id_contenido: 'nuevo',
+        titulo: '',
+        descripcion: '',
+        id_tipo_dato: '',
+        fuente_contenido: ''
+      });
+    } else if (contenidoId) {
+      const selectedContenido = this.contenidoLeccion.find(c => c.id.toString() === contenidoId);
       if (selectedContenido) {
         this.contenidoLeccionForm.patchValue({
-          id_leccion: currentIdLeccion, // Usar el id_leccion del formulario de lección
-          id_contenido: selectedContenido.id,
+          id_leccion: currentIdLeccion,
+          id_contenido: selectedContenido.id.toString(),
           titulo: selectedContenido.titulo,
           descripcion: selectedContenido.descripcion,
           id_tipo_dato: selectedContenido.id_tipo_dato,
           fuente_contenido: selectedContenido.fuente_contenido
         });
       }
-    } else {
-      // Si se selecciona "Agregar un contenido Nuevo"
-      this.contenidoLeccionForm.reset({
-        id_leccion: currentIdLeccion, // Mantener el id_leccion actual
-        id_contenido: null,
-        titulo: '',
-        descripcion: '',
-        id_tipo_dato: '',
-        fuente_contenido: ''
-      });
     }
-
-    console.log('id_leccion después de seleccionar contenido:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
   getTipoDatoNombre(id: string): string {
@@ -987,6 +929,7 @@ export class ActnivlecComponent implements OnInit {
       }
 
       this.selectedfuente = file;
+      this.selectedFromInput = true;
       this.actividadForm.patchValue({ fuente: file });
     } else {
       this.resetFileField('fuente');
@@ -1005,56 +948,17 @@ export class ActnivlecComponent implements OnInit {
 
   ////////////////////////////////////////////////////////////////////////////////////////
 
-  // onTipoDatoChangeContenido(): void {
-  //   const tipoDatoIdContenido = this.contenidoLeccionForm.get('id_tipo_dato').value;
-  //   this.resetFuenteFieldContenido();
-  //   this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
-
-  //   const tipoDatoIdnumber = Number(tipoDatoIdContenido);
-  //   switch (tipoDatoIdnumber) {
-  //     case 1: // Video
-  //     case 2: // Imagen
-  //     case 3: // PDF
-  //     case 4: // Texto
-  //       this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
-  //       break;
-  //     default:
-  //       // Si no es ninguno de los anteriores, elimina cualquier validador
-  //       this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
-  //       break;
-  //   }
-  //   this.contenidoLeccionForm.get('fuente_contenido').updateValueAndValidity();
-  // }
-
   onTipoDatoChangeContenido(): void {
     const tipoDatoIdContenido = this.contenidoLeccionForm.get('id_tipo_dato').value;
     this.resetFuenteFieldContenido();
     this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
 
-    // Resetear todos los flags de visibilidad
-    // this.showVideo = false;
-    // this.showImagen = false;
-    // this.showPdf = false;
-    // this.showTexto = false;
-
     const tipoDatoIdnumber = Number(tipoDatoIdContenido);
     switch (tipoDatoIdnumber) {
       case 1: // Video
-      // this.showVideo = true;
-      // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
-      // break;
       case 2: // Imagen
-      // this.showImagen = true;
-      // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
-      // break;
       case 3: // PDF
-      // this.showPdf = true;
-      // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
-      // break;
       case 4: // Texto
-      // this.showTexto = true;
-      // this.contenidoLeccionForm.get('fuente_contenido').setValidators([Validators.required]);
-      // break;
       default:
         // Si no es ninguno de los anteriores, elimina cualquier validador
         this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
