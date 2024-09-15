@@ -41,6 +41,16 @@
     /*background: rgb(45, 148, 216);*/
 }
 
+.menu {
+    overflow-y: scroll; /* Permite el desplazamiento vertical */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  .menu::-webkit-scrollbar {
+    display: none; /* Oculta la barra de desplazamiento en Chrome, Safari y Opera */
+  }
+  
+
 
 /* Transición del toggle switch */
 .toggle-switch .switch {
