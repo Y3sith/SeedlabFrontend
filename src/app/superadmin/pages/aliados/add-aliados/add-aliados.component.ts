@@ -362,20 +362,21 @@ mostrarToggle(): void {
 }
 
 
-  tipoDato(): void {
-    if (this.token) {
-      this.actividadService.getTipoDato(this.token).subscribe(
-        data => {
-          this.tipoDeDato = data;
-          console.log("DATO",data);
-          //this.obtenerValorBaseDatos();
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    }
+tipoDato(): void {
+  if (this.token) {
+    this.actividadService.getTipoDato(this.token).subscribe(
+      data => {
+        // Filtrar los datos para excluir el tipo de dato con ID 3
+        this.tipoDeDato = data.filter(item => item.id !== 3);
+        console.log("DATO", this.tipoDeDato);
+        //this.obtenerValorBaseDatos();
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
+}
 
   // obtenerValorBaseDatos(): void {
   //   if (this.idAliado) {
@@ -403,12 +404,6 @@ mostrarToggle(): void {
         break;
       case '2': // Imagen
         this.aliadoForm.get('Imagen').setValidators([Validators.required,]);
-        break;
-      case '3': // PDF
-        this.aliadoForm.get('PDF').setValidators([Validators.required,]);
-        break;
-      case '4': // Texto
-        this.aliadoForm.get('Texto').setValidators([Validators.required]);
         break;
       default:
         this.aliadoForm.get('fuente').clearValidators();
