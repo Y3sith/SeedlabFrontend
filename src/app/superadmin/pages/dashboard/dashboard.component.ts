@@ -1,12 +1,9 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
-import { SuperadminService } from '../../../servicios/superadmin.service';
-import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
 
 import { DashboardsService } from '../../../servicios/dashboard.service';
-import { PuntajesService } from '../../../servicios/puntajes.service';
 import { EmpresaService } from '../../../servicios/empresa.service';
 
 @Component({
@@ -37,6 +34,8 @@ export class DashboardComponent implements AfterViewInit {
   isLoading: boolean = false;
   listEmpresas = [];
   selectedEmpresa: string = '';
+  selectedTipo: string = '';
+  chart: any;
 
   constructor(
     private dashboardService: DashboardsService,
@@ -55,6 +54,7 @@ export class DashboardComponent implements AfterViewInit {
     this.getEmpresas();
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.emprendedorPorDepartamento();
+    this.initGraficaVacia();
   }
 
   ngAfterViewInit() {
@@ -94,13 +94,22 @@ export class DashboardComponent implements AfterViewInit {
     this.promedioAsesoriasMesAnio(this.selectedYear);
   }
 
+  onSelectChange(event: any): void {
+    this.selectedTipo = event.target.value; 
+    console.log('Tipo seleccionado:', this.selectedTipo);
+
+    if (this.selectedTipo) {
+      this.graficaPuntajesFormulario(+this.selectedTipo); // Convierte el valor a número y llama a la función
+    }
+  }
+
   getEmpresas() {
     this.empresaService.getAllEmpresa(this.token).subscribe(
       data => {
         console.log('Empresas:', data);
         this.listEmpresas = data;
         this.selectedEmpresa = this.listEmpresas.length > 0 ? this.listEmpresas[0].documento_empresa : null;
-        this.graficaPuntajesFormulario();
+        this.graficaPuntajesFormulario(+this.selectedTipo);
       },
       error => {
         console.error('Error al obtener empresas:', error);
@@ -108,23 +117,19 @@ export class DashboardComponent implements AfterViewInit {
     )
   }
 
-  initChart(elementId: string, options: any): void {
-    const chartDom = document.getElementById(elementId);
-    if (chartDom && options) {
-      const chart = echarts.init(chartDom);
-      chart.setOption(options);
-    } else {
-      console.warn(`No se pudo inicializar el gráfico con id "${elementId}". Verifica que el elemento DOM existe y que los datos están disponibles.`);
-    }
+  initChart(chartId: string, chartOptions: any): void {
+    const chartDom = document.getElementById(chartId);
+    this.chart = echarts.init(chartDom); // Inicializa el gráfico y lo almacena en this.chart
+    this.chart.setOption(chartOptions);
   }
 
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
     console.log('id_empresas:', this.selectedEmpresa);
-    this.graficaPuntajesFormulario();
+    this.graficaPuntajesFormulario(+this.selectedTipo);
   }
 
-  
+
 
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
@@ -376,13 +381,13 @@ export class DashboardComponent implements AfterViewInit {
 
         this.initChart('echarts-doughnut', this.doughnutChartOption);
       },
-        error => {
-          console.log(error);
-        }
+      error => {
+        console.log(error);
+      }
     );
   }
 
-  
+
 
 
   getRegistrosMensuales(): void {
@@ -555,25 +560,60 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
+  initGraficaVacia(): void {
+    // Configuración de la gráfica vacía
+    this.getPuntajesForm = {
+      title: {
+        text: 'Puntajes por Formulario (Sin datos)',
+        left: 'center'
+      },
+      radar: {
+        indicator: [
+          { name: 'General', max: 100 },
+          { name: 'Técnica', max: 100 },
+          { name: 'TRL', max: 9 },
+          { name: 'Mercado', max: 100 },
+          { name: 'Financiera', max: 100 }
+        ]
+      },
+      series: [
+        {
+          name: 'Puntajes',
+          type: 'radar',
+          data: [
+            {
+              value: [0, 0, 0, 0, 0], // Valores vacíos
+              name: 'Sin Empresa Seleccionada'
+            }
+          ]
+        }
+      ]
+    };
+
+    // Renderiza la gráfica vacía al cargar la página
+    this.initChart('echarts-formulario', this.getPuntajesForm);
+  }
 
 
-  
+  graficaPuntajesFormulario(tipo: number): void {
+    if (!this.selectedEmpresa || !tipo) {
+      this.initGraficaVacia();
+      return;
+    }
 
-  graficaPuntajesFormulario(): void {
-    console.log('selectedEmpresa:', this.selectedEmpresa);
-    this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa).subscribe(
+    this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa, tipo).subscribe(
       data => {
         console.log('data puntajes', data);
         this.getPuntajesForm = {
           title: {
-            text: 'Puntajes por Formulario',
+            text: tipo === 1 ? 'Puntajes por Formulario (Primera vez)' : 'Puntajes por Formulario (Segunda vez)',
             left: 'center'
           },
           radar: {
             indicator: [
               { name: 'General', max: 100 },
               { name: 'Técnica', max: 100 },
-              { name: 'TRL', max: 100 },
+              { name: 'TRL', max: 9 },
               { name: 'Mercado', max: 100 },
               { name: 'Financiera', max: 100 }
             ]
@@ -596,14 +636,24 @@ export class DashboardComponent implements AfterViewInit {
               ]
             }
           ]
+        };
+
+        // Actualizar la gráfica con los nuevos datos
+        if (this.chart) {
+          this.chart.dispose(); // Destruye el gráfico anterior antes de crear uno nuevo
         }
         this.initChart('echarts-formulario', this.getPuntajesForm);
       },
-      error => console.error('Error al obtener los puntajes del formulario:', error)
+      error => {
+        console.error('Error al obtener los puntajes del formulario:', error);
+        this.initGraficaVacia();
+      }
+
     );
   }
 
- 
+
+
 
   normalizeName(name: string): string {
     return name.toUpperCase()
