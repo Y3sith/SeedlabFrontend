@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<nav class="p-1 m-0 shadow-xl sidebar font-poppins flex flex-col h-screen" [ngClass]="{ 'expand': isExpanded }" *ngIf="isAuthenticated"
+<nav class="p-1 m-0 shadow-xl sidebar font-poppins flex flex-col" [ngClass]="{ 'expand': isExpanded }" *ngIf="isAuthenticated"
     [style.backgroundColor]="(!isMobile || isExpanded) ? colorPrincipal : 'white'">
     <header class="relative">
         <div class="toggle absolute top-[20px] lg:left-[calc(100%-50px)] left-[calc(100%-40px)] transform -translate-y-1/2 h-[40px] w-[40px] flex items-center justify-center rounded-r-xl text-white text-xl transition-all duration-300"
