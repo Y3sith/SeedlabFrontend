@@ -1,6 +1,6 @@
-<div class="fixed z-50 inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center  p-4">
+<div class="fixed z-50 inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center  p-4 font-poppins">
     <div class="bg-white border border-gray-300 p-6 sm:p-10 rounded w-full max-w-md md:max-w-lg lg:max-w-2xl h-auto">
-        <h1 class="text-start text-lg sm:text-xl font-bold mb-10">
+        <h1 class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900;">
             {{ isEditing ? 'Editar Ruta' : 'Crear Ruta' }}
         </h1>
         <form [formGroup]="rutaForm" (ngSubmit)="addRuta()">

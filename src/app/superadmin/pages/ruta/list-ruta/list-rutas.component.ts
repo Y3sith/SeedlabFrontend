@@ -12,6 +12,7 @@ import { SwitchService } from '../../../../servicios/switch.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalCrearSuperadminComponent } from '../../add-superadmin/modal-crear-superadmin.component';
 import { ModalAddRutaComponent } from '../modal-add-ruta/modal-add-ruta.component';
+import { AlertService } from '../../../../servicios/alert.service';
 
 @Component({
   selector: 'app-list-rutas',
@@ -39,9 +40,9 @@ export class ListRutasComponent implements OnInit {
     private rutaService: RutaService,
     private router: Router,
     private modalSS: SwitchService,
-    public dialog: MatDialog
-  ) {}
-
+    public dialog: MatDialog,
+    public alertService: AlertService,
+  ) { }
   ngOnInit(): void {
     this.validateToken();
     this.cargarRutas();
@@ -49,15 +50,13 @@ export class ListRutasComponent implements OnInit {
       this.modalSwitch = valor;
     });
   }
-
   openModal(rutaId: number | null): void {
     let dialogRef: MatDialogRef<ModalAddRutaComponent>;
     dialogRef = this.dialog.open(ModalAddRutaComponent, {
       data: { rutaId: rutaId },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
-
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -76,7 +75,6 @@ export class ListRutasComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
-
   cargarRutas(): void {
     this.isLoading = true;
     if (this.token) {
@@ -98,22 +96,16 @@ export class ListRutasComponent implements OnInit {
       console.error('Token is not available');
     }
   }
-
   onEstadoChange(event: any): void {
-    // const estado = event.target.value;
-    // this.userFilter.estado = estado === '1' ? 'Activo' : 'Inactivo';
     this.cargarRutas();
   }
-
   limpiarFiltro(): void {
     this.userFilter = { nombre: '', estado: 'Activo', fecha_creacion: '' };
     this.cargarRutas();
   }
-
   openModalSINId(): void {
     this.openModal(null);
   }
-
   canGoPrevious(): boolean {
     return this.page > 1;
   }
@@ -123,7 +115,6 @@ export class ListRutasComponent implements OnInit {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return this.page < totalPages;
   }
-
   changePage(page: number | 'previous' | 'next'): void {
     if (page === 'previous' && this.canGoPrevious()) {
       this.page--;
@@ -133,17 +124,12 @@ export class ListRutasComponent implements OnInit {
       this.page = page;
     }
   }
-
   getPages(): number[] {
     const totalItems = this.listaRutas.length;
     const itemsPerPage = 5;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-
-  // listarActividad():void {
-  //   this.router.navigate(['list-actividades'], {queryParams: {id_ruta: this.rutaId}});
-  // }
   listarActividad(rutaId: number): void {
     this.router.navigate(['list-actividades'], {
       queryParams: { id_ruta: rutaId },
