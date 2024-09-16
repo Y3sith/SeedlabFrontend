@@ -148,8 +148,7 @@
 
           <ng-container [ngSwitch]="aliadoForm.get('id_tipo_dato').value">
             <!-- Campo video -->
-            <div class="mt-3" *ngSwitchCase="1">
-              <div *ngIf="showVideo">
+            <div class="mt-3" *ngSwitchCase="'1'">
                 <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
                   (input)="onTextInput($event)"
                   class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
@@ -157,12 +156,10 @@
                   class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
                   Este campo es requerido*.
                 </div>
-              </div>
             </div>
 
             <!-- Campo imagen -->
-            <div class="mt-3 w-full flex-none justify-center text-xl" *ngSwitchCase="2">
-              <div *ngIf="showImagen">
+            <div class="mt-3 w-full flex-none justify-center text-xl" *ngSwitchCase="'2'">
                 <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
                   (change)="onFileSelecteds($event, 'ruta_multi')">
                 <span (click)="triggerFileInput()"
@@ -181,12 +178,10 @@
                   class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
                   Este campo es requerido*.
                 </div>
-              </div>
             </div>
 
             <!-- Campo pdf -->
-            <div class="mt-3 text-xl" *ngSwitchCase="3">
-              <div *ngIf="showPDF">
+            <div class="mt-3 text-xl" *ngSwitchCase="'3'">
                 <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
                   (change)="onFileSelecteds($event, 'ruta_documento')">
                 <span (click)="triggerFileInput()"
@@ -202,7 +197,6 @@
                 <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
                   Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
                 </div>
-              </div>
             </div>
             
           </ng-container>

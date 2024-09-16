@@ -119,7 +119,7 @@ export class AddAliadosComponent {
     this.validateToken();
     this.tipoDato();
     this.verEditar();
-    this.obtenerValorBaseDatos();
+    //this.obtenerValorBaseDatos();
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
@@ -248,7 +248,7 @@ export class AddAliadosComponent {
         this.aliadoForm.patchValue({ estado: this.isActive });
 
         console.log("Estado cargado:", this.isActive);
-        this.onTipoDatoChange();
+       // this.onTipoDatoChange();
       },
       error => {
         console.log(error);
@@ -368,7 +368,7 @@ mostrarToggle(): void {
         data => {
           this.tipoDeDato = data;
           console.log("DATO",data);
-          this.obtenerValorBaseDatos();
+          //this.obtenerValorBaseDatos();
         },
         error => {
           console.log(error);
@@ -377,21 +377,21 @@ mostrarToggle(): void {
     }
   }
 
-  obtenerValorBaseDatos(): void {
-    if (this.idAliado) {
-      this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
-        data => {
-          if (data && data.id_tipo_dato) {
-            this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
-            this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
-          }
-        },
-        error => {
-          console.log('Error al obtener el valor de la base de datos:', error);
-        }
-      );
-    }
-  }
+  // obtenerValorBaseDatos(): void {
+  //   if (this.idAliado) {
+  //     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
+  //       data => {
+  //         if (data && data.id_tipo_dato) {
+  //           this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
+  //           this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
+  //         }
+  //       },
+  //       error => {
+  //         console.log('Error al obtener el valor de la base de datos:', error);
+  //       }
+  //     );
+  //   }
+  // }
 
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
