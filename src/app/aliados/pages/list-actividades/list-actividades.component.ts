@@ -132,11 +132,11 @@ export class ListActividadesComponent {
   }
 
   EditarActividad(ActividadId: number, rutaId: number, isEditing: boolean): void {
-    this.router.navigate(['actnivlec'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
+    this.router.navigate(['Ruta'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
   }
 
   agregarActividadRuta(rutaId: number):void {
-    this.router.navigate(['actnivlec'], {
+    this.router.navigate(['Ruta'], {
       queryParams: { id_ruta : rutaId},
     });
   }

@@ -26,7 +26,8 @@ const routes: Routes = [
       {path: 'edit-asesor/:id', component: ModalAddAsesoresComponent, data:{  showInMenu: false } },
       {path: 'todos-los-aliados', component: TodosLosAliadosComponent, data:{  showInMenu: false } },
       {path: 'list-rutas', component: ListRutaComponent, data: {title: 'Rutas', showInMenu:true, icon: 'fa-solid fa-location-arrow'}},
-      {path: 'list-actividades', component: ListActividadesComponent, data:{  showInMenu: false } },
+      {path: 'list-actividades-aliado', component: ListActividadesComponent, data:{  showInMenu: false } },
+      {path: 'Ruta', component: RutaAliadoComponent, data:{  showInMenu: false } }
     ]
   }
 ];  

@@ -146,7 +146,7 @@ export class ListRutaComponent implements OnInit {
   //   this.router.navigate(['list-actividades'], {queryParams: {id_ruta: this.rutaId}});
   // }
   listarActividad(rutaId: number): void {
-    this.router.navigate(['list-actividades'], {
+    this.router.navigate(['list-actividades-aliado'], {
       queryParams: { id_ruta: rutaId },
     });
   }
