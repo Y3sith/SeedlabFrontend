@@ -224,7 +224,7 @@ export class ActnivlecComponent implements OnInit {
       this.contenidoLeccionService.getTipoDato(this.token).subscribe(
         data => {
           this.listarTipoDatoContenido = data;
-          //console.log('tipo de dato contenido:', data);
+          console.log('tipo de dato contenido:', data);
         },
         error => {
           console.log(error);
@@ -340,6 +340,7 @@ export class ActnivlecComponent implements OnInit {
 
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
+    console.log('lecciones::', this.onNivelChange(primerNivel.id.toString()));
     } else {
       // Si no hay niveles, preparar para agregar uno nuevo
       this.nivelForm.patchValue({
@@ -347,6 +348,7 @@ export class ActnivlecComponent implements OnInit {
         nombre: ''
       });
       this.nivelForm.get('nombre')?.disable();
+      
     } 
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
@@ -371,12 +373,12 @@ export class ActnivlecComponent implements OnInit {
       return;
     } 
     
-    if (this.actividadId != null) {
-      if (this.actividadForm.invalid) {
-        this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
-        return;
-      }
-    }
+    // if (this.actividadId != null) {
+    //   if (this.actividadForm.invalid) {
+    //     this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+    //     return;
+    //   }
+    // }
     if (this.idactividad == null) {
       estadoValue = '1'
     } else {
@@ -509,13 +511,14 @@ export class ActnivlecComponent implements OnInit {
           this.listarNiveles = data;
           this.niveles = data;
           console.log('Niveles: ', data);
-
-
           if (this.isEditing && this.niveles && this.niveles.length > 0) {
-            this.nivelForm.patchValue({
-              id_nivel: this.niveles[0].id,
-              nombre: this.niveles[0].nombre
-            });
+            const primerNivel = this.niveles[0];
+                    this.nivelForm.patchValue({
+                        id_nivel: primerNivel.id,
+                        nombre: primerNivel.nombre
+                    });
+                    // Llamar a onNivelChange para actualizar las lecciones
+                    this.onNivelChange(primerNivel.id.toString());
           }
         },
         error => {
@@ -574,17 +577,18 @@ export class ActnivlecComponent implements OnInit {
             id: data.id,
             nombre: data.nombre
           });
-
           // Actualizar el select
           this.nivelForm.patchValue({
             id_nivel: data.id
           });
           this.leccionForm.patchValue({ id_nivel: data.id })
           this.verNivel();
+          this.verLeccicon();
           this.nivelForm.reset();
           this.submittedNivel = false;
           this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
           this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
+          this.onNivelChange(data.id.toString());
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -699,6 +703,8 @@ export class ActnivlecComponent implements OnInit {
             id_leccion: '',
             nombre: ''
           });
+          this.contenidoLeccionForm.reset(); // resetea los campos de contenido por leccion si no hay lecciones y lo toma desde nive tambien (no resetea el select de contenido si no tengo lecciones)
+          this.contenidoLeccion = [];
         }
       },
       error => {
@@ -796,12 +802,8 @@ export class ActnivlecComponent implements OnInit {
 
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
-    // if (this.contenidoLeccionForm.invalid) {
-    //   this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
-    //   return;
-    // }
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
-
+    
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
@@ -812,6 +814,10 @@ export class ActnivlecComponent implements OnInit {
       this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 470 caracteres');
       return;
     }
+    // if (this.contenidoLeccionForm.invalid) {
+    //   this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
+    //   return;
+    // }
     const formData = new FormData();
     formData.append('id_leccion', idLeccion);
     let estadoValue: string;
