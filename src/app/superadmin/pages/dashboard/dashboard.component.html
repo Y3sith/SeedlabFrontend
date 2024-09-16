@@ -178,18 +178,20 @@
 
       <!-- Card de la gráfica telaraña -->
       <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div class="p-4 h-[400px] flex flex-col">
-          <select id="grafica-select" class="w-full p-2 border rounded-md mb-4"
-            (change)="onEmpresaChange($event.target.value)">
-            <option value="" disabled selected>Seleccione una empresa</option>
-            <option *ngFor="let empresa of listEmpresas" [value]="empresa.documento">{{empresa.documento}}</option>
-          </select>
-          <select id="grafica-select" class="w-full p-2 border rounded-md mb-4" (change)="onSelectChange($event)">
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option value="1">Primera Vez</option>
-            <option value="2">Segunda Vez</option>
-          </select>
-
+        <div class="p-6 h-[500px] flex flex-col">
+          <div class="flex space-x-4 mb-4">
+            <select id="empresa-select" class="w-1/2 p-2 border rounded-md"
+              (change)="onEmpresaChange($event.target.value)">
+              <option value="" disabled selected>Seleccione una empresa</option>
+              <option *ngFor="let empresa of listEmpresas" [value]="empresa.documento">{{empresa.documento}}</option>
+            </select>
+            <select id="opcion-select" class="w-1/2 p-2 border rounded-md" (change)="onSelectChange($event)">
+              <option value="" disabled selected>Seleccione una opción</option>
+              <option value="1">Primera Vez</option>
+              <option value="2">Segunda Vez</option>
+            </select>
+          </div>
+      
           <div class="flex-grow">
             <div id="echarts-formulario" class="w-full h-full"></div>
           </div>

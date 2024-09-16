@@ -95,7 +95,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   onSelectChange(event: any): void {
-    this.selectedTipo = event.target.value; // Captura el valor seleccionado del select
+    this.selectedTipo = event.target.value; 
     console.log('Tipo seleccionado:', this.selectedTipo);
 
     if (this.selectedTipo) {
