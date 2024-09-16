@@ -54,6 +54,7 @@ export class DashboardComponent implements AfterViewInit {
     this.getEmpresas();
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.emprendedorPorDepartamento();
+    this.initGraficaVacia();
   }
 
   ngAfterViewInit() {
@@ -559,12 +560,11 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-
-  graficaPuntajesFormulario(tipo: number): void {
-    // Inicializar la gráfica con valores vacíos (todos 0)
+  initGraficaVacia(): void {
+    // Configuración de la gráfica vacía
     this.getPuntajesForm = {
       title: {
-        text: tipo === 1 ? 'Puntajes por Formulario (Primera vez)' : 'Puntajes por Formulario (Segunda vez)',
+        text: 'Puntajes por Formulario (Sin datos)',
         left: 'center'
       },
       radar: {
@@ -582,21 +582,25 @@ export class DashboardComponent implements AfterViewInit {
           type: 'radar',
           data: [
             {
-              value: [0, 0, 0, 0, 0], // Valores iniciales en 0
-              name: 'Sin Datos'
+              value: [0, 0, 0, 0, 0], // Valores vacíos
+              name: 'Sin Empresa Seleccionada'
             }
           ]
         }
       ]
     };
 
-    // Destruir cualquier gráfico anterior e inicializar el gráfico vacío
-    if (this.chart) {
-      this.chart.dispose();
-    }
+    // Renderiza la gráfica vacía al cargar la página
     this.initChart('echarts-formulario', this.getPuntajesForm);
+  }
 
-    // Ahora hacemos la llamada para obtener los datos reales
+
+  graficaPuntajesFormulario(tipo: number): void {
+    if (!this.selectedEmpresa || !tipo) {
+      this.initGraficaVacia();
+      return;
+    }
+
     this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa, tipo).subscribe(
       data => {
         console.log('data puntajes', data);
@@ -640,7 +644,11 @@ export class DashboardComponent implements AfterViewInit {
         }
         this.initChart('echarts-formulario', this.getPuntajesForm);
       },
-      error => console.error('Error al obtener los puntajes del formulario:', error)
+      error => {
+        console.error('Error al obtener los puntajes del formulario:', error);
+        this.initGraficaVacia();
+      }
+
     );
   }
 
