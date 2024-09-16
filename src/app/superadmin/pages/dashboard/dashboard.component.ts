@@ -1,12 +1,9 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
-import { SuperadminService } from '../../../servicios/superadmin.service';
-import { AliadoService } from '../../../servicios/aliado.service';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
 
 import { DashboardsService } from '../../../servicios/dashboard.service';
-import { PuntajesService } from '../../../servicios/puntajes.service';
 import { EmpresaService } from '../../../servicios/empresa.service';
 
 @Component({
@@ -131,7 +128,7 @@ export class DashboardComponent implements AfterViewInit {
     this.graficaPuntajesFormulario(+this.selectedTipo);
   }
 
-  
+
 
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
@@ -383,13 +380,13 @@ export class DashboardComponent implements AfterViewInit {
 
         this.initChart('echarts-doughnut', this.doughnutChartOption);
       },
-        error => {
-          console.log(error);
-        }
+      error => {
+        console.log(error);
+      }
     );
   }
 
-  
+
 
 
   getRegistrosMensuales(): void {
@@ -563,11 +560,43 @@ export class DashboardComponent implements AfterViewInit {
   }
 
 
+  graficaPuntajesFormulario(tipo: number): void {
+    // Inicializar la gráfica con valores vacíos (todos 0)
+    this.getPuntajesForm = {
+      title: {
+        text: tipo === 1 ? 'Puntajes por Formulario (Primera vez)' : 'Puntajes por Formulario (Segunda vez)',
+        left: 'center'
+      },
+      radar: {
+        indicator: [
+          { name: 'General', max: 100 },
+          { name: 'Técnica', max: 100 },
+          { name: 'TRL', max: 9 },
+          { name: 'Mercado', max: 100 },
+          { name: 'Financiera', max: 100 }
+        ]
+      },
+      series: [
+        {
+          name: 'Puntajes',
+          type: 'radar',
+          data: [
+            {
+              value: [0, 0, 0, 0, 0], // Valores iniciales en 0
+              name: 'Sin Datos'
+            }
+          ]
+        }
+      ]
+    };
 
-  
+    // Destruir cualquier gráfico anterior e inicializar el gráfico vacío
+    if (this.chart) {
+      this.chart.dispose();
+    }
+    this.initChart('echarts-formulario', this.getPuntajesForm);
 
-  graficaPuntajesFormulario(tipo:number): void {
-    console.log('selectedEmpresa:', this.selectedEmpresa);
+    // Ahora hacemos la llamada para obtener los datos reales
     this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa, tipo).subscribe(
       data => {
         console.log('data puntajes', data);
@@ -580,7 +609,7 @@ export class DashboardComponent implements AfterViewInit {
             indicator: [
               { name: 'General', max: 100 },
               { name: 'Técnica', max: 100 },
-              { name: 'TRL', max: 100 },
+              { name: 'TRL', max: 9 },
               { name: 'Mercado', max: 100 },
               { name: 'Financiera', max: 100 }
             ]
@@ -603,7 +632,9 @@ export class DashboardComponent implements AfterViewInit {
               ]
             }
           ]
-        }
+        };
+
+        // Actualizar la gráfica con los nuevos datos
         if (this.chart) {
           this.chart.dispose(); // Destruye el gráfico anterior antes de crear uno nuevo
         }
@@ -613,7 +644,8 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
- 
+
+
 
   normalizeName(name: string): string {
     return name.toUpperCase()
