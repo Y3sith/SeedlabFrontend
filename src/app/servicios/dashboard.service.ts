@@ -8,7 +8,7 @@ import { map, Observable } from 'rxjs';
 })
 export class DashboardsService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   url = environment.apiUrl + 'dashboard/';
 
@@ -19,24 +19,24 @@ export class DashboardsService {
     });
   }
 
-  dashboardAdmin(access_token:any):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.get(this.url+"contar-usuarios",options)
+  dashboardAdmin(access_token: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url + "contar-usuarios", options)
   }
 
-  contarRegistrosMensual(access_token:any):Observable<any>{
-    const options = { headers:this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"listRegistrosAnioMes",options)
+  contarRegistrosMensual(access_token: any): Observable<any> {
+    const options = { headers: this.CreacionHeaders(access_token) };
+    return this.http.get(this.url + "listRegistrosAnioMes", options)
   }
 
-  promedioAsesorias(access_token:any, year:number):Observable<any>{
+  promedioAsesorias(access_token: any, year: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options);
   }
 
-  emprendedoresPorDepartamento(access_token:any):Observable<any>{
+  emprendedoresPorDepartamento(access_token: any): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+"emprendedor_departamento",options)
+    return this.http.get(this.url + "emprendedor_departamento", options)
   }
 
 
@@ -51,17 +51,20 @@ export class DashboardsService {
     return this.http.get<any>(this.url + "generoAliado", options)
   }
 
-  graficaFormulario(access_token: string, id_empresa: string): Observable<any> {
+  graficaFormulario(access_token: string, id_empresa: string, tipo: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}graficaFormulario/${id_empresa}`, options)
+
+    // Agregamos el parámetro tipo a la URL
+    return this.http.get<any>(`${this.url}graficaFormulario/${id_empresa}/${tipo}`, options)
       .pipe(
         map(response => {
           console.log('Respuesta original del servidor:', response);
-          // Si la respuesta está dentro de un array 'items', toma el primer elemento
+          // Procesar la respuesta
           return response.items && response.items.length > 0 ? response.items[0] : response;
         })
       );
   }
+
 
 
 
