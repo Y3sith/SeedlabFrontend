@@ -1,16 +1,16 @@
 <div class="p-4 bg-white" [formGroup]="asignarForm">
   <div>
     <h2>Detalles de la Asesoría</h2>
-    <p><strong class="text-gray-800 ">Nombre:</strong></p>
+    <p><strong class="text-blue-400 ">Nombre:</strong></p>
     <p class="-mt-2">{{ data.asesoria.Nombre_sol }}</p>
-    <p class="text-gray-800 "><strong>Notas:</strong></p>
+    <p class="text-blue-400 "><strong>Notas:</strong></p>
     <p class="-mt-2">{{ data.asesoria.notas }}</p>
-    <p><strong class="text-gray-800 mt-2">Fecha de Solicitud:</strong></p>
+    <p><strong class="text-blue-400 mt-2">Fecha de Solicitud:</strong></p>
     <p class="-mt-2">{{ data.asesoria.fecha_solicitud }}</p>
     <!-- Agrega más campos según sea necesario -->
   </div>
   <div class="rounded-xl pb-2 pt-2 w-full justify-start" id="nomAliadoContainer">
-    <label class="mb-1">¿Cual de los asesores hará la asesoría?</label>
+    <label class="mb-1 text-blue-400 font-bold">¿Cual de los asesores hará la asesoría?</label>
     <select formControlName="nom_asesor" class="w-full outline-none h-auto text-start border rounded-md px-2 py-2 bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
       <option value="" disabled selected hidden>Seleccione</option>
       <option *ngFor="let asesor of asesores" [value]="asesor.id_asesor">{{ asesor.nombre_completo }}</option>
