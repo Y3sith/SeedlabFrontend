@@ -55,6 +55,9 @@ export class AddEmpresaComponent {
   showSecondSection = false;
   showThirdSection = false;
   ocultarSinApoyo: boolean = true;
+  isEditing: boolean = false;
+  nose: boolean = true;
+  esVistaCreacion: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -111,6 +114,7 @@ export class AddEmpresaComponent {
     this.cargarDatosEmpresa();
     this.cargarDepartamentos();
     this.cargarApoyos();
+    this.esVistaCreacion = !this.id_documentoEmpresa;
   }
 
   /* Valida el token del login */
@@ -241,6 +245,7 @@ export class AddEmpresaComponent {
   }
 
   cargarDatosEmpresa(): void {
+
     this.EmpresaService.traerEmpresasola(this.token, this.id_emprendedor, this.id_documentoEmpresa).subscribe(
       data => {
         this.empresa = data;
@@ -420,26 +425,26 @@ export class AddEmpresaComponent {
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
-        if(this.listaApoyo && this.listaApoyo.length > 0 && this.listaApoyo[0].documento !== ''){
+        if (this.listaApoyo && this.listaApoyo.length > 0 && this.listaApoyo[0].documento !== '') {
           this.ocultarSinApoyo = false;
-        }
-        console.log("apoyos", this.listaApoyo);
-        if (!this.listaApoyo || this.listaApoyo.length === 0 || this.listaApoyo[0].documento === '') {
-          this.ocultarSinApoyo = true;
+          this.isEditing = true; // Estamos en modo edición si hay apoyos
+          this.mostrarBotonesNuevos = false;
         } else {
-          this.ocultarSinApoyo = false;
-          this.onApoyoSelect(this.listaApoyo[0].documento);
+          this.ocultarSinApoyo = true;
+          this.isEditing = false; // No estamos en modo edición si no hay apoyos
+          this.mostrarBotonesNuevos = false;
         }
         console.log("apoyos", this.listaApoyo);
       },
       error => {
         console.error(error);
-      });
+      }
+    );
   }
 
   onApoyoSelect(documento: string) {
     const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
-    
+    this.isEditing = true;
     if (selectedApoyo) {
       this.selectedApoyoDocumento = selectedApoyo.documento;
       this.addApoyoEmpresaForm.patchValue({
