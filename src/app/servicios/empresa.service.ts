@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import {Observable} from 'rxjs';
@@ -58,6 +58,13 @@ export class EmpresaService {
   getAllEmpresa(access_token:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(this.url+"/getAllEmpresa",options)
+  }
+
+  obtenerEmpresasPorEmprendedor(access_token:string ,docEmprendedor: string): Observable<any[]> {
+    const headers = this.CreacionHeaders(access_token);
+    let params = new HttpParams().set('doc_emprendedor', docEmprendedor);
+    const options = { headers, params };
+    return this.http.get<any[]>(this.url+"/getEmpresaByEmprendedor",  options);
   }
 
 }

@@ -64,7 +64,7 @@ export class ReportesAdmComponent {
   mostrarReportes() {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-
+      console.log(tipo_reporte, fecha_inicio, fecha_fin);
       // Obtener los datos del reporte para visualización
       this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {

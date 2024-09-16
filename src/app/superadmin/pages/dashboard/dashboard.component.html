@@ -167,29 +167,38 @@
 
 
 
-    
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <!-- Card del mapa -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div class="h-[400px]" id="echarts-empXDepar">
-            <!-- Aquí va tu componente de mapa -->
-          </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Card del mapa -->
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="h-[400px]" id="echarts-empXDepar">
+          <!-- Aquí va tu componente de mapa -->
         </div>
-    
-        <!-- Card de la gráfica telaraña -->
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div class="p-4 h-[400px] flex flex-col">
-            <select id="grafica-select" class="w-full p-2 border rounded-md mb-4" (change)="onEmpresaChange($event.target.value)" >
-              <option value="">Seleccione una empresa</option>
+      </div>
+
+      <!-- Card de la gráfica telaraña -->
+      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        <div class="p-6 h-[500px] flex flex-col">
+          <div class="flex space-x-4 mb-4">
+            <select id="empresa-select" class="w-1/2 p-2 border rounded-md"
+              (change)="onEmpresaChange($event.target.value)">
+              <option value="" disabled selected>Seleccione una empresa</option>
               <option *ngFor="let empresa of listEmpresas" [value]="empresa.documento">{{empresa.documento}}</option>
             </select>
-            <div class="flex-grow">
-              <div id="echarts-formulario" class="w-full h-full"></div>
-            </div>  
+            <select id="opcion-select" class="w-1/2 p-2 border rounded-md" (change)="onSelectChange($event)">
+              <option value="" disabled selected>Seleccione una opción</option>
+              <option value="1">Primera Vez</option>
+              <option value="2">Segunda Vez</option>
+            </select>
+          </div>
+      
+          <div class="flex-grow">
+            <div id="echarts-formulario" class="w-full h-full"></div>
           </div>
         </div>
       </div>
-   
+    </div>
+
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-14">
       <!-- Asesorias asignas y sin asignar -->
@@ -237,12 +246,12 @@
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
         <div class="flex justify-center items-center h-80 sm:h-56 md:h-64 lg:h-72 w-full " id="promedio-asesorias">
-          
+
         </div>
       </div>
     </div>
 
-    
+
 
 
 

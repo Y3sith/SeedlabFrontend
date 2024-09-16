@@ -21,7 +21,7 @@ const routes: Routes = [
       {path: 'list-empresa', component: ListEmpresasComponent, data:{title: 'Empresa', showInMenu:true, icon:'fa-solid fa-building'}},
       {path: 'ruta', component: RutaEmprendedorComponent, data:{title: 'Ruta', showInMenu:true, icon:'fa-solid fa-location-arrow'}},
       {path: 'modal', component: ModalActividadComponent, data:{title: 'modal', showInMenu:false, icon:'fa-solid fa-location-arrow'}}, //Agregado para ver la modal por la ruta
-      {path: 'reportes-emprendedor', component: ReportesComponent, data:{title: 'Ruta', showInMenu:true, icon:'fa-regular fa-file-lines'}},
+      {path: 'reportes-emprendedor', component: ReportesComponent, data:{title: 'Reporte', showInMenu:true, icon:'fa-regular fa-file-lines'}},
       {path: 'perfil-emprendedor', component: PerfilEmprendedorComponent, data:{title: 'Perfil', showInMenu:true, icon:'fa-solid fa-circle-user'}},
       {path: 'add-empresa', component: AddEmpresaComponent, data:{showInMenu: false}},
       {path: 'add-empresa/:id_emprendedor/:documento', component:AddEmpresaComponent, data:{title: 'Editar-empresa', showInMenu: false}},
