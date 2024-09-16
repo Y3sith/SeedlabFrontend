@@ -18,6 +18,7 @@ import { LeccionService } from '../../../servicios/leccion.service';
 import { Leccion } from '../../../Modelos/leccion.model';
 import { ContenidoLeccionService } from '../../../servicios/contenido-leccion.service';
 import { Contenido_Leccion } from '../../../Modelos/contenido-leccion.model';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ruta-aliado',
@@ -91,7 +92,7 @@ export class RutaAliadoComponent {
     id_tipo_dato: ['', Validators.required],
     id_asesor: [''],
     id_ruta: ['', Validators.required],
-    id_aliado: ['', Validators.required]
+    id_aliado: ['']
   })
   ////anadir nivel
 
@@ -133,6 +134,7 @@ export class RutaAliadoComponent {
     private alertServices: AlertService,
     private leccionService: LeccionService,
     private contenidoLeccionService: ContenidoLeccionService,
+    private location: Location,
   ) { }
 
   ngOnInit(): void {
@@ -151,6 +153,12 @@ export class RutaAliadoComponent {
       if (params['isEditing']) {
         this.isEditing = params['isEditing'] === 'true';
       }
+      if (this.idAliado) {
+        this.actividadForm.patchValue({
+          id_aliado: this.idAliado
+        });
+        this.onAliadoChange();
+      }
     });
     this.tipoDato();
     this.initializeNivelForm();
@@ -159,6 +167,7 @@ export class RutaAliadoComponent {
     this.verNivel();
     this.verEditar();
     this.listaAliado();
+    this.initializeFormState();
     this.onAliadoChange();
     this.bloquearBotones();
 
@@ -206,6 +215,20 @@ export class RutaAliadoComponent {
     }
   }
 
+  initializeFormState(): void {
+    const fieldsToDisable = ['id_aliado'];
+    fieldsToDisable.forEach(field => {
+      const control = this.actividadForm.get(field);
+      if (control) {
+        control.disable();
+      }
+    });
+  }
+  
+  goBack(): void {
+    this.location.back();
+  }
+
   get a() {
     return this.actividadForm.controls;
   }
@@ -239,14 +262,19 @@ export class RutaAliadoComponent {
       this.superAdminService.listarAliado(this.token).subscribe(
         data => {
           this.listarAliadoo = data;
-          //console.log('Aliado: ', data)
+          // Si tienes this.idAliado, selecciona el aliado correspondiente
+          if (this.idAliado) {
+            this.aliadoSeleccionado = this.listarAliadoo.find(aliado => aliado.id == this.idAliado);
+            this.onAliadoChange();
+          }
         },
         error => {
           console.log(error);
         }
-      )
+      );
     }
   }
+
   selectAliado(aliado: any): void {
     this.aliadoSeleccionado = aliado;
     //console.log("el aliado seleccionado fue: ", this.aliadoSeleccionado)
@@ -255,16 +283,12 @@ export class RutaAliadoComponent {
   onAliadoChange(event?: any): void {
     let aliadoId: any;
 
-    // Comprueba si event existe y tiene la estructura esperada
     if (event && event.target && event.target.value) {
       aliadoId = event.target.value;
-    } else if (this.aliadoSeleccionado) {
-      // Si no hay evento, usa el ID del aliado seleccionado actualmente
-      aliadoId = this.aliadoSeleccionado.id;
     } else {
-      console.error('No se pudo obtener el ID del aliado');
-      return;
+      aliadoId = this.actividadForm.get('id_aliado').value;
     }
+
     const aliadoSeleccionado = this.listarAliadoo.find(aliado => aliado.id == aliadoId);
     if (aliadoSeleccionado) {
       console.log("El aliado seleccionado fue: ", {
@@ -287,7 +311,6 @@ export class RutaAliadoComponent {
       console.error('No se encontró el aliado seleccionado');
     }
   }
-
   
   verEditar(): void {
     if (this.actividadId !== null) {
@@ -462,7 +485,7 @@ export class RutaAliadoComponent {
     this.nivelForm.enable();
     this.leccionForm.enable();
     this.contenidoLeccionForm.enable();
-    this.actividadForm.enable();
+    //this.actividadForm.enable();
     this.habilitarBotones();
   }
 
