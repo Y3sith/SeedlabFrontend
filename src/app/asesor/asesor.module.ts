@@ -14,7 +14,7 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
 import { ListRutaComponent } from './pages/list-ruta/list-ruta.component';
 import { ListActividadesComponent } from './pages/list-actividades/list-actividades.component';
 import { RutaAsesorComponent } from './pages/ruta-asesor/ruta-asesor.component';
-
+import { RouterModule } from '@angular/router';
 
 
 
@@ -25,7 +25,7 @@ import { RutaAsesorComponent } from './pages/ruta-asesor/ruta-asesor.component';
     PerfilAsesorComponent,
     ListRutaComponent,
     ListActividadesComponent,
-    RutaAsesorComponent
+    RutaAsesorComponent,
   ],
   imports: [
     CommonModule,
@@ -35,7 +35,8 @@ import { RutaAsesorComponent } from './pages/ruta-asesor/ruta-asesor.component';
     ReactiveFormsModule,
     NgxPaginationModule,
     FormsModule,
-    FilterPipeModule
+    FilterPipeModule,
+    RouterModule
   ]
 })
 export class AsesorModule { }
