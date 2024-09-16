@@ -409,7 +409,7 @@ export class RutaAsesorComponent {
     formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
     formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
     formData.append('id_ruta', this.rutaId.toString());
-    formData.append('id_aliado', this.idAliado);
+    formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
     console.log('datos: ', this.actividadForm.value);
     if (this.selectedfuente) {
