@@ -29,6 +29,8 @@ import { TodosLosAliadosComponent } from './pages/todos-los-aliados/todos-los-al
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RutaAliadoComponent } from './pages/ruta-aliado/ruta-aliado.component';
 import { ModalAliadosComponent } from './pages/modal-aliados/modal-aliados.component';
+import { ListRutaComponent } from './pages/list-ruta/list-ruta.component';
+import { ListActividadesComponent } from './pages/list-actividades/list-actividades.component';
 
 
 
@@ -49,7 +51,9 @@ import { ModalAliadosComponent } from './pages/modal-aliados/modal-aliados.compo
     TodosLosAliadosComponent,
     RutaAliadoComponent,
     ModalAliadosComponent,
-    SafePipe, 
+    SafePipe,
+    ListRutaComponent,
+    ListActividadesComponent, 
   ],
   imports: [
     CommonModule,

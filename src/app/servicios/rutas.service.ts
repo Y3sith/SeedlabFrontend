@@ -78,6 +78,11 @@ export class RutaService {
     return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
   }
 
+  activadadxAliado(access_token:any, idRuta: number, idAliado):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
+  }
+
   
   actividadCompletaxruta(access_token:any, idRuta: number):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
