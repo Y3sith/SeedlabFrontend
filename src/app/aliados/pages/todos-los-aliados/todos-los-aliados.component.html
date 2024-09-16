@@ -31,7 +31,7 @@
 
     <div class="grid grid-cols-3 mt-[-5%] max-w-screen-lg mx-auto">
         <div *ngFor="let aliado of listAliados" class="flex justify-center items-center">
-            <img [src]="aliado.logo" [alt]="aliado.nombre" class="w-full h-auto">
+                <img [src]="aliado.logo" [alt]="aliado.nombre" (click)="openModal(aliado.id)" class="w-full h-auto cursor-pointer">
         </div>
     </div>
 

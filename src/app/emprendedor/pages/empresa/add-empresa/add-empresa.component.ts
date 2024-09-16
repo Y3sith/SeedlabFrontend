@@ -54,6 +54,7 @@ export class AddEmpresaComponent {
   showFirstSection = true;
   showSecondSection = false;
   showThirdSection = false;
+  ocultarSinApoyo: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -419,10 +420,17 @@ export class AddEmpresaComponent {
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
+        if(this.listaApoyo && this.listaApoyo.length > 0 && this.listaApoyo[0].documento !== ''){
+          this.ocultarSinApoyo = false;
+        }
         console.log("apoyos", this.listaApoyo);
-        if (this.listaApoyo.length > 0) {
+        if (!this.listaApoyo || this.listaApoyo.length === 0 || this.listaApoyo[0].documento === '') {
+          this.ocultarSinApoyo = true;
+        } else {
+          this.ocultarSinApoyo = false;
           this.onApoyoSelect(this.listaApoyo[0].documento);
         }
+        console.log("apoyos", this.listaApoyo);
       },
       error => {
         console.error(error);

@@ -285,7 +285,7 @@
         <div class="flex flex-col justify-center gap-2 mb-2 md:flex-row max-sm:pb-2">
           <div class="flex flex-row items-center gap-2 max-md:mx-auto">
             <button
-              class="py-2 w-[150px] bg-[#373435] text-base sm:text-lg text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+              class="py-2 w-[150px] bg-[#373435] text-base sm:text-lg text-white font-bold rounded-full transition duration-300"
               (click)="previous()">
               Anterior
             </button>
@@ -322,12 +322,15 @@
             <div class="container px-4 py-12 mx-auto">
               <form [formGroup]="addApoyoEmpresaForm" (ngSubmit)="crearEmpresa()">
 
-                <div class="flex justify-center w-full " *ngIf="id_documentoEmpresa">
+                <div *ngIf="!ocultarSinApoyo">
 
-                  <label for="tipodocumento" class="text-lg font-normal text-center text-amber-500">Seleccione apoyo a
-                    editar</label>
-                </div>
-                <div class="w-full text-base relative text-center flex justify-center"
+                  <div class="flex justify-center w-full" *ngIf="id_documentoEmpresa && mostrarBotonEditar">
+  
+                    <label for="tipodocumento" class="text-lg font-normal text-center text-amber-500">Seleccione apoyo a
+                      editar</label>
+                  </div>
+                
+                 <div class="w-full text-base relative text-center flex justify-center"
                   *ngIf="id_documentoEmpresa && mostrarBotonEditar">
 
                   <div class="grid grid-cols-1 lg:grid-cols-1 md:grid-cols-1  gap-6 mb-6 flex-none justify-center">
@@ -339,6 +342,7 @@
                     </select>
                   </div>
                 </div>
+              </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2  gap-6 mb-6">
                   <div class="w-full text-base relative">
@@ -438,7 +442,7 @@
                   </div>
 
                   <div class="flex items-center justify-center lg:justify-end"
-                    *ngIf="mostrarBotonEditar && id_documentoEmpresa">
+                    *ngIf="mostrarBotonEditar && id_documentoEmpresa && !ocultarSinApoyo">
                     <span class="mr-3 text-amber-500 text-[25px] italic mb-1" style="font-weight: 900;">Agregar
                       Apoyo</span>
                     <button (click)="limpiarYCambiarBotones()"
@@ -452,18 +456,18 @@
             </div>
           </div>
           <div class="flex justify-center h-auto pb-2">
-            <button
+            <button *ngIf="id_documentoEmpresa && mostrarBotonEditar"
               class="py-2 mr-3 px-4 max-md:mt-2 sm:px-8 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal"
               (click)="previous()">
               Anterior
             </button>
-            <div *ngIf="mostrarBotonesNuevos" class="flex justify-end">
-              <button
+            <div class="flex justify-end">
+              <button *ngIf="mostrarBotonesNuevos"
                 class="py-2 mr-3 px-4 max-md:mt-2 sm:px-8 bg-[#373435] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal"
                 (click)="cancel()">
                 Cancelar
               </button>
-              <button id="guardar" (click)="crearApoyo()"
+              <button id="guardar" (click)="crearApoyo()" *ngIf="mostrarBotonesNuevos || ocultarSinApoyo"
                 class="py-2 px-4 max-md:mt-2 sm:px-8 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal">
                 Guardar Apoyo
               </button>
@@ -472,7 +476,7 @@
               class="py-2 px-4 max-md:mt-2 sm:px-8 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal">
               Guardar Apoyo
             </button>
-            <button id="guardar" (click)="editarApoyo()" *ngIf="id_documentoEmpresa && mostrarBotonEditar"
+            <button id="guardar" (click)="editarApoyo()" *ngIf="id_documentoEmpresa && mostrarBotonEditar && !ocultarSinApoyo"
               class="py-2 px-4 max-md:mt-2 sm:px-8 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal">
               Editar apoyo
             </button>

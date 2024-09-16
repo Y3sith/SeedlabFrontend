@@ -3,6 +3,7 @@ import { RutaService } from '../../../servicios/rutas.service';
 import { Router } from '@angular/router';
 import { Ruta } from '../../../Modelos/ruta.modelo';
 import { FormBuilder } from '@angular/forms';
+import { data } from 'jquery';
 
 @Component({
   selector: 'app-ruta-emprendedor',
@@ -16,9 +17,15 @@ export class RutaEmprendedorComponent implements OnInit {
   currentRolId: number;
   idRuta: number | null; 
   rutaList: Ruta[] = [];
+  rutaLista: Ruta[] = [];
   modalVisible: boolean = false;
   selectedActividad: any = null;
-  
+  selectedRutaId: any = null;
+  nombre: any = null;
+  rutaId: number;
+  ultimoElemento: any;
+  listRespuestaId:any []=[];
+  ishidden: boolean = true;
 
   actividadForm = this.fb.group({
     id:[null],
@@ -38,7 +45,7 @@ export class RutaEmprendedorComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateToken();
-    this.listarRuta();
+    this.idRespuesta();
   }
 
   validateToken(): void {
@@ -62,16 +69,41 @@ export class RutaEmprendedorComponent implements OnInit {
     }
   }
 
-  listarRuta(): void {
+  idRespuesta(): void {
+    this.rutaService.idRespuestas(this.token).subscribe(
+      data => {
+        this.listRespuestaId = data;
+        console.log('ID de respuestas:', this.listRespuestaId);
+  
+        // Verifica si la lista de respuestas es válida y si el ID no es 0, null o undefined
+        if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
+          console.log('ID de respuesta válido:', this.listRespuestaId[0].id);
+          // Llamar a las demás funciones solo si el ID es válido
+          this.ishidden = false;
+          this.listarRutaActiva();
+        } else {
+          console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
+        }
+      },
+      error => {
+        console.error('Error al obtener el ID de respuestas:', error);
+      }
+    );
+  }
+  
+  listarRutaActiva(): void {
     if (this.token) {
-      console.log('Solicitando rutas activas...');
-      this.rutaService.rutasActivas(this.token).subscribe(
+      this.rutaService.ruta(this.token).subscribe(
         data => {
           this.rutaList = data;
           console.log('Rutas recibidas:', this.rutaList);
-          console.log('Número de rutas:', this.rutaList.length);
+
           if (this.rutaList.length > 0) {
-            console.log('Primera ruta:', this.rutaList[0]);
+            const primeraRuta = this.rutaList[0];
+            this.rutaId = primeraRuta.id;
+            console.log('ID de la primera ruta almacenado en this.rutaId:', this.rutaId);
+            // Si quieres llamar otra función después de recibir el ID
+            this.listarRutas();
           }
         },
         err => {
@@ -81,6 +113,18 @@ export class RutaEmprendedorComponent implements OnInit {
     } else {
       console.log('No hay token disponible');
     }
+  }
+
+  listarRutas():void {
+    console.log('RUTAAAAAAAAAAAAAAAAA:', this.rutaId);
+    this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
+      data=> {
+        this.rutaLista = data;
+        console.log('Rutas activas:', this.rutaLista);
+      },
+      err=>{
+        console.error(err);
+      });
   }
 
   getItemClass(index: number): string {
@@ -114,18 +158,23 @@ export class RutaEmprendedorComponent implements OnInit {
     const positionInGroup = index % 6;
     return [0, 1, 4].includes(positionInGroup) ? 'circle-right' : 'circle-left';
   }
+
   openModal(actividad: any, index: number): void {
     this.selectedActividad = actividad;
     this.selectedActividad = { ...actividad, colorIndex: index };
+    //this.selectedRutaId = this.rutaList[Math.floor(index / this.rutaList[0].actividades.length)].id;
     console.log("ACTIVIDDDAAAD", this.selectedActividad)
     this.modalVisible = true;
+  }
+
+  handleIrAModulo(actividad: any) {
+    // Usa un servicio de estado o el router para pasar la actividad
+    this.router.navigate(['curso-ruta-emprendedor'], { state: { actividad: actividad } });
   }
 
   closeModal(): void {
     this.modalVisible = false;
     this.selectedActividad = null;
   }
-
-  
 }
 

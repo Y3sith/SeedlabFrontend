@@ -9,6 +9,7 @@ import { CursorutasComponent } from '../ruta/cursorutas/cursorutas.component';
 import { RutaEmprendedorComponent } from './pages/ruta-emprendedor/ruta-emprendedor.component';
 import { ModalActividadComponent } from './pages/modal-actividad/modal-actividad.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';
+import { CursoRutaEmprendedorComponent } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
 
 const routes: Routes = [
 
@@ -24,6 +25,7 @@ const routes: Routes = [
       {path: 'perfil-emprendedor', component: PerfilEmprendedorComponent, data:{title: 'Perfil', showInMenu:true, icon:'fa-solid fa-circle-user'}},
       {path: 'add-empresa', component: AddEmpresaComponent, data:{showInMenu: false}},
       {path: 'add-empresa/:id_emprendedor/:documento', component:AddEmpresaComponent, data:{title: 'Editar-empresa', showInMenu: false}},
+      {path: 'curso-ruta-emprendedor', component: CursoRutaEmprendedorComponent, data:{showInMenu: false}},
     ]
   }
 ];

@@ -19,12 +19,12 @@
             </button>
         </div>
     </header>
-    <div class="flex justify-end items-center mb-4">
+    <!-- <div class="flex justify-end items-center mb-4">
         <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900">Agregar Actividad</span>
         <button class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center" (click)="agregarActividadRuta(rutaId)" >
             <span class="text-3xl font-semibold leading-none">+</span>
         </button>
-    </div>
+    </div> -->
     <div class="bg-form-gray rounded-lg shadow-md p-4 mb-6">
         <div class="overflow-x-auto">
             <table class="lg:w-4/6 md:5/6 md:mx-auto">
@@ -47,14 +47,14 @@
                                 <td class="p-2">{{ actividad.id_asesor }}</td>
                                 <!-- <td class="p-2">{{ actividad.estado }}</td> -->
                                 <td class="p-2 text-center">
-                                    <label class="inline-flex items-center cursor-pointer text-center">
-                                        <input type="checkbox" class="sr-only peer"
+                                    <label class="inline-flex items-center text-center">
+                                        <!-- <input type="checkbox" class="sr-only peer"
                                             [checked]="actividad.estado === 'Activo'"
-                                            (change)="toggleActive(actividad.id, actividad.estado)" />
-                                        <div
+                                            (change)="toggleActive(actividad.id, actividad.estado)" /> -->
+                                        <!-- <div
                                             class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
-                                        </div>
-                                        <span class="ms-3 text-sm font-medium text-gray-900 ">
+                                        </div> -->
+                                        <span class="text-sm font-medium text-gray-900">
                                             {{ actividad.estado ? 'Activo' : 'Inactivo' }}
                                         </span>
                                     </label>

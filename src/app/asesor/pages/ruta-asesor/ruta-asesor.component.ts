@@ -21,11 +21,11 @@ import { Contenido_Leccion } from '../../../Modelos/contenido-leccion.model';
 import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-ruta-aliado',
-  templateUrl: './ruta-aliado.component.html',
-  styleUrl: './ruta-aliado.component.css'
+  selector: 'app-ruta-asesor',
+  templateUrl: './ruta-asesor.component.html',
+  styleUrl: './ruta-asesor.component.css'
 })
-export class RutaAliadoComponent {
+export class RutaAsesorComponent {
   token: string | null = null;
   user: User | null = null;
   id: number | null = null;
@@ -79,6 +79,7 @@ export class RutaAliadoComponent {
   showTexto: boolean = false;
   Number = Number;
   idAliado: any;
+  idAsesor: any;
 
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;
@@ -186,9 +187,9 @@ export class RutaAliadoComponent {
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
-        this.idAliado = this.user.id;
+        this.idAsesor = this.user.id;
         this.currentRolId = this.user.id_rol;
-        if (this.currentRolId != 3) {
+        if (this.currentRolId != 4) {
           this.router.navigate(['home']);
         }
       }
@@ -197,7 +198,6 @@ export class RutaAliadoComponent {
       this.router.navigate(['home']);
     }
   }
-
 
   //me trae el tipo de dato que requiere la actividad
   tipoDato(): void {
@@ -216,7 +216,7 @@ export class RutaAliadoComponent {
   }
 
   initializeFormState(): void {
-    const fieldsToDisable = ['id_aliado'];
+    const fieldsToDisable = ['id_aliado', 'id_asesor'];
     fieldsToDisable.forEach(field => {
       const control = this.actividadForm.get(field);
       if (control) {

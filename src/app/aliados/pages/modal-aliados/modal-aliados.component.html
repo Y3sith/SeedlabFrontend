@@ -1,0 +1,33 @@
+<div class="fixed z-50 inset-0 bg-black bg-opacity-50 flex justify-center items-center" (click)="closeModal()">
+    <div class="bg-white rounded-3xl shadow-xl w-full max-w-xl md:max-w-3xl lg:max-w-4xl  overflow-hidden" (click)="$event.stopPropagation()">
+      <div class="sm:p-8">
+        <div *ngFor="let aliado of listAliados" class="flex-none justify-center">
+          <img [src]="aliado.logo" [alt]="aliado.nombre" class="w-64 h-32 object-cover rounded-full mx-auto">
+          
+          <ng-container [ngSwitch]="getContentType(aliado)">
+            <div *ngSwitchCase="'video'" class="relative aspect-video mb-4">
+              <iframe class="absolute inset-0 w-full h-full rounded-lg"
+                      [src]="getYouTubeEmbedUrl(aliado.ruta_multi) | safe: 'resourceUrl'" 
+                      frameborder="0" allowfullscreen></iframe>
+            </div>
+            <div *ngSwitchCase="'image'" class="mb-4">
+              <img [src]="getCorrectImageUrl(aliado.ruta_multi) | safe: 'url'"
+                   class="w-full h-auto rounded-lg object-cover" [alt]="aliado.titulo"
+                   (error)="handleImageError($event)">
+            </div>
+            <div *ngSwitchCase="'text'" class="mb-4">
+              <p class="bg-gray-100 rounded-lg p-4">{{ aliado.ruta_multi }}</p>
+            </div>
+            <div *ngSwitchDefault class="mb-4">
+              <p class="text-gray-500 italic">Tipo de contenido no soportado</p>
+            </div>
+          </ng-container>
+             <div class="flex justify-center w-full">
+                 <a [href]="aliado.urlpagina" target="_blank" class="w-auto py-3 px-6 bg-[#FA7D00] text-xl text-white font-extrabold text-center rounded-lg no-underline  hover:bg-[#E56F00] transition duration-300">
+                   Ir a sitio web
+                 </a>
+             </div>
+        </div>
+      </div>
+    </div>
+  </div>

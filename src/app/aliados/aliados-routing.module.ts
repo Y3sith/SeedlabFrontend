@@ -10,6 +10,8 @@ import { ModalAddAsesoresComponent } from './pages/add-asesores/modal-add-asesor
 import { TodosLosAliadosComponent } from './pages/todos-los-aliados/todos-los-aliados.component';
 import { data } from 'jquery';
 import { RutaAliadoComponent } from './pages/ruta-aliado/ruta-aliado.component';
+import { ListRutaComponent } from './pages/list-ruta/list-ruta.component';
+import { ListActividadesComponent } from './pages/list-actividades/list-actividades.component';
 
 const routes: Routes = [
   {
@@ -23,7 +25,9 @@ const routes: Routes = [
       {path: 'add-asesor', component: ModalAddAsesoresComponent, data:{showInMenu:false}},
       {path: 'edit-asesor/:id', component: ModalAddAsesoresComponent, data:{  showInMenu: false } },
       {path: 'todos-los-aliados', component: TodosLosAliadosComponent, data:{  showInMenu: false } },
-      {path: 'Actividades', component: RutaAliadoComponent, data: {title: 'Actividades', showInMenu:true, icon: 'fa-solid fa-location-arrow'}}
+      {path: 'list-rutas', component: ListRutaComponent, data: {title: 'Rutas', showInMenu:true, icon: 'fa-solid fa-location-arrow'}},
+      {path: 'list-actividades-aliado', component: ListActividadesComponent, data:{  showInMenu: false } },
+      {path: 'Ruta', component: RutaAliadoComponent, data:{  showInMenu: false } }
     ]
   }
 ];  
