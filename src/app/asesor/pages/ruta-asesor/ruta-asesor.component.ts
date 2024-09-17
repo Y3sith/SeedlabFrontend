@@ -999,7 +999,6 @@ export class RutaAsesorComponent {
       case 1: // Video
       case 2: // Imagen
       case 3: // PDF
-      case 4: // Texto
       default:
         // Si no es ninguno de los anteriores, elimina cualquier validador
         this.contenidoLeccionForm.get('fuente_contenido').clearValidators();

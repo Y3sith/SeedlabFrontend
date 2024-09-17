@@ -283,7 +283,8 @@
                                         </div>
                                         <div *ngIf="contenidoLeccionForm.get('fuente_contenido')?.value"
                                             class="mt-2 text-gray-500 text-center">
-                                            Archivo seleccionado: {{ selectedfuenteContenido.name }}
+                                            <!-- Archivo seleccionado: {{ selectedfuenteContenido.name }} -->
+                                            Archivo seleccionado: {{contenidoLeccionForm.get('fuente_contenido')?.value?.name }}
                                         </div>
                                     </div>
                                     <!--pdf-->
@@ -307,22 +308,8 @@
                                         </div>
                                         <div *ngIf="contenidoLeccionForm.get('fuente_contenido')?.value"
                                             class="mt-2 text-gray-500 text-center">
-                                            Archivo seleccionado: {{
-                                            contenidoLeccionForm.get('fuente_contenido')?.value?.name }}
-                                        </div>
-                                    </div>
-                                    <!--texto-->
-                                    <div class="mb-4" *ngSwitchCase="4">
-                                        <label class="text-xl font-normal flex-none justify-center"
-                                            for="nombre"></label>
-                                        <textarea type="text" id="fuente_contenido" formControlName="fuente_contenido"
-                                            (input)="onTextInputContenido($event)" placeholder="Texto del contenido"
-                                            class="w-full p-2 border rounded"></textarea>
-
-                                        <div *ngIf="submittedContent && cl.fuente_contenido.errors"
-                                            class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                            <div *ngIf="cl.fuente_contenido.errors.required">Este campo es requerido *
-                                            </div>
+                                            Archivo seleccionado: {{contenidoLeccionForm.get('fuente_contenido')?.value?.name }}
+                                            <!-- Archivo seleccionado: {{ selectedfuenteContenido?.name }} -->
                                         </div>
                                     </div>
                                 </ng-container>
