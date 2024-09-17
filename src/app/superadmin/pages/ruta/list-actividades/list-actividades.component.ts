@@ -129,8 +129,15 @@ export class ListActividadesComponent {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  EditarActividad(ActividadId: number, rutaId: number, isEditing: boolean): void {
-    this.router.navigate(['actnivlec'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
+  EditarActividad(ActividadId: number, rutaId: number, isEditing: boolean, estado:any): void {
+    if (estado === 'Inactivo'){
+      this.alertService.alertainformativa('No puedes editar actividades cuando la actividad este inactiva, debes activarla para poderla editar', 'error').then((result) => {
+        if (result.isConfirmed) {   
+        }
+      });
+    }else{
+      this.router.navigate(['actnivlec'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
+    }
   }
 
   agregarActividadRuta(rutaId: number):void {

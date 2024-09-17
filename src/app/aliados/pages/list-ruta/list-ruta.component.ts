@@ -11,6 +11,7 @@ import { User } from '../../../Modelos/user.model';
 import { SwitchService } from '../../../servicios/switch.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalAddRutaComponent } from '../../../superadmin/pages/ruta/modal-add-ruta/modal-add-ruta.component';
+import { AlertService } from '../../../servicios/alert.service';
 
 @Component({
   selector: 'app-list-ruta',
@@ -39,7 +40,8 @@ export class ListRutaComponent implements OnInit {
     private rutaService: RutaService,
     private router: Router,
     private modalSS: SwitchService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public alertService: AlertService,
   ) {}
 
   ngOnInit(): void {
@@ -145,10 +147,19 @@ export class ListRutaComponent implements OnInit {
   // listarActividad():void {
   //   this.router.navigate(['list-actividades'], {queryParams: {id_ruta: this.rutaId}});
   // }
-  listarActividad(rutaId: number): void {
-    this.router.navigate(['list-actividades-aliado'], {
-      queryParams: { id_ruta: rutaId },
-    });
+  listarActividad(rutaId: number, estado: any): void {
+    console.log("AQUI ESTADO", estado);
+    if (estado === 'Inactivo'){
+      this.alertService.alertainformativa('No puedes editar actividades en una ruta que este inactiva, debes activar la ruta para poderla editar', 'error').then((result) => {
+        if (result.isConfirmed) {
+          
+        }
+      });
+    }else{
+      this.router.navigate(['list-actividades-aliado'], {queryParams: { id_ruta: rutaId},
+      });
+    }
   }
+
 }
 
