@@ -839,14 +839,11 @@ export class RutaAliadoComponent {
       return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
-    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 470) {
-      this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 470 caracteres');
+    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 1200) {
+      this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 1200 caracteres');
       return;
     }
-    if (this.contenidoLeccionForm.invalid) {
-      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
-      return;
-    }
+
     const formData = new FormData();
     formData.append('id_leccion', idLeccion);
     let estadoValue: string;
@@ -880,6 +877,10 @@ export class RutaAliadoComponent {
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();
+        },
+        error => {
+          this.alertServices.errorAlert('Error', error.error.message);
+          console.log(error);
         }
       )
     } else {
@@ -894,6 +895,7 @@ export class RutaAliadoComponent {
           //location.reload();
         },
         error => {
+          this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
       )

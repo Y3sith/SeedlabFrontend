@@ -807,14 +807,11 @@ export class ActnivlecComponent implements OnInit {
       return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
-    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 470) {
+    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 1200) {
       this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 1200 caracteres');
       return;
     }
-    if (this.contenidoLeccionForm.invalid) {
-      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
-      return;
-    }
+
     const formData = new FormData();
     formData.append('id_leccion', idLeccion);
     let estadoValue: string;
@@ -848,6 +845,10 @@ export class ActnivlecComponent implements OnInit {
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();
+        },
+        error => {
+          this.alertServices.errorAlert('Error', error.error.message);
+          console.log(error);
         }
       )
     } else {
@@ -862,6 +863,7 @@ export class ActnivlecComponent implements OnInit {
           //location.reload();
         },
         error => {
+          this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
       )
@@ -976,7 +978,6 @@ export class ActnivlecComponent implements OnInit {
   onTextInputContenido(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.contenidoLeccionForm.patchValue({ fuente_contenido: value });
-    //console.log('fuente actualizada:', value);  // Para depuración
   }
 
   triggerFileInputContenido() {
