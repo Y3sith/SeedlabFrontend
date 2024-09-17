@@ -42,6 +42,16 @@ export class AlertService {
     });
   }
 
+  alertainformativa(text: string, icon?: 'success' | 'error' | 'warning' | 'info' | 'question', confirmButtonText?: string) {
+    return Swal.fire({
+      text: text,
+      icon: icon,
+      confirmButtonColor: "#38bdf8",
+      confirmButtonText: confirmButtonText || 'Aceptar',
+      reverseButtons: true
+    });
+  }
+
   DesactivarEmprendedor(title: string, text: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question', confirmButtonText?: string, cancelButtonText?: string) {
     return Swal.fire({
       title: title,

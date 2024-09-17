@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { environment } from '../../../../environment/env';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-actividad',
@@ -10,13 +11,19 @@ import { environment } from '../../../../environment/env';
 export class ModalActividadComponent implements OnInit {
   @Input() actividad: any;
   @Input() visible: boolean = false;
+  @Input() rutaId: number;
   @Output() close = new EventEmitter<void>();
+  @Output() irAModuloClicked = new EventEmitter<number>();
+//  @Output() irAModuloClicked = new EventEmitter<{ actividad: any, ultimoElemento: any }>();
+
 
   imagenError: boolean = false;
   imagenUrl: string;
   colorIndex?: number;
 
-  constructor (private cdr: ChangeDetectorRef){}
+  constructor (private cdr: ChangeDetectorRef,
+    private router: Router,
+  ){}
 
   ngOnInit() {
     if (this.actividad && this.actividad.fuente) {
@@ -70,8 +77,7 @@ export class ModalActividadComponent implements OnInit {
   }
 
   irAModulo() {
-    // Implementa la lógica para ir al módulo aquí
-    console.log('Ir al módulo de:', this.actividad.nombre);
+    this.irAModuloClicked.emit(this.actividad);
   }
 
   manejarErrorImagen() {

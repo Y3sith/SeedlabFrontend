@@ -45,7 +45,7 @@ export class PerfilOrientadorComponent {
   boton: boolean;
   id: number;
   selectedImagen: File | null = null;
-  orientadorId : number = 1;
+  orientadorId : number
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
   showEditButton = false;
@@ -56,7 +56,7 @@ export class PerfilOrientadorComponent {
     nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
     apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
     celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
-    imagen_perfil: [null ,Validators.required],
+    imagen_perfil: [Validators.required],
     email: ['', [Validators.required, Validators.email, this.emailValidator]],
     password: ['', [Validators.minLength(8)]],
     genero: ['', Validators.required],
@@ -99,7 +99,7 @@ export class PerfilOrientadorComponent {
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
-        this.id = this.user.id;
+        this.orientadorId = this.user.id;
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 2) {
           this.router.navigate(['home']);
@@ -114,7 +114,7 @@ export class PerfilOrientadorComponent {
 
   verEditar(): void {
     if (this.token) {
-      this.orientadorService.getinformacionOrientador(this.token, this.id).subscribe(
+      this.orientadorService.getinformacionOrientador(this.token, this.orientadorId).subscribe(
         (data) => {
           this.perfilorientadorForm.patchValue({
             documento: data.documento,
@@ -183,10 +183,6 @@ export class PerfilOrientadorComponent {
       console.log("Formulario Invalido", this.perfilorientadorForm.value);
       this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
       this.submitted = true;
-    }
-    error=>{
-      console.log("Error al actualizar", error);
-    
       return
     }
   
@@ -209,6 +205,7 @@ export class PerfilOrientadorComponent {
         } else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
         }
+
       }
     });
   
@@ -230,16 +227,6 @@ export class PerfilOrientadorComponent {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
   
-        //   this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
-        //     data => {
-        //       console.log("personalizacion creada", data);
-        //       location.reload();
-        //     },
-        //     error => {
-        //       console.error("no funciona", error);
-        //     }
-        //   );
-        // }
 
         this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
           if (result.isConfirmed) {
@@ -334,7 +321,8 @@ export class PerfilOrientadorComponent {
 
     // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
-
+    this.perfilorientadorForm.get('id_municipio')?.setValue(null);
+    this.listMunicipios = [];
     // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }

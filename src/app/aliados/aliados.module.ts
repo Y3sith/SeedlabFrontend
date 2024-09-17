@@ -7,6 +7,7 @@ import { AsignarAsesorModalComponent } from './pages/asignar-asesor-modal/asigna
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SharedModule } from '../shared.module';
 import { AliadosRoutingModule } from './aliados-routing.module';
+import { SafePipe } from './pages/modal-aliados/modal-aliados.component';
 
 
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
@@ -26,6 +27,10 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
 import { TodosLosAliadosComponent } from './pages/todos-los-aliados/todos-los-aliados.component';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { RutaAliadoComponent } from './pages/ruta-aliado/ruta-aliado.component';
+import { ModalAliadosComponent } from './pages/modal-aliados/modal-aliados.component';
+import { ListRutaComponent } from './pages/list-ruta/list-ruta.component';
+import { ListActividadesComponent } from './pages/list-actividades/list-actividades.component';
 
 
 
@@ -44,7 +49,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     AddBannerComponent,
     ReportesComponent,
     TodosLosAliadosComponent,
-    
+    RutaAliadoComponent,
+    ModalAliadosComponent,
+    SafePipe,
+    ListRutaComponent,
+    ListActividadesComponent, 
   ],
   imports: [
     CommonModule,

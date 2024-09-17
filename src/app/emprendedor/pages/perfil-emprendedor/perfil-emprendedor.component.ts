@@ -75,19 +75,19 @@ export class PerfilEmprendedorComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
   ) { 
     this.emprendedorForm = this.fb.group({
-      nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
-      apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
+      nombre: ['', [Validators.required, this.noNumbersValidator]],
+      apellido: ['', [Validators.required, this.noNumbersValidator]],
       documento: ['', Validators.required],
       imagen_perfil: [Validators.required],
       celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
       genero: ['', Validators.required],
       direccion: [],
       id_tipo_documento: [Validators.required],
-      id_departamento: [Validators.required],
-      id_municipio: [Validators.required],
+      id_departamento: ['', Validators.required],
+      id_municipio: ['', Validators.required],
       fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
       email: ['', Validators.required],
-      password: ['',  Validators.minLength(8)],
+      password: ['',  [Validators.minLength(10), this.passwordValidator]],
       estado: true,
     });
   }
@@ -144,7 +144,8 @@ export class PerfilEmprendedorComponent implements OnInit {
   
       // Guarda el departamento seleccionado en el localStorage
       localStorage.setItem('departamento', selectedDepartamento);
-  
+      this.emprendedorForm.get('id_municipio')?.setValue(null);
+      this.listMunicipios = [];
       // Llama a cargarMunicipios si es necesario
       this.cargarMunicipios(selectedDepartamento);
     }
@@ -154,11 +155,7 @@ export class PerfilEmprendedorComponent implements OnInit {
         (data) => {
           this.listMunicipios = data;
         console.log("MUNICIPIOS",data);
-          // Establecer el municipio actual en el select después de cargar los municipios
-          //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
-          // if (municipioId) {
-          //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
-          // }
+         
         },
         (err) => {
           console.log('Error al cargar los municipios:', err);
@@ -252,13 +249,14 @@ export class PerfilEmprendedorComponent implements OnInit {
 
  updateEmprendedor(): void {
   const formData = new FormData();
-  let estadoValue: string;  
+  let estadoValue: string;
 
-  if(this.emprendedorForm.invalid){
+  // Validación general
+  if (this.emprendedorForm.invalid) {
     console.log("Formulario Invalido", this.emprendedorForm.value);
-    this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
+    this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
     this.submitted = true;
-    return
+    return;
   }
 
   // First pass: handle special cases and avoid duplication
@@ -301,10 +299,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
   }
 
-  // console.log('Data to be sent:');
-  // formData.forEach((value, key) => {
-  //   console.log(`${key}: ${value}`);
-  // });
+ 
 
   this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
     if (result.isConfirmed) {
@@ -408,8 +403,14 @@ export class PerfilEmprendedorComponent implements OnInit {
 
   // console.log("Texto de confirmación para desactivar:", confirmationText);
 
-  passwordValidator(control: AbstractControl) {
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
+
+    // Si el campo está vacío, consideramos que es válido
+    if (!value || value.trim() === '') {
+      return null;
+    }
+
     const hasUpperCase = /[A-Z]+/.test(value);
     const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
 
@@ -419,6 +420,7 @@ export class PerfilEmprendedorComponent implements OnInit {
       return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
     }
   }
+
 
   get f() { return this.emprendedorForm.controls; }
 
@@ -555,4 +557,5 @@ export class PerfilEmprendedorComponent implements OnInit {
       return null;
     }
   }
+  
 }

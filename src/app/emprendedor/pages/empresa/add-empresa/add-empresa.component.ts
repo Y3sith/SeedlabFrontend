@@ -54,6 +54,10 @@ export class AddEmpresaComponent {
   showFirstSection = true;
   showSecondSection = false;
   showThirdSection = false;
+  ocultarSinApoyo: boolean = true;
+  isEditing: boolean = false;
+  nose: boolean = true;
+  esVistaCreacion: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -73,8 +77,8 @@ export class AddEmpresaComponent {
     console.log("DOCUMENTO",this.id_documentoEmpresa)
 
     this.addEmpresaForm = this.fb.group({
-      nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
-      correo: ['', [Validators.required, Validators.email, this.emailValidator]],
+      nombre: ['', [Validators.required, this.noNumbersValidator]],
+      correo: ['', [Validators.required, Validators.email]],
       id_tipo_documento: ['', Validators.required],
       documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
       razonSocial: ['', Validators.required],
@@ -110,6 +114,7 @@ export class AddEmpresaComponent {
     this.cargarDatosEmpresa();
     this.cargarDepartamentos();
     this.cargarApoyos();
+    this.esVistaCreacion = !this.id_documentoEmpresa;
   }
 
   /* Valida el token del login */
@@ -240,6 +245,7 @@ export class AddEmpresaComponent {
   }
 
   cargarDatosEmpresa(): void {
+
     this.EmpresaService.traerEmpresasola(this.token, this.id_emprendedor, this.id_documentoEmpresa).subscribe(
       data => {
         this.empresa = data;
@@ -274,9 +280,11 @@ export class AddEmpresaComponent {
 
     if (this.addEmpresaForm.invalid) {
       console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
-      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos de la empresa');
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del formulario');
       return;
     }
+
+    
 
     const empresa: any = {
       documento: this.addEmpresaForm.get('documento')?.value,
@@ -417,19 +425,26 @@ export class AddEmpresaComponent {
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
-        console.log("apoyos", this.listaApoyo);
-        if (this.listaApoyo.length > 0) {
-          this.onApoyoSelect(this.listaApoyo[0].documento);
+        if (this.listaApoyo && this.listaApoyo.length > 0 && this.listaApoyo[0].documento !== '') {
+          this.ocultarSinApoyo = false;
+          this.isEditing = true; // Estamos en modo edición si hay apoyos
+          this.mostrarBotonesNuevos = false;
+        } else {
+          this.ocultarSinApoyo = true;
+          this.isEditing = false; // No estamos en modo edición si no hay apoyos
+          this.mostrarBotonesNuevos = false;
         }
+        console.log("apoyos", this.listaApoyo);
       },
       error => {
         console.error(error);
-      });
+      }
+    );
   }
 
   onApoyoSelect(documento: string) {
     const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
-    
+    this.isEditing = true;
     if (selectedApoyo) {
       this.selectedApoyoDocumento = selectedApoyo.documento;
       this.addApoyoEmpresaForm.patchValue({
@@ -552,17 +567,6 @@ export class AddEmpresaComponent {
       return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
     }
     return null;
-  }
-
-  emailValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    const hasAtSymbol = /@/.test(value);
-
-    if (!hasAtSymbol) {
-      return { emailInvalid: 'El correo debe ser válido *' };
-    } else {
-      return null;
-    }
   }
 
   noLettersValidator(control: AbstractControl): ValidationErrors | null {

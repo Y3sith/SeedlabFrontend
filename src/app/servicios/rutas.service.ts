@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs';
@@ -36,6 +36,23 @@ export class RutaService {
     return this.http.get(this.url+'/ruta', options);
   }
 
+  descargarArchivo(contenidoId: number): Observable<HttpResponse<Blob>> {
+    //const url = `${environment.apiUrl}aliado/${estado}`;
+    return this.http.get(`${environment.apiUrl}descargar-archivo/${contenidoId}`, {
+      observe: 'response',
+      responseType: 'blob',
+      headers: new HttpHeaders({
+        'Accept': 'application/pdf'
+      })
+    });
+  }
+
+  ultimaActividad(access_token:any, rutaId: number):Observable<any>{
+    const options= { headers: this.CreacionHeaders(access_token)};
+    const url = `${environment.apiUrl}ultimaruta/${rutaId}`;
+    return this.http.get(url, options);
+  }
+
   rutasActivas(access_token:any): Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(this.url+'/rutasActivas',options)
@@ -45,7 +62,6 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(this.url+'/ruta', ruta,options);
   }
-
   
   rutaXid(access_token:any, rutaId: number):Observable<any>{
     const options= { headers: this.CreacionHeaders(access_token)};
@@ -57,6 +73,30 @@ export class RutaService {
     return this.http.get(this.url+'/mostrarRutaContenido/'+idRuta,options);
   }
 
+  actnivleccontXruta(access_token:any, idRuta: number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
+  }
+
+  activadadxAliado(access_token:any, idRuta: number, idAliado):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
+  }
+
+  activadadxAsesor(access_token:any, idRuta: number, idAsesor):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/actnividadxAsesor/'+idRuta+'/'+idAsesor,options)
+  }
+
+  actividadCompletaxruta(access_token:any, idRuta: number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/actividadcompleta/'+idRuta,options)
+  }
+
+  ruta(access_token:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/rutas',options)
+  }
   
   //////  editar
   updateRutas(access_token:any, ruta:Ruta,id:number):Observable<any>{
@@ -84,10 +124,12 @@ export class RutaService {
     return this.http.put(this.url+'contenido_por_leccion',options)
   }
 
-  actnivleccontXruta(access_token:any, idRuta: number):Observable<any>{
+  idRespuestas(access_token:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
+    return this.http.get(this.url+'/idRespuestasHeidy',options)
   }
+
+
 
 
   

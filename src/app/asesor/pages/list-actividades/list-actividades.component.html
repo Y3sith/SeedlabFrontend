@@ -1,0 +1,132 @@
+<div class="container mx-auto p-4 pt-2 font-poppins">
+    <header class="flex flex-col md:flex-row justify-between items-center mb-6">
+        <app-header [title] [subtitle]="'Actividades'"></app-header>
+        <div class="relative w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl flex justify-end md:mb-10">
+            <select [(ngModel)]="userFilter.estado" (change)="onEstadoChange($event)"
+                class="rounded-full border-2 bg-form-gray text-gray-400 md:w-28 mr-5 h-10 ml-3 focus:outline-none text-center">
+                <option value="Activo" class="text-gray-600">Activo</option>
+                <option value="Inactivo" class="text-gray-600">Inactivo</option>
+            </select>
+            <input type="text" [(ngModel)]="userFilter.nombre"
+                class="w-full max-md:w-full max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray"
+                placeholder="Buscar..." required />
+            <button class="absolute md:right-3 right-1 top-1.5 bg-sky-500 p-1.5 rounded-2xl">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+    </header>
+    <!-- <div class="flex justify-end items-center mb-4">
+        <span class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900">Agregar Actividad</span>
+        <button class="bg-amber-500 text-white w-16 h-8 rounded-lg flex items-center justify-center" (click)="agregarActividadRuta(rutaId)" >
+            <span class="text-3xl font-semibold leading-none">+</span>
+        </button>
+    </div> -->
+    <div class="bg-form-gray rounded-lg shadow-md p-4 mb-6">
+        <div class="overflow-x-auto">
+            <table class="lg:w-4/6 md:5/6 md:mx-auto">
+                <thead>
+                    <tr>
+                        <th class="text-left p-2">Nombre Actividad</th>
+                        <th class="text-left p-2">Aliado</th>
+                        <th class="text-left p-2">Asesor</th>
+                        <th class="text-left p-2 ">Estado</th>
+                        <th class="text-left p-2"></th>
+                    </tr>
+                </thead>
+                <tbody class="space-y-6">
+                    <ng-container
+                        *ngFor="let contenido of listAcNiLeCo">
+                        <ng-container *ngFor="let actividad of contenido.actividades |filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index ">
+                            <tr class="bg-line-gray my-5 rounded-xl">
+                                <td class="p-2 rounded-s-lg">{{ actividad.nombre }}</td>
+                                <td class="p-2">{{ actividad.id_aliado }}</td>
+                                <td class="p-2">{{ actividad.id_asesor }}</td>
+                                <!-- <td class="p-2">{{ actividad.estado }}</td> -->
+                                <td class="p-2 text-center">
+                                    <label class="inline-flex items-center text-center">
+                                        <!-- <input type="checkbox" class="sr-only peer"
+                                            [checked]="actividad.estado === 'Activo'"
+                                            (change)="toggleActive(actividad.id, actividad.estado)" /> -->
+                                        <!-- <div
+                                            class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                        </div> -->
+                                        <span class="text-sm font-medium text-gray-900">
+                                            {{ actividad.estado ? 'Activo' : 'Inactivo' }}
+                                        </span>
+                                    </label>
+                                </td>
+                                <td class="p-2 rounded-e-lg">
+                                    <button type="button" class="text-blue-500" (click)="EditarActividad(actividad.id,rutaId, true, actividad.estado)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4"
+                                            fill="currentColor">
+                                            <path
+                                                d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                            <td class="h-2"></td>
+                            <tr *ngIf="i < listAcNiLeCo.length - 1">
+                                <td class="py-2"></td>
+                            </tr>
+                        </ng-container>
+                        <tr *ngIf="listAcNiLeCo.length === 0">
+                            <td colspan="4" class="text-center py-4 text-gray-500">No se encontraron actividades.</td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading">
+        <div class="text-center">
+          <nav aria-label="Page navigation example">
+            <ul class="inline-flex space-x-2 text-sm items-center pl-0">
+              <li>
+                <a 
+                  href="javascript:void(0)" 
+                  class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline" 
+                  (click)="changePage('previous')" 
+                  [class.opacity-50]="!canGoPrevious()" 
+                  [class.cursor-not-allowed]="!canGoPrevious()"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                    <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
+                  </svg>
+                </a>
+              </li>
+              <ng-container *ngFor="let pageNumber of getPages()">
+                <li>
+                  <a 
+                    href="javascript:void(0)" 
+                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 border-amber-500 text-amber-500 hover:bg-amber-100 focus:outline-none no-underline font-bold" 
+                    (click)="changePage(pageNumber)" 
+                    [class.bg-amber-500]="page === pageNumber" 
+                    [class.text-white]="page === pageNumber"
+                  >
+                    {{ pageNumber }}
+                  </a>
+                </li>
+              </ng-container>
+              <li>
+                <a 
+                  href="javascript:void(0)" 
+                  class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline" 
+                  (click)="changePage('next')" 
+                  [class.opacity-50]="!canGoNext()" 
+                  [class.cursor-not-allowed]="!canGoNext()"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                    <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>

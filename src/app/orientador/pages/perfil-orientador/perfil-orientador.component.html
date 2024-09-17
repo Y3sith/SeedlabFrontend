@@ -34,14 +34,16 @@
                         </div>
                         <div class=" rounded-lg p-4 h-full w-full">
                             <div class="w-full">
-                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center font-poppins ">Información Básica</h5>
+                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center font-poppins ">Información
+                                    Básica</h5>
 
                                 <label for="nombre" class="block mt-4 mb-2">Nombre(s)</label>
                                 <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
                                     class="p-2 h-12 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                                <div *ngIf="submitted && f.nombre.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="f.nombre.errors.required">Este campo es requerido*</div>
+                                <div *ngIf="f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
+                                    <span *ngIf="f.nombre.errors.required">Este campo es requerido*</span>
                                     <div *ngIf="f.nombre.errors.hasNumbers">Este campo no puede contener números*</div>
                                     <div *ngIf="f.nombre.errors.minlength">El nombre debe tener al menos 4 caracteres*
                                     </div>
@@ -50,8 +52,9 @@
                                 <label for="apellido" class="block mb-2 mt-4">Apellido(s)</label>
                                 <input type="text" id="apellido" formControlName="apellido" [readonly]="blockedInputs"
                                     class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                                <div *ngIf="submitted && f.apellido.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                <div *ngIf="f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
                                     <div *ngIf="f.apellido.errors.required">Este campo es requerido*</div>
                                     <div *ngIf="f.apellido.errors.hasNumbers">Este campo no puede contener números*
                                     </div>
@@ -74,20 +77,26 @@
                                     <div class="">
                                         <label for="documento" class="block mb-2 max-md:mt-4">Número de
                                             Documento</label>
-                                        <input type="number" id="documento" formControlName="documento"
+                                        <input type="text" id="documento" formControlName="documento"
                                             [readonly]="blockedInputs"
-                                            class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                                            <div *ngIf="submitted && f.documento.errors"
-                                                class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                                <div *ngIf="f.documento.errors.required">Este campo es requerido*</div>
-                                                <div *ngIf="f.documento.errors.lengthError">El número de documento debe tener entre 5 y 13 dígitos*</div>
-                                                <div *ngIf="f.documento.errors.hasLetters">El número de documento no puede contener letras*</div>
-                                            </div>
-                                        </div>
+                                            class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                            [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}" />
+                                    </div>
 
 
 
                                 </div>
+
+                                <div *ngIf="f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)"
+                                    class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg"
+                                    role="alert">
+                                    <div *ngIf="f.documento.errors.required">Este campo es requerido*</div>
+                                    <div *ngIf="f.documento.errors.lengthError">El número de documento debe tener entre
+                                        5 y 13 dígitos*</div>
+                                    <div *ngIf="f.documento.errors.hasLetters">El número de documento no puede contener
+                                        letras*</div>
+                                </div>
+
                                 <label for="genero" class="block mb-2 mt-4">Género</label>
                                 <select id="genero" formControlName="genero" [disabled]="blockedInputs"
                                     class="p-2 h-12 w-full md:mb-4 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
@@ -113,12 +122,14 @@
                         <label for="fechaNacimiento" class="block mb-2">Fecha de Nacimiento</label>
                         <input type="date" id="fecha_nac" formControlName="fecha_nac" [readonly]="blockedInputs"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none" />
-                            <div *ngIf="submitted && f.fecha_nac.errors" class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                <div *ngIf="f.fecha_nac.errors.required">Este campo es requerido *</div>
-                                <div *ngIf="f.fecha_nac.errors.futureDate">La fecha no es válida*</div>
-                                <div *ngIf="f.fecha_nac.errors.tooOld">La fecha no es válida*</div>
-                                <div *ngIf="f.fecha_nac.errors.tooRecent">Debe tener al menos 18 años *</div>
-                            </div>
+                            <div *ngIf="f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)"
+                            class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg"
+                            role="alert">
+                            <div *ngIf="f.fecha_nac.errors.required">Este campo es requerido *</div>
+                            <div *ngIf="f.fecha_nac.errors.futureDate">La fecha no es válida*</div>
+                            <div *ngIf="f.fecha_nac.errors.tooOld">La fecha no es válida*</div>
+                            <div *ngIf="f.fecha_nac.errors.tooRecent">Debe tener al menos 18 años *</div>
+                        </div>
 
                         <label for="password" class="block mb-2 mt-4">Contraseña</label>
                         <div class="relative mb-2">
@@ -133,9 +144,9 @@
                                 <i *ngIf="!hide" class="fa fa-eye text-cyan-500"></i>
                             </button>
                         </div>
-                        <div *ngIf="submitted && f.password.errors"
+                        <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)"
                             class="text-red-500 bg-red-50 pl-2 rounded-lg inline-block">
-                            <div *ngIf="f.password.errors.minlength">La contraseña debe tener al menos 10 caracteres *
+                            <div *ngIf="f.password.errors.minlength">La contraseña debe tener al menos 10 caracteres*
                             </div>
                         </div>
 
@@ -143,16 +154,25 @@
 
                         <label for="correo" class="block mb-2">Correo Electrónico</label>
                         <input type="text" id="correo" formControlName="email" [readonly]="blockedInputs"
-                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                            <div *ngIf="submitted && f.email.errors"
-                        class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                        <div *ngIf="f.email.errors.required">Este campo es requerido *</div>
-                        <div *ngIf="f.email.errors.emailInvalid">Ingrese un Correo valido</div>
-                      </div>                            
+                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"
+                            [ngClass]="{'border-red-500': f['email'].invalid && (f['email'].dirty || f['email'].touched)}">
+                        <div *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)"
+                            class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                            <div *ngIf="f.email.errors.required">Este campo es requerido*</div>
+                            <div *ngIf="f.email.errors.emailInvalid">Ingrese un Correo valido*</div>
+                        </div>
 
                         <label for="celular" class="block mb-2 mt-4">Celular</label>
-                        <input type="number" id="celular" formControlName="celular" [readonly]="blockedInputs"
-                            class="p-2 h-12 w-full md:mb-8 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                        <input type="text" id="celular" formControlName="celular" [readonly]="blockedInputs"
+                            class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200"
+                            [ngClass]="{'border-red-500': f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)}">
+                        <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
+                            class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg" role="alert">
+                            <div *ngIf="f.celular.errors.required">Este campo es requerido*</div>
+                            <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos*</div>
+                            <div *ngIf="f.celular.errors.hasLetters">El número de celular no puede contener letras*
+                            </div>
+                        </div>
                     </div>
                     <div class="w-20"></div>
 
@@ -170,13 +190,16 @@
 
 
                         <label for="id_municipio" class="block mb-2 mt-4">Municipio</label>
-                        <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
-                            [disabled]="blockedInputs"
-                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
-                            <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
-                                {{ municipio.nombre }}
-                            </option>
-                        </select>
+                            <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
+                                [disabled]="blockedInputs"
+                                class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
+                                <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
+                                    {{ municipio.nombre }}
+                                </option>
+                            </select>
+                            <div *ngIf="submitted && f['id_municipio'].errors" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                                <div *ngIf="f['id_municipio'].errors['required']">Este campo es requerido *</div>
+                            </div>
 
                         <label for="direccion" class="block mb-2 mt-4">Dirección</label>
                         <input type="text" id="direccion" formControlName="direccion" [readonly]="blockedInputs"

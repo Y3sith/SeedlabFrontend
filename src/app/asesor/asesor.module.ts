@@ -11,7 +11,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 
 import { FilterPipeModule } from 'ngx-filter-pipe';
-
+import { ListRutaComponent } from './pages/list-ruta/list-ruta.component';
+import { ListActividadesComponent } from './pages/list-actividades/list-actividades.component';
+import { RutaAsesorComponent } from './pages/ruta-asesor/ruta-asesor.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -19,7 +22,10 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
   declarations: [
     AsesoriasComponent,
     HorarioModalComponent,
-    PerfilAsesorComponent
+    PerfilAsesorComponent,
+    ListRutaComponent,
+    ListActividadesComponent,
+    RutaAsesorComponent,
   ],
   imports: [
     CommonModule,
@@ -29,7 +35,8 @@ import { FilterPipeModule } from 'ngx-filter-pipe';
     ReactiveFormsModule,
     NgxPaginationModule,
     FormsModule,
-    FilterPipeModule
+    FilterPipeModule,
+    RouterModule
   ]
 })
 export class AsesorModule { }

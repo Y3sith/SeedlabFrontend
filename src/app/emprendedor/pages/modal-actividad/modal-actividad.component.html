@@ -8,10 +8,10 @@
           <path fill="#000000" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z"/></svg>
         </button>
 
-        <div class="md:flex justify-between items-center px-5">
+        <div class="md:flex justify-between items-center md:px-5">
           <!-- Contenedor del título y texto -->
-          <div class="md:w-1/2 pr-8">
-            <h1 class="mb-0 font-bold text-5xl font-poppins leading-tight" [style.color]="getColor()">{{ actividad.nombre }}</h1>
+          <div class="md:w-1/2">
+            <h1 class="mb-0 font-bold md:text-5xl text-4xl font-poppins leading-tight" [style.color]="getColor()">{{ actividad.nombre }}</h1>
             <h3 class="italic"></h3>
             <p class="mb-6 leading-relaxed text-base  text-gray-800 ">{{ actividad.descripcion }}</p>
             <button (click)="irAModulo()" [style.background-color]="getColor()"

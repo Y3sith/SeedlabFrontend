@@ -1,22 +1,21 @@
-<div class="fixed z-50 inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center  p-4">
+<div class="fixed z-50 inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center  p-4 font-poppins">
     <div class="bg-white border border-gray-300 p-6 sm:p-10 rounded w-full max-w-md md:max-w-lg lg:max-w-2xl h-auto">
-        <h1 class="text-start text-lg sm:text-xl font-bold mb-10">
+        <h1 class="mr-3 text-amber-500 text-[20px] italic mb-1" style="font-weight: 900;">
             {{ isEditing ? 'Editar Ruta' : 'Crear Ruta' }}
         </h1>
-        <form [formGroup]= "rutaForm" (ngSubmit)="addRuta()">
+        <form [formGroup]="rutaForm" (ngSubmit)="addRuta()">
             <div>
                 <div class="relative mx-2 my-2">
-                    <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input type="text" id="nombre" formControlName="nombre" required
-                        class="w-full p-2 border rounded">  
+                    <label for="nombre" class="block mb-2 text-black">Nombre</label>
+                    <input type="text" id="nombre" formControlName="nombre" required class="p-2 h-12 w-full border rounded-md bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
                 </div>
 
 
                 <!-- Toggle Field -->
                 <div *ngIf="isEditing">
-                    <div class="mt-4 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
+                    <div class="mt-4 block text-sm font-medium text-gray-700 ">Activar/Desactivar Ruta
                         <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-                            matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
+                            matTooltip="Esta funcion sirve para Activar/Desactivar la ruta.Si la desactivas no podra acceder a sus funciones y tendras que activarla."
                             matTooltipPosition="right" style="color: #adb7c7;"></fa-icon>
                     </div>
                     <label class="inline-flex items-center cursor-pointer md:mt-6">
@@ -28,22 +27,13 @@
                         <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ isActive ? 'Activo' :
                             'Inactivo' }}</span>
                     </label>
-                    <button type="button" (click)="addActividad()" 
-                        class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
-                        Agregar Actividad
-                    </button>
-
-                    <button type="button" (click)="EditarActividad()" 
-                        class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
-                        Editar Actividades
-                    </button>
                 </div>
                 <div class="flex flex-wrap justify-center mt-4">
                     <button type="button" (click)="closeModal()"
                         class="m-2 inline-block bg-gray-500 px-4 py-2 rounded text-white">
                         Cancelar
                     </button>
-                    <button type="submit" 
+                    <button type="submit"
                         class="inline-flex sm:w-auto bg-sky-400 px-4 py-2 rounded m-2 text-white font-bold">
                         Confirmar
                     </button>

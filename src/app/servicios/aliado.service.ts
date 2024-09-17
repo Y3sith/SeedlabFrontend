@@ -73,6 +73,11 @@ export class AliadoService {
     return this.http.get(url);
   }
 
+  getaliadosinau(id:number): Observable<any> {
+    const url = `${environment.apiUrl}traerAliadosiau/${id}`;
+    return this.http.get(url);
+  }
+
   //Listar asesores por aliados
   getinfoAsesor(access_token: any, id: number, estado: boolean): Observable<any> {
     const options = {

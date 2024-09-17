@@ -1,0 +1,45 @@
+@media (max-width: 900px) {
+    .contenedores {
+        display: block;
+    }
+  
+    .contenedor {
+        width: 100%;
+        display: none;
+    }
+  
+    .contenedor.active {
+        display: block;
+    }
+  
+    .navegacion {
+        justify-content: space-between;
+    }
+  }
+  
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+      background-color: white; /* Mantiene el fondo transparente */
+      color: inherit; /* Mantiene el color del texto */
+      border: 1px solid #d1d5db; /* Mantiene el borde */
+      cursor: not-allowed; /* Muestra el cursor de no permitido */
+  }
+  
+  input:disabled::placeholder,
+  textarea:disabled::placeholder {
+      color: #9ca3af; /* Mantiene el color del placeholder */
+  }
+  
+  .disabled-btn {
+      cursor: not-allowed;
+      opacity: 1; /* Mantiene la opacidad para que no se vea desvanecido */
+  }
+  
+  .boton-agregar.disabled {
+      cursor: not-allowed; /* Cambia el cursor cuando está deshabilitado */
+  }
+  
+  button[disabled], a[style*="pointer-events: none;"] {
+      cursor: not-allowed; /* Cambia el cursor para indicar que no está permitido hacer clic */
+  }

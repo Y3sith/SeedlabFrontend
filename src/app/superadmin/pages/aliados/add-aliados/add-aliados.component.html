@@ -6,7 +6,7 @@
       </svg>
       Volver
     </button>
-    <app-header [title] [subtitle]="'Agregar empresa y apoyos'"></app-header>
+    <app-header [title] [subtitle]="'Aliados'"></app-header>
   </header>
 
 
@@ -18,7 +18,7 @@
 
       <div
         class="w-full h-full sm:w-3/4 md:w-2/3 bg-gray-50 rounded-lg shadow-md px-10 py-4 md:px-32 md:py-10 md:my-6 mx-auto">
-        <div class="flex items-center mb-4 sm:mb-6 justify-center">
+        <div class="flex flex-col items-center mb-4 sm:mb-6">
           <label for="imagen_ruta" class="cursor-pointer text-center">
             <div
               class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
@@ -37,8 +37,14 @@
             <input type="file" id="imagen_ruta" name="profilePicture" class="hidden"
               (change)="onFileSelecteds($event, 'logo')" accept="image/*">
           </label>
-
+          <div *ngIf="formSubmitted && aliadoForm.get('logo')?.invalid" class="text-center w-full mt-2">
+            <span class="inline-block p-1 text-sm text-red-500 rounded-lg bg-red-50">
+              Este campo es requerido*.
+            </span>
+          </div>
         </div>
+
+
 
         <div class="grid grid-cols-1 md:grid md:grid-cols-1">
 
@@ -48,8 +54,9 @@
             <label class="text-xl font-normal" for="nombre">Nombre</label>
             <input type="text" formControlName="nombre"
               class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-            <div *ngIf="formSubmitted && aliadoForm.get('nombre')?.invalid" class="error text-red-700">
-              Este campo es obligatorio.
+            <div *ngIf="formSubmitted && aliadoForm.get('nombre')?.invalid"
+              class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+              Este campo es requerido*.
             </div>
           </div>
           <!-- Campo Correo Electrónico -->
@@ -57,30 +64,37 @@
             <label class="text-xl font-normal" for="email">Correo Electrónico</label>
             <input type="text" formControlName="email"
               class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-            <div *ngIf="formSubmitted && aliadoForm.get('email')?.invalid" class="error text-red-700">
-              Este campo es obligatorio.
+            <div *ngIf="formSubmitted && aliadoForm.get('email')?.invalid"
+              class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+              Este campo es requerido*.
             </div>
           </div>
           <!-- Campo Contraseña -->
-          <div class="md:flex items-center h-full">
-            <div class="text-xl font-normal relative mt-3">
-              <label class="text-xl font-normal" for="password">Contraseña</label>
-              <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
-                class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2" (click)="hide = !hide">
-                <i class="fas text-yellow-500 text-lg mt-8" [ngClass]="hide ? 'fa-eye' : 'fa-eye-slash'"></i>
-              </button>
-              <div *ngIf="formSubmitted && aliadoForm.get('password')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
+          <div class="md:flex items-center justify-between h-full">
+            <div class="md:w-1/2">
+              <div class="text-xl font-normal relative mt-3">
+                <label class="text-xl font-normal" for="password">Contraseña</label>
+                <div class="relative">
+                  <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
+                    class="mt-1 block w-full px-2 py-1 pr-10 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                  <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2"
+                    (click)="hide = !hide">
+                    <i class="fas text-cyan-500 text-lg" [ngClass]="hide ? 'fa-eye' : 'fa-eye-slash'"></i>
+                  </button>
+                </div>
+                <div *ngIf="formSubmitted && aliadoForm.get('password')?.invalid"
+                  class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+                  Este campo es requerido*.
+                </div>
               </div>
             </div>
 
-            <div *ngIf="idAliado" class="md:ml-24 flex flex-col justify-center h-full">
-              <div class="block text-sm font-medium text-gray-700 flex-none justify-center">
+            <div *ngIf="idAliado" class="md:w-1/2 md:flex md:flex-col md:justify-center md:items-end mt-4">
+              <div class="text-sm font-medium text-gray-700 flex items-center justify-end">
                 Activar/Desactivar Aliado
-                <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
+                <fa-icon [icon]="falupa" class="text-sm ml-1" mat-raised-button
                   matTooltip="Esta funcion sirve para Activar/Desactivar el usuario. Si lo desactivas no podra acceder a sus funciones y tendras que activarlo"
-                  matTooltipPosition="right" style="color: #adb7c7;">
+                  matTooltipPosition="left" style="color: #adb7c7;">
                 </fa-icon>
               </div>
               <label class="inline-flex items-center cursor-pointer md:mt-2">
@@ -100,102 +114,115 @@
             <label class="text-xl font-normal" for="descripcion">Descripción fanpage</label>
             <textarea formControlName="descripcion"
               class=" mt-1 w-full px-2 py-1 h-40 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200  hover:bg-blue-100 focus:bg-blue-100"></textarea>
-            <div *ngIf="formSubmitted && aliadoForm.get('descripcion')?.invalid" class="error text-red-700">
-              Este campo es obligatorio.
+            <div *ngIf="formSubmitted && aliadoForm.get('descripcion')?.invalid"
+              class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+              Este campo es requerido*.
+            </div>
+          </div>
+
+          <div class="text-xl font-normal mt-3">
+            <label class="text-xl font-normal" for="urlpagina">Url Pagina web</label>
+            <input type="text" formControlName="urlpagina"
+              class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+            <div *ngIf="formSubmitted && aliadoForm.get('urlpagina')?.invalid"
+              class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+              Este campo es requerido*.
             </div>
           </div>
 
           <!-- Campo Tipo de archivo -->
           <div class="text-xl font-normal mt-3">
-            <label class="text-xl font-normal" for="id_tipo_dato">Tipo de archivo</label>
+            <label class="text-xl font-normal" for="id_tipo_dato">Contenido didáctico</label>
             <select id="id_tipo_dato" formControlName="id_tipo_dato"
-              class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+              class="mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100"
+              [ngClass]="{'border-red-500': formSubmitted && aliadoForm.get('id_tipo_dato')?.errors}">
               <option value="" disabled selected>Seleccione el tipo de dato...</option>
               <option *ngFor="let tipodato of tipoDeDato" [value]="tipodato.id">{{tipodato.nombre}}</option>
-              <div *ngIf="formSubmitted && aliadoForm.get('id_tipo_dato')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
-              </div>
             </select>
+            <div *ngIf="formSubmitted && aliadoForm.get('id_tipo_dato')?.errors?.['required']"
+              class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+              Este campo es requerido*.
+            </div>
           </div>
+
 
           <ng-container [ngSwitch]="aliadoForm.get('id_tipo_dato').value">
             <!-- Campo video -->
             <div class="mt-3" *ngSwitchCase="'1'">
-              <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
-                (input)="onTextInput($event)"
-                class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
-              </div>
+                <input type="text" id="fuente" formControlName="ruta_multi" placeholder="Example http://example.com"
+                  (input)="onTextInput($event)"
+                  class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
+                  class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+                  Este campo es requerido*.
+                </div>
             </div>
 
             <!-- Campo imagen -->
             <div class="mt-3 w-full flex-none justify-center text-xl" *ngSwitchCase="'2'">
-              <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
-                (change)="onFileSelecteds($event, 'ruta_multi')">
-              <span (click)="triggerFileInput()"
-                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                Subir Imagen
-                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
-              </span>
-
-              <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
-                class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
-                class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
-              <div>
-
-              </div>
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
-              </div>
+                <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+                  (change)="onFileSelecteds($event, 'ruta_multi')">
+                <span (click)="triggerFileInput()"
+                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                  Subir Imagen
+                  <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+                </span>
+  
+                <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
+                  class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
+                  class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
+                <div>
+  
+                </div>
+                <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
+                  class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+                  Este campo es requerido*.
+                </div>
             </div>
 
             <!-- Campo pdf -->
             <div class="mt-3 text-xl" *ngSwitchCase="'3'">
-              <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
-                (change)="onFileSelecteds($event, 'ruta_documento')">
-              <span (click)="triggerFileInput()"
-                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                Subir PDF
-                <fa-icon [icon]="fafile" class="text-md ml-2"></fa-icon>
-              </span>
-
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
-              </div>
-              <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
-                Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
-              </div>
+                <input type="file" id="fuente" class="hidden" accept="application/pdf" #fileInput
+                  (change)="onFileSelecteds($event, 'ruta_documento')">
+                <span (click)="triggerFileInput()"
+                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                  Subir PDF
+                  <fa-icon [icon]="fafile" class="text-md ml-2"></fa-icon>
+                </span>
+  
+                <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid"
+                  class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
+                  Este campo es requerido*.
+                </div>
+                <div *ngIf="aliadoForm.get('ruta_multi')?.value" class="mt-2 text-gray-500 text-center">
+                  Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
+                </div>
             </div>
-
-            <!-- Campo texto -->
-            <div class="mt-3" *ngSwitchCase="'4'">
-              <input type="text" id="fuente" formControlName="ruta_multi" (input)="onTextInput($event)"
-                class="text-xl mt-1 block w-full px-2 py-1 border rounded-lg bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
-              <div *ngIf="formSubmitted && aliadoForm.get('ruta_multi')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
-              </div>
-            </div>
+            
           </ng-container>
 
           <!-- Campo banner -->
           <div *ngIf="!idAliado">
-            <label class="text-xl font-normal relative mt-3" for="logo">Banner
-            </label>
+            <label class="text-xl font-normal relative mt-3" for="logo">Banner</label>
             <div class="w-full text-xl font-normal mt-2">
               <input class="hidden" id="banner" type="file" accept="image/*" #fileInputs
                 (change)="onFileSelecteds($event, 'urlImagen')">
-              <span (click)="triggerFileInputs()"
-                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg bg-white hover:bg-blue-100">
-                Subir Imagen
-                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
-              </span>
-              <div *ngIf="formSubmitted && bannerForm.get('urlImagen')?.invalid" class="error text-red-700">
-                Este campo es obligatorio.
+              <div class="flex flex-col">
+                <span (click)="triggerFileInputs()"
+                  class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg bg-white hover:bg-blue-100 inline-block self-start">
+                  Subir Imagen
+                  <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+                </span>
+
+                <div *ngIf="formSubmitted && bannerForm.get('urlImagen')?.invalid"
+                  class="mt-2 px-2 py-1 text-sm text-red-500 bg-red-50 rounded-lg self-start">
+                  Este campo es requerido*.
+                </div>
               </div>
-              <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner" width="200px"
+
+              <img *ngIf="bannerPreview" [src]="bannerPreview" alt="Vista previa del banner"
                 class="mt-4 flex-none justify-center preview-image-banner border rounded-md object-cover md:text-center small-preview"
-                alt="Vista previa de la imagen">
+                width="200px">
             </div>
           </div>
 
@@ -217,13 +244,13 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="space-y-6 w-full flex justify-center">
-      <button type="submit" *ngIf="!idAliado"
-        class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full">
-        Crear Aliado
-      </button>
+      <div class="space-y-6 w-full flex justify-center">
+        <button type="submit" *ngIf="!idAliado"
+          class="mr-2 py-2 px-4 sm:px-16 mb-4 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full">
+          Crear Aliado
+        </button>
+      </div>
     </div>
   </form>
   <div
@@ -234,7 +261,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4">
         <div *ngFor="let banner of listBanners" class="bg-white rounded-lg shadow-md overflow-hidden relative">
           <img [src]="banner.urlImagen" alt="Gallery image" class="w-full h-64 object-cover">
-          <div class="absolute top-2 right-2 flex space-x-2"> 
+          <div class="absolute top-2 right-2 flex space-x-2">
             <!-- Botón del lápiz -->
             <button
               class="bg-white h-8 w-8 flex items-center justify-center rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
@@ -255,12 +282,13 @@
             </button>
           </div>
         </div>
-      
+
         <button (click)="openModal(null)">
           <label class="cursor-pointer text-center">
             <div
               class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
-              <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6">
                 </path>
               </svg>
@@ -269,7 +297,7 @@
           </label>
         </button>
       </div>
-      
+
       <tr *ngIf="listBanners.length === 0">
         <td colspan="4" class="text-center py-4 text-gray-500">No se encontraron Banners.</td>
       </tr>

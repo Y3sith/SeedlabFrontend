@@ -7,6 +7,8 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Personalizaciones } from '../../../Modelos/personalizaciones.model';
 import { Aliado } from '../../../Modelos/aliado.model';
 import { AliadoService } from '../../../servicios/aliado.service';
+import { ModalAliadosComponent } from '../modal-aliados/modal-aliados.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-todos-los-aliados',
@@ -31,6 +33,7 @@ export class TodosLosAliadosComponent {
     private authService: AuthService,
     private aliadoService: AliadoService,
     private cdr: ChangeDetectorRef,
+    public dialog: MatDialog,
     private personalizacionesService: SuperadminService,
   ) { }
 
@@ -53,6 +56,16 @@ export class TodosLosAliadosComponent {
     );
   }
   
+  openModal(idAliado: number): void {
+    let dialogRef: MatDialogRef<ModalAliadosComponent>;
+    dialogRef = this.dialog.open(ModalAliadosComponent, {
+      data: { idAliado: idAliado }
+    });
+    // dialogRef.afterClosed().subscribe(() => {
+    //   this.cargarSuperAdmin();
+    // });
+  }
+
 
   getPersonalizacion() {
     this.personalizacionesService.getPersonalizacion(this.id).subscribe(

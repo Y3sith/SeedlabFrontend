@@ -27,6 +27,7 @@ export class PersonalizacionesComponent implements OnInit {
   PreviewLogoFooter: any = null;
   idPersonalizacion: number = 1;
   ImagenPreview: string | ArrayBuffer | null = null;
+  errorMessage: string = '';
 
 
   // crear personalización
@@ -46,6 +47,10 @@ export class PersonalizacionesComponent implements OnInit {
   @ViewChild('colorPickerPrincipal') colorPickerPrincipal: ColorPickerDirective;
   @ViewChild('colorPickerSecundario') colorPickerSecundario: ColorPickerDirective;
 
+  sectionFields: string[][] = [
+    ['descripcion_footer', 'paginaWeb', 'email', 'telefono','direccion', 'ubicacion'], // Sección 1
+    ['nombre_sistema', 'color_principal','color_secundario', 'imagen_logo'], // Sección 2
+  ];
 
   constructor(private fb: FormBuilder,
     private personalizacionesService: SuperadminService,
@@ -56,7 +61,7 @@ export class PersonalizacionesComponent implements OnInit {
 
     this.personalizacionForm = this.fb.group({
       nombre_sistema: ['', Validators.required],
-      imagen_logo: [Validators.required],
+      imagen_logo: ['', Validators.required],
       //logo_footer: ['', Validators.required],
       color_principal: ['', Validators.required],
       color_secundario: ['', Validators.required],
@@ -111,11 +116,6 @@ export class PersonalizacionesComponent implements OnInit {
     this.personalizacionForm.get('color_secundario')?.setValue(color, { emitEvent: false });
   }
 
-  // onColorChangeTerciario(color: string): void {
-  //   this.selectedColorTerciario = color;
-  // }
-
-  // Resto de tu código...
 
   onFileSelecteds(event: any, type: string) {
     const file = event.target.files[0];
@@ -171,6 +171,26 @@ export class PersonalizacionesComponent implements OnInit {
   // metodo agregar personalizacion
   addPersonalizacion(): void {
     try {
+      // Verificar si los campos de la segunda sección son válidos
+      const seccion2Fields = ['nombre_sistema', 'color_principal', 'color_secundario', 'imagen_logo'];
+  
+      // Revisar si todos los campos de la sección 2 son válidos
+      const seccion2Invalido = seccion2Fields.some(field => {
+        const control = this.personalizacionForm.get(field);
+        return control?.invalid;
+      });
+  
+      // Si algún campo de la sección 2 es inválido, no enviar el formulario
+      if (seccion2Invalido) {
+        console.error("Los campos de la segunda sección son inválidos");
+        seccion2Fields.forEach(field => {
+          const control = this.personalizacionForm.get(field);
+          control?.markAsTouched(); // Marcar el campo como "tocado" para que se muestren los errores
+        });
+        return; // Evitar el envío del formulario
+      }
+  
+      // Continuar con la validación general del formulario
       if (this.personalizacionForm.valid) {
         const itemslocal = localStorage.getItem('identity');
         if (!itemslocal) {
@@ -179,7 +199,7 @@ export class PersonalizacionesComponent implements OnInit {
         }
         const id_temp = JSON.parse(itemslocal).id;
         console.log("ID Superadmin:", id_temp);
-
+  
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
         formData.append('color_principal', this.personalizacionForm.get('color_principal')?.value);
@@ -191,35 +211,16 @@ export class PersonalizacionesComponent implements OnInit {
         formData.append('direccion', this.personalizacionForm.get('direccion')?.value);
         formData.append('ubicacion', this.personalizacionForm.get('ubicacion')?.value);
         formData.append('id_superadmin', id_temp);
-
-        // const personalizaciones: Personalizaciones = {
-        //   nombre_sistema: this.personalizacionForm.value.nombre_sistema,
-        //   imagen_logo: this.personalizacionForm.value.imagen_logo,
-        //   //logo_footer: this.personalizacionForm.value.logo_footer,
-        //   color_principal: this.selectedColorPrincipal,
-        //   color_secundario: this.selectedColorSecundario,
-        //   //color_terciario: this.selectedColorTerciario,
-        //   descripcion_footer: this.personalizacionForm.value.descripcion_footer,
-        //   paginaWeb: this.personalizacionForm.value.paginaWeb,
-        //   email: this.personalizacionForm.value.email,
-        //   telefono: this.personalizacionForm.value.telefono,
-        //   direccion: this.personalizacionForm.value.direccion,
-        //   ubicacion: this.personalizacionForm.value.ubicacion,
-        //   id_superadmin: id_temp
-        // };
+  
         if (this.selectedImagen) {
           formData.append('imagen_logo', this.selectedImagen, this.selectedImagen.name);
         }
-
-
+  
         console.log("Datos a enviar:");
-
+  
         this.personalizacionesService.createPersonalizacion(this.token, formData, this.idPersonalizacion).subscribe(
           data => {
             console.log("personalizacion creada", data);
-            // console.log("Imagen en base64:", this.personalizacionForm.value.imagen_Logo);
-            // alert("Imagen en base64:\n");
-
             location.reload();
           },
           error => {
@@ -228,26 +229,18 @@ export class PersonalizacionesComponent implements OnInit {
         );
       } else {
         console.error("El formulario no es válido");
-        console.log(this.personalizacionForm);
-        this.logFormErrors();
-
+        this.logFormErrors(); // Si tienes una función para mostrar los errores
       }
     } catch (error) {
       console.error("Ocurrió un error:", error);
     }
   }
+  
 
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
         console.log("Personalización restaurada!!!!!!", data);
-        // this.personalizacionForm.patchValue({
-        //   nombre_sistema: data.nombre_sistema,
-        //   color_principal: data.color_principal,
-        //   color_secundario: data.color_secundario,
-        //   color_terciario: data.color_terciario,
-        //   imagen_Logo: '' // Limpiar o actualizar según necesites
-        // });
         location.reload();
       },
       error => {
@@ -255,8 +248,6 @@ export class PersonalizacionesComponent implements OnInit {
       }
     );
   }
-
-
 
   logFormErrors(): void {
     Object.keys(this.personalizacionForm.controls).forEach(key => {
@@ -267,7 +258,54 @@ export class PersonalizacionesComponent implements OnInit {
     });
   }
 
-  next() {
+ next() {
+    const form = this.personalizacionForm;
+    let sectionIsValid = true;
+  
+    // Obtener los campos de la sección actual
+    const currentSectionFields = this.sectionFields[this.currentIndex];
+  
+    currentSectionFields.forEach(field => {
+      const control = form.get(field);
+      if (control.invalid) {
+        control.markAsTouched();
+        control.markAsDirty();
+        sectionIsValid = false;
+      }
+    });
+  
+    // Validaciones especiales
+    if (this.currentIndex === 1) { // Asumiendo que email y fecha_nac están en la sección 2
+      const emailControl = form.get('email');
+      if (emailControl.value && emailControl.invalid) {
+        emailControl.markAsTouched();
+        emailControl.markAsDirty();
+        sectionIsValid = false;
+      }
+  
+      const fechaNacControl = form.get('fecha_nac');
+      if (fechaNacControl.value) {
+        const fechaNac = new Date(fechaNacControl.value);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+        const mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+          edad--;
+        }
+        if (edad < 18 || edad > 100) {
+          fechaNacControl.setErrors({ 'invalidAge': true });
+          fechaNacControl.markAsTouched();
+          sectionIsValid = false;
+        }
+      }
+    }
+  
+    if (!sectionIsValid) {
+      this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
+      return;
+    }
+  
+    // Si llegamos aquí, la sección actual es válida
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
     } else {
@@ -276,7 +314,20 @@ export class PersonalizacionesComponent implements OnInit {
         this.currentSubSectionIndex = 0;
       }
     }
-
+  
+    // Limpiar el mensaje de error si existe
+    this.clearErrorMessage();
+  }
+  
+  // Función auxiliar para mostrar mensajes de error
+  private showErrorMessage(message: string) {
+    console.error(message);
+    this.errorMessage = message;
+  }
+  
+  // Función auxiliar para limpiar el mensaje de error
+  private clearErrorMessage() {
+    this.errorMessage = '';
   }
 
   previous(): void {
