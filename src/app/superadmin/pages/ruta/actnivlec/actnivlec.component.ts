@@ -18,6 +18,7 @@ import { LeccionService } from '../../../../servicios/leccion.service';
 import { Leccion } from '../../../../Modelos/leccion.model';
 import { ContenidoLeccionService } from '../../../../servicios/contenido-leccion.service';
 import { Contenido_Leccion } from '../../../../Modelos/contenido-leccion.model';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-actnivlec',
@@ -132,6 +133,7 @@ export class ActnivlecComponent implements OnInit {
     private alertServices: AlertService,
     private leccionService: LeccionService,
     private contenidoLeccionService: ContenidoLeccionService,
+    private location: Location,
   ) { }
 
   ngOnInit(): void {
@@ -188,6 +190,10 @@ export class ActnivlecComponent implements OnInit {
     if (!this.token) {
       this.router.navigate(['/home']);
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   //me trae el tipo de dato que requiere la actividad
@@ -421,7 +427,7 @@ export class ActnivlecComponent implements OnInit {
         }
       })
     } else {
-      this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
+      this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
         if (result.isConfirmed) {
           this.actividadService.updateActividad(this.token, this.actividadId, formData).subscribe(
             data => {
