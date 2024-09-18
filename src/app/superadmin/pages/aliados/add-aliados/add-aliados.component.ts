@@ -362,20 +362,21 @@ mostrarToggle(): void {
 }
 
 
-  tipoDato(): void {
-    if (this.token) {
-      this.actividadService.getTipoDato(this.token).subscribe(
-        data => {
-          this.tipoDeDato = data;
-          console.log("DATO",data);
-          //this.obtenerValorBaseDatos();
-        },
-        error => {
-          console.log(error);
-        }
-      )
-    }
+tipoDato(): void {
+  if (this.token) {
+    this.actividadService.getTipoDato(this.token).subscribe(
+      data => {
+        // Filtrar los datos para excluir el tipo de dato con ID 3
+        this.tipoDeDato = data.filter(item => item.id !== 3);
+        console.log("DATO", this.tipoDeDato);
+        //this.obtenerValorBaseDatos();
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
+}
 
   // obtenerValorBaseDatos(): void {
   //   if (this.idAliado) {
@@ -403,12 +404,6 @@ mostrarToggle(): void {
         break;
       case '2': // Imagen
         this.aliadoForm.get('Imagen').setValidators([Validators.required,]);
-        break;
-      case '3': // PDF
-        this.aliadoForm.get('PDF').setValidators([Validators.required,]);
-        break;
-      case '4': // Texto
-        this.aliadoForm.get('Texto').setValidators([Validators.required]);
         break;
       default:
         this.aliadoForm.get('fuente').clearValidators();
@@ -456,8 +451,32 @@ mostrarToggle(): void {
         this.resetFileField(field);
         return;
       }
-
-      const reader = new FileReader();
+  
+      // Nueva validación para las dimensiones del logo
+      if (field === 'logo') {
+        const img = new Image();
+        img.onload = () => {
+          if (img.width !== 1751 || img.height !== 1751) {
+            this.alertService.errorAlert('Error', 'La imagen del logo debe tener exactamente 1751 x 1751 píxeles.');
+            this.resetFileField(field);
+            event.target.value = ''; // Borra la selección del input
+            return;
+          } else {
+            this.processFile(file, field);
+          }
+        };
+        img.src = URL.createObjectURL(file);
+      } else {
+        this.processFile(file, field);
+      }
+    } else {
+      this.resetFileField(field);
+    }
+  }
+  
+  // Método para procesar el archivo una vez validado
+  private processFile(file: File, field: string) {
+    const reader = new FileReader();
     reader.onload = (e: any) => {
       const previewUrl = e.target.result;
       if (field === 'urlImagen') {
@@ -473,28 +492,23 @@ mostrarToggle(): void {
     };
     reader.readAsDataURL(file);
   
-      // Genera la previsualización solo si el archivo es de tamaño permitido
-      this.generateImagePreview(file, field);
-
-      if (field === 'urlImagen') {
-        this.selectedBanner = file;
-        this.bannerForm.patchValue({ urlImagen: file });
-      } else if (field === 'logo') {
-        this.selectedLogo = file;
-        this.aliadoForm.patchValue({ logo: file });
-      } else if (field === 'ruta_multi') {
-        this.selectedruta = file;
-        this.aliadoForm.patchValue({ ruta_multi: file });
-      } else if (field === 'ruta_documento') {
-        this.selectedruta = file;
-        this.aliadoForm.patchValue({ ruta_multi: file });
-      }
-      
-  } else {
-    this.resetFileField(field);
+    // Genera la previsualización solo si el archivo es de tamaño permitido
+    this.generateImagePreview(file, field);
+  
+    if (field === 'urlImagen') {
+      this.selectedBanner = file;
+      this.bannerForm.patchValue({ urlImagen: file });
+    } else if (field === 'logo') {
+      this.selectedLogo = file;
+      this.aliadoForm.patchValue({ logo: file });
+    } else if (field === 'ruta_multi') {
+      this.selectedruta = file;
+      this.aliadoForm.patchValue({ ruta_multi: file });
+    } else if (field === 'ruta_documento') {
+      this.selectedruta = file;
+      this.aliadoForm.patchValue({ ruta_multi: file });
+    }
   }
-  }
-
   // onTextInput(event: any) {
   //   const value = event.target.value;
   //   this.aliadoForm.patchValue({ ruta_multi: value });

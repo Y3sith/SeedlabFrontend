@@ -28,6 +28,7 @@ export class ListActividadesComponent {
   isLoading: boolean = false;
   idAliado: any;
   idAsesor: any;
+  todasLasActividades: any;
 
   actividadForm = this.fb.group({
     estado: [true],
@@ -73,10 +74,12 @@ export class ListActividadesComponent {
 
   ver(): void {
     if (this.rutaId !== null) {
-      this.rutaService.activadadxAsesor(this.token, this.rutaId, this.idAsesor).subscribe(
+      this.rutaService.activadadxAsesor(this.token, this.rutaId, this.idAsesor, this.userFilter.estado).subscribe(
         (data) => {
           this.listAcNiLeCo = data;
-          console.log('Rutassssss:', this.listAcNiLeCo);
+          // Extraer todas las actividades en un solo array
+          this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
+          console.log('Todas las actividades:', this.todasLasActividades);
         },
         (error) => {
           console.log(error);
@@ -84,6 +87,7 @@ export class ListActividadesComponent {
       );
     }
   }
+
   editarEstado(ActividadId: number): void {
     const estadoActual = this.actividadForm.get('estado')?.value;
     this.alertService.alertaActivarDesactivar("¿Estás seguro de cambiar el estado de la actividad?", 'question').then((result) => {
@@ -91,7 +95,8 @@ export class ListActividadesComponent {
         this.actividadService.estadoActividad(this.token, ActividadId, estadoActual).subscribe(
           (data) => {
             this.alertService.successAlert('Éxito', data.message);
-            this.ver();
+            //this.ver();
+            location.reload();
           },
           (error) => {
             console.error(error);
@@ -113,7 +118,7 @@ export class ListActividadesComponent {
     return this.page > 1;
   }
   canGoNext(): boolean {
-    const totalItems = this.listAcNiLeCo.length;
+    const totalItems = this.todasLasActividades.length;
     const itemsPerPage = 5;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return this.page < totalPages;
@@ -128,14 +133,22 @@ export class ListActividadesComponent {
     }
   }
   getPages(): number[] {
-    const totalItems = this.listAcNiLeCo.length;
+    const totalItems = this.todasLasActividades.length;
     const itemsPerPage = 5;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  EditarActividad(ActividadId: number, rutaId: number, isEditing: boolean): void {
-    this.router.navigate(['Ruta-asesor'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
+
+  EditarActividad(ActividadId: number, rutaId: number, isEditing: boolean, estado:any): void {
+    if (estado === 'Inactivo'){
+      this.alertService.alertainformativa('No puedes editar actividades cuando la actividad este inactiva, debes activarla para poderla editar', 'error').then((result) => {
+        if (result.isConfirmed) {   
+        }
+      });
+    }else{
+      this.router.navigate(['Ruta-asesor'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
+    }
   }
 
   agregarActividadRuta(rutaId: number):void {
