@@ -25,6 +25,7 @@ export class ListActividadesComponent {
   isActive: boolean = true;
   boton = true;
   isLoading: boolean = false;
+  todasLasActividades: any;
 
   actividadForm = this.fb.group({
     estado: [true],
@@ -66,12 +67,15 @@ export class ListActividadesComponent {
       this.router.navigate(['/home']);
     }
   }
+  
   ver(): void {
     if (this.rutaId !== null) {
-      this.rutaService.actnivleccontXruta(this.token, this.rutaId).subscribe(
+      this.rutaService.actnivleccontXruta(this.token, this.rutaId, this.userFilter.estado).subscribe(
         (data) => {
           this.listAcNiLeCo = data;
-          console.log('Rutassssss:', this.listAcNiLeCo);
+          // Extraer todas las actividades en un solo array
+          this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
+          console.log('Todas las actividades:', this.todasLasActividades);
         },
         (error) => {
           console.log(error);
@@ -79,6 +83,7 @@ export class ListActividadesComponent {
       );
     }
   }
+
   editarEstado(ActividadId: number): void {
     const estadoActual = this.actividadForm.get('estado')?.value;
     this.alertService.alertaActivarDesactivar("¿Estás seguro de cambiar el estado de la actividad?", 'question').then((result) => {
@@ -86,7 +91,8 @@ export class ListActividadesComponent {
         this.actividadService.estadoActividad(this.token, ActividadId, estadoActual).subscribe(
           (data) => {
             this.alertService.successAlert('Éxito', data.message);
-            this.ver();
+            //this.ver();
+            location.reload();
           },
           (error) => {
             console.error(error);
@@ -108,7 +114,7 @@ export class ListActividadesComponent {
     return this.page > 1;
   }
   canGoNext(): boolean {
-    const totalItems = this.listAcNiLeCo.length;
+    const totalItems = this.todasLasActividades.length;
     const itemsPerPage = 5;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return this.page < totalPages;
@@ -123,7 +129,7 @@ export class ListActividadesComponent {
     }
   }
   getPages(): number[] {
-    const totalItems = this.listAcNiLeCo.length;
+    const totalItems = this.todasLasActividades.length;
     const itemsPerPage = 5;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
