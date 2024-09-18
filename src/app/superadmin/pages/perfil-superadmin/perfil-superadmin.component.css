@@ -28,6 +28,8 @@
   margin-top: 75px; /* Ajusta este valor según sea necesario */
 }
 
+input[type="password"]::-ms-reveal { display: none; }
+
 /* @media (max-width: 769px) {
   .image-container {
     top: -50px;
