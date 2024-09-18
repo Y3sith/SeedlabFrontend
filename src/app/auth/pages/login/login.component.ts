@@ -106,6 +106,7 @@ export class LoginComponent implements OnInit {
             (rs: any) => {
                 this.reply = rs;
                 if (this.reply) {
+                    this.reply.user.id_rol = Number(this.reply.user.id_rol);
                     localStorage.setItem('token', this.reply.access_token);
                     localStorage.setItem('identity', JSON.stringify(this.reply.user));
                     localStorage.setItem('currentRolName', this.getRoleName(Number(this.reply.user.id_rol)));
