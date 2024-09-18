@@ -451,8 +451,32 @@ tipoDato(): void {
         this.resetFileField(field);
         return;
       }
-
-      const reader = new FileReader();
+  
+      // Nueva validación para las dimensiones del logo
+      if (field === 'logo') {
+        const img = new Image();
+        img.onload = () => {
+          if (img.width !== 1751 || img.height !== 1751) {
+            this.alertService.errorAlert('Error', 'La imagen del logo debe tener exactamente 1751 x 1751 píxeles.');
+            this.resetFileField(field);
+            event.target.value = ''; // Borra la selección del input
+            return;
+          } else {
+            this.processFile(file, field);
+          }
+        };
+        img.src = URL.createObjectURL(file);
+      } else {
+        this.processFile(file, field);
+      }
+    } else {
+      this.resetFileField(field);
+    }
+  }
+  
+  // Método para procesar el archivo una vez validado
+  private processFile(file: File, field: string) {
+    const reader = new FileReader();
     reader.onload = (e: any) => {
       const previewUrl = e.target.result;
       if (field === 'urlImagen') {
@@ -468,28 +492,23 @@ tipoDato(): void {
     };
     reader.readAsDataURL(file);
   
-      // Genera la previsualización solo si el archivo es de tamaño permitido
-      this.generateImagePreview(file, field);
-
-      if (field === 'urlImagen') {
-        this.selectedBanner = file;
-        this.bannerForm.patchValue({ urlImagen: file });
-      } else if (field === 'logo') {
-        this.selectedLogo = file;
-        this.aliadoForm.patchValue({ logo: file });
-      } else if (field === 'ruta_multi') {
-        this.selectedruta = file;
-        this.aliadoForm.patchValue({ ruta_multi: file });
-      } else if (field === 'ruta_documento') {
-        this.selectedruta = file;
-        this.aliadoForm.patchValue({ ruta_multi: file });
-      }
-      
-  } else {
-    this.resetFileField(field);
+    // Genera la previsualización solo si el archivo es de tamaño permitido
+    this.generateImagePreview(file, field);
+  
+    if (field === 'urlImagen') {
+      this.selectedBanner = file;
+      this.bannerForm.patchValue({ urlImagen: file });
+    } else if (field === 'logo') {
+      this.selectedLogo = file;
+      this.aliadoForm.patchValue({ logo: file });
+    } else if (field === 'ruta_multi') {
+      this.selectedruta = file;
+      this.aliadoForm.patchValue({ ruta_multi: file });
+    } else if (field === 'ruta_documento') {
+      this.selectedruta = file;
+      this.aliadoForm.patchValue({ ruta_multi: file });
+    }
   }
-  }
-
   // onTextInput(event: any) {
   //   const value = event.target.value;
   //   this.aliadoForm.patchValue({ ruta_multi: value });
