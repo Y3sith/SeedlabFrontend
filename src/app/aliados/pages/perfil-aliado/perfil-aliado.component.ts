@@ -65,7 +65,8 @@ export class PerfilAliadoComponent implements OnInit {
       descripcion: ['', Validators.required],
       logo: [null, Validators.required],
       ruta_multi: [null, Validators.required],
-      id_tipo_dato: [Validators.required],
+      urlpagina: ['', Validators.required],
+      id_tipo_dato: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.minLength(8)]], 
       estado: [true]
@@ -239,6 +240,7 @@ export class PerfilAliadoComponent implements OnInit {
           descripcion: data.descripcion,
           logo: data.logo,
           ruta_multi: data.ruta_multi,
+          urlpagina: data.urlpagina,
           id_tipo_dato: data.id_tipo_dato,
           email: data.email,
           password: '',
@@ -254,7 +256,7 @@ export class PerfilAliadoComponent implements OnInit {
   }
 
   initializeFormState(): void {
-    const fieldsToDisable = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato'];
+    const fieldsToDisable = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato', 'urlpagina'];
     fieldsToDisable.forEach(field => {
       const control = this.aliadoForm.get(field);
       if (control) {
@@ -266,7 +268,7 @@ export class PerfilAliadoComponent implements OnInit {
   /* Bloqueo de inputs */
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
-    const fieldsToToggle = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato'];
+    const fieldsToToggle = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato', 'urlpagina'];
     
     fieldsToToggle.forEach(field => {
       const control = this.aliadoForm.get(field);
