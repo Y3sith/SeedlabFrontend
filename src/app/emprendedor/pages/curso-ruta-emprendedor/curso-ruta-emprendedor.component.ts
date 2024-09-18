@@ -196,26 +196,41 @@ export class CursoRutaEmprendedorComponent {
   // }
 
   initializeNiveles() {
+    // Mapeo de los niveles
     this.niveles = this.actividad.nivel
-      .map((nivel: any) => ({
-        ...nivel,
-        expanded: false,
-        lecciones: nivel.lecciones
-          .filter((leccion: any) => {
-            // Filtrar lecciones que tienen contenido_lecciones no vacío
-            return leccion.contenido_lecciones && leccion.contenido_lecciones.length > 0;
-          })
-          .map((leccion: any) => ({
-            ...leccion,
-            expanded: false,
-            contenido_lecciones: leccion.contenido_lecciones || []
-          }))
-      }))
+      .map((nivel: any) => {
+        const mappedNivel = {
+          ...nivel,
+          expanded: false,
+          lecciones: nivel.lecciones
+            .filter((leccion: any) => {
+              // Filtrar lecciones que tienen contenido_lecciones no vacío
+              return leccion.contenido_lecciones && leccion.contenido_lecciones.length > 0;
+            })
+            .map((leccion: any) => {
+              const mappedLeccion = {
+                ...leccion,
+                expanded: false,
+                contenido_lecciones: leccion.contenido_lecciones || []
+              };
+              console.log('Mapped Leccion:', mappedLeccion); // Log de cada lección mapeada
+              return mappedLeccion;
+            })
+        };
+        console.log('Mapped Nivel:', mappedNivel); // Log de cada nivel mapeado
+        return mappedNivel;
+      })
       .filter((nivel: any) => {
         // Filtrar niveles que tienen al menos una lección con contenido
-        return nivel.lecciones.length > 0;
+        const hasValidLecciones = nivel.lecciones.length > 0;
+        if (hasValidLecciones) {
+          console.log('Valid Nivel:', nivel); // Log de los niveles que pasan el filtro
+        }
+        return hasValidLecciones;
       });
-  }
+
+    console.log('Final Niveles:', this.niveles); // Log del resultado final
+}
 
   toggleNivel(selectedNivelIndex: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
