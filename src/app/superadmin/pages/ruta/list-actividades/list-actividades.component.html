@@ -69,12 +69,11 @@
                                     </button>
                                 </td>
                             </tr>
-                            <td class="h-2"></td>
-                            <tr *ngIf="i < listAcNiLeCo.length - 1">
+                            <tr *ngIf="i < todasLasActividades.length - 1">
                                 <td class="py-2"></td>
                             </tr>
                         </ng-container>
-                        <tr *ngIf="listAcNiLeCo.length === 0">
+                        <tr *ngIf="todasLasActividades.length === 0">
                             <td colspan="4" class="text-center py-4 text-gray-500">No se encontraron actividades.</td>
                         </tr>
                     </ng-container>
