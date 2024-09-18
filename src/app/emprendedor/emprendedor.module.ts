@@ -19,7 +19,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
 import { CursoRutaEmprendedorComponent} from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
 import { SafePipe } from './pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
 import { HttpClientModule } from '@angular/common/http';
-
+import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -53,7 +53,7 @@ import { HttpClientModule } from '@angular/common/http';
     NgxPaginationModule,
     RouterModule,
     HttpClientModule,
-
+    MatTooltipModule,
   ]
 })
 export class EmprendedorModule { }

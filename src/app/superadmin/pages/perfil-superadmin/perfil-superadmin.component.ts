@@ -5,7 +5,7 @@ import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
-import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { AuthService } from '../../../servicios/auth.service';
@@ -38,6 +38,7 @@ export class PerfilSuperadminComponent {
   listTipoDocumento: any[] = [];
   isActive: boolean = true;
   estado: boolean;
+  falupa = faCircleQuestion;
   ////////
   selectedImagen_Perfil: File | null = null;
   perfilPreview: string | ArrayBuffer | null = null;
