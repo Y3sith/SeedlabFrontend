@@ -43,7 +43,13 @@
                                     <span *ngIf="f['nombre'].errors?.['required']">Este campo es requerido *</span>
                                 </div>
 
-                                <label for="password" class="block mb-2 mt-4">Contraseña</label>
+                                <div class="flex items-center">
+                                    <label for="password" class="block mb-2 mt-4">Contraseña</label>
+                                <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
+                                    matTooltip="Puedes cambiar la contraseña si lo deseas. Si la dejas en blanco, la contraseña actual permanecerá sin cambios."
+                                    matTooltipPosition="right" style="color: #adb7c7;">
+                                </fa-icon>
+                                </div>
                                 <div class="relative mb-2">
                                     <input [type]="hide ? 'password' : 'text'" id="contrasena"
                                         formControlName="password"

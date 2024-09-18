@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Aliado } from '../../../Modelos/aliado.model';
 import { AlertService } from '../../../servicios/alert.service';
 import { AliadoService } from '../../../servicios/aliado.service';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../Modelos/actividad.model';
 import { ActividadService } from '../../../servicios/actividad.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -53,6 +53,7 @@ export class PerfilAliadoComponent implements OnInit {
   mostrarRutaMulti: boolean = true;
   private videoUrl: string = '';
   private imageUrl: string = '';
+  falupa = faCircleQuestion;
 
   constructor(
     private router: Router,
