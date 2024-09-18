@@ -50,6 +50,9 @@ export class PerfilAliadoComponent implements OnInit {
   Number = Number;
   tiempoEspera = 1800;
   showEditButton = false;
+  mostrarRutaMulti: boolean = true;
+  private videoUrl: string = '';
+  private imageUrl: string = '';
 
   constructor(
     private router: Router,
@@ -162,7 +165,7 @@ export class PerfilAliadoComponent implements OnInit {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
-          this.tipoDeDato = data;
+          this.tipoDeDato = data.filter(item => item.id !== 3);
           console.log("DATO",data);
           this.obtenerValorBaseDatos();
         },
@@ -188,9 +191,11 @@ export class PerfilAliadoComponent implements OnInit {
       );
     }
   }
+  private previousImageUrl: string = '';
 
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
+    let currentRutaMulti = this.aliadoForm.get('ruta_multi').value;
     
     this.aliadoForm.get('ruta_multi').clearValidators();
     this.aliadoForm.get('Video')?.clearValidators();
@@ -204,23 +209,17 @@ export class PerfilAliadoComponent implements OnInit {
     switch (tipoDatoIdNumber) {
       case 1: // Video
         this.showVideo = true;
+        this.showImagen = false;
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
-        console.log('Mostrando Video');
+        this.aliadoForm.patchValue({ruta_multi: this.videoUrl});
+      console.log('Mostrando Video');
         break;
       case 2: // Imagen
         this.showImagen = true;
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+        this.aliadoForm.patchValue({ruta_multi: this.imageUrl});
+        //this.previousImageUrl = currentRutaMulti;
         console.log('Mostrando Imagen');
-        break;
-      case 3: // PDF
-        this.showPDF = true;
-        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
-        console.log('Mostrando PDF');
-        break;
-      case 4: // Texto
-        this.showTexto = true;
-        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
-        console.log('Mostrando Texto');
         break;
       default:
         console.log('Caso no manejado:', tipoDatoId);
@@ -232,27 +231,56 @@ export class PerfilAliadoComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-  verEditar():void{
+  onRutaMultiChange(event: any): void {
+    const tipoDatoId = Number(this.aliadoForm.get('id_tipo_dato').value);
+    const newValue = event.target.value;
+
+    if (tipoDatoId === 1) { // Video
+      this.videoUrl = this.limpiarPrefijo(newValue);
+    } else if (tipoDatoId === 2) { // Imagen
+      this.imageUrl = newValue;
+    }
+
+    this.aliadoForm.patchValue({ruta_multi: newValue}, {emitEvent: false});
+  }
+
+  verEditar(): void {
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
+        let rutaMulti = data.ruta_multi;
+        if (data.id_tipo_dato === 1) { // Video
+          this.videoUrl = this.limpiarPrefijo(rutaMulti);
+          rutaMulti = this.videoUrl;
+        } else if (data.id_tipo_dato === 2) { // Imagen
+          this.imageUrl = rutaMulti;
+        }
         this.aliadoForm.patchValue({
           nombre: data.nombre,
           descripcion: data.descripcion,
           logo: data.logo,
+          id_tipo_dato: data.id_tipo_dato,
           ruta_multi: data.ruta_multi,
           urlpagina: data.urlpagina,
-          id_tipo_dato: data.id_tipo_dato,
           email: data.email,
           password: '',
           estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
-        console.log("aaaa",data);
+        this.previousImageUrl = data.id_tipo_dato === 2 ? data.ruta_multi : '';
+        // Establecer una variable para controlar la visibilidad de ruta_multi
+        //this.mostrarRutaMulti = data.id_tipo_dato !== 2;
+        
+        console.log("aaaa", data);
         this.onTipoDatoChange();
       },
       error => {
         console.log(error);
       }
     );
+  }
+
+  limpiarPrefijo(url: string): string {
+    const prefijo = 'http://127.0.0.1:8000/storage/';
+    return url.startsWith(prefijo) ? url.substring(prefijo.length) : url;
   }
 
   initializeFormState(): void {

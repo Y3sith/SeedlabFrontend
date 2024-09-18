@@ -21,7 +21,7 @@
                             <ng-template #noImage>
                                 <span class="text-gray-500">Logo del Aliado</span>
                             </ng-template>
-                            <button class="edit-button cursor-pointer" [class.hidden]="!showEditButton" id="editboton">
+                            <button class="edit-button cursor-pointer" [class.hidden]="!showEditButton" >
                                 <i class="fas fa-pencil-alt">
                                     <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'logo')"
                                         accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
@@ -32,7 +32,7 @@
                         </div>
                         <div class=" rounded-lg p-4 h-full w-full">
                             <div class="w-full">
-                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center">Información Básica</h5>
+                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center md:mb-14">Información Básica</h5>
 
                                 <label for="nombre" class="block mt-4 mb-2">Nombre</label>
                                 <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
@@ -112,7 +112,7 @@
                                 </div>
 
                         <div class="">
-                            <label class="mt-4" for="id_tipo_dato">Tipo de archivo</label>
+                            <label class="mt-4" for="id_tipo_dato">Informacion para ver mas del aliado</label>
                             <select id="id_tipo_dato" formControlName="id_tipo_dato" (change)="onTipoDatoChange()"
                                 class="mt-1 block w-full px-2 py-1 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                                 <option value="" disabled selected>Seleccione el tipo de dato...</option>
@@ -134,9 +134,11 @@
                                     <div *ngIf="showVideo">
                                         <label class="   flex-none justify-center" for="nombre">Link
                                             del video</label>
-                                        <input type="text" id="fuente" formControlName="ruta_multi"
-                                            [readonly]="blockedInputs" placeholder="Example http://example.com"
-                                            (input)="onTextInput($event)"
+                                        <input type="text" id="fuente" 
+                                            formControlName="ruta_multi"
+                                            [readonly]="blockedInputs" 
+                                            [placeholder]="'Ingrese el link del video'"
+                                            (input)="onRutaMultiChange($event)"
                                             class="p-2 h-14 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
                                         <div *ngIf="(formSubmitted || f['ruta_multi'].touched) && f['ruta_multi'].invalid"
                                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
@@ -152,7 +154,7 @@
                                         <label
                                             class="text-sm  relative cursor-pointer flex flex-row items-center  flex-none justify-center"
                                             for="nombre">Imagen
-                                            <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+                                            <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput 
                                                 [readonly]="blockedInputs"
                                                 (change)="onFileSelecteds($event, 'ruta_multi')">
                                             <span (click)="triggerFileInput()"
@@ -161,11 +163,9 @@
                                                 <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
                                             </span>
                                         </label>
-                                        <img *ngIf="rutaPreview" [src]="rutaPreview" alt="Vista previa de la ruta"
-                                            class="mt-4 preview-image border rounded-md object-cover md:text-center w-52 h-52"
-                                            class="mt-4 preview-image border rounded-md object-cover md:text-center small-preview ">
-                                        <div>
-
+                                        <div *ngIf="aliadoForm.get('ruta_multi')?.value"
+                                            class="mt-2 text-gray-500 text-center">
+                                            Archivo seleccionado: {{ selectedruta?.name }}
                                         </div>
                                         <div *ngIf="(formSubmitted || f['ruta_multi'].touched) && f['ruta_multi'].invalid"
                                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
@@ -173,6 +173,7 @@
                                             <span *ngIf="f['ruta_multi'].errors?.['required']">Este campo es requerido
                                                 *</span>
                                         </div>
+                                        
                                     </div>
                                 </div>
 
@@ -302,9 +303,6 @@
                     </button>
                 </div>
             </ng-container>
-            <div class="w-full flex justify-center mt-8" *ngIf="listBanners.length === 0">
-                <p class="text-center">No se encontraron banners.</p>
-            </div>
         </div>
         
     </div>
