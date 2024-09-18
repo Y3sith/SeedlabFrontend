@@ -149,14 +149,6 @@ export class PerfilSuperadminComponent {
     const formData = new FormData();
     let estadoValue: string;
 
-    // Validación general
-    if (this.perfiladminForm.invalid) {
-      console.log("Formulario Inválido", this.perfiladminForm.value);
-      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
-      this.submitted = true;
-      return;
-    }
-
     const municipio = this.perfiladminForm.get('id_municipio');
     if (!municipio || municipio.value === null || municipio.value === '') {
         this.alertService.errorAlert('Error', 'Debes seleccionar un municipio');
