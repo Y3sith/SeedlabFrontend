@@ -136,11 +136,7 @@ export class AsesoriaAliadoComponent implements OnInit {
 
     if (this.asesorias.length === 0) {
       this.mensaje = "No hay asesorías disponibles para mostrar.";
-    } else if (this.asesoriasSinAsesor.length === 0) {
-      this.mensaje = "No hay asesorías esperando por asignación.";
-    } else if (this.asesoriasConAsesor.length === 0) {
-      this.mensaje = "Aún no has asignado ninguna asesoría.";
-    } else {
+    }  else {
       this.mensaje = null;
     }
   }
@@ -186,12 +182,24 @@ export class AsesoriaAliadoComponent implements OnInit {
     this.showAsignadasFlag = false; 
     this.asesorias = this.asesoriasSinAsesor;
     this.page = 1;
+
+    if (this.asesoriasSinAsesor.length === 0) {
+      this.mensaje = "No hay asesorías esperando por asignación.";
+    } else {
+      this.mensaje = null;
+    }
   }
 
   showAsignadas(): void {
     this.showAsignadasFlag = true; 
     this.asesorias = this.asesoriasConAsesor;
     this.page = 1;
+
+    if (this.asesoriasConAsesor.length === 0) {
+      this.mensaje = "Aún no has asignado ninguna asesoría.";
+    } else {
+      this.mensaje = null;
+    }
   }
 
   filtrarAsesorias(): void {

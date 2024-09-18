@@ -47,7 +47,9 @@ export class LoginComponent implements OnInit {
             if (identityJSON) {
                 let identity = JSON.parse(identityJSON);
                 this.user = identity;
+                console.log(this.user);
                 this.currentRolId = this.user.id_rol?.toString();
+                console.log(this.currentRolId);
             }
         }
         if (!this.token) {
@@ -106,9 +108,10 @@ export class LoginComponent implements OnInit {
                 if (this.reply) {
                     localStorage.setItem('token', this.reply.access_token);
                     localStorage.setItem('identity', JSON.stringify(this.reply.user));
-                    localStorage.setItem('currentRolName', this.getRoleName(this.reply.user.id_rol));
+                    localStorage.setItem('currentRolName', this.getRoleName(Number(this.reply.user.id_rol)));
                     this.token = this.reply.access_token;
                     console.log(this.token);
+                    console.log(this.reply.user.id_rol);
                     if (this.reply.user.emprendedor) {
                         localStorage.setItem('documento', this.reply.user.emprendedor.documento);
                     }

@@ -122,7 +122,9 @@
                         <label for="fechaNacimiento" class="block mb-2">Fecha de Nacimiento</label>
                         <input type="date" id="fecha_nac" formControlName="fecha_nac" [readonly]="blockedInputs"
                             class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none" />
-                        <div *ngIf="submitted && f['fecha_nac'].invalid" class="text-sm text-red-500 mt-1" role="alert">
+                            <div *ngIf="f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)"
+                            class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg"
+                            role="alert">
                             <div *ngIf="f.fecha_nac.errors.required">Este campo es requerido *</div>
                             <div *ngIf="f.fecha_nac.errors.futureDate">La fecha no es válida*</div>
                             <div *ngIf="f.fecha_nac.errors.tooOld">La fecha no es válida*</div>

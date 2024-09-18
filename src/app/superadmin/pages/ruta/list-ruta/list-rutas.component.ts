@@ -79,9 +79,7 @@ export class ListRutasComponent implements OnInit {
     this.isLoading = true;
     if (this.token) {
       this.isLoading = true;
-      this.rutaService
-        .getAllRutas(this.token, this.userFilter.estado)
-        .subscribe(
+      this.rutaService.getAllRutas(this.token, this.userFilter.estado).subscribe(
           (data) => {
             this.listaRutas = data;
             console.log('listaRutas filtrada:', this.listaRutas);
@@ -130,9 +128,17 @@ export class ListRutasComponent implements OnInit {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-  listarActividad(rutaId: number): void {
-    this.router.navigate(['list-actividades'], {
-      queryParams: { id_ruta: rutaId },
-    });
+  
+  listarActividad(rutaId: number, estado: any): void {
+    console.log("AQUI ESTADO", estado);
+    if (estado === 'Inactivo'){
+      this.alertService.alertainformativa('No puedes editar actividades en una ruta que este inactiva, debes activar la ruta para poderla editar', 'error').then((result) => {
+        if (result.isConfirmed) {   
+        }
+      });
+    }else{
+      this.router.navigate(['list-actividades'], {queryParams: { id_ruta: rutaId},
+      });
+    }
   }
 }
