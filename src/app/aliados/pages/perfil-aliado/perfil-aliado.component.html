@@ -96,13 +96,23 @@
 
                         <label for="descripcion" class="block mt-4">Descripcion fanpage</label>
                         <textarea id="descripcion" formControlName="descripcion" [readonly]="blockedInputs"
-                            class="p-2 h-36 w-full mb-4 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"></textarea>
+                            class="p-2 h-36 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"></textarea>
                         <div *ngIf="(formSubmitted || f['descripcion'].touched) && f['descripcion'].invalid"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <span *ngIf="f['descripcion'].errors?.['required']">Este campo es requerido *</span>
                         </div>
+
+                        <label for="urlpagina" class="block mb-2 mt-4">URL Pagina</label>
+                                <input type="text" id="urlpagina" formControlName="urlpagina" [readonly]="blockedInputs"
+                                    class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                <div *ngIf="(formSubmitted || f['urlpagina'].touched) && f['urlpagina'].invalid"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
+                                    <span *ngIf="f['urlpagina'].errors?.['required']">Este campo es requerido *</span>
+                                </div>
+
                         <div class="">
-                            <label class="" for="id_tipo_dato">Tipo de archivo</label>
+                            <label class="mt-4" for="id_tipo_dato">Tipo de archivo</label>
                             <select id="id_tipo_dato" formControlName="id_tipo_dato" (change)="onTipoDatoChange()"
                                 class="mt-1 block w-full px-2 py-1 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                                 <option value="" disabled selected>Seleccione el tipo de dato...</option>
