@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { faIdCard } from '@fortawesome/free-solid-svg-icons';
@@ -63,6 +63,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
   showEditButton = false;
+  falupa = faCircleQuestion;
 
   constructor(
     private fb: FormBuilder,

@@ -7,7 +7,7 @@ import { Orientador } from '../../../Modelos/orientador.model';
 import { User } from '../../../Modelos/user.model';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
-import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../servicios/auth.service';
 import { error } from 'node:console';
 @Component({
@@ -50,6 +50,8 @@ export class PerfilOrientadorComponent {
   isHidden = true;
   showEditButton = false;
   tiempoEspera = 1800;
+
+  falupa = faCircleQuestion;
 
   perfilorientadorForm = this.fb.group({
     documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
