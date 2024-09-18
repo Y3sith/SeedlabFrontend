@@ -67,9 +67,10 @@ export class ListActividadesComponent {
       this.router.navigate(['/home']);
     }
   }
+  
   ver(): void {
     if (this.rutaId !== null) {
-      this.rutaService.actnivleccontXruta(this.token, this.rutaId).subscribe(
+      this.rutaService.actnivleccontXruta(this.token, this.rutaId, this.userFilter.estado).subscribe(
         (data) => {
           this.listAcNiLeCo = data;
           // Extraer todas las actividades en un solo array
@@ -82,6 +83,7 @@ export class ListActividadesComponent {
       );
     }
   }
+
   editarEstado(ActividadId: number): void {
     const estadoActual = this.actividadForm.get('estado')?.value;
     this.alertService.alertaActivarDesactivar("¿Estás seguro de cambiar el estado de la actividad?", 'question').then((result) => {

@@ -73,8 +73,10 @@ export class RutaService {
     return this.http.get(this.url+'/mostrarRutaContenido/'+idRuta,options);
   }
 
-  actnivleccontXruta(access_token:any, idRuta: number):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
+  actnivleccontXruta(access_token:any, idRuta: number, estado:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token),
+      params: new HttpParams().set('estado', estado)
+    };
     return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
   }
 
