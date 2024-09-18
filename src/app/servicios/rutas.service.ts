@@ -80,13 +80,17 @@ export class RutaService {
     return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
   }
 
-  activadadxAliado(access_token:any, idRuta: number, idAliado):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
+  activadadxAliado(access_token:any, idRuta: number, idAliado, estado:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token),
+      params: new HttpParams().set('estado', estado)
+    };
     return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
   }
 
-  activadadxAsesor(access_token:any, idRuta: number, idAsesor):Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token)};
+  activadadxAsesor(access_token:any, idRuta: number, idAsesor, estado:any):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token),
+      params: new HttpParams().set('estado', estado)
+    };
     return this.http.get(this.url+'/actnividadxAsesor/'+idRuta+'/'+idAsesor,options)
   }
 

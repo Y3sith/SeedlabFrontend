@@ -55,7 +55,7 @@
                                             class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                                         </div>
                                         <span class="ms-3 text-sm font-medium text-gray-900">
-                                            {{ actividad.estado ? 'Activo' : 'Inactivo' }}
+                                            {{ actividad.estado }}
                                         </span>
                                     </label>
                                 </td>
@@ -84,49 +84,41 @@
     </div>
 
     <div *ngIf="!isLoading">
-        <div class="text-center">
-          <nav aria-label="Page navigation example">
-            <ul class="inline-flex space-x-2 text-sm items-center pl-0">
+      <div class="text-center">
+        <nav aria-label="Page navigation example">
+          <ul class="inline-flex space-x-2 text-sm items-center pl-0">
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline"
+                (click)="changePage('previous')" [class.opacity-50]="!canGoPrevious()"
+                [class.cursor-not-allowed]="!canGoPrevious()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                  <path
+                    d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z" />
+                </svg>
+              </a>
+            </li>
+            <ng-container *ngFor="let pageNumber of getPages()">
               <li>
-                <a 
-                  href="javascript:void(0)" 
-                  class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline" 
-                  (click)="changePage('previous')" 
-                  [class.opacity-50]="!canGoPrevious()" 
-                  [class.cursor-not-allowed]="!canGoPrevious()"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
-                    <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/>
-                  </svg>
+                <a href="javascript:void(0)"
+                  class="inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 border-amber-500 text-amber-500 hover:bg-amber-100 focus:outline-none no-underline font-bold"
+                  (click)="changePage(pageNumber)" [class.bg-amber-500]="page === pageNumber"
+                  [class.text-white]="page === pageNumber">
+                  {{ pageNumber }}
                 </a>
               </li>
-              <ng-container *ngFor="let pageNumber of getPages()">
-                <li>
-                  <a 
-                    href="javascript:void(0)" 
-                    class="inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 border-amber-500 text-amber-500 hover:bg-amber-100 focus:outline-none no-underline font-bold" 
-                    (click)="changePage(pageNumber)" 
-                    [class.bg-amber-500]="page === pageNumber" 
-                    [class.text-white]="page === pageNumber"
-                  >
-                    {{ pageNumber }}
-                  </a>
-                </li>
-              </ng-container>
-              <li>
-                <a 
-                  href="javascript:void(0)" 
-                  class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline" 
-                  (click)="changePage('next')" 
-                  [class.opacity-50]="!canGoNext()" 
-                  [class.cursor-not-allowed]="!canGoNext()"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
-                    <path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/>
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+            </ng-container>
+            <li>
+              <a href="javascript:void(0)"
+                class="inline-flex items-center justify-center pl-2 w-8 h-8 rounded-lg border-2 border-gray-300 text-gray-400 hover:bg-gray-200 focus:outline-none no-underline"
+                (click)="changePage('next')" [class.opacity-50]="!canGoNext()" [class.cursor-not-allowed]="!canGoNext()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">
+                  <path
+                    d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
+    </div>
