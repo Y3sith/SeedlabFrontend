@@ -12,7 +12,7 @@
             <!-- Contenido -->
             <div class="min-[860px]:flex items-center w-full">
 
-                <div class=" bg-[#e6e6e6] rounded-lg relative max-[860px]:w-full  min-[860px]:max-w-[45rem]">
+                <div class="max-lg:mb-4 bg-[#e6e6e6] rounded-lg relative max-[860px]:w-full  min-[860px]:max-w-[45rem]">
                     <div class="w-full">
                         <div class="image-container">
                             <ng-container
@@ -116,7 +116,13 @@
                             <div *ngIf="f.fecha_nac.errors.tooRecent">Debe tener al menos 18 años *</div>
                         </div>
 
-                        <label for="password" class="block mb-2 mt-4">Contraseña</label>
+                        <div class="flex items-center">
+                            <label for="password" class="block mb-2 mt-4">Contraseña</label>
+                        <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
+                            matTooltip="Puedes cambiar la contraseña si lo deseas. Si la dejas en blanco, la contraseña actual permanecerá sin cambios."
+                            matTooltipPosition="right" style="color: #adb7c7;">
+                        </fa-icon>
+                        </div>
                         <div class="relative mb-2">
                             <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
                                 [disabled]="blockedInputs" [readonly]="blockedInputs"

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 
@@ -50,15 +50,15 @@ export class PerfilAsesorComponent implements OnInit {
   asesorId: any;
 
   asesorForm = this.fb.group({
-    nombre: ['', Validators.required],
-    apellido: ['', Validators.required],
-    documento: ['', Validators.required],
+    nombre: ['', [Validators.required,this.noNumbersValidator ,Validators.minLength(4)]],
+    apellido: ['', [Validators.required,this.noNumbersValidator ,Validators.minLength(4)]],
+    documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
     id_tipo_documento: ['', Validators.required],
     imagen_perfil: [null],
     genero: ['', Validators.required],
-    fecha_nac: ['', Validators.required],
-    direccion: ['', Validators.required],
-    celular: ['', [Validators.required, Validators.maxLength(10)]],
+    fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
+    direccion: ['', [Validators.required, this.noLettersValidator]],
+    celular: ['', [Validators.required,Validators.maxLength(10),this.noLettersValidator ]],
     id_departamento: ['',Validators.required],
     id_municipio: ['',Validators.required],
     aliado: ['', Validators.required],
@@ -154,7 +154,7 @@ export class PerfilAsesorComponent implements OnInit {
   /* Actualiza los datos del asesor */
   editAsesor(): void {
     const formData = new FormData();
-  let estadoValue: string;
+    let estadoValue: string;
 
   // First pass: handle special cases and avoid duplication
   Object.keys(this.asesorForm.controls).forEach((key) => {
@@ -215,6 +215,8 @@ export class PerfilAsesorComponent implements OnInit {
     }
   });
 }
+
+get a() { return this.asesorForm.controls; }
 
 initializeFormState(): void {
   const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
@@ -348,8 +350,6 @@ initializeFormState(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
-        //console.log('Departamentos cargados:', JSON.stringify(data));
-        //console.log('zzzzzzzzzzz: ',this.listDepartamentos);
       },
       (err) => {
         console.log(err);
@@ -392,6 +392,60 @@ initializeFormState(): void {
           console.log(error);
         }
       )
+    }
+  }
+
+  noNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasNumbers = /\d/.test(value);
+
+    if (hasNumbers) {
+      return { hasNumbers: 'El campo no debe contener números *' };
+    } else {
+      return null;
+    }
+  }
+
+  documentoValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 13) {
+      return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
+    }
+    return null;
+  }
+
+  noLettersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasLetters = /[a-zA-Z]/.test(value);
+  
+    if (hasLetters) {
+      return { hasLetters: 'El campo no debe contener letras *' };
+    } else {
+      return null;
+    }
+  }
+
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
+      return null; // Si no hay valor, no se valida
+    }
+  
+    const selectedDate = new Date(value);
+    const today = new Date();
+    const hundredYearsAgo = new Date();
+    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+  
+    if (selectedDate > today) {
+      return { futureDate: 'La fecha no es válida *' };
+    } else if (selectedDate < hundredYearsAgo) {
+      return { tooOld: 'La fecha no es válida *' };
+    } else if (selectedDate > eighteenYearsAgo) {
+      return { tooRecent: 'Debe tener al menos 18 años *' };
+    } else {
+      return null;
     }
   }
 

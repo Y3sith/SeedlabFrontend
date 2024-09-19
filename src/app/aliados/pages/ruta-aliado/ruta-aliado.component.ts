@@ -360,7 +360,7 @@ export class RutaAliadoComponent {
         nombre: primerNivel.nombre
       });
       //this.nivelForm.disable();
-
+      
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
     } else {
@@ -535,10 +535,18 @@ export class RutaAliadoComponent {
 
 
           if (this.isEditing && this.niveles && this.niveles.length > 0) {
-            this.nivelForm.patchValue({
-              id_nivel: this.niveles[0].id,
-              nombre: this.niveles[0].nombre
-            });
+            // this.nivelForm.patchValue({
+            //   id_nivel: this.niveles[0].id,
+            //   nombre: this.niveles[0].nombre
+            // });
+            const primerNivel = this.niveles[0];
+                    this.nivelForm.patchValue({
+                        id_nivel: primerNivel.id,
+                        nombre: primerNivel.nombre
+                    });
+                    // Llamar a onNivelChange para actualizar las lecciones
+                    this.onNivelChange(primerNivel.id.toString());
+            
           }
         },
         error => {
@@ -604,10 +612,12 @@ export class RutaAliadoComponent {
           });
           this.leccionForm.patchValue({ id_nivel: data.id })
           this.verNivel();
+          this.verLeccicon();
           this.nivelForm.reset();
           this.submittedNivel = false;
           this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
           this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
+          this.onNivelChange(data.id.toString());
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -722,6 +732,8 @@ export class RutaAliadoComponent {
             id_leccion: '',
             nombre: ''
           });
+          this.contenidoLeccionForm.reset(); // resetea los campos de contenido por leccion si no hay lecciones y lo toma desde nive tambien (no resetea el select de contenido si no tengo lecciones)
+          this.contenidoLeccion = [];
         }
       },
       error => {
@@ -819,10 +831,6 @@ export class RutaAliadoComponent {
 
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
-    // if (this.contenidoLeccionForm.invalid) {
-    //   this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
-    //   return;
-    // }
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
 
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
@@ -831,10 +839,11 @@ export class RutaAliadoComponent {
       return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
-    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 470) {
-      this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 470 caracteres');
+    if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 1200) {
+      this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 1200 caracteres');
       return;
     }
+
     const formData = new FormData();
     formData.append('id_leccion', idLeccion);
     let estadoValue: string;
@@ -868,6 +877,10 @@ export class RutaAliadoComponent {
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();
+        },
+        error => {
+          this.alertServices.errorAlert('Error', error.error.message);
+          console.log(error);
         }
       )
     } else {
@@ -882,6 +895,7 @@ export class RutaAliadoComponent {
           //location.reload();
         },
         error => {
+          this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
       )
@@ -981,7 +995,6 @@ export class RutaAliadoComponent {
       case 1: // Video
       case 2: // Imagen
       case 3: // PDF
-      case 4: // Texto
       default:
         // Si no es ninguno de los anteriores, elimina cualquier validador
         this.contenidoLeccionForm.get('fuente_contenido').clearValidators();

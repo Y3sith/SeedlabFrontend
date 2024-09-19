@@ -5,7 +5,7 @@ import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
-import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { AuthService } from '../../../servicios/auth.service';
@@ -38,6 +38,7 @@ export class PerfilSuperadminComponent {
   listTipoDocumento: any[] = [];
   isActive: boolean = true;
   estado: boolean;
+  falupa = faCircleQuestion;
   ////////
   selectedImagen_Perfil: File | null = null;
   perfilPreview: string | ArrayBuffer | null = null;
@@ -148,14 +149,6 @@ export class PerfilSuperadminComponent {
   updateAdministrador(): void {
     const formData = new FormData();
     let estadoValue: string;
-
-    // Validación general
-    if (this.perfiladminForm.invalid) {
-      console.log("Formulario Inválido", this.perfiladminForm.value);
-      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
-      this.submitted = true;
-      return;
-    }
 
     const municipio = this.perfiladminForm.get('id_municipio');
     if (!municipio || municipio.value === null || municipio.value === '') {
