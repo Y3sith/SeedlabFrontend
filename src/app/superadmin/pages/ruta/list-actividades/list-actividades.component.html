@@ -32,20 +32,17 @@
                     <tr>
                         <th class="text-left p-2">Nombre Actividad</th>
                         <th class="text-left p-2">Aliado</th>
-                        <th class="text-left p-2 hidden sm:table-cell">Asesor</th>
-                        <th class="text-left p-2 ">Estado</th>
+                        <th class="text-left p-2 hidden sm:table-cell">Estado</th>
                         <th class="text-left p-2"></th>
                     </tr>
                 </thead>
                 <tbody class="space-y-6">
                     <ng-container
-                        *ngFor="let contenido of listAcNiLeCo">
+                    *ngIf="todasLasActividades">
                         <ng-container *ngFor="let actividad of todasLasActividades |filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index ">
                             <tr class="bg-line-gray my-5 rounded-xl">
                                 <td class="p-2 rounded-s-lg">{{ actividad.nombre }}</td>
                                 <td class="p-2">{{ actividad.id_aliado }}</td>
-                                <td class="p-2 hidden sm:table-cell">{{ actividad.id_asesor }}</td>
-                                <!-- <td class="p-2">{{ actividad.estado }}</td> -->
                                 <td class="p-2 ">
                                     <label class="inline-flex items-center cursor-pointer text-center">
                                         <input type="checkbox" class="sr-only peer"
