@@ -86,7 +86,8 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado)
     };
-    return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
+    //return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
+    return this.http.get<{id: number, actividades: any[]}>(this.url + '/actnividadxAliado/'+idRuta+'/'+idAliado, options);
   }
 
   activadadxAsesor(access_token:any, idRuta: number, idAsesor, estado:any):Observable<any>{

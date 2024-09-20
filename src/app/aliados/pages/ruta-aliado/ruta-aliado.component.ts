@@ -90,7 +90,7 @@ export class RutaAliadoComponent {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: [''],
+    // id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['']
   })
@@ -99,6 +99,7 @@ export class RutaAliadoComponent {
   nivelForm = this.fb.group({
     id_nivel: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
+    id_asesor: [''],
     id_actividad: [{ value: '', disabled: true }, Validators.required]
   })
   mostrarNivelForm: boolean = false;
@@ -325,7 +326,7 @@ export class RutaAliadoComponent {
                 nombre: data.nombre,
                 descripcion: data.descripcion,
                 id_tipo_dato: data.id_tipo_dato,
-                id_asesor: data.id_asesor ? data.id_asesor : '',
+                // id_asesor: data.id_asesor ? data.id_asesor : '',
                 id_aliado: data.id_aliado,
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
@@ -407,7 +408,7 @@ export class RutaAliadoComponent {
     formData.append('nombre', this.actividadForm.get('nombre')?.value);
     formData.append('descripcion', this.actividadForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
-    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
+    // formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.idAliado);
     formData.append('estado', estadoValue);
@@ -565,6 +566,7 @@ export class RutaAliadoComponent {
     }
     const nivel: any = {
       nombre: nombreNivel,
+      id_asesor: this.nivelForm.value.id_asesor,
       id_actividad: this.nivelForm.value.id_actividad
       //id_actividad: this.actividadId
     };

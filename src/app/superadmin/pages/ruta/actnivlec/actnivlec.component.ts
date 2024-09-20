@@ -89,7 +89,6 @@ export class ActnivlecComponent implements OnInit {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    // id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
