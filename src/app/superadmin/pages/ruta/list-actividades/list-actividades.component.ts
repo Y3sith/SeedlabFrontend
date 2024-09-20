@@ -25,7 +25,7 @@ export class ListActividadesComponent {
   isActive: boolean = true;
   boton = true;
   isLoading: boolean = false;
-  todasLasActividades: any;
+  todasLasActividades: any[] = [];
   tiempoEspera = 1800;
 
   actividadForm = this.fb.group({

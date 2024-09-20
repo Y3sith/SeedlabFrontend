@@ -26,7 +26,7 @@ export class ListActividadesComponent {
   boton = true;
   isLoading: boolean = false;
   idAliado: any;
-  todasLasActividades: any;
+  todasLasActividades: any[] = [];
 
   actividadForm = this.fb.group({
     estado: [true],
