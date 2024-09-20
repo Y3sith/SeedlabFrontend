@@ -21,12 +21,12 @@ export class ListActividadesComponent {
   user: User | null = null;
   id: number | null = null;
   currentRolId: number;
-  listAcNiLeCo: [] = [];
+  listAcNiLeCo: any[] = [];
   isActive: boolean = true;
   boton = true;
   isLoading: boolean = false;
   idAliado: any;
-  todasLasActividades: any;
+  todasLasActividades: any[] = [];
 
   actividadForm = this.fb.group({
     estado: [true],
@@ -73,7 +73,7 @@ export class ListActividadesComponent {
     if (this.rutaId !== null) {
       this.rutaService.activadadxAliado(this.token, this.rutaId, this.idAliado, this.userFilter.estado).subscribe(
         (data) => {
-          this.listAcNiLeCo = data;
+          this.listAcNiLeCo = [data];
           // Extraer todas las actividades en un solo array
           this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
           console.log('Todas las actividades:', this.todasLasActividades);
