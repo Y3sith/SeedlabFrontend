@@ -394,18 +394,14 @@ export class DashboardComponent implements AfterViewInit {
     this.dashboardService.contarRegistrosMensual(this.token).subscribe(
       data => {
         console.log('data meses', data);
-
         if (Array.isArray(data) && data.length > 0) {
           const emprendedoresData = data.map(item => parseInt(item.emprendedores));
           const aliadosData = data.map(item => parseInt(item.aliados));
           const meses = data.map(item => this.getMonthName(item.mes));
-
           console.log('Emprendedores:', emprendedoresData);
           console.log('Aliados:', aliadosData);
           console.log('Meses:', meses);
-
           const maxValue = Math.max(...emprendedoresData, ...aliadosData);
-
           this.registrosEchartsOptions = {
             tooltip: {
               trigger: 'axis',
@@ -425,7 +421,17 @@ export class DashboardComponent implements AfterViewInit {
               }
             },
             legend: {
-              data: ['Emprendedor', 'Aliados']
+              data: ['Emprendedor', 'Aliados'],
+              left: 'center',  // Centrar la leyenda en PC
+              top: 10,
+              itemGap: 20
+            },
+            grid: {
+              top: 60,
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
             },
             xAxis: [
               {
@@ -456,11 +462,38 @@ export class DashboardComponent implements AfterViewInit {
                 type: 'bar',
                 data: aliadosData
               }
+            ],
+            media: [
+              {
+                query: {
+                  maxWidth: 575.98  // Punto de quiebre para dispositivos móviles
+                },
+                option: {
+                  legend: {
+                    left: 'center',
+                    top: 0,
+                    orient: 'horizontal',
+                    itemGap: 10  // Reducir el espacio entre elementos para móviles
+                  },
+                  grid: {
+                    top: 40  // Aumentar el espacio superior para la leyenda
+                  },
+                  toolbox: {
+                    right: 10,
+                    top: 25,  // Mover la caja de herramientas un poco más abajo
+                    itemSize: 15,  // Reducir el tamaño de los iconos para móviles
+                    feature: {
+                      dataView: { show: false },  // Ocultar algunas opciones en móviles
+                      magicType: { show: true, type: ['line', 'bar'] },
+                      restore: { show: false },
+                      saveAsImage: { show: true }
+                    }
+                  }
+                }
+              }
             ]
           };
-
           console.log('Opciones de ECharts:', this.registrosEchartsOptions);
-
           // Usar setTimeout para asegurarse de que el DOM esté listo
           this.initChart('echarts-registros', this.registrosEchartsOptions);
         } else {
