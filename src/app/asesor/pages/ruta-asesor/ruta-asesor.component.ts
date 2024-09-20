@@ -91,7 +91,6 @@ export class RutaAsesorComponent {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['']
   })
@@ -99,16 +98,17 @@ export class RutaAsesorComponent {
 
   nivelForm = this.fb.group({
     id_nivel: [],
-    nombre: [{ value: '', disabled: true }, Validators.required],
-    id_actividad: [{ value: '', disabled: true }, Validators.required]
+    nombre: ['', Validators.required],
+    id_asesor: [''],
+    id_actividad: ['', Validators.required]
   })
   mostrarNivelForm: boolean = false;
 
   ///// añadir leccion
   leccionForm = this.fb.group({
     id_leccion: [''],
-    nombre: [{ value: '', disabled: true }, Validators.required],
-    id_nivel: [{ value: '', disabled: true }, Validators.required]
+    nombre: ['', Validators.required],
+    id_nivel: ['', Validators.required]
   })
   mostrarLeccionForm: boolean = false;
 
@@ -116,11 +116,11 @@ export class RutaAsesorComponent {
 
   contenidoLeccionForm = this.fb.group({
     id_contenido: [''],
-    titulo: [{ value: '', disabled: true }, Validators.required],
-    descripcion: [{ value: '', disabled: true }, Validators.required],
-    fuente_contenido: [{ value: '', disabled: true }, Validators.required],
-    id_tipo_dato: [{ value: '', disabled: true }, Validators.required],
-    id_leccion: [{ value: '', disabled: true }, Validators.required]
+    titulo: ['', Validators.required],
+    descripcion: ['', Validators.required],
+    fuente_contenido: ['', Validators.required],
+    id_tipo_dato: ['', Validators.required],
+    id_leccion: ['', Validators.required]
   })
   mostrarContenidoLeccionForm: boolean = false;
   constructor(
@@ -170,7 +170,7 @@ export class RutaAsesorComponent {
     this.listaAliado();
     this.initializeFormState();
     this.onAliadoChange();
-    this.bloquearBotones();
+    // this.bloquearBotones();
 
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
   if (idLeccion) {
@@ -325,7 +325,6 @@ export class RutaAsesorComponent {
                 nombre: data.nombre,
                 descripcion: data.descripcion,
                 id_tipo_dato: data.id_tipo_dato,
-                id_asesor: data.id_asesor ? data.id_asesor : '',
                 id_aliado: data.id_aliado,
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
@@ -336,7 +335,7 @@ export class RutaAsesorComponent {
               this.selectedFromInput = false;
               this.initializeNivelForm();
 
-              this.activivarFormulariosBotones();
+              // this.activivarFormulariosBotones();
               console.log('Actividad: ', data);
             },
             error => {
@@ -357,10 +356,11 @@ export class RutaAsesorComponent {
       const primerNivel = this.niveles[0];
       this.nivelForm.patchValue({
         id_nivel: primerNivel.id,
-        nombre: primerNivel.nombre
+        nombre: primerNivel.nombre,
+        id_asesor:primerNivel.id_asesor
       });
       //this.nivelForm.disable();
-
+      this.nivelForm.get('id_asesor')?.disable();
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
       console.log('lecciones::', this.onNivelChange(primerNivel.id.toString()));
@@ -370,7 +370,7 @@ export class RutaAsesorComponent {
         id_nivel: '',
         nombre: ''
       });
-      this.nivelForm.get('nombre')?.disable();
+      //this.nivelForm.get('nombre')?.disable();
     } 
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
@@ -395,12 +395,12 @@ export class RutaAsesorComponent {
       return;
     } 
     
-    if (this.actividadId != null) {
-      // if (this.actividadForm.invalid) {
-      //   this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
-      //   return;
-      // }
-    }
+    // if (this.actividadId != null) {
+      if (this.actividadForm.invalid) {
+        this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+        return;
+      }
+    // }
     if (this.idactividad == null) {
       estadoValue = '1'
     } else {
@@ -430,12 +430,8 @@ export class RutaAsesorComponent {
             (data: any) => {
               const actividadCreada = data[0];
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-              //this.mostrarNivelForm = true;
               this.alertServices.successAlert('Exito', data.message);
-              this.desactivarcamposActividad();
               console.log('datos enviados: ', data)
-              this.activarformularios();
-              this.habilitarBotones();
             },
             error => {
               console.log(error);
@@ -462,70 +458,70 @@ export class RutaAsesorComponent {
     }
   }
 
-  desactivarcamposActividad(): void {
-    this.actividadForm.disable();
-    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
-    if (guardarBtn) {
-      guardarBtn.disabled = true;
-      guardarBtn.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
-    }
-    const fuente = document.getElementById('fuente') as HTMLButtonElement;
-    if (fuente) {
-      fuente.disabled = true;
-      fuente.classList.add('disabled-btn');
-    }
-  }
+  // desactivarcamposActividad(): void {
+  //   this.actividadForm.disable();
+  //   const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+  //   if (guardarBtn) {
+  //     guardarBtn.disabled = true;
+  //     guardarBtn.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
+  //   }
+  //   const fuente = document.getElementById('fuente') as HTMLButtonElement;
+  //   if (fuente) {
+  //     fuente.disabled = true;
+  //     fuente.classList.add('disabled-btn');
+  //   }
+  // }
 
-  activarformularios(): void {
-    this.nivelForm.enable(); // Habilita el formulario de niveles
-    this.leccionForm.enable();
-    this.contenidoLeccionForm.enable();
-  }
+  // activarformularios(): void {
+  //   this.nivelForm.enable(); // Habilita el formulario de niveles
+  //   this.leccionForm.enable();
+  //   this.contenidoLeccionForm.enable();
+  // }
 
-  activivarFormulariosBotones(): void {
-    this.nivelForm.enable();
-    this.leccionForm.enable();
-    this.contenidoLeccionForm.enable();
-    //this.actividadForm.enable();
-    this.habilitarBotones();
-  }
+  // activivarFormulariosBotones(): void {
+  //   this.nivelForm.enable();
+  //   this.leccionForm.enable();
+  //   this.contenidoLeccionForm.enable();
+  //   //this.actividadForm.enable();
+  //   this.habilitarBotones();
+  // }
 
-  bloquearBotones(): void {
-    const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
-    if (agregarNivelBtn) {
-      agregarNivelBtn.style.pointerEvents = 'none';
-      agregarNivelBtn.style.opacity = '0.5';
-    }
+  // bloquearBotones(): void {
+  //   const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+  //   if (agregarNivelBtn) {
+  //     agregarNivelBtn.style.pointerEvents = 'none';
+  //     agregarNivelBtn.style.opacity = '0.5';
+  //   }
 
-    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
-    if (agregarLeccionBtn) {
-      agregarLeccionBtn.style.pointerEvents = 'none';
-      agregarLeccionBtn.style.opacity = '0.5';
-    }
+  //   const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
+  //   if (agregarLeccionBtn) {
+  //     agregarLeccionBtn.style.pointerEvents = 'none';
+  //     agregarLeccionBtn.style.opacity = '0.5';
+  //   }
 
-    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
-    if (agregarContenidoBtn) {
-      agregarContenidoBtn.style.pointerEvents = 'none';
-      agregarContenidoBtn.style.opacity = '0.5';
-    }
-  }
-  habilitarBotones(): void {
-    const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
-    if (agregarNivelBtn) {
-      agregarNivelBtn.style.pointerEvents = 'auto';
-      agregarNivelBtn.style.opacity = '1';
-    }
-    const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
-    if (agregarLeccionBtn) {
-      agregarLeccionBtn.style.pointerEvents = 'auto';
-      agregarLeccionBtn.style.opacity = '1';
-    }
-    const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
-    if (agregarContenidoBtn) {
-      agregarContenidoBtn.style.pointerEvents = 'auto';
-      agregarContenidoBtn.style.opacity = '1';
-    }
-  }
+  //   const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
+  //   if (agregarContenidoBtn) {
+  //     agregarContenidoBtn.style.pointerEvents = 'none';
+  //     agregarContenidoBtn.style.opacity = '0.5';
+  //   }
+  // }
+  // habilitarBotones(): void {
+  //   const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
+  //   if (agregarNivelBtn) {
+  //     agregarNivelBtn.style.pointerEvents = 'auto';
+  //     agregarNivelBtn.style.opacity = '1';
+  //   }
+  //   const agregarLeccionBtn = document.getElementById('agregarLeccionBtn') as HTMLAnchorElement;
+  //   if (agregarLeccionBtn) {
+  //     agregarLeccionBtn.style.pointerEvents = 'auto';
+  //     agregarLeccionBtn.style.opacity = '1';
+  //   }
+  //   const agregarContenidoBtn = document.getElementById('agregarContenidoBtn') as HTMLAnchorElement;
+  //   if (agregarContenidoBtn) {
+  //     agregarContenidoBtn.style.pointerEvents = 'auto';
+  //     agregarContenidoBtn.style.opacity = '1';
+  //   }
+  // }
   verNivel(): void {
     if (this.token) {
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
@@ -563,8 +559,12 @@ export class RutaAsesorComponent {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
       return;
     }
+
+    const idAsesor = this.nivelForm.get('id_asesor')?.value;
     const nivel: any = {
       nombre: nombreNivel,
+      id_asesor: idAsesor,
+      //id_asesor: this.nivelForm.value.id_asesor,
       id_actividad: this.nivelForm.value.id_actividad
       //id_actividad: this.actividadId
     };
@@ -583,8 +583,10 @@ export class RutaAsesorComponent {
             id_nivel: data.id
           });
           this.nivelForm.reset();
+          
+          //this.nivelForm.patchValue({ id_actividad: nivel.id_actividad, id_asesor: idAsesor });
           this.submittedNivel = false;
-          this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
+          this.nivelForm.patchValue({ id_actividad: nivel.id_actividad, id_asesor: idAsesor });
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -592,38 +594,38 @@ export class RutaAsesorComponent {
         }
       );
     } else {
-      if (this.nivelForm.invalid) {
-        this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
-        return;
-      }
-      console.log('nivel data', nivel);
-      this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
-        (data: any) => {
-          this.alertServices.successAlert('Exito', data.message);
-          // Actualizar la lista de niveles
-          this.niveles.push({
-            id: data.id,
-            nombre: data.nombre
-          });
+      // if (this.nivelForm.invalid) {
+      //   this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+      //   return;
+      // }
+      // console.log('nivel data', nivel);
+      // this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
+      //   (data: any) => {
+      //     this.alertServices.successAlert('Exito', data.message);
+      //     // Actualizar la lista de niveles
+      //     this.niveles.push({
+      //       id: data.id,
+      //       nombre: data.nombre
+      //     });
 
-          // Actualizar el select
-          this.nivelForm.patchValue({
-            id_nivel: data.id
-          });
-          this.leccionForm.patchValue({ id_nivel: data.id })
-          this.verNivel();
-          this.verLeccicon();
-          this.nivelForm.reset();
-          this.submittedNivel = false;
-          this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
-          this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
-          this.onNivelChange(data.id.toString());
-        },
-        error => {
-          this.alertServices.errorAlert('Error', error.error.message);
-          console.log(error);
-        }
-      )
+      //     // Actualizar el select
+      //     this.nivelForm.patchValue({
+      //       id_nivel: data.id
+      //     });
+      //     this.leccionForm.patchValue({ id_nivel: data.id })
+      //     this.verNivel();
+      //     this.verLeccicon();
+      //     this.nivelForm.reset();
+      //     this.submittedNivel = false;
+      //     this.nivelForm.patchValue({ id_actividad: nivel.id_actividad, id_asesor: idAsesor });
+      //     this.alertServices.successAlert('Éxito', 'Nivel creado correctamente')
+      //     this.onNivelChange(data.id.toString());
+      //   },
+      //   error => {
+      //     this.alertServices.errorAlert('Error', error.error.message);
+      //     console.log(error);
+      //   }
+      // )
     } 
   }
 
