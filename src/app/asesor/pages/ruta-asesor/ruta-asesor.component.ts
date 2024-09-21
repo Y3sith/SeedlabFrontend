@@ -311,7 +311,7 @@ export class RutaAsesorComponent {
 
   verEditar(): void {
     if (this.actividadId !== null) {
-      this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
+      this.actividadService.ActividadAsesor(this.token, this.actividadId).subscribe(
         data => {
           this.listActividadContenido = data;
           this.aliadoService.getinfoAsesor(this.token, data.id_aliado, this.userFilter.estado).subscribe(
