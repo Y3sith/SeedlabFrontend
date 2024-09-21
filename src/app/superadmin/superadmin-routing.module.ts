@@ -18,7 +18,6 @@ import { AddAllComponent } from './pages/ruta/add-all/add-all.component';
 import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
 import { RutaEmprendedorComponent } from '../emprendedor/pages/ruta-emprendedor/ruta-emprendedor.component';
 import { CursoRutaEmprendedorComponent } from '../emprendedor/pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
-import { ModalActividadComponent } from '../emprendedor/pages/modal-actividad/modal-actividad.component';
 
 const routes: Routes = [
   {
@@ -42,7 +41,7 @@ const routes: Routes = [
       { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
       { path: 'add-all', component: AddAllComponent, data: {title: 'Creación actividades', icon: 'fa-solid fa-table-list', showInMenu: false}},
       { path: 'list-actividades', component: ListActividadesComponent, data: {title: 'Actividades', showInMenu: false}},
-      { path: 'ruta', component: RutaEmprendedorComponent, data:{title: 'Ruta', showInMenu:true, icon:'fa-solid fa-location-arrow'}},
+      { path: 'ruta', component: RutaEmprendedorComponent, data:{title: 'Ruta General', showInMenu:true, icon:'fa-solid fa-code-fork'}},
       { path: 'curso-ruta-superadmin', component: CursoRutaEmprendedorComponent, data:{showInMenu: false}},
 
       /////

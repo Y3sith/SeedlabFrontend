@@ -4,31 +4,39 @@
   </header>
 </div>
 
-<div *ngIf="ishidden" class="flex justify-center md:mt-52">
-  <div class="container text-center mx-auto p-4 font-poppins">
-    <h4 class="font-poppins">Para acceder al contenido de la ruta, es necesario que completes la encuesta de maduración. Haz clic en el siguiente botón para dirigirte a la encuesta.</h4>
-    <button
-            class="py-2 px-4 max-md:mt-2 sm:px-8 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal flex-none justify-end"
-            [routerLink]="['/list-empresa']"
-            >Encuesta de maduracion
-          </button>
+<div *ngIf="!isLoading">
+  <div *ngIf="ishidden" class="flex justify-center md:mt-52">
+    <div class="container text-center mx-auto p-4 font-poppins">
+      <h4 class="font-poppins">Para acceder al contenido de la ruta, es necesario que completes la encuesta de maduración. Haz clic en el siguiente botón para dirigirte a la encuesta.</h4>
+      <button
+        class="py-2 px-4 max-md:mt-2 sm:px-8 bg-[#FA7D00] text-base sm:text-xl text-white font-bold rounded-full transition duration-300 text-center whitespace-normal flex-none justify-end"
+        [routerLink]="['/list-empresa']"
+      >Encuesta de maduracion</button>
+    </div>
   </div>
-</div>
 
 <div>
-  <div class="route-container">
-    <ng-container *ngFor="let ruta of rutaLista; let i = index">
-      <ng-container *ngFor="let actividad of ruta.actividades || []; let j = index">
-        <div class="route-item cursor-pointer" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)" (click)="openModal(actividad, i * (ruta.actividades?.length || 0) + j)">
-          <div class="circle" [ngClass]="getCirclePositionClass(i * ruta.actividades.length + j)" [style.border-color]="getItemColor(i * ruta.actividades.length + j)">
-            <div class="number" [style.color]="getItemColor(i * ruta.actividades.length + j)">{{ (i * ruta.actividades.length + j + 1).toString().padStart(2, '0') }}</div>
+
+  <div *ngIf="!ishidden">
+    <div class="route-container">
+      <ng-container *ngFor="let ruta of rutaLista; let i = index">
+        <ng-container *ngFor="let actividad of ruta.actividades || []; let j = index">
+          <div class="route-item cursor-pointer" [ngClass]="getItemClass(i * ruta.actividades.length + j)" [style.order]="getOrder(i * ruta.actividades.length + j)" (click)="openModal(actividad, i * (ruta.actividades?.length || 0) + j)">
+            <div class="circle" [ngClass]="getCirclePositionClass(i * ruta.actividades.length + j)" [style.border-color]="getItemColor(i * ruta.actividades.length + j)">
+              <div class="number" [style.color]="getItemColor(i * ruta.actividades.length + j)">{{ (i * ruta.actividades.length + j + 1).toString().padStart(2, '0') }}</div>
+            </div>
+            <div class="content" [style.background-color]="getItemColor(i * ruta.actividades.length + j)">
+              <h3>{{ actividad.nombre }}</h3>
+            </div>
           </div>
-          <div class="content" [style.background-color]="getItemColor(i * ruta.actividades.length + j)">
-            <h3>{{ actividad.nombre }}</h3>
-          </div>
-        </div>
+        </ng-container>
       </ng-container>
-    </ng-container>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center h-screen">
+    <!-- Aquí puedes agregar un spinner o mensaje de carga -->
+    <p>Cargando...</p>
   </div>
   <!-- [ultimoElemento]="ultimoElemento" -->
   

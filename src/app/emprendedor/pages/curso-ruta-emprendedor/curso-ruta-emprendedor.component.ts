@@ -128,7 +128,7 @@ export class CursoRutaEmprendedorComponent {
       if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
       } else {
-        this.documento = this.user.emprendedor.documento;
+        //this.documento = this.user.emprendedor.documento;
       }
     }
 
@@ -322,16 +322,22 @@ export class CursoRutaEmprendedorComponent {
       const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
       const nextContenidoIndex = this.currentContenidoIndex + 1;
   
+      
       if (nextContenidoIndex < currentLeccion.contenido_lecciones.length) {
         this.currentContenidoIndex = nextContenidoIndex;
       } else {
         const lastContentId = currentLeccion.contenido_lecciones[currentLeccion.contenido_lecciones.length - 1].id;
         if (lastContentId === this.ultimoContenidoId) {
-          this.alertService.alertainformativa('¡Felicitaciones por haber completado la ruta! Ahora es momento de volver a llenar la encuesta de maduración. Esta te permitirá evaluar cuánto has avanzado con tu emprendimiento y cómo han influido los conocimientos que has adquirido en este tiempo. Es una gran oportunidad para reflexionar sobre tu progreso y seguir mejorando. ¡Sigue adelante!', 'success').then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['list-empresa']);
-            }
-          });
+          if (this.currentRolId != 1 && this.currentRolId != 2) {
+            this.alertService.alertainformativa('¡Felicitaciones por haber completado la ruta! Ahora es momento de volver a llenar la encuesta de maduración. Esta te permitirá evaluar cuánto has avanzado con tu emprendimiento y cómo han influido los conocimientos que has adquirido en este tiempo. Es una gran oportunidad para reflexionar sobre tu progreso y seguir mejorando. ¡Sigue adelante!', 'success').then((result) => {
+              if (result.isConfirmed) {
+                this.router.navigate(['list-empresa']);
+              }
+            });
+          } else {
+            // Para roles 1 y 2, simplemente navegar a la ruta deseada
+            this.router.navigate(['ruta']);
+          }
           return;
         }
   
