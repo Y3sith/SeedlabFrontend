@@ -103,16 +103,13 @@ export class CursoRutaEmprendedorComponent {
     this.currentNivelIndex = 0;
     this.currentLeccionIndex = 0;
     this.currentContenidoIndex = -1;
-    //this.expandCurrentPath();
     this.updateSelectedContent();
     this.loadYouTubeApi();
     this.listarRutaActiva();
     if (this.actividad) {
-      console.log('Actividad recibida:', this.actividad);
-      // Aquí puedes usar this.actividad.nombre, this.actividad.nivel, etc.
+      console.log('Actividad recibida');
     } else {
       console.error('No se recibió información de la actividad');
-      // Manejar el caso en que no se recibió la actividad
     }
   }
 
@@ -142,13 +139,10 @@ export class CursoRutaEmprendedorComponent {
       this.rutaService.ruta(this.token).subscribe(
         data => {
           this.rutaList = data;
-          console.log('Rutas recibidas:', this.rutaList);
 
           if (this.rutaList.length > 0) {
             const primeraRuta = this.rutaList[0];
             this.rutaId = primeraRuta.id;
-            console.log('ID de la primera ruta almacenado en this.rutaId:', this.rutaId);
-            // Si quieres llamar otra función después de recibir el ID
             this.getUltimaActividad();
           }
         },
@@ -166,7 +160,6 @@ export class CursoRutaEmprendedorComponent {
       (data) => {
         this.ultimoElemento = data.ultimo_elemento;
         this.ultimoContenidoId = data.ultimo_elemento.contenido_id;
-        console.log('Último elemento:', this.ultimoElemento);
       },
       (error) => {
         console.error('Error fetching ultima actividad:', error);
@@ -182,18 +175,6 @@ export class CursoRutaEmprendedorComponent {
       }
     });
   }
-
-  // initializeNiveles() {
-  //   this.niveles = this.actividad.nivel.map((nivel: any) => ({
-  //     ...nivel,
-  //     expanded: false,
-  //     lecciones: nivel.lecciones.map((leccion: any) => ({
-  //       ...leccion,
-  //       expanded: false,
-  //       contenido_lecciones: leccion.contenido_lecciones || []
-  //     }))
-  //   }));
-  // }
 
   initializeNiveles() {
     // Mapeo de los niveles
@@ -213,24 +194,17 @@ export class CursoRutaEmprendedorComponent {
                 expanded: false,
                 contenido_lecciones: leccion.contenido_lecciones || []
               };
-              console.log('Mapped Leccion:', mappedLeccion); // Log de cada lección mapeada
               return mappedLeccion;
             })
         };
-        console.log('Mapped Nivel:', mappedNivel); // Log de cada nivel mapeado
         return mappedNivel;
       })
       .filter((nivel: any) => {
         // Filtrar niveles que tienen al menos una lección con contenido
         const hasValidLecciones = nivel.lecciones.length > 0;
-        if (hasValidLecciones) {
-          console.log('Valid Nivel:', nivel); // Log de los niveles que pasan el filtro
-        }
         return hasValidLecciones;
       });
-
-    console.log('Final Niveles:', this.niveles); // Log del resultado final
-}
+  }
 
   toggleNivel(selectedNivelIndex: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
@@ -264,11 +238,6 @@ export class CursoRutaEmprendedorComponent {
     this.selectedLeccion = leccion;
     this.leccionForm.patchValue(leccion);
   }
-
-  // selectContenido(contenido: any) {
-  //   this.selectedContenido = contenido;
-  //   this.contenidoForm.patchValue(contenido);
-  // }
 
   selectContenido(contenido: any, nivelIndex: number, leccionIndex: number) {
     this.selectedContenido = contenido;
@@ -321,7 +290,7 @@ export class CursoRutaEmprendedorComponent {
       const currentNivel = this.niveles[this.currentNivelIndex];
       const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
       const nextContenidoIndex = this.currentContenidoIndex + 1;
-  
+
       if (nextContenidoIndex < currentLeccion.contenido_lecciones.length) {
         this.currentContenidoIndex = nextContenidoIndex;
       } else {
@@ -334,7 +303,7 @@ export class CursoRutaEmprendedorComponent {
           });
           return;
         }
-  
+
         this.currentLeccionIndex++;
         if (this.currentLeccionIndex >= currentNivel.lecciones.length) {
           this.currentLeccionIndex = 0;
@@ -348,12 +317,12 @@ export class CursoRutaEmprendedorComponent {
         this.currentContenidoIndex = 0;
       }
     }
-  
+
     // Obtener el contenido actual después de actualizar los índices
     const newCurrentNivel = this.niveles[this.currentNivelIndex];
     const newCurrentLeccion = newCurrentNivel.lecciones[this.currentLeccionIndex];
     const newCurrentContenido = newCurrentLeccion.contenido_lecciones[this.currentContenidoIndex];
-  
+
     // Llamar a closeAllExceptSelected con los nuevos índices
     this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
     this.selectedContenido = newCurrentContenido;
@@ -367,7 +336,7 @@ export class CursoRutaEmprendedorComponent {
   boton() {
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
-  
+
     // Verificar si estamos en el último contenido de la última lección del último nivel
     if (
       this.currentNivelIndex === this.niveles.length - 1 &&
@@ -377,8 +346,8 @@ export class CursoRutaEmprendedorComponent {
       this.botonAsesoria = true;
     }
   }
-  
-  
+
+
   onNextContentClick() {
     this.goToNextContent();
   }
@@ -406,8 +375,8 @@ export class CursoRutaEmprendedorComponent {
 
   isCurrentContent(nivelIndex: number, leccionIndex: number, contenidoIndex: number): boolean {
     return this.currentNivelIndex === nivelIndex &&
-           this.currentLeccionIndex === leccionIndex &&
-           this.currentContenidoIndex === contenidoIndex;
+      this.currentLeccionIndex === leccionIndex &&
+      this.currentContenidoIndex === contenidoIndex;
   }
 
   getContentStyle(nivelIndex: number, leccionIndex: number, contenidoIndex: number): object {
@@ -427,7 +396,6 @@ export class CursoRutaEmprendedorComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Asesoría creada:', result);
-        //this.listarAsesorias();
       }
     });
   }
@@ -455,21 +423,21 @@ export class CursoRutaEmprendedorComponent {
     const newCurrentNivel = this.niveles[this.currentNivelIndex];
     const newCurrentLeccion = newCurrentNivel.lecciones[this.currentLeccionIndex];
     const newCurrentContenido = newCurrentLeccion.contenido_lecciones[this.currentContenidoIndex];
-  
+
     this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
     this.updateSelectedContent();
-    
+
   }
 
   updateSelectedContent() {
-    
+
     if (this.showActivityDescription) {
       return; // No hacemos nada si estamos mostrando la descripción de la actividad
     }
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
-    
+
 
     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
     this.currentLeccionDescripcion = null;
@@ -539,15 +507,6 @@ export class CursoRutaEmprendedorComponent {
     return `${baseUrl}${relativePath}`;
   }
 
-  // getPdfUrl(url: string): SafeResourceUrl {
-  //   // Remove any leading slashes and 'storage' from the URL
-  //   const cleanUrl = url.replace(/^\/?(storage\/)?/, '');
-  //   // Construct the full URL
-  //   const fullUrl = `${environment.apiUrl}/storage/${cleanUrl}`;
-  //   // Sanitize the URL
-  //   return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
-  // }
-
   getPdfUrl(url: string): SafeResourceUrl {
     const cleanUrl = url.replace(/^\/?(storage\/)?/, '');
     const fullUrl = `${environment.apiUrl}/storage/${cleanUrl}`;
@@ -583,13 +542,7 @@ export class CursoRutaEmprendedorComponent {
       }
     });
   }
-
-  handleIrAModulo(rutaId: number) {
-    console.log('Ir a módulos de la ruta con ID:', rutaId);
-    // Aquí puedes implementar la lógica para manejar el ID de la ruta
-    // Por ejemplo, navegar a una nueva página o cargar datos específicos
-  }
-
+  
   getItemColor(index: number): string {
     const colors = [
       '#F4384B', // Rojo

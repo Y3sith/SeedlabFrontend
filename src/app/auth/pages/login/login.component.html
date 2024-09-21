@@ -2,9 +2,9 @@
 <div
     class="absolute top-0 left-0 w-full  min-h-screen bg-cover bg-center md:bg-center bg-no-repeat bg-[url('./assets/images/fondoLogin.jpg')] text-[16px] font-poppins">
 
-    <div class="grid justify-center content-center min-h-screen ">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 justify-center content-center pl-0">
-            <div class="col-span-1 md:content-center  ">
+    <div class="grid content-center justify-center min-h-screen ">
+        <div class="grid content-center justify-center grid-cols-1 gap-2 pl-0 md:grid-cols-3">
+            <div class="col-span-1 md:content-center ">
                 <div class="flex items-center justify-center">
                     <div class="w-[250px] h-[180px]">
                         <img src="../../../assets/images/logoSeed_blanco.png" class="w-[100%] h-[100%]  md:mt-14"
@@ -22,7 +22,7 @@
 
                     <!-- Email input -->
                     <div class="mb-2">
-                        <label for="email" class="block truncate text-base">Correo electronico:</label>
+                        <label for="email" class="block text-base truncate">Correo electronico:</label>
                         <div class="mt-2">
                             <input type="email" id="email" name="email" formControlName="email"
                                 placeholder="Correo electronico"
@@ -33,7 +33,7 @@
 
                     <!-- Password input -->
                     <div class="relative">
-                        <label for="password" class="block truncate text-base">Contraseña:</label>
+                        <label for="password" class="block text-base truncate">Contraseña:</label>
                         <div class="mt-2">
                             <input [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
                                 placeholder="Contraseña"

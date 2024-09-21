@@ -43,7 +43,6 @@ export class ListActividadesComponent {
     this.validateToken();
     this.route.queryParams.subscribe((params) => {
       this.rutaId = +params['id_ruta'];
-      console.log('id ruta: ', this.rutaId);
     });
     this.ver();
   }
@@ -51,13 +50,11 @@ export class ListActividadesComponent {
     if (!this.token) {
       this.token = localStorage.getItem('token');
       let identityJSON = localStorage.getItem('identity');
-      //console.log('currentrol',identityJSON);
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
-        //console.log('ererer',this.id)
         if (this.currentRolId != 1) {
           this.router.navigate(['/home']);
         }
@@ -75,7 +72,6 @@ export class ListActividadesComponent {
           this.listAcNiLeCo = data;
           // Extraer todas las actividades en un solo array
           this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
-          console.log('Todas las actividades:', this.todasLasActividades);
         },
         (error) => {
           console.log(error);
@@ -91,7 +87,6 @@ export class ListActividadesComponent {
         this.actividadService.estadoActividad(this.token, ActividadId, estadoActual).subscribe(
           (data) => {
             this.alertService.successAlert('Éxito', data.message);
-            //this.ver();
             location.reload();
           },
           (error) => {

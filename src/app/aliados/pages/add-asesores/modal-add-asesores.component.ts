@@ -106,7 +106,6 @@ export class ModalAddAsesoresComponent implements OnInit {
     if (this.asesorId != null) {
       this.isEditing = true;
       this.asesorForm.get('password')?.setValidators([Validators.minLength(8)]);
-      // this.verEditar(); /* Llama a verEditar si estás editando un asesor */
     } else {
       this.asesorForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
@@ -118,7 +117,7 @@ export class ModalAddAsesoresComponent implements OnInit {
 
   get f() {
     return this.asesorForm.controls;
-  } //aquii
+  }
 
   /* Valida el token del login colocando el nombre del aliado para llenarlo automaticamente con el localstorage*/
   validateToken(): void {
@@ -154,7 +153,6 @@ export class ModalAddAsesoresComponent implements OnInit {
       this.authService.tipoDocumento().subscribe(
         (data) => {
           this.listTipoDocumento = data;
-          //console.log('datos tipo de documento: ',data)
         },
         (error) => {
           console.log(error);
@@ -167,8 +165,6 @@ export class ModalAddAsesoresComponent implements OnInit {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
-        //console.log('Departamentos cargados:', JSON.stringify(data));
-        //console.log('zzzzzzzzzzz: ',this.listDepartamentos);
       },
       (err) => {
         console.log(err);
@@ -191,7 +187,6 @@ export class ModalAddAsesoresComponent implements OnInit {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       (data) => {
         this.listMunicipios = data;
-        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       (err) => {
         console.log('Error al cargar los municipios:', err);
@@ -216,7 +211,6 @@ export class ModalAddAsesoresComponent implements OnInit {
     if (this.idAsesor != null) {
       this.aliadoService.getAsesorAliado(this.token, this.idAsesor).subscribe(
         (data) => {
-          console.log('datossssss: ', data);
           this.asesorForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
@@ -376,9 +370,6 @@ export class ModalAddAsesoresComponent implements OnInit {
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
-
-    console.log('Datos del formulario:', this.asesorForm.value);
-
     /* Actualiza asesor */
     if (this.idAsesor != null) {
       this.alerService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {

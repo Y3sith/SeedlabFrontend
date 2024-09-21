@@ -1,6 +1,6 @@
-<div class="container mx-auto p-0 pt-2 font-poppins">
+<div class="container p-0 pt-2 mx-auto font-poppins">
   <!-- Encabezado -->
-  <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4">
+  <header class="flex flex-col items-center justify-between mb-6 md:flex-row md:pl-4">
     <app-header [title] [subtitle]="'Dashboard SuperAdmin'"></app-header>
   </header>
 
@@ -9,12 +9,12 @@
     <div class="spinner"></div>
   </div>
 
-  <div class=" p-2 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
+  <div class="p-2 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">
+    <div class="grid grid-cols-1 gap-4 mb-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
       <!-- Super Admins -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
+      <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
         <div class="absolute -top-5 left-4">
-          <div class="bg-orange-500 rounded-lg p-3 shadow-md">
+          <div class="p-3 bg-orange-500 rounded-lg shadow-md">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -26,15 +26,15 @@
         <div class="pt-8 pb-0">
           <p class="text-xl text-gray-500">Super Admins</p>
         </div>
-        <div class="border-t border-gray-200 pt-1">
+        <div class="pt-1 border-t border-gray-200">
           <div class="flex justify-between text-center">
             <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
+              <p class="font-semibold text-md">Activos</p>
               <p class="text-lg font-bold text-green-600">{{ totalSuperAdmin['activos'] }}</p>
             </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
+            <div class="self-stretch w-px bg-gray-200"></div>
             <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
+              <p class="font-semibold text-md">Inactivos</p>
               <p class="text-lg font-bold text-red-600">{{totalSuperAdmin['inactivos']}}</p>
             </div>
           </div>
@@ -42,9 +42,9 @@
       </div>
 
       <!-- Orientadores -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
+      <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
         <div class="absolute -top-5 left-4">
-          <div class="bg-green-500 rounded-lg p-3 shadow-md">
+          <div class="p-3 bg-green-500 rounded-lg shadow-md">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -58,15 +58,15 @@
           <p class="text-xl text-gray-500">Orientadores</p>
         </div>
 
-        <div class="border-t border-gray-200 pt-1">
+        <div class="pt-1 border-t border-gray-200">
           <div class="flex justify-between text-center">
             <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
+              <p class="font-semibold text-md">Activos</p>
               <p class="text-lg font-bold text-green-600">{{ totalOrientador['activos'] }}</p>
             </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
+            <div class="self-stretch w-px bg-gray-200"></div>
             <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
+              <p class="font-semibold text-md">Inactivos</p>
               <p class="text-lg font-bold text-red-600">{{totalOrientador['inactivos']}}</p>
             </div>
           </div>
@@ -74,9 +74,9 @@
       </div>
 
       <!-- Aliados -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
+      <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
         <div class="absolute -top-5 left-4">
-          <div class="bg-red-500 rounded-lg p-3 shadow-md">
+          <div class="p-3 bg-red-500 rounded-lg shadow-md">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -88,15 +88,15 @@
         <div class="pt-8 pb-0">
           <p class="text-xl text-gray-500">Aliados</p>
         </div>
-        <div class="border-t border-gray-200 pt-1">
+        <div class="pt-1 border-t border-gray-200">
           <div class="flex justify-between text-center">
             <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
+              <p class="font-semibold text-md">Activos</p>
               <p class="text-lg font-bold text-green-600">{{totalAliados['activos']}}</p>
             </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
+            <div class="self-stretch w-px bg-gray-200"></div>
             <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
+              <p class="font-semibold text-md">Inactivos</p>
               <p class="text-lg font-bold text-red-600">{{totalAliados['inactivos']}}</p>
             </div>
           </div>
@@ -104,9 +104,9 @@
       </div>
 
       <!-- Asesores -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
+      <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
         <div class="absolute -top-5 left-4">
-          <div class="bg-blue-500 rounded-lg p-3 shadow-md">
+          <div class="p-3 bg-blue-500 rounded-lg shadow-md">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -118,15 +118,15 @@
         <div class="pt-8 pb-0">
           <p class="text-xl text-gray-500">Asesores</p>
         </div>
-        <div class="border-t border-gray-200 pt-1">
+        <div class="pt-1 border-t border-gray-200">
           <div class="flex justify-between text-center">
             <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
+              <p class="font-semibold text-md">Activos</p>
               <p class="text-lg font-bold text-green-600">{{totalAsesores['activos']}}</p>
             </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
+            <div class="self-stretch w-px bg-gray-200"></div>
             <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
+              <p class="font-semibold text-md">Inactivos</p>
               <p class="text-lg font-bold text-red-600">{{totalAsesores['inactivos']}}</p>
             </div>
           </div>
@@ -134,9 +134,9 @@
       </div>
 
       <!-- Emprendedores -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
+      <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
         <div class="absolute -top-5 left-4">
-          <div class="bg-purple-500 rounded-lg p-3 shadow-md">
+          <div class="p-3 bg-purple-500 rounded-lg shadow-md">
             <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -148,15 +148,15 @@
         <div class="pt-8 pb-0">
           <p class="text-xl text-gray-500">Emprendedores</p>
         </div>
-        <div class="border-t border-gray-200 pt-1">
+        <div class="pt-1 border-t border-gray-200">
           <div class="flex justify-between text-center">
             <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
+              <p class="font-semibold text-md">Activos</p>
               <p class="text-lg font-bold text-green-600">{{totalEmprendedores['activos']}}</p>
             </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
+            <div class="self-stretch w-px bg-gray-200"></div>
             <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
+              <p class="font-semibold text-md">Inactivos</p>
               <p class="text-lg font-bold text-red-600">{{totalEmprendedores['inactivos']}}</p>
             </div>
           </div>
@@ -168,18 +168,18 @@
 
 
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <!-- Card del mapa -->
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="overflow-hidden bg-white rounded-lg shadow-lg">
         <div class="h-[400px]" id="echarts-empXDepar">
           <!-- Aquí va tu componente de mapa -->
         </div>
       </div>
 
       <!-- Card de la gráfica telaraña -->
-      <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      <div class="overflow-hidden bg-white rounded-lg shadow-lg">
         <div class="p-6 h-[500px] flex flex-col">
-          <div class="flex space-x-4 mb-4">
+          <div class="flex mb-4 space-x-4">
             <select id="empresa-select" class="w-1/2 p-2 border rounded-md"
               (change)="onEmpresaChange($event.target.value)">
               <option value="" disabled selected>Seleccione una empresa</option>
@@ -191,7 +191,7 @@
               <option value="2">Segunda Vez</option>
             </select>
           </div>
-      
+
           <div class="flex-grow">
             <div id="echarts-formulario" class="w-full h-full"></div>
           </div>
@@ -200,60 +200,54 @@
     </div>
 
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-14">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 sm:gap-6 mt-14">
       <!-- Asesorias asignas y sin asignar -->
-      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
-        <h2 class="text-lg font-semibold mb-4">Asesorias</h2>
+      <div class="max-w-sm p-4 my-auto bg-white rounded-lg shadow sm:p-3 md:p-4 sm:max-w-md md:max-w-lg">
+        <h2 class="mb-4 text-lg font-semibold">Asesorias</h2>
         <!-- Chart placeholder -->
-        <div class="flex justify-center items-center h-48 sm:h-56 md:h-64 lg:h-72 w-full">
+        <div class="flex items-center justify-center w-full h-48 sm:h-56 md:h-64 lg:h-72">
           <div id="echarts-pie" style="width: 100%; height:100%;"></div>
         </div>
       </div>
 
       <!-- Top Aliados -->
-      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
-        <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorias</h2>
+      <div class="max-w-sm p-4 my-auto bg-white rounded-lg shadow sm:p-3 md:p-4 sm:max-w-md md:max-w-lg">
+        <h2 class="mb-4 text-lg font-semibold">Top Aliados - Asesorias</h2>
         <!-- Chart placeholder -->
-        <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
+        <div class="w-full h-48 sm:h-56 md:h-64 lg:h-72">
           <div id="echarts-bar" style="width: 100%; height:100%;"></div>
         </div>
       </div>
 
       <!-- Asesorias por mes -->
-      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg my-auto">
-        <h2 class="text-lg font-semibold mb-4">Generos Emprendedores</h2>
+      <div class="max-w-sm p-4 my-auto bg-white rounded-lg shadow sm:p-3 md:p-4 sm:max-w-md md:max-w-lg">
+        <h2 class="mb-4 text-lg font-semibold">Generos Emprendedores</h2>
         <!-- Chart placeholder -->
-        <div class="flex justify-center items-center h-48 sm:h-56 md:h-64 lg:h-72 w-full">
+        <div class="flex items-center justify-center w-full h-48 sm:h-56 md:h-64 lg:h-72">
           <div id="echarts-doughnut" style="width: 100%; height: 100%;"></div>
         </div>
       </div>
     </div>
 
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-14 mb-8">
-      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4">
-        <h2 class="text-lg font-semibold mb-4">Registros Mensuales</h2>
-        <div class="flex justify-center items-center h-80 sm:h-56 md:h-64 lg:h-72 w-full">
+    <div class="grid grid-cols-1 gap-4 mb-8 md:grid-cols-2 sm:gap-6 mt-14">
+      <div class="p-4 bg-white rounded-lg shadow sm:p-3 md:p-4">
+        <h2 class="mb-4 text-lg font-semibold">Registros Mensuales</h2>
+        <div class="flex items-center justify-center w-full h-80 sm:h-56 md:h-64 lg:h-72">
           <div id="echarts-registros" style="width: 100%; height: 100%;"></div>
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4">
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">Promedio de Asesorias</h2>
+      <div class="p-4 bg-white rounded-lg shadow sm:p-3 md:p-4">
+        <h2 class="mb-2 text-lg font-semibold text-gray-700">Promedio de Asesorias</h2>
         <label for="yearSelect" class="mr-2 text-sm text-gray-600">Año:</label>
         <select name="year" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)"
-          class="text-sm py-1 px-2 w-20 border rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          class="w-20 px-2 py-1 text-sm border rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
-        <div class="flex justify-center items-center h-80 sm:h-56 md:h-64 lg:h-72 w-full " id="promedio-asesorias">
-
+        <div class="flex items-center justify-center w-full h-80 sm:h-56 md:h-64 lg:h-72 " id="promedio-asesorias">
         </div>
       </div>
     </div>
-
-
-
-
-
   </div>
 </div>

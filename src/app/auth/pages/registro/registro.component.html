@@ -2,10 +2,10 @@
 <div
     class="absolute top-0 left-0 w-full  min-h-screen bg-cover bg-custom-150px md:bg-center bg-no-repeat bg-[url('./assets/images/fondoRegister.jpg')] md:text-[16px]">
 
-    <div class="grid justify-center content-center min-h-screen my-4 font-poppins">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 justify-center content-center">
+    <div class="grid content-center justify-center min-h-screen my-4 font-poppins">
+        <div class="grid content-center justify-center grid-cols-1 gap-2 md:grid-cols-3">
             <!-- columna 1 -->
-            <div class="col-span-1 md:content-center  ">
+            <div class="col-span-1 md:content-center ">
                 <div class="flex items-center justify-center">
                     <div class="w-[250px] h-[180px]">
                         <img src="../../../assets/images/logoSeed_blanco.png" class="w-[100%] h-[100%]  md:mt-14"
@@ -13,30 +13,30 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-span-2 ">
                 <h2 class="text-[#fff] text-center mt-4 md:font-[500] h-12 font-poppins">
-                    ¿Ya tienes una cuenta? 
-                      <a class="no-underline" href="login"><span class="text-[#00B3ED]">Iniciar Sesión</span></a>
-                  </h2>
-                <div class="flex justify-center space-x-4 mt-8 ">
+                    ¿Ya tienes una cuenta?
+                    <a class="no-underline" href="login"><span class="text-[#00B3ED]">Iniciar Sesión</span></a>
+                </h2>
+                <div class="flex justify-center mt-8 space-x-4 ">
                     <!-- Barra de progreso -->
                     <div class="relative w-full flex items-center  max-w-[25rem] m-2">
                         <div class="absolute left-0 right-0 h-1 bg-[#fcb404]"></div>
                         <div class="absolute left-0 h-1 bg-[#fa7d00] transition-all duration-300 ease-in-out"
                             [style.width.%]="progressWidth"></div>
                         <!-- Apartados del progreso -->
-                        <div class="flex justify-between absolute w-full">
+                        <div class="absolute flex justify-between w-full">
                             <div [ngClass]="{'bg-[#fa7d00]': progressWidth >= 1, 'bg-[#fcb404]': progressWidth < 1}"
-                                class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold transition-all duration-300 ease-in-out">
+                                class="flex items-center justify-center w-8 h-8 font-bold text-white transition-all duration-300 ease-in-out rounded-full">
                                 1
                             </div>
                             <div [ngClass]="{'bg-[#fa7d00]': progressWidth >= 50, 'bg-[#fcb404]': progressWidth < 50}"
-                                class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold transition-all duration-300 ease-in-out">
+                                class="flex items-center justify-center w-8 h-8 font-bold text-white transition-all duration-300 ease-in-out rounded-full">
                                 2
                             </div>
                             <div [ngClass]="{'bg-[#fa7d00]': progressWidth >= 100, 'bg-[#fcb404]': progressWidth < 100}"
-                                class="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold transition-all duration-300 ease-in-out">
+                                class="flex items-center justify-center w-8 h-8 font-bold text-white transition-all duration-300 ease-in-out rounded-full">
                                 3
                             </div>
                         </div>
@@ -52,40 +52,49 @@
                         <div>
                             <label for="nombre" class="block text-[#000] truncate">Nombre:</label>
                             <div class="mt-2">
-                              <input type="text" id="nombre" formControlName="nombre" (input)="updateProgress()"
-                                class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
+                                <input type="text" id="nombre" formControlName="nombre" (input)="updateProgress()"
+                                    class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                             </div>
                             <div *ngIf="submitted && f.nombre.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                              <span *ngIf="f.nombre.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</span>
-                              <span *ngIf="f.nombre.errors.hasNumbers" class="text-red-700 pl-2 rounded-lg inline-block">El campo no debe contener números *</span>
+                                <span *ngIf="f.nombre.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</span>
+                                <span *ngIf="f.nombre.errors.hasNumbers"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">El campo no debe contener números
+                                    *</span>
                             </div>
-                          </div>
+                        </div>
 
                         <!-- pregunta 2 -->
 
-                          <div>
+                        <div>
                             <label for="apellido" class="block truncate">Apellido:</label>
                             <div class="mt-2">
-                              <input type="text" id="apellido" formControlName="apellido" (input)="updateProgress()"
-                                class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
+                                <input type="text" id="apellido" formControlName="apellido" (input)="updateProgress()"
+                                    class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                             </div>
                             <div *ngIf="submitted && f.apellido.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                              <div *ngIf="f.apellido.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
-                              <div *ngIf="f.apellido.errors.hasNumbers" class="text-red-700 pl-2 rounded-lg inline-block">El campo no debe contener números *</div>
+                                <div *ngIf="f.apellido.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
+                                <div *ngIf="f.apellido.errors.hasNumbers"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">El campo no debe contener números
+                                    *</div>
                             </div>
-                          </div>
-                          
+                        </div>
+
 
                         <!-- pregunta 3 -->
                         <div class="relative">
                             <label for="id_tipo_documento" class="block truncate">Tipo de Documento:</label>
-                            <select id="id_tipo_documento" formControlName="id_tipo_documento" (change)="updateProgress()"
+                            <select id="id_tipo_documento" formControlName="id_tipo_documento"
+                                (change)="updateProgress()"
                                 class="mt-2 p-2 block w-full rounded-md border-0 py-1.5 text-[#000] shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] focus:outline-none sm:text-sm sm:leading-6">
                                 <option value="" disabled selected>Seleccionar tipo de documento...</option>
-                                <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
+                                <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}
+                                </option>
                             </select>
                             <div *ngIf="submitted && f.nombretipodoc.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <div *ngIf="f.nombretipodoc.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
+                                <div *ngIf="f.nombretipodoc.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
                             </div>
                             <fa-icon [icon]="faIdCard" class="absolute right-3 top-[38.5px] text-md"
                                 styles="pointer-events: auto;"></fa-icon>
@@ -94,15 +103,21 @@
                         <div>
                             <label for="documento" class="block truncate">Número de Documento:</label>
                             <div class="mt-2">
-                              <input type="number" id="documento" formControlName="documento" (input)="updateProgress()"
-                                class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
+                                <input type="number" id="documento" formControlName="documento"
+                                    (input)="updateProgress()"
+                                    class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                             </div>
                             <div *ngIf="submitted && f.documento.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                              <div *ngIf="f.documento.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
-                              <div *ngIf="f.documento.errors.lengthError" class="text-red-700 pl-2 rounded-lg inline-block">{{ f.documento.errors.lengthError }}</div>
-                              <div *ngIf="f.documento.errors.exists" class="text-red-700 pl-2 rounded-lg inline-block">El número de documento ya existe. Por favor, corrígelo.</div>
-                            </div>                       
-                          </div>
+                                <div *ngIf="f.documento.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
+                                <div *ngIf="f.documento.errors.lengthError"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">{{ f.documento.errors.lengthError
+                                    }}</div>
+                                <div *ngIf="f.documento.errors.exists"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">El número de documento ya existe.
+                                    Por favor, corrígelo.</div>
+                            </div>
+                        </div>
                         <div class="flex justify-center">
                             <button (click)="next()"
                                 class="mt-4 bg-[#fcb404] text-white py-2 px-4 rounded-full">Siguiente</button>
@@ -122,11 +137,17 @@
                                 <i class="fas fa-calendar-alt text-[#000] cursor-pointer md:-mt-1 pr-3 text-md"
                                     onclick="document.getElementById('fechaNacimiento').focus();"></i>
                             </div>
-                            <div *ngIf="submitted && f.fecha_nacimiento.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <div *ngIf="f.fecha_nacimiento.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
-                                <div *ngIf="f.fecha_nacimiento.errors.futureDate" class="text-red-700 pl-2 rounded-lg inline-block">La fecha no es válida*</div>
-                                <div *ngIf="f.fecha_nacimiento.errors.tooOld" class="text-red-700 pl-2 rounded-lg inline-block">La fecha no es válida*</div>
-                                <div *ngIf="f.fecha_nacimiento.errors.tooRecent" class="text-red-700 pl-2 rounded-lg inline-block">Debe tener al menos 18 años *</div>
+                            <div *ngIf="submitted && f.fecha_nacimiento.errors"
+                                class="max-w-[19rem] overflow-hidden mt-1">
+                                <div *ngIf="f.fecha_nacimiento.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
+                                <div *ngIf="f.fecha_nacimiento.errors.futureDate"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">La fecha no es válida*</div>
+                                <div *ngIf="f.fecha_nacimiento.errors.tooOld"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">La fecha no es válida*</div>
+                                <div *ngIf="f.fecha_nacimiento.errors.tooRecent"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Debe tener al menos 18 años *
+                                </div>
                             </div>
                         </div>
 
@@ -146,7 +167,8 @@
                                 <fa-icon [icon]="faVenusMars"></fa-icon>
                             </div>
                             <div *ngIf="submitted && f.genero.errors" class="max-w-[19rem] overflow-hidden mt-1 ">
-                                <div *ngIf="f.genero.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
+                                <div *ngIf="f.genero.errors.required" class="inline-block pl-2 text-red-700 rounded-lg">
+                                    Este campo es requerido *</div>
                             </div>
                         </div>
 
@@ -159,15 +181,18 @@
                                     class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                                 <button type="button" class="absolute right-3 top-[38.5px]" (click)="hide = !hide">
                                     <i *ngIf="hide" class="fa fa-eye-slash text-[#000] -mt-1 text-md"></i>
-                                    <i *ngIf="!hide" class="fa fa-eye text-cyan-500 -mt-1 text-md"></i>
+                                    <i *ngIf="!hide" class="-mt-1 fa fa-eye text-cyan-500 text-md"></i>
                                 </button>
                             </div>
                             <div *ngIf="submitted && f.password.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <div *ngIf="f.password.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *
+                                <div *ngIf="f.password.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *
                                 </div>
-                                <div *ngIf="f.password.errors.minlength" class="text-red-700 pl-2 rounded-lg inline-block">La contraseña debe tener al
+                                <div *ngIf="f.password.errors.minlength"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">La contraseña debe tener al
                                     menos 8 caracteres *</div>
-                                <div *ngIf="f.password.errors.passwordStrength" class="text-red-700 pl-2 mt-1">{{ f.password.errors.passwordStrength }}
+                                <div *ngIf="f.password.errors.passwordStrength" class="pl-2 mt-1 text-red-700">{{
+                                    f.password.errors.passwordStrength }}
                                 </div>
                             </div>
                         </div>
@@ -176,18 +201,23 @@
                         <div>
                             <label for="correo" class="block truncate">Correo Electrónico:</label>
                             <div class="mt-2">
-                              <input type="text" id="correo" formControlName="email" (input)="updateProgress()"
-                                class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
+                                <input type="text" id="correo" formControlName="email" (input)="updateProgress()"
+                                    class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                             </div>
                             <div *ngIf="submitted && f.email.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                              <div *ngIf="f.email.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
-                              <div *ngIf="f.email.errors.emailInvalid" class="text-red-700 pl-2 rounded-lg inline-block">{{ f.email.errors.emailInvalid }}</div>
+                                <div *ngIf="f.email.errors.required" class="inline-block pl-2 text-red-700 rounded-lg">
+                                    Este campo es requerido *</div>
+                                <div *ngIf="f.email.errors.emailInvalid"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">{{ f.email.errors.emailInvalid }}
+                                </div>
                             </div>
-                          </div>
-                          <div class="flex justify-center space-x-2">
-                            <button (click)="prev()" class="mt-4 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-full">Anterior</button>
-                            <button (click)="next()" class="mt-4 bg-[#fcb404] text-white py-2 px-4 rounded-full">Siguiente</button>
-                          </div>
+                        </div>
+                        <div class="flex justify-center space-x-2">
+                            <button (click)="prev()"
+                                class="px-4 py-2 mt-4 text-white bg-gray-500 rounded-full hover:bg-gray-600">Anterior</button>
+                            <button (click)="next()"
+                                class="mt-4 bg-[#fcb404] text-white py-2 px-4 rounded-full">Siguiente</button>
+                        </div>
                     </div>
 
                     <div *ngIf="currentIndex === 2" class="grid gap-y-4">
@@ -199,7 +229,8 @@
                                     class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                             </div>
                             <div *ngIf="submitted && f.celular.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <div *ngIf="f.celular.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
+                                <div *ngIf="f.celular.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
                                 <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10
                                     dígitos</div>
                             </div>
@@ -208,15 +239,14 @@
                         <!-- pregunta 10 -->
                         <div class="relative">
                             <label for="id_departamento" class="block truncate">Departamento:</label>
-                            <select id="id_departamento" name="id_departamento" formControlName="id_departamento" (change)="onSelectChange($event)"
+                            <select id="id_departamento" name="id_departamento" formControlName="id_departamento"
+                                (change)="onSelectChange($event)"
                                 class="mt-2 p-2 block w-full rounded-md border-0 py-1.5 text-[#000] shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] focus:outline-none sm:text-sm sm:leading-6">
-                              <option value="" disabled selected>Seleccionar Departamento...</option>
-                              <option *ngFor="let nameDepartamento of listDepartamentos" [value]="nameDepartamento.id">
-                                {{nameDepartamento.name}}</option>
+                                <option value="" disabled selected>Seleccionar Departamento...</option>
+                                <option *ngFor="let nameDepartamento of listDepartamentos"
+                                    [value]="nameDepartamento.id">
+                                    {{nameDepartamento.name}}</option>
                             </select>
-                            <!-- <div *ngIf="submitted && f.departamento.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                              <div *ngIf="f.departamento.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
-                            </div> -->
                             <fa-icon [icon]="faLandmarkFlag" class="absolute right-4 top-[38.5px]"></fa-icon>
                         </div>
                         <!-- pregunta 11 -->
@@ -230,9 +260,6 @@
                                     {{municipio.nombre}}
                                 </option>
                             </select>
-                            <!-- <div *ngIf="submitted && f.municipio.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <div *ngIf="f.municipio.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
-                            </div> -->
                             <fa-icon [icon]="faMountainCity" class="absolute right-4 top-[39.5px]"></fa-icon>
                         </div>
 
@@ -244,12 +271,13 @@
                                     class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                             </div>
                             <div *ngIf="submitted && f.direccion.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <div *ngIf="f.direccion.errors.required" class="text-red-700 pl-2 rounded-lg inline-block">Este campo es requerido *</div>
+                                <div *ngIf="f.direccion.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
                             </div>
                         </div>
                         <div class="flex justify-center space-x-2">
                             <button (click)="prev()"
-                                class="mt-4 bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-full">Anterior</button>
+                                class="px-4 py-2 mt-4 text-white bg-gray-500 rounded-full hover:bg-gray-600">Anterior</button>
                             <button type="submit"
                                 class="mt-4 bg-[#fcb404] hover:bg-[#fcb404] text-white py-2 px-4 rounded-full">Registrar</button>
                         </div>

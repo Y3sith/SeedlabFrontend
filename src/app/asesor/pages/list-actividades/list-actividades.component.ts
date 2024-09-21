@@ -46,7 +46,6 @@ export class ListActividadesComponent {
     this.validateToken();
     this.route.queryParams.subscribe((params) => {
       this.rutaId = +params['id_ruta'];
-      console.log('id ruta: ', this.rutaId);
     });
     this.ver();
   }
@@ -79,7 +78,6 @@ export class ListActividadesComponent {
           this.listAcNiLeCo = data;
           // Extraer todas las actividades en un solo array
           this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
-          console.log('Todas las actividades:', this.todasLasActividades);
         },
         (error) => {
           console.log(error);

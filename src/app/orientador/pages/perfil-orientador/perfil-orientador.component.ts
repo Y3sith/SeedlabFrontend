@@ -167,9 +167,6 @@ export class PerfilOrientadorComponent {
     this.authServices.tipoDocumento().subscribe(
       data => {
         this.listTipoDocumento = data;
-
-        console.log('tipos de documentos', this.listTipoDocumento);
-        //console.log('datos tipo de documento: ',data)
       },
       error => {
         console.log(error);
@@ -182,7 +179,6 @@ export class PerfilOrientadorComponent {
     let estadoValue: string;
 
     if(this.perfilorientadorForm.invalid){
-      console.log("Formulario Invalido", this.perfilorientadorForm.value);
       this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
       this.submitted = true;
       return
@@ -234,7 +230,6 @@ export class PerfilOrientadorComponent {
           if (result.isConfirmed) {
             this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
               (data) => {
-                console.log('Response from server:', data);
                 setTimeout(function () {
                   location.reload();
                 }, this.tiempoEspera);
@@ -288,7 +283,6 @@ export class PerfilOrientadorComponent {
         } else {
           control.enable();
         }
-        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
       } else {
         console.warn(`Control for field ${field} not found in form`);
       }
@@ -297,19 +291,12 @@ export class PerfilOrientadorComponent {
     // Force change detection
     this.cdRef.detectChanges();
   
-    // Log the entire form state
-    console.log('Form state after toggling:', this.perfilorientadorForm);
   }
-
-   //Funcion para cargar los departamentos
-
    //Funcion para cargar los departamentos
    cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
-        console.log("DEPARTAMENTO",data);
         this.listDepartamentos = data;
-        //this.cdRef.detectChanges(); // Forzar la detección de cambios
       },
       (err) => {
         console.log(err);
@@ -333,12 +320,6 @@ export class PerfilOrientadorComponent {
     this.municipioService.getMunicipios(departamentoId).subscribe(
       (data) => {
         this.listMunicipios = data;
-      console.log("MUNICIPIOS",data);
-        // Establecer el municipio actual en el select después de cargar los municipios
-        //const municipioId = this.emprendedorForm.get('id_municipio')?.value;
-        // if (municipioId) {
-        //   this.emprendedorForm.patchValue({ id_municipio: municipioId });
-        // }
       },
       (err) => {
         console.log('Error al cargar los municipios:', err);
@@ -438,7 +419,6 @@ export class PerfilOrientadorComponent {
         this.authServices.tipoDocumento().subscribe(
           data => {
             this.listTipoDocumento = data;
-            //console.log('datos tipo de documento: ',data)
           },
           error => {
             console.log(error);
@@ -511,29 +491,4 @@ export class PerfilOrientadorComponent {
         return null;
       }
     }
-  //   desactivarEmprendedor(): void {
-  //     // let confirmationText = this.token
-  //     //   ? "¿Estás seguro de desactivar tu cuenta?"
-  //     //   : "¿Estás seguro de desactivar tu cuenta?";
-  //     if (this.token) {
-  //       this.alertService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
-  //       "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momnento de iniciar sección!", 'warning').then((result) => {
-  //         if (result.isConfirmed) {
-  //           this.orientadorService.destroy(this.token, this.documento).subscribe(
-  //             (data) => {
-  //               console.log("desactivar", data);
-  //               this.isAuthenticated = false;
-  //               localStorage.clear();
-  //               location.reload();
-  //             },
-  //             (err) => {
-  //               console.log(err);
-  //             }
-  //           );
-  //         }
-  //       });
-  //     }
-  //   }
-
-  // 
 }

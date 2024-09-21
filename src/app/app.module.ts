@@ -23,7 +23,6 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { BodyComponent } from './inicio/body/body.component';
-import { CargaComponent } from './carga/carga.component';
 import { CursorutasComponent } from './ruta/cursorutas/cursorutas.component';
 
 import { MenuComponent } from './inicio/menu/menu.component';
@@ -38,7 +37,6 @@ import { EmprendedorModule } from './emprendedor/emprendedor.module';
 import { SuperadminModule } from './superadmin/superadmin.module';
 
 
-import { AddLevelComponent } from './superadmin/pages/ruta/add-level/add-level.component';
 import { OrientadorModule } from './orientador/orientador.module';
 import { NgxEchartsModule } from 'ngx-echarts';
 
@@ -55,8 +53,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     //OrientadorCrearComponent,
     RutasComponent,
     SafeUrlPipe,
-    CargaComponent,
-    AddLevelComponent,
     
   ],
   imports: [

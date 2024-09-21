@@ -5,7 +5,6 @@ import { PerfilSuperadminComponent } from './pages/perfil-superadmin/perfil-supe
 import { PersonalizacionesComponent } from './pages/personalizaciones/personalizaciones.component';
 import { ListRutasComponent } from './pages/ruta/list-ruta/list-rutas.component';
 import { ListOrientadorComponent } from './pages/orientador/list-orientador/list-orientador.component';
-import { AddActividadComponent } from './pages/ruta/add-actividad/add-actividad.component';
 import { ListAliadosComponent } from './pages/aliados/list-aliados/list-aliados.component';
 import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.component';
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
@@ -14,7 +13,6 @@ import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.
 import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ModalCrearSuperadminComponent } from './pages/add-superadmin/modal-crear-superadmin.component';
-import { AddAllComponent } from './pages/ruta/add-all/add-all.component';
 import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
 
 const routes: Routes = [
@@ -35,9 +33,7 @@ const routes: Routes = [
       { path: 'edit-superAdmin/:id', component: ModalCrearSuperadminComponent, data:{  showInMenu: false } },
       { path: 'edit-aliados/:id', component: AddAliadosComponent, data: { showInMenu: false } },
       { path: 'actnivlec', component: ActnivlecComponent, data: { title: 'Act-Niv-Lec', showInMenu: false } },
-      { path: 'add-actividad', component: AddActividadComponent, data: { title: 'Actividad', icon: 'fa-solid fa-table-list', showInMenu: false } },
       { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
-      { path: 'add-all', component: AddAllComponent, data: {title: 'Creación actividades', icon: 'fa-solid fa-table-list', showInMenu: false}},
       { path: 'list-actividades', component: ListActividadesComponent, data: {title: 'Actividades', showInMenu: false}},
       /////
       { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}},

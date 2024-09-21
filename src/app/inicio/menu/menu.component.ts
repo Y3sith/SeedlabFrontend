@@ -30,10 +30,10 @@ export class MenuComponent {
   id: number = 1;
 
   constructor(private router: Router,
-              private authservices: AuthService,
-              private menuService: MenuService,
-              private personalizacionService: SuperadminService,
-              private eRef: ElementRef) { }
+    private authservices: AuthService,
+    private menuService: MenuService,
+    private personalizacionService: SuperadminService,
+    private eRef: ElementRef) { }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: Event) {
@@ -41,19 +41,19 @@ export class MenuComponent {
   }
 
   getRolUser(): void {
-    if (this.user.id_rol === 1){
+    if (this.user.id_rol === 1) {
       this.rolUser = 'Super Admin';
     }
-    else if (this.user.id_rol === 2){
+    else if (this.user.id_rol === 2) {
       this.rolUser = 'Orientador';
     }
-    else if (this.user.id_rol === 3){
+    else if (this.user.id_rol === 3) {
       this.rolUser = 'Aliado';
     }
-    else if (this.user.id_rol === 4){
+    else if (this.user.id_rol === 4) {
       this.rolUser = 'Asesor';
     }
-    else if (this.user.id_rol === 5){
+    else if (this.user.id_rol === 5) {
       this.rolUser = 'Emprendedor';
     }
   }
@@ -71,7 +71,6 @@ export class MenuComponent {
         this.user = JSON.parse(identityJSON);
         this.currentRolName = localStorage.getItem('currentRolName');
         this.currentRolId = this.user.id_rol?.toString();
-        console.log(this.currentRolName);
       }
     }
   }
@@ -84,42 +83,34 @@ export class MenuComponent {
 
     if (this.logueado && this.user) {
       this.currentRolId = this.user.id_rol?.toString();
-      
+
     } else {
       console.log("No está logueado o no se pudo cargar el usuario.");
     }
-    this.menuItems = this.menuService.getRoutesByRole(this.currentRolName); 
-    //console.log(this.menuItems);
+    this.menuItems = this.menuService.getRoutesByRole(this.currentRolName);
     this.personalizacionService.getPersonalizacion(this.id).subscribe(
       data => {
         this.colorPrincipal = data.color_principal;
         this.colorSecundario = data.color_secundario;
-        console.log(this.colorPrincipal, this.colorSecundario);
       },
       err => console.log(err)
     );
-    
+
     this.checkIfMobile();
   }
 
   checkIfMobile() {
-   this.isMobile = window.innerWidth < 768;
+    this.isMobile = window.innerWidth < 768;
   }
 
-  // getBackgroundColor(): string {
-  //   return this.isMobile ? 'white' : this.colorPrincipal;
-  // }
-
- 
   getIconColor(): string {
     return this.isMobile ? '#00B3ED' : '#FFFFFF'; // Color blanco en pantallas grandes
   }
-  
+
   logout() {
     if (this.token) {
       this.authservices.logout(this.token).subscribe(
         (data) => {
-          console.log(data);
           this.handleLogout();
         },
         (err) => {
@@ -131,7 +122,7 @@ export class MenuComponent {
       this.handleLogout();
     }
   }
-  
+
 
   private handleLogout() {
     localStorage.clear();
@@ -151,5 +142,5 @@ export class MenuComponent {
     event.stopPropagation();
     this.toggleSidebar();
   }
-  
+
 }

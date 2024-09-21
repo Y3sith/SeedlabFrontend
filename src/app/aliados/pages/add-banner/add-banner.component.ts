@@ -40,9 +40,7 @@ export class AddBannerComponent {
     private cdRef: ChangeDetectorRef,
   ) {
     this.id_banner = data.id;
-    console.log("ALIADO", this.idAliado);
-    console.log("IDDD", this.id_banner);
-
+  
     this.bannerForm = this.formBuilder.group({
       urlImagen: [null, Validators.required],
       estadobanner: [1],
@@ -62,7 +60,6 @@ export class AddBannerComponent {
         this.id = this.user.id;
         this.idAliado = this.user.id;
         this.currentRolId = this.user.id_rol;
-        console.log("OTRO ID",this.currentRolId);
         if (this.currentRolId != 3) {
           this.router.navigate(['home']);
         }
@@ -75,7 +72,6 @@ export class AddBannerComponent {
 
   ngOnInit(): void{
     this.validateToken();
-    console.log("PARA EL TOKEN",this.currentRolId);
     this.verEditar();
     this.mostrarToggle();
     this.toggleActive();
@@ -88,13 +84,11 @@ export class AddBannerComponent {
           urlImagen: data.urlImagen,
           estadobanner: data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1
         });
-        console.log(data);
         this.isActive = data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1;
         this.bannerForm.patchValue({ estadobanner: this.isActive });
       },
       error => {
         console.error(error);
-        //this.alertService.errorAlert('Error', error.error.message);
       }
     )
   }
@@ -124,9 +118,7 @@ export class AddBannerComponent {
       this.aliadoService.editarBanner(this.token, this.id_banner, formData).subscribe(
         data => {
           this.alertService.successAlert('Exito', data.message);
-          //console.log("ACTUALIZAAA", data);
           this.dialogRef.close();
-          //location.reload();
         },
         error => {
           console.error(error);
@@ -137,7 +129,6 @@ export class AddBannerComponent {
     } else {
       this.aliadoService.crearBanner(this.token, formData).subscribe(
         data => {
-          //console.log("funcionaaa", data)
           this.alertService.successAlert('Exito', data.message);
           this.dialogRef.close();
         },

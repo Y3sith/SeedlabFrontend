@@ -84,7 +84,6 @@ export class PersonalizacionesComponent implements OnInit {
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
-      //console.log(this.token);
       let identityJSON = localStorage.getItem('identity');
 
       if (identityJSON) {
@@ -197,9 +196,7 @@ export class PersonalizacionesComponent implements OnInit {
           console.error("No se encontró 'identity' en el almacenamiento local.");
           return;
         }
-        const id_temp = JSON.parse(itemslocal).id;
-        console.log("ID Superadmin:", id_temp);
-  
+        const id_temp = JSON.parse(itemslocal).id;  
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
         formData.append('color_principal', this.personalizacionForm.get('color_principal')?.value);
@@ -216,11 +213,9 @@ export class PersonalizacionesComponent implements OnInit {
           formData.append('imagen_logo', this.selectedImagen, this.selectedImagen.name);
         }
   
-        console.log("Datos a enviar:");
-  
         this.personalizacionesService.createPersonalizacion(this.token, formData, this.idPersonalizacion).subscribe(
           data => {
-            console.log("personalizacion creada", data);
+            console.log("personalizacion creada");
             location.reload();
           },
           error => {
@@ -240,7 +235,7 @@ export class PersonalizacionesComponent implements OnInit {
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
-        console.log("Personalización restaurada!!!!!!", data);
+        console.log("Personalización restaurada!!!!!!");
         location.reload();
       },
       error => {
@@ -341,8 +336,4 @@ export class PersonalizacionesComponent implements OnInit {
     }
 
   }
-
-
-
-
 }

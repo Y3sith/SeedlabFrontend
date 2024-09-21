@@ -144,7 +144,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
-        //console.log('zzzzzzzzzzz: ',this.listDepartamentos);
       },
       (err) => {
         console.log(err);
@@ -167,7 +166,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
         this.listMunicipios = data;
-        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       err => {
         console.log('Error al cargar los municipios:', err);
@@ -191,7 +189,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     if (this.idOrientador != null) {
       this.orientadorServices.getinformacionOrientador(this.token, this.idOrientador).subscribe(
         data => {
-          console.log('datossssss: ', data);
           this.orientadorForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
@@ -343,7 +340,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
-    console.log('Datos del formulario:', this.orientadorForm.value);
   
     /* Actualiza orientador */
     if (this.idOrientador != null) {
@@ -385,7 +381,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
 
   toggleActive() {
     this.isActive = !this.isActive;
-    console.log("Estado después de toggle:", this.isActive);
     this.orientadorForm.patchValue({ estado: this.isActive ? true : false });
   }
   mostrarToggle(): void {

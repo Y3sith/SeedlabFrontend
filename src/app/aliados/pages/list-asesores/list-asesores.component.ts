@@ -70,7 +70,6 @@ export class ListAsesoresComponent implements OnInit {
       this.isLoading = true;
       this.aliadoService.getinfoAsesor(this.token, this.user.id, this.userFilter.estado).subscribe(
         (data) => {
-          //console.log('datos: ',data);
           this.listaAsesores = data;
           this.isLoading = false;
         },

@@ -59,7 +59,6 @@ export class AsesoriaAliadoComponent implements OnInit {
         this.user = identity;
         this.currentRolId = this.user.id_rol;
         this.id_aliado = this.user.id;
-        console.log("IIIIIIIIIIIIIIIII",this.id_aliado);
         if (this.currentRolId != 3) {
           this.router.navigate(['home']);
         }
