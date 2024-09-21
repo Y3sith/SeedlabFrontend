@@ -125,7 +125,7 @@ export class CursoRutaEmprendedorComponent {
       this.user = identity;
       this.currentRolId = this.user.id_rol;
 
-      if (this.currentRolId != 5) {
+      if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
       } else {
         this.documento = this.user.emprendedor.documento;
