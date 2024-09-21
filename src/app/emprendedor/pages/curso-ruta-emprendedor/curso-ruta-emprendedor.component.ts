@@ -540,7 +540,8 @@ export class CursoRutaEmprendedorComponent {
 
   getCorrectFileUrl(relativePath: string): string {
     // Asegúrate de que esta URL base sea correcta para tu configuración de backend
-    const baseUrl = 'http://127.0.0.1:8000'; // Por ejemplo: 'http://localhost:8000'
+    //const baseUrl = 'http://127.0.0.1:8000'; // Por ejemplo: 'http://localhost:8000'
+    const baseUrl = 'https://ruta.api.adsocidm.com/';
     return `${baseUrl}${relativePath}`;
   }
 
