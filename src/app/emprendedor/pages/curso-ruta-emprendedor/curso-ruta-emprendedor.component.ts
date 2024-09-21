@@ -125,10 +125,10 @@ export class CursoRutaEmprendedorComponent {
       this.user = identity;
       this.currentRolId = this.user.id_rol;
 
-      if (this.currentRolId != 5) {
+      if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
       } else {
-        this.documento = this.user.emprendedor.documento;
+        //this.documento = this.user.emprendedor.documento;
       }
     }
 
@@ -196,26 +196,41 @@ export class CursoRutaEmprendedorComponent {
   // }
 
   initializeNiveles() {
+    // Mapeo de los niveles
     this.niveles = this.actividad.nivel
-      .map((nivel: any) => ({
-        ...nivel,
-        expanded: false,
-        lecciones: nivel.lecciones
-          .filter((leccion: any) => {
-            // Filtrar lecciones que tienen contenido_lecciones no vacío
-            return leccion.contenido_lecciones && leccion.contenido_lecciones.length > 0;
-          })
-          .map((leccion: any) => ({
-            ...leccion,
-            expanded: false,
-            contenido_lecciones: leccion.contenido_lecciones || []
-          }))
-      }))
+      .map((nivel: any) => {
+        const mappedNivel = {
+          ...nivel,
+          expanded: false,
+          lecciones: nivel.lecciones
+            .filter((leccion: any) => {
+              // Filtrar lecciones que tienen contenido_lecciones no vacío
+              return leccion.contenido_lecciones && leccion.contenido_lecciones.length > 0;
+            })
+            .map((leccion: any) => {
+              const mappedLeccion = {
+                ...leccion,
+                expanded: false,
+                contenido_lecciones: leccion.contenido_lecciones || []
+              };
+              console.log('Mapped Leccion:', mappedLeccion); // Log de cada lección mapeada
+              return mappedLeccion;
+            })
+        };
+        console.log('Mapped Nivel:', mappedNivel); // Log de cada nivel mapeado
+        return mappedNivel;
+      })
       .filter((nivel: any) => {
         // Filtrar niveles que tienen al menos una lección con contenido
-        return nivel.lecciones.length > 0;
+        const hasValidLecciones = nivel.lecciones.length > 0;
+        if (hasValidLecciones) {
+          console.log('Valid Nivel:', nivel); // Log de los niveles que pasan el filtro
+        }
+        return hasValidLecciones;
       });
-  }
+
+    console.log('Final Niveles:', this.niveles); // Log del resultado final
+}
 
   toggleNivel(selectedNivelIndex: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
@@ -307,16 +322,22 @@ export class CursoRutaEmprendedorComponent {
       const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
       const nextContenidoIndex = this.currentContenidoIndex + 1;
   
+      
       if (nextContenidoIndex < currentLeccion.contenido_lecciones.length) {
         this.currentContenidoIndex = nextContenidoIndex;
       } else {
         const lastContentId = currentLeccion.contenido_lecciones[currentLeccion.contenido_lecciones.length - 1].id;
         if (lastContentId === this.ultimoContenidoId) {
-          this.alertService.alertainformativa('¡Felicitaciones por haber completado la ruta! Ahora es momento de volver a llenar la encuesta de maduración. Esta te permitirá evaluar cuánto has avanzado con tu emprendimiento y cómo han influido los conocimientos que has adquirido en este tiempo. Es una gran oportunidad para reflexionar sobre tu progreso y seguir mejorando. ¡Sigue adelante!', 'success').then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['list-empresa']);
-            }
-          });
+          if (this.currentRolId != 1 && this.currentRolId != 2) {
+            this.alertService.alertainformativa('¡Felicitaciones por haber completado la ruta! Ahora es momento de volver a llenar la encuesta de maduración. Esta te permitirá evaluar cuánto has avanzado con tu emprendimiento y cómo han influido los conocimientos que has adquirido en este tiempo. Es una gran oportunidad para reflexionar sobre tu progreso y seguir mejorando. ¡Sigue adelante!', 'success').then((result) => {
+              if (result.isConfirmed) {
+                this.router.navigate(['list-empresa']);
+              }
+            });
+          } else {
+            // Para roles 1 y 2, simplemente navegar a la ruta deseada
+            this.router.navigate(['ruta']);
+          }
           return;
         }
   
@@ -519,7 +540,8 @@ export class CursoRutaEmprendedorComponent {
 
   getCorrectFileUrl(relativePath: string): string {
     // Asegúrate de que esta URL base sea correcta para tu configuración de backend
-    const baseUrl = 'http://127.0.0.1:8000'; // Por ejemplo: 'http://localhost:8000'
+    //const baseUrl = 'http://127.0.0.1:8000'; // Por ejemplo: 'http://localhost:8000'
+    const baseUrl = 'https://ruta.api.adsocidm.com/';
     return `${baseUrl}${relativePath}`;
   }
 

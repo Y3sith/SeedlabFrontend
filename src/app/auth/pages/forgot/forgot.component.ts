@@ -37,7 +37,12 @@ export class ForgotComponent {
         this.router.navigate(['/login']);
       },
       error => {
-        console.log(error);
+        console.error(error);
+        if (error.status === 400){
+          this.alertService.errorAlert('Error', error.error.message);
+        } else if (error.status === 404) {
+          this.alertService.errorAlert('Error', error.error.message);
+      }
       }
     )
   }

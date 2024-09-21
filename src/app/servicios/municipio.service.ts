@@ -15,9 +15,11 @@ export class MunicipioService {
   constructor(private http: HttpClient) { }
 
   getMunicipios(idDepartamento: string): Observable<any> {
-    const url = idDepartamento ? `${this.url}?dep_id=${idDepartamento}` : this.url;
+    const numericDepId = idDepartamento ? Number(idDepartamento) : null;
+    const url = numericDepId ? `${this.url}?dep_id=${numericDepId}` : this.url;
     return this.http.get(url);
   }
+
 
 
 }
