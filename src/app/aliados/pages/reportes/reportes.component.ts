@@ -52,7 +52,6 @@ export class ReportesComponent implements OnInit {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.currentRolId = this.user.id_rol;
-        console.log(this.user.id);
         if (this.currentRolId != 3) {
           this.router.navigate(['home']);
         }
@@ -73,16 +72,11 @@ export class ReportesComponent implements OnInit {
         console.error('El ID del aliado no está disponible.');
         return;
       }
-  
-      // Depuración: Imprime la URL o los parámetros
-      console.log('Parámetros enviados:', { id_aliado, fecha_inicio, fecha_fin });
-  
+    
       // Obtener los datos del reporte para visualización
       this.reporteService.obtenerDatosAsesoriaAliado(tipo_reporte, id_aliado, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
-          this.reportes = data;
-          console.log(this.reportes);
-  
+          this.reportes = data;  
           this.totalItems = data.length;
           this.page = 1;
           this.updatePaginated();

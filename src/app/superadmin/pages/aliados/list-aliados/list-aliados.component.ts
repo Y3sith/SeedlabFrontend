@@ -60,7 +60,6 @@ export class ListAliadosComponent implements OnInit {
             aliado['estadoString'] = this.mapEstado(item.estado);
             return aliado;
           });
-          console.log(data);
           this.updatePaginatedData(); // Inicializa los datos paginados
           setTimeout(() => {
             this.isLoading = false;
@@ -90,7 +89,6 @@ export class ListAliadosComponent implements OnInit {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.currentRolId = this.user.id_rol;
-        console.log(this.currentRolId);
         if (this.currentRolId != 1 && this.currentRolId != 2) {
           this.router.navigate(['home']);
         }

@@ -31,7 +31,6 @@ constructor(private router:Router,
     this.route.queryParams.subscribe(params => {
       if ('email' in params) {
         this.email = params['email'];
-        console.log(this.email); // Mover la impresión aquí
       } else {
         console.log('No se encontró el parámetro "email" en la URL');
       }
@@ -55,8 +54,6 @@ actualizarCodigo(){
 verificarEmail():void{
   this.authService.verificarEmail(this.email, this.codigoVerificacion).subscribe(
     data => {
-      console.log(data);
-      console.log('Validación exitosa',data);
       this.router.navigate(['/login']);
       this.alertService.successAlert('Exito',data.message);
     },

@@ -77,7 +77,6 @@ export class DashboardComponent implements AfterViewInit {
         this.user = identity;
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
-        console.log(this.currentRolId);
         if (this.currentRolId != 1) {
           this.router.navigate(['home']);
         }
@@ -95,8 +94,7 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   onSelectChange(event: any): void {
-    this.selectedTipo = event.target.value; 
-    console.log('Tipo seleccionado:', this.selectedTipo);
+    this.selectedTipo = event.target.value;
 
     if (this.selectedTipo) {
       this.graficaPuntajesFormulario(+this.selectedTipo); // Convierte el valor a número y llama a la función
@@ -106,7 +104,6 @@ export class DashboardComponent implements AfterViewInit {
   getEmpresas() {
     this.empresaService.getAllEmpresa(this.token).subscribe(
       data => {
-        console.log('Empresas:', data);
         this.listEmpresas = data;
         this.selectedEmpresa = this.listEmpresas.length > 0 ? this.listEmpresas[0].documento_empresa : null;
         this.graficaPuntajesFormulario(+this.selectedTipo);
@@ -125,7 +122,6 @@ export class DashboardComponent implements AfterViewInit {
 
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
-    console.log('id_empresas:', this.selectedEmpresa);
     this.graficaPuntajesFormulario(+this.selectedTipo);
   }
 
@@ -134,8 +130,6 @@ export class DashboardComponent implements AfterViewInit {
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
       data => {
-        console.log('Promedio de asesorías:', data);
-
         const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
 
@@ -246,8 +240,6 @@ export class DashboardComponent implements AfterViewInit {
 
         // Inicializar el gráfico de Asesorías
         this.initChart('echarts-pie', this.pieChartOption);
-
-        //console.log(data);
       },
       error => {
         console.log(error);
@@ -343,7 +335,6 @@ export class DashboardComponent implements AfterViewInit {
   getDatosGenerosGrafica(): void {
     this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
-        //console.log('data generos', data);
         const dataGenero = data.map(item => item.total);
         this.doughnutChartOption = {
           tooltip: {
@@ -393,16 +384,10 @@ export class DashboardComponent implements AfterViewInit {
   getRegistrosMensuales(): void {
     this.dashboardService.contarRegistrosMensual(this.token).subscribe(
       data => {
-        console.log('data meses', data);
-
         if (Array.isArray(data) && data.length > 0) {
           const emprendedoresData = data.map(item => parseInt(item.emprendedores));
           const aliadosData = data.map(item => parseInt(item.aliados));
           const meses = data.map(item => this.getMonthName(item.mes));
-
-          console.log('Emprendedores:', emprendedoresData);
-          console.log('Aliados:', aliadosData);
-          console.log('Meses:', meses);
 
           const maxValue = Math.max(...emprendedoresData, ...aliadosData);
 
@@ -458,9 +443,6 @@ export class DashboardComponent implements AfterViewInit {
               }
             ]
           };
-
-          console.log('Opciones de ECharts:', this.registrosEchartsOptions);
-
           // Usar setTimeout para asegurarse de que el DOM esté listo
           this.initChart('echarts-registros', this.registrosEchartsOptions);
         } else {
@@ -483,7 +465,6 @@ export class DashboardComponent implements AfterViewInit {
   emprendedorPorDepartamento() {
     this.dashboardService.emprendedoresPorDepartamento(this.token).subscribe(
       (data: { departamento: string; total_emprendedores: number }[]) => {
-        //console.log('data departamentos', data);
         fetch('assets/data/COL1.geo.json')
           .then(response => response.json())
           .then(colJson => {
@@ -497,9 +478,6 @@ export class DashboardComponent implements AfterViewInit {
             colJson.features.forEach(feature => {
               feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
             });
-
-            //console.log('Datos mapeados:', mappedData);  
-
             const maxValue = Math.max(...data.map(item => item.total_emprendedores));
 
             this.emprenDeparEchartsOptions = {
@@ -603,7 +581,6 @@ export class DashboardComponent implements AfterViewInit {
 
     this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa, tipo).subscribe(
       data => {
-        console.log('data puntajes', data);
         this.getPuntajesForm = {
           title: {
             text: tipo === 1 ? 'Puntajes por Formulario (Primera vez)' : 'Puntajes por Formulario (Segunda vez)',

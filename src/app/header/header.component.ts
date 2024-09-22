@@ -19,23 +19,9 @@ export class HeaderComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit() {
-    //this.setHeaderText();
     this.personalizacionService.getPersonalizacion(this.id).subscribe(
       data => {
         this.logoUrl = data.imagen_logo;
-        //console.log('logoUrl', this.logoUrl);
-        //console.log("personalizaciones obtenidas", data);
-      },
-      error => {
-        //console.error("no funciona", error);
       });
   }
-
-  // setHeaderText() {
-  //   if (this.headerTitle) {
-  //     // Reemplazar el texto para incluir un salto de línea
-  //     const titleWithLineBreak = this.title.replace('Incubadora de', 'Incubadora de<br>');
-  //     this.headerTitle.nativeElement.innerHTML = titleWithLineBreak;
-  //   }
-  // }
 }

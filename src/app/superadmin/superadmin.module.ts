@@ -9,7 +9,6 @@ import { PerfilSuperadminComponent } from './pages/perfil-superadmin/perfil-supe
 import { PersonalizacionesComponent } from './pages/personalizaciones/personalizaciones.component';
 import { ListRutasComponent } from './pages/ruta/list-ruta/list-rutas.component';
 import { ModalAddRutaComponent } from './pages/ruta/modal-add-ruta/modal-add-ruta.component';
-import { AddActividadComponent } from './pages/ruta/add-actividad/add-actividad.component';
 import { SuperadminRoutingModule } from './superadmin-routing.module';
 import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
@@ -31,7 +30,6 @@ import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.
 import { MatTooltipModule} from '@angular/material/tooltip';
 import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { AddBannerModalComponent } from './pages/aliados/add-banner-modal/add-banner-modal.component';
-import { AddAllComponent } from './pages/ruta/add-all/add-all.component';
 import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
 
 
@@ -50,13 +48,11 @@ import { ListActividadesComponent } from './pages/ruta/list-actividades/list-act
     PersonalizacionesComponent,
     ListRutasComponent,
     ModalAddRutaComponent,
-    AddActividadComponent,
     ModalCrearOrientadorComponent,
     ActnivlecComponent,
     DashboardComponent,
     EditarActRutaComponent,
     AddBannerModalComponent,
-    AddAllComponent,
     ListActividadesComponent,
     ReportesAdmComponent
     

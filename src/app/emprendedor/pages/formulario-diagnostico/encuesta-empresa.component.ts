@@ -215,9 +215,7 @@ export class EncuestaEmpresaComponent {
     this.validateToken();
     this.route.paramMap.subscribe(params => {
       this.id_empresa = +params.get('id');
-      console.log('id_empresa', this.id_empresa);
-    });
-    this.cargarRespuestasCache();
+    })
   }
 
   validateToken(): void {
@@ -229,7 +227,6 @@ export class EncuestaEmpresaComponent {
         let identity = JSON.parse(identityJSON);
 
         this.user = identity;
-        console.log('user', this.user);
         this.id = this.user.id_rol;
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 5) {
@@ -362,8 +359,6 @@ export class EncuestaEmpresaComponent {
 
 
     for (let i = 0; i < 15; i++) {
-      //debugger;
-      //console.log(`Validando pregunta ${i + 1} con respCounter en posición ${respCounter}`);
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas1[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas1[respCounter].id_empresa = this.id_empresa;
@@ -419,7 +414,6 @@ export class EncuestaEmpresaComponent {
         } else if (this.listaRespuestas1[respCounter].opcion === 'No') {
           i += 2;
           respCounter += 2;
-          //console.log(`Saltando preguntas 10 y 11 debido a respuesta 'No' en la pregunta 9`);
         }
         respCounter++;
       } else if (currentPregunta.id === 10 || currentPregunta.id === 11) {
@@ -461,8 +455,6 @@ export class EncuestaEmpresaComponent {
         respCounter++;
       }
     }
-    console.log('fuera del ciclo', this.listaRespuestas1);
-    console.log('Acumulado por sección 1:', this.acumXSeccion1);
     if (!isValidForm) {
       return false;
     }
@@ -827,8 +819,6 @@ export class EncuestaEmpresaComponent {
         return false;
       }
     }
-    console.log('fuera del ciclo', this.listaRespuestas2);
-    console.log(this.acumXSeccion2);
     this.next();
     this.saveSection(2, this.listaRespuestas2);
     return isValidForm;
@@ -909,8 +899,6 @@ export class EncuestaEmpresaComponent {
       }
       respCounter++;
     }
-    console.log('fuera del ciclo', this.listaRespuestas3);
-    console.log('Acumulado seccion 3', this.acumXSeccion3);
     this.next();
     this.saveSection(3, this.listaRespuestas3);
     return isValidForm;
@@ -1018,7 +1006,6 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas4[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas4[respCounter].valor;
       this.acumXTrl += totalXpregunta;
-      console.log('acum TRl', this.acumXTrl);
 
       if (currentPregunta.isAffirmativeQuestion) {
         if (currentRespuesta.opcion === 'No') {
@@ -1155,8 +1142,6 @@ export class EncuestaEmpresaComponent {
         respCounter++;
       }
     }
-    console.log('TRL:', this.maxTrl);
-    console.log('fuera del ciclo', this.listaRespuestas4);
     this.next();
     this.saveSection(4, this.listaRespuestas4);
     return isValidForm;
@@ -1291,7 +1276,6 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas5[respCounter].id_subpregunta = null;
       totalXpregunta = this.listaRespuestas5[respCounter].valor;
       this.acumXTecnica += totalXpregunta;
-      console.log('acum Tecnica', this.acumXTecnica);
 
       if (currentPregunta.id === 43) {
         if (!this.listaRespuestas5[respCounter].opcion || this.listaRespuestas5[respCounter].opcion === '') {
@@ -1355,8 +1339,6 @@ export class EncuestaEmpresaComponent {
       if (!isValidForm) {
         return false;
       }
-      console.log(i);
-      console.log('fuera del ciclo', this.listaRespuestas5);
 
     }
     if (isValidForm) {
@@ -1367,8 +1349,6 @@ export class EncuestaEmpresaComponent {
         if (result.isConfirmed) {
           this.enviarRespuestasJson();
           this.router.navigate(['/list-empresa']);
-        } else {
-          console.log('Se guarda en cache');
         }
       });
     }
@@ -1424,11 +1404,9 @@ export class EncuestaEmpresaComponent {
           respuestas: totalRespuestas,
           id_empresa: this.id_empresa
         };
-        console.log('Payload a enviar:', payload);
 
         this.respuestasService.saveAnswers(this.token, payload).subscribe(
           (data: any) => {
-            console.log(data);
             this.alertService.successAlert('Éxito', data.message);
           },
           error => {
@@ -1448,7 +1426,6 @@ export class EncuestaEmpresaComponent {
 
         this.puntajeService.savePuntajeSeccion(puntajes, this.id_empresa).subscribe(
           data => {
-            console.log('puntajes', data);
             this.alertService.successAlert('Éxito', 'Los puntajes se han guardado correctamente.');
           },
           error => {
@@ -1471,7 +1448,6 @@ export class EncuestaEmpresaComponent {
 
     this.respuestasService.saveAnswersRedis(this.token, sectionId, this.id_empresa, respuestas).subscribe(
       data => {
-        console.log(`Guardado sección ${sectionId} en redis`, data);
         this.isSectionSaved[sectionId] = true;
       },
       error => {

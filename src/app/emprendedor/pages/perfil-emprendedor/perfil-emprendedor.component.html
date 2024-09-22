@@ -1,8 +1,8 @@
 <form [formGroup]="emprendedorForm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <div class="container mx-auto py-6 md:py-12 font-poppins ">
+    <div class="container py-6 mx-auto md:py-12 font-poppins ">
         <!-- Encabezado -->
-        <header class="flex md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+        <header class="flex items-center justify-between mt-2 mb-6 md:flex-row md:pl-4">
             <app-header [title] [subtitle]="'Perfil'"></app-header>
         </header>
 
@@ -12,7 +12,7 @@
             <!-- Contenido -->
             <div class="min-[860px]:flex items-center w-full">
 
-                <div class=" bg-[#e6e6e6] rounded-lg relative max-[860px]:w-full  min-[860px]:max-w-[45rem]">
+                <div class="max-lg:mb-4 bg-[#e6e6e6] rounded-lg relative max-[860px]:w-full  min-[860px]:max-w-[45rem]">
                     <div class="w-full">
                         <div class="image-container">
                             <ng-container
@@ -32,14 +32,14 @@
                                 </i>
                             </button>
                         </div>
-                        <div class=" rounded-lg p-4 h-full w-full">
+                        <div class="w-full h-full p-4 rounded-lg ">
                             <div class="w-full">
-                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center font-poppins">Información
+                                <h5 class="mt-16 text-xl font-bold text-center max-md:mt-20 font-poppins">Información
                                     Básica</h5>
 
                                 <label for="nombre" class="block mt-4 mb-2">Nombre(s)</label>
                                 <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
-                                    class="p-2 h-12 w-full  border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                    class="w-full h-12 p-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
                                 <div *ngIf="f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)"
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
@@ -47,9 +47,9 @@
                                     <div *ngIf="f.nombre.errors.hasNumbers">Este campo no puede contener números</div>
                                 </div>
 
-                                <label for="apellido" class="block mb-2 mt-4">Apellido(s)</label>
+                                <label for="apellido" class="block mt-4 mb-2">Apellido(s)</label>
                                 <input type="text" id="apellido" formControlName="apellido" [readonly]="blockedInputs"
-                                    class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                    class="w-full h-12 p-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
                                 <div *ngIf="f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)"
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
@@ -62,7 +62,7 @@
                                         <label for="tipodocumento" class="block mb-2 md:w-20 ">Tipo de Documento</label>
                                         <select id="id_tipo_documento" formControlName="id_tipo_documento"
                                             [disabled]="blockedInputs"
-                                            class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"> 
+                                            class="w-full h-12 p-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"> 
                                             <option value="" disabled selected>Seleccionar tipo de documento...</option>
                                             <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{
                                                 tipo.nombre }}</option>
@@ -73,15 +73,15 @@
                                             Documento</label>
                                         <input type="number" id="documento" formControlName="documento"
                                             [readonly]="bloqueado"
-                                            class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                            class="w-full h-12 p-2 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200" />
                                     </div>
 
 
 
                                 </div>
-                                <label for="genero" class="block mb-2 mt-4">Género</label>
+                                <label for="genero" class="block mt-4 mb-2">Género</label>
                                 <select id="genero" formControlName="genero" [disabled]="blockedInputs"
-                                    class="p-2 h-12 w-full md:mb-4 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                    class="w-full h-12 p-2 bg-white border rounded-md appearance-none md:mb-4 focus:outline-none focus:ring-2 focus:ring-blue-200">
                                     <option value="" disabled selected>Seleccionar Género...</option>
                                     <option value="Masculino">Masculino</option>
                                     <option value="Femenino">Femenino</option>
@@ -94,20 +94,18 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
                 <div class="max-[860px]:hidden w-10"></div>
                 <!-- Primera Columna -->
 
                 <div class="min-[860px]:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
-                    <div class="w-full mt-0 pt-0">
+                    <div class="w-full pt-0 mt-0">
 
-                        <h5 class="text-xl font-bold mb-4 text-center font-poppins">Información de Personal</h5>
+                        <h5 class="mb-4 text-xl font-bold text-center font-poppins">Información de Personal</h5>
 
                         <label for="fechaNacimiento" class="block mb-2">Fecha de Nacimiento</label>
                         <input type="date" id="fecha_nac" formControlName="fecha_nac" [readonly]="blockedInputs"
-                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none" />
+                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
                         <div *ngIf="f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <div *ngIf="f.fecha_nac.errors.required">Este campo es requerido *</div>
@@ -117,18 +115,18 @@
                         </div>
 
                         <div class="flex items-center">
-                            <label for="password" class="block mb-2 mt-4">Contraseña</label>
-                        <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-                            matTooltip="Puedes cambiar la contraseña si lo deseas. Si la dejas en blanco, la contraseña actual permanecerá sin cambios."
-                            matTooltipPosition="right" style="color: #adb7c7;">
-                        </fa-icon>
+                            <label for="password" class="block mt-4 mb-2">Contraseña</label>
+                            <fa-icon [icon]="falupa" class="mt-2 ml-1 text-sm transform right-2" mat-raised-button
+                                matTooltip="Puedes cambiar la contraseña si lo deseas. Si la dejas en blanco, la contraseña actual permanecerá sin cambios."
+                                matTooltipPosition="right" style="color: #adb7c7;">
+                            </fa-icon>
                         </div>
                         <div class="relative mb-2">
                             <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
                                 [disabled]="blockedInputs" [readonly]="blockedInputs"
-                                class="p-2 h-12 w-full border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 placeholder-black" />
+                                class="w-full h-12 p-2 placeholder-black bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200" />
                             <button type="button"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500"
+                                class="absolute inset-y-0 right-0 flex items-center pr-3 text-sm leading-5 text-gray-500"
                                 (click)="hide = !hide">
                                 <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500"></i>
                                 <i *ngIf="!hide" class="fa fa-eye text-cyan-500"></i>
@@ -142,16 +140,16 @@
                                 f.password.errors['passwordStrength'] }}</div>
                         </div>
 
-                        <h5 class="text-xl font-bold mt-6 mb-4 text-center font-poppins">Información de Contacto</h5>
+                        <h5 class="mt-6 mb-4 text-xl font-bold text-center font-poppins">Información de Contacto</h5>
 
                         <label for="correo" class="block mb-2">Correo Electrónico</label>
                         <input type="text" id="correo" formControlName="email" [readonly]="bloqueado"
-                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
 
 
-                        <label for="celular" class="block mb-2 mt-4">Celular</label>
+                        <label for="celular" class="block mt-4 mb-2">Celular</label>
                         <input type="text" id="celular" formControlName="celular" [readonly]="blockedInputs"
-                            class="p-2 h-12 w-full  border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                            class="w-full h-12 p-2 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200" />
                         <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
@@ -163,51 +161,48 @@
                     <div class="w-20"></div>
 
                     <div class="w-full">
-                        <h5 class="text-xl font-bold mb-4 text-center max-md:mt-5 font-poppins ">Dirección</h5>
+                        <h5 class="mb-4 text-xl font-bold text-center max-md:mt-5 font-poppins ">Dirección</h5>
 
                         <label for="id_departamento" class="block mb-2">Departamento</label>
                         <select id="id_departamento" name="id_departamento" formControlName="id_departamento"
                             (change)="onDepartamentoSeleccionado($event)" [disabled]="blockedInputs"
-                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
+                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
                             <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
                                 {{ departamento.name }}
                             </option>
                         </select>
 
 
-                        <label for="id_municipio" class="block mb-2 mt-4">Municipio</label>
-                            <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
-                                [disabled]="blockedInputs"
-                                class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none">
-                                <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
-                                    {{ municipio.nombre }}
-                                </option>
-                            </select>
-                            <div *ngIf="submitted && f['id_municipio'].errors" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                                <div *ngIf="f['id_municipio'].errors['required']">Este campo es requerido *</div>
-                            </div>
+                        <label for="id_municipio" class="block mt-4 mb-2">Municipio</label>
+                        <select id="id_municipio" name="id_municipio" formControlName="id_municipio"
+                            [disabled]="blockedInputs"
+                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
+                            <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">
+                                {{ municipio.nombre }}
+                            </option>
+                        </select>
+                        <div *ngIf="submitted && f['id_municipio'].errors"
+                            class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                            <div *ngIf="f['id_municipio'].errors['required']">Este campo es requerido *</div>
+                        </div>
 
-                        <label for="direccion" class="block mb-2 mt-4">Dirección</label>
+                        <label for="direccion" class="block mt-4 mb-2">Dirección</label>
                         <input type="text" id="direccion" formControlName="direccion" [readonly]="blockedInputs"
-                            class="p-2 h-12 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200" />
                     </div>
-
                 </div>
                 <!-- Segunda Columna -->
-
             </div>
-
-
         </div>
-        <div class="mt-7 w-full flex md:justify-end justify-center">
+        <div class="flex justify-center w-full mt-7 md:justify-end">
 
             <div class="flex ">
-                <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic"
+                <button class="px-4 py-2 mr-2 italic font-bold text-white rounded-full bg-amber-500"
                     (click)="onCancel()" *ngIf="!blockedInputs" (click)="toggleInputsLock()"
                     (click)="toggleEditButtonn()">
                     Cancelar
                 </button>
-                <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
+                <button type="submit" class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500"
                     *ngIf="!blockedInputs" (click)="updateEmprendedor()">
                     Guardar cambios
                 </button>
@@ -217,7 +212,7 @@
                 <div class="flex justify-start">
                 </div>
                 <button id="boton"
-                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
+                    class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500 md:-mt-4 -pl-12"
                     (click)="onEdit()" *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
                 </button>
             </div>

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<nav class="p-1 m-0 shadow-xl sidebar font-poppins flex flex-col" [ngClass]="{ 'expand': isExpanded }" *ngIf="isAuthenticated"
-    [style.backgroundColor]="(!isMobile || isExpanded) ? colorPrincipal : 'white'">
+<nav class="flex flex-col p-1 m-0 shadow-xl sidebar font-poppins" [ngClass]="{ 'expand': isExpanded }"
+    *ngIf="isAuthenticated" [style.backgroundColor]="(!isMobile || isExpanded) ? colorPrincipal : 'white'">
     <header class="relative">
         <div class="toggle absolute top-[20px] lg:left-[calc(100%-50px)] left-[calc(100%-40px)] transform -translate-y-1/2 h-[40px] w-[40px] flex items-center justify-center rounded-r-xl text-white text-xl transition-all duration-300"
             (click)="onToggleClick($event)">
@@ -16,8 +16,8 @@
 
         <ng-template #burgerIcon>
             <svg xmlns="http://www.w3.org/2000/svg"
-                style="width: 25px; height: 25px; display: flex; justify-content: center; margin-right: 10;" [attr.fill]="getIconColor()"
-                 viewBox="0 0 448 512">
+                style="width: 25px; height: 25px; display: flex; justify-content: center; margin-right: 10;"
+                [attr.fill]="getIconColor()" viewBox="0 0 448 512">
                 <path
                     d="M16 132h416c8.8 0 16-7.2 16-16V116c0-8.8-7.2-16-16-16H16c-8.8 0-16 7.2-16 16v4c0 8.8 7.2 16 16 16zm0 128h416c8.8 0 16-7.2 16-16v-4c0-8.8-7.2-16-16-16H16c-8.8 0-16 7.2-16 16v4c0 8.8 7.2 16 16 16zm416 112H16c-8.8 0-16 7.2-16 16v4c0 8.8 7.2 16 16 16h416c8.8 0 16-7.2 16-16v-4c0-8.8-7.2-16-16-16z" />
             </svg>
@@ -25,7 +25,7 @@
 
     </header>
     <div class="flex flex-col flex-grow overflow-hidden">
-        <div class="menu flex-grow overflow-y-auto">
+        <div class="flex-grow overflow-y-auto menu">
             <div class="relative xl:mt-24 mt-28">
                 <ul class="p-0 space-y-2">
                     <!-- Inicio -->
@@ -41,11 +41,11 @@
                             <span class="text-base font-medium text nav-text">Inicio</span>
                         </a>
                     </li>
-        
+
                     <!-- Iterar sobre los elementos del menú -->
                     <li *ngFor="let item of menuItems" class="flex items-center h-14">
                         <a [routerLink]="item.route" routerLinkActive="active-link"
-                            class="appearance-none no-underline flex items-center w-full h-full p-2 rounded-md transition-all duration-400 text-white ">
+                            class="flex items-center w-full h-full p-2 text-white no-underline transition-all rounded-md appearance-none duration-400 ">
                             <i [class]="item.icon + ' text-center text-xl min-w-[60px] transition duration-200'"
                                 style="color: white;"></i>
                             <span class="text-base text nav-text">{{item.name}}</span>
@@ -56,13 +56,14 @@
         </div>
 
         <!-- Botón de Cerrar sesión -->
-        <div class="containerLogout mt-auto">
+        <div class="mt-auto containerLogout">
             <div *ngIf="isExpanded" class="pl-6 mt-4 text-white">
                 <div class="text-lg font-bold">
                     {{ rolUser }}
                 </div>
             </div>
-            <div [style.backgroundColor]= "colorSecundario" [ngClass]="{ 'expand-line': isExpanded, 'collapse-line': !isExpanded }"
+            <div [style.backgroundColor]="colorSecundario"
+                [ngClass]="{ 'expand-line': isExpanded, 'collapse-line': !isExpanded }"
                 class="transition-all duration-300"></div>
             <li class="flex items-center mt-2 h-14" *ngIf="logueado">
                 <a *ngIf="token != null" (click)="logout()"

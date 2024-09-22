@@ -135,8 +135,6 @@ export class PerfilSuperadminComponent {
             estado: data.estado
 
           });
-          console.log('ver editar perfil', data);
-
         },
         (err) => {
           console.log(err);
@@ -199,7 +197,6 @@ export class PerfilSuperadminComponent {
       if (result.isConfirmed) {
         this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
           (data) => {
-            console.log('Response from server:', data);
             setTimeout(function () {
               location.reload();
             }, this.tiempoEspera);
@@ -273,7 +270,6 @@ export class PerfilSuperadminComponent {
         } else {
           control.enable();
         }
-        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
       } else {
         console.warn(`Control for field ${field} not found in form`);
       }
@@ -281,9 +277,6 @@ export class PerfilSuperadminComponent {
 
     // Force change detection
     this.cdRef.detectChanges();
-
-    // Log the entire form state
-    console.log('Form state after toggling:', this.perfiladminForm);
   }
 
   /* Restaura los datos originales */
@@ -305,11 +298,6 @@ export class PerfilSuperadminComponent {
   //Funcion para cargar los departamentos
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
-      (data: any[]) => {
-        console.log("DEPARTAMENTO", data);
-        this.listDepartamentos = data;
-        //this.cdRef.detectChanges(); // Forzar la detección de cambios
-      },
       (err) => {
         console.log(err);
       }
@@ -330,10 +318,6 @@ export class PerfilSuperadminComponent {
 
   cargarMunicipios(departamentoId: string): void {
     this.municipioService.getMunicipios(departamentoId).subscribe(
-      (data) => {
-        this.listMunicipios = data;
-        console.log("MUNICIPIOS", data);
-      },
       (err) => {
         console.log('Error al cargar los municipios:', err);
       }
@@ -413,12 +397,6 @@ export class PerfilSuperadminComponent {
 
   tipoDocumento(): void {
     this.authService.tipoDocumento().subscribe(
-      data => {
-        this.listTipoDocumento = data;
-
-        console.log('tipos de documentos', this.listTipoDocumento);
-        //console.log('datos tipo de documento: ',data)
-      },
       error => {
         console.log(error);
       }

@@ -1,37 +1,55 @@
-<div class="w-full overflow-x-hidden font-poppins ">
-    <div class="flex flex-col justify-between w-full m-10 lg:flex-row md:flex-row">
-        <mat-toolbar
-            class="flex flex-col items-center justify-between w-full px-4 py-2 bg-white app-header lg:flex-row md:flex-row md:items-center lg:py-20 md:py-20 lg:px-8 md:px-8">
-            <!-- Imagen -->
-            <img [src]="logoUrl" alt="Logo"
-                class="w-64 h-auto mb-4 lg:mb-0 md:mb-0 lg:ml-60 md:ml-2 max-sm:w-36 max-sm:ml-4 max-sm:mb-0">
-            <!-- Contenedor de los botones -->
-            <div *ngIf="!isLoggedIn"
-                class="flex flex-col items-center mt-4 space-y-4 lg:flex-row md:flex-col lg:items-center lg:space-x-8 md:space-x-4 lg:space-y-0 md:space-y-3 lg:mt-0 md:mt-0 lg:mr-60 md:mr-24 max-sm:ml-28 max-sm:space-y-3 max-sm:space-x-0">
-                <a routerLink="/auth/login" mat-button routerLinkActive="active"
-                    class="no-underline lg:text-base  max-sm:text-[12px] bg-[#373435] md:text-lg text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[24px] md:px-[26px] max-sm:text-sm max-sm:py-1 max-sm:px-[10px] max-sm:-mt-28">Iniciar
-                    sesión</a>
-                <a routerLink="/auth/registro" mat-button routerLinkActive="active"
-                    class="no-underline lg:text-base md:text-lg max-sm:text-[12px] bg-[#00B3ED] text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[28px] md:px-[30px]  max-sm:text-sm max-sm:py-1 max-sm:px-[10px]">Registrarse</a>
+<div class="w-full overflow-x-hidden font-poppins">
+    <div class="w-full px-4 py-4 lg:py-10">
+        <mat-toolbar class="flex flex-col bg-white app-header">
+            <!-- Header para móvil -->
+            <div class="flex justify-between items-center w-full lg:hidden">
+                <img [src]="logoUrl" alt="Logo" class="w-24 h-auto">
+                <div *ngIf="!isLoggedIn" class="flex flex-col items-end space-y-2">
+                    <a routerLink="/auth/login" mat-button routerLinkActive="active"
+                        class="no-underline text-xs bg-[#373435] text-white rounded-full font-poppins font-bold py-1 px-3">
+                        Iniciar sesión
+                    </a>
+                    <a routerLink="/auth/registro" mat-button routerLinkActive="active"
+                        class="no-underline text-xs bg-[#00B3ED] text-white rounded-full font-poppins font-bold py-1 px-3">
+                        Registrarse
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Header para desktop -->
+            <div class="hidden lg:flex justify-between items-center w-full">
+                <img [src]="logoUrl" alt="Logo" class="w-64 h-auto ml-60">
+                <div *ngIf="!isLoggedIn" class="flex items-center space-x-4 mr-60">
+                    <a routerLink="/auth/login" mat-button routerLinkActive="active"
+                        class="no-underline text-base bg-[#373435] text-white rounded-full font-poppins font-bold py-2 px-6">
+                        Iniciar sesión
+                    </a>
+                    <a routerLink="/auth/registro" mat-button routerLinkActive="active"
+                        class="no-underline text-base bg-[#00B3ED] text-white rounded-full font-poppins font-bold py-2 px-6">
+                        Registrarse
+                    </a>
+                </div>
             </div>
         </mat-toolbar>
     </div>
 
-    <div class="relative pt-56 pb-52 flex content-center items-center justify-center min-h-screen-75">
-        <div class="absolute top-0 w-full h-[70%] bg-center bg-cover mt-[-20px]"
+    <div class="relative pt-20 pb-24 lg:pt-40 lg:pb-40 flex content-center items-center justify-center">
+        <div class="absolute top-0 w-full h-full bg-center bg-cover lg:mt-20"
             style="background-image: url('assets/images/aliados.jpg');">
-            <div class="pr70 ml-[39%] mt-[7%]">
-                <p class="text-white text-5xl font-sans font-semibold inline">
-                    Nuestros
-                </p>
-                <p class="font-bold text-5xl italic text-white inline">Aliados</p>
+            <div class="w-full h-full flex items-center justify-center">
+                <div class="text-center">
+                    <p class="text-white text-3xl lg:text-5xl font-sans font-semibold inline">
+                        Nuestros
+                    </p>
+                    <p class="font-bold text-3xl lg:text-5xl italic text-white inline">Aliados</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="grid grid-cols-3 mt-[-5%] max-w-screen-lg mx-auto">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 mt-8 max-w-screen-lg mx-auto px-4">
         <div *ngFor="let aliado of listAliados" class="flex justify-center items-center">
-                <img [src]="aliado.logo" [alt]="aliado.nombre" (click)="openModal(aliado.id)" class="w-full h-auto cursor-pointer">
+            <img [src]="aliado.logo" [alt]="aliado.nombre" (click)="openModal(aliado.id)" class="w-full h-auto cursor-pointer">
         </div>
     </div>
 

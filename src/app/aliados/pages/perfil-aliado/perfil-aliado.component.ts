@@ -92,7 +92,6 @@ export class PerfilAliadoComponent implements OnInit {
     this.obtenerValorBaseDatos();
     this.initializeFormState();
 
-    console.log('Tipos de dato disponibles:', this.tipoDeDato);
     this.aliadoForm.get('id_tipo_dato')?.valueChanges.subscribe(() => {
       if (this.aliadoForm.get('id_tipo_dato')?.value) {
         this.onTipoDatoChange();
@@ -111,8 +110,6 @@ export class PerfilAliadoComponent implements OnInit {
         this.id = this.user.id;
         this.idAliado = this.user.id;
         this.currentRolId = this.user.id_rol;
-        console.log(this.user);
-        console.log("ASDDS",this.idAliado);
         if (this.currentRolId != 3) {
           this.router.navigate(['home']);
         }
@@ -129,7 +126,6 @@ export class PerfilAliadoComponent implements OnInit {
     dialogRef = this.dialog.open(AddBannerComponent, {
       data: { id: id },
     });
-   // console.log("aliado", idAliado);
 
     dialogRef.afterClosed().subscribe(result => {
       this.verEditarBanners();
@@ -141,7 +137,6 @@ export class PerfilAliadoComponent implements OnInit {
       if (result.isConfirmed) {
         this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
           (data) => {
-            console.log('Response from server:', data);
             setTimeout(function () {
               location.reload();
             }, this.tiempoEspera);
@@ -167,7 +162,6 @@ export class PerfilAliadoComponent implements OnInit {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
           this.tipoDeDato = data.filter(item => item.id !== 3);
-          console.log("DATO",data);
           this.obtenerValorBaseDatos();
         },
         error => {
@@ -223,7 +217,6 @@ export class PerfilAliadoComponent implements OnInit {
         console.log('Mostrando Imagen');
         break;
       default:
-        console.log('Caso no manejado:', tipoDatoId);
         break;
     }
     // Actualizar la validez del campo ruta_multi
@@ -270,7 +263,6 @@ export class PerfilAliadoComponent implements OnInit {
         // Establecer una variable para controlar la visibilidad de ruta_multi
         //this.mostrarRutaMulti = data.id_tipo_dato !== 2;
         
-        console.log("aaaa", data);
         this.onTipoDatoChange();
       },
       error => {
@@ -307,7 +299,6 @@ export class PerfilAliadoComponent implements OnInit {
         } else {
           control.enable();
         }
-        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
       } else {
         console.warn(`Control for field ${field} not found in form`);
       }
@@ -315,9 +306,6 @@ export class PerfilAliadoComponent implements OnInit {
   
     // Force change detection
     this.cdRef.detectChanges();
-  
-    // Log the entire form state
-    console.log('Form state after toggling:', this.aliadoForm);
   }
 
   onEdit() {
@@ -330,7 +318,6 @@ export class PerfilAliadoComponent implements OnInit {
     this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
       data => {
         this.listBanners = data;
-        console.log('Banners:', this.listBanners);
       },
       error => {
         console.error('Error al obtener los banners:', error);
@@ -340,7 +327,6 @@ export class PerfilAliadoComponent implements OnInit {
 
   upadateAliado(): void {
     if (this.aliadoForm.invalid || this.bannerForm.invalid) {
-      console.log("Formulario Invalido", this.aliadoForm.value);
       this.alertService.errorAlert('Error', 'Debes completar los campos requeridos.');
       this.formSubmitted = true;
       return; // Detener si el formulario es inválido
@@ -401,7 +387,6 @@ export class PerfilAliadoComponent implements OnInit {
       if (result.isConfirmed) {
         this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
           (data) => {
-            console.log('Respuesta del servidor:', data);
             setTimeout(() => {
               location.reload();
             }, this.tiempoEspera);

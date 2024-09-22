@@ -83,18 +83,13 @@ export class AsesoriasComponent implements OnInit {
       // Ejecutar ambas solicitudes en paralelo
       forkJoin([requestSinHorario, requestConHorario]).subscribe(
         ([responseSinHorario, responseConHorario]) => {
-          console.log('Response Sin Horario:', responseSinHorario); // Log the entire response
-          console.log('Response Con Horario:', responseConHorario); // Log the entire response
 
-          this.asesoriasSinHorario = responseSinHorario || []; // Ensure the assignment
-          this.asesoriasConHorario = responseConHorario || []; // Ensure the assignment
+          this.asesoriasSinHorario = responseSinHorario || [];
+          this.asesoriasConHorario = responseConHorario || [];
 
           this.sinHorarioCount = this.asesoriasSinHorario.length;
           this.conHorarioCount = this.asesoriasConHorario.length;
           this.totalAsesorias = this.asesoriasSinHorario.length + this.asesoriasConHorario.length; // Calcula el total de asesorías
-
-          console.log('Asesorias Sin Horario:', this.asesoriasSinHorario); // Check assigned data
-          console.log('Asesorias Con Horario:', this.asesoriasConHorario); // Check assigned data
 
           this.isLoading = false; // Finaliza la carga
         },

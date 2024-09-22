@@ -14,31 +14,27 @@ export class ModalActividadComponent implements OnInit {
   @Input() rutaId: number;
   @Output() close = new EventEmitter<void>();
   @Output() irAModuloClicked = new EventEmitter<number>();
-//  @Output() irAModuloClicked = new EventEmitter<{ actividad: any, ultimoElemento: any }>();
 
 
   imagenError: boolean = false;
   imagenUrl: string;
   colorIndex?: number;
 
-  constructor (private cdr: ChangeDetectorRef,
+  constructor(private cdr: ChangeDetectorRef,
     private router: Router,
-  ){}
+  ) { }
 
   ngOnInit() {
     if (this.actividad && this.actividad.fuente) {
       // Remover '/api' si está presente en environment.apiUrl
       const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
-      
+
       // Asegurarse de que la fuente no comience con '/'
-      const fuenteAjustada = this.actividad.fuente.startsWith('/') 
-        ? this.actividad.fuente.slice(1) 
+      const fuenteAjustada = this.actividad.fuente.startsWith('/')
+        ? this.actividad.fuente.slice(1)
         : this.actividad.fuente;
-      
+
       this.imagenUrl = `${baseUrl}/${fuenteAjustada}`;
-     // console.log("URL de la imagen ajustada:", this.imagenUrl);
-    } else {
-      //console.log('No hay actividad o fuente', this.actividad);
     }
   }
 
@@ -56,10 +52,10 @@ export class ModalActividadComponent implements OnInit {
     ];
     return colors[index % colors.length];
   }
-  
+
   getColor(): string {
-    return this.actividad.colorIndex !== undefined 
-      ? this.getItemColor(this.actividad.colorIndex) 
+    return this.actividad.colorIndex !== undefined
+      ? this.getItemColor(this.actividad.colorIndex)
       : '#FA7D00'; // Color por defecto si no hay índice
   }
 
@@ -82,7 +78,7 @@ export class ModalActividadComponent implements OnInit {
 
   manejarErrorImagen() {
     this.imagenError = true;
-    console.error('Error al cargar la imagen:', this.actividad.fuente);
+    console.error('Error al cargar la imagen');
   }
 
 }

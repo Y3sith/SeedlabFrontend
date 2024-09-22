@@ -30,7 +30,7 @@ export class RegistroComponent implements OnInit {
   hide = true;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  listTipoDocumento: []= [];
+  listTipoDocumento: [] = [];
   departamentoPredeterminado = '';
   registerForm: FormGroup;
   submitted = false;
@@ -53,7 +53,7 @@ export class RegistroComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private registroService: AuthService,
-    
+
     private router: Router,
     private alertService: AlertService,
   ) { }
@@ -163,14 +163,14 @@ export class RegistroComponent implements OnInit {
     if (!value) {
       return null; // Si no hay valor, no se valida
     }
-  
+
     const selectedDate = new Date(value);
     const today = new Date();
     const hundredYearsAgo = new Date();
     hundredYearsAgo.setFullYear(today.getFullYear() - 100);
     const eighteenYearsAgo = new Date();
     eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
-  
+
     if (selectedDate > today) {
       return { futureDate: 'La fecha no es válida *' };
     } else if (selectedDate < hundredYearsAgo) {
@@ -210,7 +210,6 @@ export class RegistroComponent implements OnInit {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
         this.listMunicipios = data;
-        console.log('Municipios cargados:', JSON.stringify(data));
       },
       err => {
         console.log('Error al cargar los municipios:', err);
@@ -218,18 +217,15 @@ export class RegistroComponent implements OnInit {
     );
   }
 
-  tipoDocumento():void{
-      this.registroService.tipoDocumento().subscribe(
-        data => {
-          this.listTipoDocumento = data;
-
-          console.log(this.listTipoDocumento);
-          //console.log('datos tipo de documento: ',data)
-        },
-        error => {
-          console.log(error);
-        }
-      )
+  tipoDocumento(): void {
+    this.registroService.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 
   registro(): void {
@@ -257,7 +253,6 @@ export class RegistroComponent implements OnInit {
       this.f.id_departamento.value
 
     );
-console.log(emprendedor);
     this.registroService.registrar(emprendedor).subscribe(
       (response: any) => {
         this.alertService.successAlert('Registro exitoso', response.message);
@@ -289,19 +284,18 @@ console.log(emprendedor);
 
   onSelectChange(event: Event) {
     const target = event.target as HTMLSelectElement;
-  
+
     // Lógica para cuando cambia el departamento
     if (target.id === 'id_departamento') {
       this.onDepartamentoSeleccionado(event);
     }
-  
+
     // Lógica para cuando cambia el municipio
     if (target.id === 'id_municipio') {
       this.updateProgress();
     }
-  
+
     // Si necesitas acceder al valor seleccionado
     const selectedValue = target.value;
-    console.log(selectedValue);
   }
 }

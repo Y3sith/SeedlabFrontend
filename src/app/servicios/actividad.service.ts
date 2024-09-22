@@ -50,5 +50,10 @@ export class ActividadService {
     return this.http.get(this.url+'/ActiNivelLeccionContenido/'+idActividad,options)
   }
 
+  ActividadAsesor(access_token:any, idActividad:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/ActividadAsesor/'+idActividad,options)
+  }
+
  
 }

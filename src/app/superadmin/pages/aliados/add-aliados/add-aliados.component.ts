@@ -69,12 +69,12 @@ export class AddAliadosComponent {
   faImages = faImage;
   @ViewChild('fileInput') fileInput: ElementRef;
   @ViewChild('fileInputs') fileInputs: ElementRef;
-  listBanners: Banner[] =[];
+  listBanners: Banner[] = [];
   showVideo: boolean = false;
   showImagen: boolean = false;
   showPDF: boolean = false;
   showTexto: boolean = false;
-  
+
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
     private alertService: AlertService,
@@ -84,7 +84,7 @@ export class AddAliadosComponent {
     public dialog: MatDialog,
     private cdRef: ChangeDetectorRef,
     private aRoute: ActivatedRoute,
-    private location:Location
+    private location: Location
   ) {
 
     this.aliadoForm = this.formBuilder.group({
@@ -94,10 +94,10 @@ export class AddAliadosComponent {
       ruta_multi: [null, Validators.required],
       urlpagina: ['', Validators.required],
       id_tipo_dato: ['', Validators.required],
-      email: ['', [Validators.required,Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       estado: [true]
-      
+
     });
 
     this.bannerForm = this.formBuilder.group({
@@ -106,7 +106,6 @@ export class AddAliadosComponent {
     });
     this.isActive = true;
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');
-   // console.log("IDDDD",this.idAliado); 
   }
 
   goBack(): void {
@@ -119,12 +118,10 @@ export class AddAliadosComponent {
     this.validateToken();
     this.tipoDato();
     this.verEditar();
-    //this.obtenerValorBaseDatos();
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
     this.verEditarBanners();
-    console.log('Initial estado value:', this.aliadoForm.get('estado')?.value);
   }
 
   validateToken(): void {
@@ -147,14 +144,14 @@ export class AddAliadosComponent {
     }
   }
 
-  openModal(id:number | null, idAliado: string): void{
+  openModal(id: number | null, idAliado: string): void {
     let dialogRef: MatDialogRef<AddBannerModalComponent>;
 
     dialogRef = this.dialog.open(AddBannerModalComponent, {
-      data: { id: id, idAliado: this.idAliado 
+      data: {
+        id: id, idAliado: this.idAliado
       },
     });
-   // console.log("aliado", idAliado);
 
     dialogRef.afterClosed().subscribe(result => {
       this.verEditarBanners();
@@ -181,7 +178,6 @@ export class AddAliadosComponent {
       if (result.isConfirmed) {
         this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
           (data) => {
-            console.log('Response from server:', data);
             setTimeout(function () {
               location.reload();
             }, this.tiempoEspera);
@@ -196,13 +192,12 @@ export class AddAliadosComponent {
     });
   }
 
-  
 
-  verEditarBanners():void {
+
+  verEditarBanners(): void {
     this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
       data => {
         this.listBanners = data;
-        console.log('Banners:', this.listBanners);
       },
       error => {
         console.error('Error al obtener los banners:', error);
@@ -229,26 +224,21 @@ export class AddAliadosComponent {
     });
   }
 
-  verEditar():void{
+  verEditar(): void {
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
         this.aliadoForm.patchValue({
           nombre: data.nombre,
           descripcion: data.descripcion,
           logo: data.logo,
-          //ruta_multi: data.ruta_multi,
           urlpagina: data.urlpagina,
           id_tipo_dato: data.id_tipo_dato,
           email: data.email,
           password: '',
           estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
-        console.log("ALIADOOOO",data);
         this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
         this.aliadoForm.patchValue({ estado: this.isActive });
-
-        console.log("Estado cargado:", this.isActive);
-       // this.onTipoDatoChange();
       },
       error => {
         console.log(error);
@@ -257,27 +247,22 @@ export class AddAliadosComponent {
   }
 
   addAliado(): void {
-    if (this.idAliado == null){
+    if (this.idAliado == null) {
       if (this.aliadoForm.invalid || this.bannerForm.invalid) {
         // Mostrar alert si algún formulario es inválido
         this.alertService.errorAlert('Error', 'Por favor, completa todos los campos requeridos.');
-  
+
         this.formSubmitted = true;
-  
-      if (this.aliadoForm.invalid) {
-        this.formSubmitted = true;
-        console.log("aqui",this.formSubmitted)   
-        return; // Detiene la ejecución si el formulario es inválido
-      }
-        
-        console.error('Formulario inválido');
-        console.log('Errores aliadoForm:', this.getFormValidationErrors(this.aliadoForm));
-        console.log('Errores bannerForm:', this.getFormValidationErrors(this.bannerForm));
+
+        if (this.aliadoForm.invalid) {
+          this.formSubmitted = true;
+          return; // Detiene la ejecución si el formulario es inválido
+        }
         return;
-       }
+      }
     }
 
-    
+
     const formData = new FormData();
     let estadoValue: string;
     if (this.idAliado == null) {
@@ -287,9 +272,7 @@ export class AddAliadosComponent {
       // Es una edición, usar el valor del formulario
       estadoValue = this.aliadoForm.get('estado')?.value ? 'true' : 'false';
     }
-  
-    console.log('Estado antes de crear FormData:', estadoValue);
-    
+
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
     formData.append('descripcion', this.aliadoForm.get('descripcion')?.value);
     formData.append('urlpagina', this.aliadoForm.get('urlpagina')?.value);
@@ -304,12 +287,12 @@ export class AddAliadosComponent {
     }
     if (this.selectedruta) {
       formData.append('ruta_multi', this.selectedruta, this.selectedruta.name);
-    } else{
+    } else {
       const rutaMultiValue = this.aliadoForm.get('ruta_multi')?.value;
       if (rutaMultiValue) {
         formData.append('ruta_multi', rutaMultiValue);
+      }
     }
-  }
 
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
 
@@ -319,27 +302,23 @@ export class AddAliadosComponent {
     }
     formData.append('banner_estadobanner', this.bannerForm.get('estadobanner')?.value);
 
-    console.log("SSSSSSSSSSSSSSSSSSSSSSSS", formData);
-   
-        
-    if ( this.idAliado != null ) {
-    this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
-      data =>{
-        console.log("ACTUALIZAAAAAA", data);
-        this.alertService.successAlert('Exito', data.message);
-      },
-      error => {
-        console.error(error);
-        this.alertService.successAlert('Error', error.error.message);
+    if (this.idAliado != null) {
+      this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
+        data => {
+          this.alertService.successAlert('Exito', data.message);
+        },
+        error => {
+          console.error(error);
+          this.alertService.successAlert('Error', error.error.message);
 
-      }
-    )
-      
-    }else {
+        }
+      )
+
+    } else {
       this.aliadoService.crearAliado(this.token, formData).subscribe(
         data => {
-         this.alertService.successAlert('Exito', data.message);
-         this.router.navigate(['list-aliados'])
+          this.alertService.successAlert('Exito', data.message);
+          this.router.navigate(['list-aliados'])
         },
         error => {
           if (error.status === 400) {
@@ -349,50 +328,30 @@ export class AddAliadosComponent {
     }
   }
 
-/* Cambia el estado del toggle*/
-toggleActive() {
-  this.isActive = !this.isActive;
-  this.aliadoForm.patchValue({ estado: this.isActive });
-  console.log("Toggle activado, nuevo estado:", this.isActive);
-  console.log("Estado en el formulario después del toggle:", this.aliadoForm.get('estado')?.value);
-}
-/* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
-mostrarToggle(): void {
-  this.boton = this.idAliado != null;
-}
-
-
-tipoDato(): void {
-  if (this.token) {
-    this.actividadService.getTipoDato(this.token).subscribe(
-      data => {
-        // Filtrar los datos para excluir el tipo de dato con ID 3
-        this.tipoDeDato = data.filter(item => item.id !== 3);
-        console.log("DATO", this.tipoDeDato);
-        //this.obtenerValorBaseDatos();
-      },
-      error => {
-        console.log(error);
-      }
-    )
+  /* Cambia el estado del toggle*/
+  toggleActive() {
+    this.isActive = !this.isActive;
+    this.aliadoForm.patchValue({ estado: this.isActive });
   }
-}
+  /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
+  mostrarToggle(): void {
+    this.boton = this.idAliado != null;
+  }
 
-  // obtenerValorBaseDatos(): void {
-  //   if (this.idAliado) {
-  //     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
-  //       data => {
-  //         if (data && data.id_tipo_dato) {
-  //           this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
-  //           this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
-  //         }
-  //       },
-  //       error => {
-  //         console.log('Error al obtener el valor de la base de datos:', error);
-  //       }
-  //     );
-  //   }
-  // }
+
+  tipoDato(): void {
+    if (this.token) {
+      this.actividadService.getTipoDato(this.token).subscribe(
+        data => {
+          // Filtrar los datos para excluir el tipo de dato con ID 3
+          this.tipoDeDato = data.filter(item => item.id !== 3);
+        },
+        error => {
+          console.log(error);
+        }
+      )
+    }
+  }
 
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
@@ -417,23 +376,23 @@ tipoDato(): void {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      
+
       let maxSize = 0;
-  
+
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
       } else if (field === 'ruta_documento') {
         maxSize = 18 * 1024 * 1024; // 20MB para documentos
       }
-  
+
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-  
+
         ////Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-  
+
         // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'urlImagen') {
           this.bannerForm.patchValue({ urlImagen: null });
@@ -451,7 +410,7 @@ tipoDato(): void {
         this.resetFileField(field);
         return;
       }
-  
+
       // Nueva validación para las dimensiones del logo
       if (field === 'logo') {
         const img = new Image();
@@ -473,7 +432,7 @@ tipoDato(): void {
       this.resetFileField(field);
     }
   }
-  
+
   // Método para procesar el archivo una vez validado
   private processFile(file: File, field: string) {
     const reader = new FileReader();
@@ -491,10 +450,10 @@ tipoDato(): void {
       }
     };
     reader.readAsDataURL(file);
-  
+
     // Genera la previsualización solo si el archivo es de tamaño permitido
     this.generateImagePreview(file, field);
-  
+
     if (field === 'urlImagen') {
       this.selectedBanner = file;
       this.bannerForm.patchValue({ urlImagen: file });
@@ -513,11 +472,10 @@ tipoDato(): void {
   //   const value = event.target.value;
   //   this.aliadoForm.patchValue({ ruta_multi: value });
   // }
-  
+
   onTextInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.aliadoForm.patchValue({ ruta_multi: value });
-    console.log('ruta_multi actualizada:', value);  // Para depuración
   }
 
   resetFileField(field: string) {
@@ -583,10 +541,10 @@ tipoDato(): void {
     return field && field.invalid && (field.dirty || field.touched);
   }
 
-  cancel():void {
+  cancel(): void {
     this.verEditar();
   }
-  }
+}
 
 
 

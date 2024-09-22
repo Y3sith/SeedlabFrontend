@@ -51,12 +51,6 @@ export class HorarioModalComponent implements OnInit {
       const { fecha, observaciones } = this.asignarForm.value;
       const idAsesoria = this.data.asesoria.id;
 
-      // // Logs para depuración
-      // console.log('Formulario válido:', this.asignarForm.valid);
-      // console.log('Fecha:', fecha);
-      // console.log('Observaciones:', observaciones);
-      // console.log('ID Asesoria:', idAsesoria);
-
       this.asesoriaService.agregarHorarioAsesoria(this.token, observaciones, idAsesoria, fecha).subscribe(
         response => {
           this.dialogRef.close(response);
@@ -66,7 +60,6 @@ export class HorarioModalComponent implements OnInit {
         }
       );
     } else {
-      //console.error('Formulario inválido:', this.asignarForm.value);
       this.alertService.errorAlert('Error', 'Formulario inválido, debes asignar un horario correcto');
     }
   }

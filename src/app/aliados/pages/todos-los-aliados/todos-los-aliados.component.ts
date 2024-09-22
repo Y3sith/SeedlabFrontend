@@ -46,7 +46,6 @@ export class TodosLosAliadosComponent {
   mostrarAliados(): void {
     this.aliadoService.getaliados().subscribe(
       data => {
-        console.log('Aliados:', data);
         this.listAliados = data;
         this.cdr.detectChanges();
       },
@@ -77,9 +76,6 @@ export class TodosLosAliadosComponent {
         this.telefono = data.telefono;
         this.direccion = data.direccion;
         this.ubicacion = data.ubicacion;
-
-        //console.log(data);
-        //console.log("personalizaciones obtenidas", data);
       },
       error => {
         console.error("no funciona", error);
