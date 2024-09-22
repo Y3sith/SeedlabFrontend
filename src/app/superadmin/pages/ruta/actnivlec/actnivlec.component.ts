@@ -140,6 +140,7 @@ export class ActnivlecComponent implements OnInit {
     this.validateToken();
 
     this.route.queryParams.subscribe(params => {
+      console.log('params:', params);
       if (params['id_ruta']) {
         this.rutaId = +params['id_ruta'];
         this.actividadForm.patchValue({ id_ruta: this.rutaId.toString() });
@@ -173,11 +174,14 @@ export class ActnivlecComponent implements OnInit {
       this.token = localStorage.getItem('token');
       let identityJSON = localStorage.getItem('identity');
 
+      //console.log('currentrol',identityJSON);
+
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
+        //console.log('ererer',this.id)
         if (this.currentRolId != 1) {
           this.router.navigate(['/home']);
         }
@@ -197,7 +201,9 @@ export class ActnivlecComponent implements OnInit {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
+
           this.listarTipoDato = data.filter((tipo: any) => tipo.nombre === 'Imagen'); //solo me muestra imagen en el select tipo dato
+          // console.log('tipo de dato:', this.listarTipoDato);
         },
         error => {
           console.log(error);
@@ -224,6 +230,7 @@ export class ActnivlecComponent implements OnInit {
       this.contenidoLeccionService.getTipoDato(this.token).subscribe(
         data => {
           this.listarTipoDatoContenido = data;
+          console.log('tipo de dato contenido:', data);
         },
         error => {
           console.log(error);
@@ -238,6 +245,7 @@ export class ActnivlecComponent implements OnInit {
       this.superAdminService.listarAliado(this.token).subscribe(
         data => {
           this.listarAliadoo = data;
+          console.log('Aliado: ', data)
         },
         error => {
           console.log(error);
@@ -270,6 +278,7 @@ export class ActnivlecComponent implements OnInit {
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
+              console.log('Actividad: ', data);
             },
             error => {
               console.log('Error al cargar los asesores:', error);
@@ -295,6 +304,7 @@ export class ActnivlecComponent implements OnInit {
 
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
+      console.log('lecciones::', this.onNivelChange(primerNivel.id.toString()));
     } else {
       // Si no hay niveles, preparar para agregar uno nuevo
       this.nivelForm.patchValue({
@@ -341,6 +351,7 @@ export class ActnivlecComponent implements OnInit {
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
+    console.log('datos: ', this.actividadForm.value);
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
     } else {
@@ -348,6 +359,7 @@ export class ActnivlecComponent implements OnInit {
       if (rutaMultiValue) {
         formData.append('fuente', rutaMultiValue);
       }
+      console.log('datos enviados: ', formData)
     }
     if (this.actividadId == null) {
       this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
@@ -359,6 +371,7 @@ export class ActnivlecComponent implements OnInit {
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
               this.alertServices.successAlert('Exito', data.message);
               this.desactivarcamposActividad();
+              console.log('datos enviados: ', data)
               this.activarformularios();
               this.habilitarBotones();
             },
@@ -457,6 +470,7 @@ export class ActnivlecComponent implements OnInit {
         data => {
           this.listarNiveles = data;
           this.niveles = data;
+          console.log('Niveles: ', data);
           if (this.isEditing && this.niveles && this.niveles.length > 0) {
             const primerNivel = this.niveles[0];
             this.nivelForm.patchValue({
@@ -484,7 +498,9 @@ export class ActnivlecComponent implements OnInit {
     const nivel: any = {
       nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
+      //id_actividad: this.actividadId
     };
+    console.log("idnivel", this.selectedNivelId);
     if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
@@ -512,6 +528,7 @@ export class ActnivlecComponent implements OnInit {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
         return;
       }
+      console.log('nivel data', nivel);
       this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
@@ -557,16 +574,20 @@ export class ActnivlecComponent implements OnInit {
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
+    //const leccionId = +this.leccionForm.get('id_leccion')?.value;
     const leccionId = +this.leccionForm.get('id_leccion')?.value;
     if (leccionId) {
+      //console.log("leccionIddddddddd", leccionId);
       const leccionId = +this.leccionForm.get('id_leccion')?.value;
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
+          //this.verLeccicon();
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
+          console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -574,14 +595,20 @@ export class ActnivlecComponent implements OnInit {
         }
       )
     } else {
+      console.log('leccion data', leccion);
       this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
         (data: any) => {
+          console.log('datos recibidos', data);
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
+          //this.verLeccicon();
+          //this.mostrarContenidoLeccionForm = true;
+          //this.mostrarContenidoLeccionForm = true;
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
+          console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -675,12 +702,16 @@ export class ActnivlecComponent implements OnInit {
       })
       this.contenidoLeccion = [];
     }
+
+    console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
+    console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
+        console.log('Contenido de la lección:', data);
         if (this.isEditing && data.length > 0) {
           const primerContenido = data[0];
           this.contenidoLeccionForm.patchValue({
@@ -756,6 +787,7 @@ export class ActnivlecComponent implements OnInit {
     formData.append('id_tipo_dato', this.contenidoLeccionForm.get('id_tipo_dato')?.value);
     //formData.append('id_leccion', this.contenidoLeccionForm.get('id_leccion')?.value);
     formData.append('id_leccion', idLeccion);
+    console.log('id_leccion a enviar:', idLeccion);
 
     if (this.selectedfuenteContenido) {
       formData.append('fuente_contenido', this.selectedfuenteContenido, this.selectedfuenteContenido.name);
@@ -767,9 +799,11 @@ export class ActnivlecComponent implements OnInit {
     }
     const contenidoLeccionId = +this.contenidoLeccionForm.get('id_contenido')?.value;
     if (contenidoLeccionId) {
+      console.log("conteido", contenidoLeccionId)
       this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
+          console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(contenidoLeccionId);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
@@ -784,6 +818,7 @@ export class ActnivlecComponent implements OnInit {
       this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
+          console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
