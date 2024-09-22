@@ -90,7 +90,6 @@ export class RutaAliadoComponent {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    // id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['']
   })
@@ -99,7 +98,7 @@ export class RutaAliadoComponent {
   nivelForm = this.fb.group({
     id_nivel: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
-    id_asesor: [''],
+    id_asesor: [{value:'' ,disabled: true}],
     id_actividad: [{ value: '', disabled: true }, Validators.required]
   })
   mostrarNivelForm: boolean = false;
@@ -359,7 +358,7 @@ export class RutaAliadoComponent {
       this.nivelForm.patchValue({
         id_nivel: primerNivel.id,
         nombre: primerNivel.nombre,
-        id_asesor: primerNivel.id_asesor
+        id_asesor:primerNivel.id_asesor
       });
       //this.nivelForm.disable();
       
@@ -395,13 +394,10 @@ export class RutaAliadoComponent {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
       return;
     } 
-    
-    if (this.actividadId != null) {
       if (this.actividadForm.invalid) {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
         return;
       }
-    }
     if (this.idactividad == null) {
       estadoValue = '1'
     } else {
@@ -607,12 +603,15 @@ export class RutaAliadoComponent {
           // Actualizar la lista de niveles
           this.niveles.push({
             id: data.id,
-            nombre: data.nombre
+            nombre: data.nombre,
           });
 
           // Actualizar el select
           this.nivelForm.patchValue({
             id_nivel: data.id
+          });
+          this.nivelForm.patchValue({
+            id_asesor: data.id_asesor
           });
           this.leccionForm.patchValue({ id_nivel: data.id })
           this.verNivel();
@@ -812,7 +811,7 @@ export class RutaAliadoComponent {
     const selectedNivelId = event.target.value;
     this.selectedNivelId = selectedNivelId !== '0' ? parseInt(selectedNivelId) : null;
     if (selectedNivelId === '0' ) {
-      this.nivelForm.patchValue({ nombre: '', id_nivel: 0, id_asesor: '' });
+      this.nivelForm.patchValue({ nombre: '', id_nivel: 0, id_asesor: "" });
       this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
       this.contenidoLeccionForm.patchValue({
         titulo: '',
