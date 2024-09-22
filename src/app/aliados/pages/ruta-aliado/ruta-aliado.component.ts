@@ -22,7 +22,7 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ruta-aliado',
-  templateUrl:'./ruta-aliado.component.html',
+  templateUrl: './ruta-aliado.component.html',
   styleUrl: './ruta-aliado.component.css'
 })
 export class RutaAliadoComponent {
@@ -71,7 +71,7 @@ export class RutaAliadoComponent {
   leccioon: any[] = [];
   isEditing: any;
   contenidoLeccion: any[] = [];
-  selectedFromInput: any;
+  selectedFromInput:any;
 
   showVideo: boolean = false;
   showImagen: boolean = false;
@@ -90,6 +90,7 @@ export class RutaAliadoComponent {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
+    // id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['']
   })
@@ -98,7 +99,7 @@ export class RutaAliadoComponent {
   nivelForm = this.fb.group({
     id_nivel: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
-    id_asesor: [{value:'' ,disabled: true}],
+    id_asesor: [''],
     id_actividad: [{ value: '', disabled: true }, Validators.required]
   })
   mostrarNivelForm: boolean = false;
@@ -141,6 +142,7 @@ export class RutaAliadoComponent {
     this.validateToken();
 
     this.route.queryParams.subscribe(params => {
+      console.log('params:', params);
       if (params['id_ruta']) {
         this.rutaId = +params['id_ruta'];
         this.actividadForm.patchValue({ id_ruta: this.rutaId.toString() });
@@ -171,10 +173,10 @@ export class RutaAliadoComponent {
     this.bloquearBotones();
 
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
-    if (idLeccion) {
-      this.onLeccionChange(idLeccion); // Llama la función que carga las lecciones
-    }
-    this.selectedFromInput = false;
+  if (idLeccion) {
+    this.onLeccionChange(idLeccion); // Llama la función que carga las lecciones
+  }
+  this.selectedFromInput = false;
   }
 
   validateToken(): void {
@@ -197,6 +199,7 @@ export class RutaAliadoComponent {
     }
   }
 
+
   //me trae el tipo de dato que requiere la actividad
   tipoDato(): void {
     if (this.token) {
@@ -204,6 +207,7 @@ export class RutaAliadoComponent {
         data => {
 
           this.listarTipoDato = data.filter((tipo: any) => tipo.nombre === 'Imagen'); //solo me muestra imagen en el select tipo dato
+          // console.log('tipo de dato:', this.listarTipoDato);
         },
         error => {
           console.log(error);
@@ -221,7 +225,7 @@ export class RutaAliadoComponent {
       }
     });
   }
-
+  
   goBack(): void {
     this.location.back();
   }
@@ -244,6 +248,7 @@ export class RutaAliadoComponent {
       this.contenidoLeccionService.getTipoDato(this.token).subscribe(
         data => {
           this.listarTipoDatoContenido = data;
+          //console.log('tipo de dato contenido:', data);
         },
         error => {
           console.log(error);
@@ -273,6 +278,7 @@ export class RutaAliadoComponent {
 
   selectAliado(aliado: any): void {
     this.aliadoSeleccionado = aliado;
+    //console.log("el aliado seleccionado fue: ", this.aliadoSeleccionado)
   }
 
   onAliadoChange(event?: any): void {
@@ -286,11 +292,16 @@ export class RutaAliadoComponent {
 
     const aliadoSeleccionado = this.listarAliadoo.find(aliado => aliado.id == aliadoId);
     if (aliadoSeleccionado) {
+      console.log("El aliado seleccionado fue: ", {
+        id: aliadoSeleccionado.id,
+        nombre: aliadoSeleccionado.nombre
+      });
       this.aliadoSeleccionado = aliadoSeleccionado;
       if (this.token) {
         this.aliadoService.getinfoAsesor(this.token, this.aliadoSeleccionado.id, this.userFilter.estado).subscribe(
           data => {
             this.listarAsesores = data;
+            console.log('Asesores: ', data);
           },
           error => {
             console.log(error);
@@ -301,7 +312,7 @@ export class RutaAliadoComponent {
       console.error('No se encontró el aliado seleccionado');
     }
   }
-
+  
   verEditar(): void {
     if (this.actividadId !== null) {
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
@@ -320,13 +331,14 @@ export class RutaAliadoComponent {
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
               });
-
+              
               this.niveles = data.nivel;
               this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
               this.selectedFromInput = false;
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
+              console.log('Actividad: ', data);
             },
             error => {
               console.log('Error al cargar los asesores:', error);
@@ -347,8 +359,10 @@ export class RutaAliadoComponent {
       this.nivelForm.patchValue({
         id_nivel: primerNivel.id,
         nombre: primerNivel.nombre,
-        id_asesor:primerNivel.id_asesor
+        id_asesor: primerNivel.id_asesor
       });
+      //this.nivelForm.disable();
+      
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
     } else {
@@ -358,7 +372,7 @@ export class RutaAliadoComponent {
         nombre: ''
       });
       this.nivelForm.get('nombre')?.disable();
-    }
+    } 
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
       this.contenidoLeccionForm.patchValue({
@@ -380,14 +394,14 @@ export class RutaAliadoComponent {
     if (nombreActividad && nombreActividad.length > 39) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
       return;
-    }
-
+    } 
+    
     if (this.actividadId != null) {
       if (this.actividadForm.invalid) {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
         return;
-        }
       }
+    }
     if (this.idactividad == null) {
       estadoValue = '1'
     } else {
@@ -399,6 +413,7 @@ export class RutaAliadoComponent {
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.idAliado);
     formData.append('estado', estadoValue);
+    console.log('datos: ', this.actividadForm.value);
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
     } else {
@@ -406,6 +421,7 @@ export class RutaAliadoComponent {
       if (rutaMultiValue) {
         formData.append('fuente', rutaMultiValue);
       }
+      console.log('datos enviados: ', formData)
     }
     if (this.actividadId == null) {
       this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
@@ -418,6 +434,7 @@ export class RutaAliadoComponent {
               //this.mostrarNivelForm = true;
               this.alertServices.successAlert('Exito', data.message);
               this.desactivarcamposActividad();
+              console.log('datos enviados: ', data)
               this.activarformularios();
               this.habilitarBotones();
             },
@@ -470,6 +487,7 @@ export class RutaAliadoComponent {
     this.nivelForm.enable();
     this.leccionForm.enable();
     this.contenidoLeccionForm.enable();
+    //this.actividadForm.enable();
     this.habilitarBotones();
   }
 
@@ -515,13 +533,18 @@ export class RutaAliadoComponent {
         data => {
           this.listarNiveles = data;
           this.niveles = data;
+          console.log('Niveles: ', data);
+
 
           if (this.isEditing && this.niveles && this.niveles.length > 0) {
+            // this.nivelForm.patchValue({
+            //   id_nivel: this.niveles[0].id,
+            //   nombre: this.niveles[0].nombre
+            // });
             const primerNivel = this.niveles[0];
                     this.nivelForm.patchValue({
                         id_nivel: primerNivel.id,
-                        nombre: primerNivel.nombre,
-                        id_asesor: primerNivel.id_asesor
+                        nombre: primerNivel.nombre
                     });
                     // Llamar a onNivelChange para actualizar las lecciones
                     this.onNivelChange(primerNivel.id.toString());
@@ -546,7 +569,9 @@ export class RutaAliadoComponent {
       nombre: nombreNivel,
       id_asesor: this.nivelForm.value.id_asesor,
       id_actividad: this.nivelForm.value.id_actividad
+      //id_actividad: this.actividadId
     };
+    console.log("idnivel", this.selectedNivelId);
     if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
@@ -574,21 +599,19 @@ export class RutaAliadoComponent {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
         return;
       }
+      console.log('nivel data', nivel);
       this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
           // Actualizar la lista de niveles
           this.niveles.push({
             id: data.id,
-            nombre: data.nombre,
+            nombre: data.nombre
           });
 
           // Actualizar el select
           this.nivelForm.patchValue({
             id_nivel: data.id
-          });
-          this.nivelForm.patchValue({
-            id_asesor: data.id_asesor
           });
           this.leccionForm.patchValue({ id_nivel: data.id })
           this.verNivel();
@@ -604,7 +627,7 @@ export class RutaAliadoComponent {
           console.log(error);
         }
       )
-    }
+    } 
   }
 
   addLeccionSuperAdmin(): void {
@@ -623,16 +646,20 @@ export class RutaAliadoComponent {
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
+    //const leccionId = +this.leccionForm.get('id_leccion')?.value;
     const leccionId = +this.leccionForm.get('id_leccion')?.value;
     if (leccionId) {
+      //console.log("leccionIddddddddd", leccionId);
       const leccionId = +this.leccionForm.get('id_leccion')?.value;
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
+          //this.verLeccicon();
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
+          console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -640,8 +667,10 @@ export class RutaAliadoComponent {
         }
       )
     } else {
+      console.log('leccion data', leccion);
       this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
         (data: any) => {
+          console.log('datos recibidos', data);
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
@@ -651,6 +680,7 @@ export class RutaAliadoComponent {
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
+          console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -743,13 +773,17 @@ export class RutaAliadoComponent {
         id_tipo_dato: ''
       })
       this.contenidoLeccion = [];
-    }
+    } 
+
+    console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
+    console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
+        console.log('Contenido de la lección:', data);
         if (this.isEditing && data.length > 0) {
           const primerContenido = data[0];
           this.contenidoLeccionForm.patchValue({
@@ -777,7 +811,7 @@ export class RutaAliadoComponent {
     const selectedNivelId = event.target.value;
     this.selectedNivelId = selectedNivelId !== '0' ? parseInt(selectedNivelId) : null;
     if (selectedNivelId === '0' ) {
-      this.nivelForm.patchValue({ nombre: '', id_nivel: 0, id_asesor: "" });
+      this.nivelForm.patchValue({ nombre: '', id_nivel: 0, id_asesor: '' });
       this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
       this.contenidoLeccionForm.patchValue({
         titulo: '',
@@ -826,6 +860,7 @@ export class RutaAliadoComponent {
     formData.append('id_tipo_dato', this.contenidoLeccionForm.get('id_tipo_dato')?.value);
     //formData.append('id_leccion', this.contenidoLeccionForm.get('id_leccion')?.value);
     formData.append('id_leccion', idLeccion);
+    console.log('id_leccion a enviar:', idLeccion);
 
     if (this.selectedfuenteContenido) {
       formData.append('fuente_contenido', this.selectedfuenteContenido, this.selectedfuenteContenido.name);
@@ -837,9 +872,11 @@ export class RutaAliadoComponent {
     }
     const contenidoLeccionId = +this.contenidoLeccionForm.get('id_contenido')?.value;
     if (contenidoLeccionId) {
+      console.log("conteido", contenidoLeccionId)
       this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
+          console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(contenidoLeccionId);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
@@ -854,10 +891,11 @@ export class RutaAliadoComponent {
       this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
+          console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
-
+          
           //location.reload();
         },
         error => {
@@ -869,7 +907,7 @@ export class RutaAliadoComponent {
   }
   onContenidoSelect(contenidoId: string): void {
     const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
-
+  
     if (contenidoId === 'nuevo') {
       // Si se selecciona "Agregar contenido nuevo"
       this.contenidoLeccionForm.patchValue({
@@ -899,6 +937,8 @@ export class RutaAliadoComponent {
     const tipoDato = this.listarTipoDatoContenido.find(t => t.id === +id);
     return tipoDato ? tipoDato.fuente_contenido : '';
   }
+
+
 
   ///////////////////////////////////////////////////////////////////////////////
 
@@ -973,6 +1013,7 @@ export class RutaAliadoComponent {
   onTextInputContenido(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.contenidoLeccionForm.patchValue({ fuente_contenido: value });
+    //console.log('fuente actualizada:', value);  // Para depuración
   }
 
   triggerFileInputContenido() {
@@ -1024,4 +1065,7 @@ export class RutaAliadoComponent {
     this.selectedfuenteContenido = null;
     this.fuentePreviewContenido = null;
   }
+
+  ////////////////////////////////////////////////////////////////////////
+
 }
