@@ -22,7 +22,7 @@ import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-ruta-aliado',
-  templateUrl: './ruta-aliado.component.html',
+  templateUrl:'./ruta-aliado.component.html',
   styleUrl: './ruta-aliado.component.css'
 })
 export class RutaAliadoComponent {
