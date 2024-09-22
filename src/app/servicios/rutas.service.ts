@@ -13,7 +13,7 @@ import { Ruta } from '../Modelos/ruta.modelo';
 export class RutaService {
 
   url = environment.apiUrl + 'ruta';
-  url2 = environment.apiUrl + 'nivel';
+ // url2 = environment.apiUrl + 'nivel';
 
   constructor(private http:HttpClient) { }
 
@@ -77,21 +77,24 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado)
     };
-    return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
+    // return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
+    return this.http.get<{id: number, actividades: any[]}>(this.url + '/actnivleccontXruta/' + idRuta, options);
+
   }
 
   activadadxAliado(access_token:any, idRuta: number, idAliado, estado:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado)
     };
-    return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
+    //return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
+    return this.http.get<{id: number, actividades: any[]}>(this.url + '/actnividadxAliado/'+idRuta+'/'+idAliado, options);
   }
 
   activadadxAsesor(access_token:any, idRuta: number, idAsesor, estado:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado)
     };
-    return this.http.get(this.url+'/actnividadxAsesor/'+idRuta+'/'+idAsesor,options)
+    return this.http.get(this.url+'/actnividadxNivelAsesor/'+idRuta+'/'+idAsesor,options)
   }
 
   actividadCompletaxruta(access_token:any, idRuta: number):Observable<any>{

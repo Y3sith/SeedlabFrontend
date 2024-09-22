@@ -36,16 +36,21 @@
                         <th class="hidden p-2 text-left sm:table-cell">Asesor</th>
                         <th class="p-2 text-left ">Estado</th>
                         <th class="p-2 text-left"></th>
+                        <th class="p-2 text-left">Nombre Actividad</th>
+                        <th class="p-2 text-left">Aliado</th>
+                        <th class="hidden p-2 text-left sm:table-cell">Estado</th>
+                        <th class="p-2 text-left"></th>
                     </tr>
                 </thead>
                 <tbody class="space-y-6">
-                    <ng-container *ngFor="let contenido of listAcNiLeCo">
-                        <ng-container
-                            *ngFor="let actividad of todasLasActividades |filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index ">
+                    <ng-container
+                        *ngFor="let contenido of listAcNiLeCo">
+                        <ng-container *ngFor="let actividad of todasLasActividades |filterBy: userFilter | paginate: { itemsPerPage: 5, currentPage: page }; let i = index ">
                             <tr class="my-5 bg-line-gray rounded-xl">
                                 <td class="p-2 rounded-s-lg">{{ actividad.nombre }}</td>
                                 <td class="p-2">{{ actividad.id_aliado }}</td>
                                 <td class="hidden p-2 sm:table-cell">{{ actividad.id_asesor }}</td>
+                                <!-- <td class="p-2">{{ actividad.estado }}</td> -->
                                 <td class="p-2 ">
                                     <label class="inline-flex items-center text-center cursor-pointer">
                                         <input type="checkbox" class="sr-only peer"

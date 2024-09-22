@@ -74,7 +74,6 @@ export class EditarActRutaComponent {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.ActividadId = +params['id_actividad'];
-      console.log('id actividad: ',this.ActividadId);
     });
     this.validateToken();
     this.verEditar();

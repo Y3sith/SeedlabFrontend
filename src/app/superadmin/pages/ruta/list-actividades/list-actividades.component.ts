@@ -21,11 +21,12 @@ export class ListActividadesComponent {
   user: User | null = null;
   id: number | null = null;
   currentRolId: number;
-  listAcNiLeCo: [] = [];
+  listAcNiLeCo: any [] = [];
   isActive: boolean = true;
   boton = true;
   isLoading: boolean = false;
-  todasLasActividades: any;
+  todasLasActividades: any[] = [];
+  tiempoEspera = 1800;
 
   actividadForm = this.fb.group({
     estado: [true],
@@ -69,8 +70,7 @@ export class ListActividadesComponent {
     if (this.rutaId !== null) {
       this.rutaService.actnivleccontXruta(this.token, this.rutaId, this.userFilter.estado).subscribe(
         (data) => {
-          this.listAcNiLeCo = data;
-          // Extraer todas las actividades en un solo array
+          this.listAcNiLeCo = [data];
           this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
         },
         (error) => {
@@ -79,15 +79,16 @@ export class ListActividadesComponent {
       );
     }
   }
-
   editarEstado(ActividadId: number): void {
     const estadoActual = this.actividadForm.get('estado')?.value;
     this.alertService.alertaActivarDesactivar("¿Estás seguro de cambiar el estado de la actividad?", 'question').then((result) => {
       if (result.isConfirmed) {
         this.actividadService.estadoActividad(this.token, ActividadId, estadoActual).subscribe(
           (data) => {
-            this.alertService.successAlert('Éxito', data.message);
-            location.reload();
+            setTimeout(function () {
+              location.reload();
+            }, this.tiempoEspera);
+            this.alertService.successAlert('Exito', data.message);
           },
           (error) => {
             console.error(error);
@@ -101,7 +102,6 @@ export class ListActividadesComponent {
     this.actividadForm.patchValue({ estado: nuevoEstado });
     this.editarEstado(ActividadId);
   }
-
   onEstadoChange(event: any):void{
     this.ver();
   }
@@ -129,7 +129,6 @@ export class ListActividadesComponent {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-
   EditarActividad(ActividadId: number, rutaId: number, isEditing: boolean, estado:any): void {
     if (estado === 'Inactivo'){
       this.alertService.alertainformativa('No puedes editar actividades cuando la actividad este inactiva, debes activarla para poderla editar', 'error').then((result) => {
@@ -140,7 +139,6 @@ export class ListActividadesComponent {
       this.router.navigate(['actnivlec'], { queryParams: { id_actividad: ActividadId, id_ruta : rutaId,  isEditing: isEditing } });
     }
   }
-
   agregarActividadRuta(rutaId: number):void {
     this.router.navigate(['actnivlec'], {
       queryParams: { id_ruta : rutaId},

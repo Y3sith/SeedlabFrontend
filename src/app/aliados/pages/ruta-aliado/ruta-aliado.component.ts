@@ -90,7 +90,6 @@ export class RutaAliadoComponent {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['']
   })
@@ -99,6 +98,7 @@ export class RutaAliadoComponent {
   nivelForm = this.fb.group({
     id_nivel: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
+    id_asesor: [{value:'' ,disabled: true}],
     id_actividad: [{ value: '', disabled: true }, Validators.required]
   })
   mostrarNivelForm: boolean = false;
@@ -315,7 +315,7 @@ export class RutaAliadoComponent {
                 nombre: data.nombre,
                 descripcion: data.descripcion,
                 id_tipo_dato: data.id_tipo_dato,
-                id_asesor: data.id_asesor ? data.id_asesor : '',
+                // id_asesor: data.id_asesor ? data.id_asesor : '',
                 id_aliado: data.id_aliado,
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
@@ -346,7 +346,8 @@ export class RutaAliadoComponent {
       const primerNivel = this.niveles[0];
       this.nivelForm.patchValue({
         id_nivel: primerNivel.id,
-        nombre: primerNivel.nombre
+        nombre: primerNivel.nombre,
+        id_asesor:primerNivel.id_asesor
       });
       // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
@@ -385,8 +386,8 @@ export class RutaAliadoComponent {
       if (this.actividadForm.invalid) {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
         return;
+        }
       }
-    }
     if (this.idactividad == null) {
       estadoValue = '1'
     } else {
@@ -394,7 +395,7 @@ export class RutaAliadoComponent {
     formData.append('nombre', this.actividadForm.get('nombre')?.value);
     formData.append('descripcion', this.actividadForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
-    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
+    // formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.idAliado);
     formData.append('estado', estadoValue);
@@ -517,13 +518,14 @@ export class RutaAliadoComponent {
 
           if (this.isEditing && this.niveles && this.niveles.length > 0) {
             const primerNivel = this.niveles[0];
-            this.nivelForm.patchValue({
-              id_nivel: primerNivel.id,
-              nombre: primerNivel.nombre
-            });
-            // Llamar a onNivelChange para actualizar las lecciones
-            this.onNivelChange(primerNivel.id.toString());
-
+                    this.nivelForm.patchValue({
+                        id_nivel: primerNivel.id,
+                        nombre: primerNivel.nombre,
+                        id_asesor: primerNivel.id_asesor
+                    });
+                    // Llamar a onNivelChange para actualizar las lecciones
+                    this.onNivelChange(primerNivel.id.toString());
+            
           }
         },
         error => {
@@ -542,6 +544,7 @@ export class RutaAliadoComponent {
     }
     const nivel: any = {
       nombre: nombreNivel,
+      id_asesor: this.nivelForm.value.id_asesor,
       id_actividad: this.nivelForm.value.id_actividad
     };
     if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
@@ -577,12 +580,15 @@ export class RutaAliadoComponent {
           // Actualizar la lista de niveles
           this.niveles.push({
             id: data.id,
-            nombre: data.nombre
+            nombre: data.nombre,
           });
 
           // Actualizar el select
           this.nivelForm.patchValue({
             id_nivel: data.id
+          });
+          this.nivelForm.patchValue({
+            id_asesor: data.id_asesor
           });
           this.leccionForm.patchValue({ id_nivel: data.id })
           this.verNivel();
@@ -770,8 +776,8 @@ export class RutaAliadoComponent {
   onNivelSelect(event: any): void {
     const selectedNivelId = event.target.value;
     this.selectedNivelId = selectedNivelId !== '0' ? parseInt(selectedNivelId) : null;
-    if (selectedNivelId === '0') {
-      this.nivelForm.patchValue({ nombre: '', id_nivel: 0 });
+    if (selectedNivelId === '0' ) {
+      this.nivelForm.patchValue({ nombre: '', id_nivel: 0, id_asesor: "" });
       this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
       this.contenidoLeccionForm.patchValue({
         titulo: '',
@@ -786,7 +792,8 @@ export class RutaAliadoComponent {
       if (selectedNivel) {
         this.nivelForm.patchValue({
           id_nivel: selectedNivel.id,
-          nombre: selectedNivel.nombre
+          nombre: selectedNivel.nombre,
+          id_asesor: selectedNivel.id_asesor
         });
       }
     }

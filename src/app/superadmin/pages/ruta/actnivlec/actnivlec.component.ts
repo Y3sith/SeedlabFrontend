@@ -89,7 +89,6 @@ export class ActnivlecComponent implements OnInit {
     descripcion: ['', Validators.required],
     fuente: ['', Validators.required],
     id_tipo_dato: ['', Validators.required],
-    id_asesor: [''],
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
@@ -98,6 +97,7 @@ export class ActnivlecComponent implements OnInit {
   nivelForm = this.fb.group({
     id_nivel: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
+    id_asesor: [''],
     id_actividad: [{ value: '', disabled: true }, Validators.required]
   })
   mostrarNivelForm: boolean = false;
@@ -159,7 +159,7 @@ export class ActnivlecComponent implements OnInit {
     this.verNivel();
     this.verEditar();
     this.listaAliado();
-    this.onAliadoChange();
+    // this.onAliadoChange();
     this.bloquearBotones();
 
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
@@ -245,39 +245,6 @@ export class ActnivlecComponent implements OnInit {
       )
     }
   }
-  selectAliado(aliado: any): void {
-    this.aliadoSeleccionado = aliado;
-  }
-
-  onAliadoChange(event?: any): void {
-    let aliadoId: any;
-
-    // Comprueba si event existe y tiene la estructura esperada
-    if (event && event.target && event.target.value) {
-      aliadoId = event.target.value;
-    } else if (this.aliadoSeleccionado) {
-      // Si no hay evento, usa el ID del aliado seleccionado actualmente
-      aliadoId = this.aliadoSeleccionado.id;
-    } else {
-      console.error('No se pudo obtener el ID del aliado');
-      return;
-    }
-    const aliadoSeleccionado = this.listarAliadoo.find(aliado => aliado.id == aliadoId);
-    if (aliadoSeleccionado) {
-      this.aliadoSeleccionado = aliadoSeleccionado;
-      if (this.token) {
-        this.aliadoService.getinfoAsesor(this.token, this.aliadoSeleccionado.id, this.userFilter.estado).subscribe(
-          error => {
-            console.log(error);
-          }
-        );
-      }
-    } else {
-      console.error('No se encontró el aliado seleccionado');
-    }
-  }
-
-
   verEditar(): void {
     if (this.actividadId !== null) {
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
@@ -291,7 +258,7 @@ export class ActnivlecComponent implements OnInit {
                 nombre: data.nombre,
                 descripcion: data.descripcion,
                 id_tipo_dato: data.id_tipo_dato,
-                id_asesor: data.id_asesor ? data.id_asesor : '',
+                // id_asesor: data.id_asesor ? data.id_asesor : '',
                 id_aliado: data.id_aliado,
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
@@ -371,7 +338,6 @@ export class ActnivlecComponent implements OnInit {
     formData.append('nombre', this.actividadForm.get('nombre')?.value);
     formData.append('descripcion', this.actividadForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.actividadForm.get('id_tipo_dato')?.value);
-    formData.append('id_asesor', this.actividadForm.get('id_asesor')?.value || '');
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);

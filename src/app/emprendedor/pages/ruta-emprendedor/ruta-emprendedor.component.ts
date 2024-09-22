@@ -26,6 +26,7 @@ export class RutaEmprendedorComponent implements OnInit {
   ultimoElemento: any;
   listRespuestaId: any[] = [];
   ishidden: boolean = true;
+  isLoading: boolean = true;
 
   actividadForm = this.fb.group({
     id: [null],
@@ -44,9 +45,11 @@ export class RutaEmprendedorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.validateToken();
-    this.idRespuesta();
-  }
+      this.validateToken();
+      this.idRespuesta();
+      //this.listarRutaActiva();
+    }
+
 
   validateToken(): void {
     this.token = localStorage.getItem("token");
@@ -56,34 +59,41 @@ export class RutaEmprendedorComponent implements OnInit {
       let identity = JSON.parse(identityJSON);
       this.user = identity;
       this.currentRolId = this.user.id_rol;
+      console.log(this.currentRolId);
 
-      if (this.currentRolId != 5) {
+      if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
       } else {
-        this.documento = this.user.emprendedor.documento;
+       // this.documento = this.user.emprendedor.documento;
       }
     }
 
     if (!this.token) {
       this.router.navigate(['home']);
     }
+    this.idRespuesta();
   }
 
   idRespuesta(): void {
     this.rutaService.idRespuestas(this.token).subscribe(
       data => {
         this.listRespuestaId = data;
-        // Verifica si la lista de respuestas es válida y si el ID no es 0, null o undefined
-        if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
-          // Llamar a las demás funciones solo si el ID es válido
+        if (this.currentRolId != 1 && this.currentRolId != 2) {
+          if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
+            this.ishidden = false;
+            this.listarRutaActiva();
+          } else {
+            console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
+            this.isLoading = false;
+          }
+        } else {
           this.ishidden = false;
           this.listarRutaActiva();
-        } else {
-          console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
         }
       },
       error => {
         console.error('Error al obtener el ID de respuestas:', error);
+        this.isLoading = false;
       }
     );
   }
@@ -113,6 +123,7 @@ export class RutaEmprendedorComponent implements OnInit {
     this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
       data => {
         this.rutaLista = data;
+        this.isLoading = false;
       },
       err => {
         console.error(err);

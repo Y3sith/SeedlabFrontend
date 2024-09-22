@@ -14,6 +14,8 @@ import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.componen
 import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ModalCrearSuperadminComponent } from './pages/add-superadmin/modal-crear-superadmin.component';
 import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
+import { RutaEmprendedorComponent } from '../emprendedor/pages/ruta-emprendedor/ruta-emprendedor.component';
+import { CursoRutaEmprendedorComponent } from '../emprendedor/pages/curso-ruta-emprendedor/curso-ruta-emprendedor.component';
 
 const routes: Routes = [
   {
@@ -35,6 +37,9 @@ const routes: Routes = [
       { path: 'actnivlec', component: ActnivlecComponent, data: { title: 'Act-Niv-Lec', showInMenu: false } },
       { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
       { path: 'list-actividades', component: ListActividadesComponent, data: {title: 'Actividades', showInMenu: false}},
+      { path: 'ruta', component: RutaEmprendedorComponent, data:{title: 'Ruta General', showInMenu:true, icon:'fa-solid fa-code-fork'}},
+      { path: 'curso-ruta-superadmin', component: CursoRutaEmprendedorComponent, data:{showInMenu: false}},
+
       /////
       { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}},
       ////

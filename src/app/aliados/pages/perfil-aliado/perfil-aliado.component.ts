@@ -92,7 +92,6 @@ export class PerfilAliadoComponent implements OnInit {
     this.obtenerValorBaseDatos();
     this.initializeFormState();
 
-    console.log('Tipos de dato disponibles:', this.tipoDeDato);
     this.aliadoForm.get('id_tipo_dato')?.valueChanges.subscribe(() => {
       if (this.aliadoForm.get('id_tipo_dato')?.value) {
         this.onTipoDatoChange();
