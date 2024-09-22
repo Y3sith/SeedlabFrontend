@@ -544,7 +544,8 @@ export class RutaAliadoComponent {
             const primerNivel = this.niveles[0];
                     this.nivelForm.patchValue({
                         id_nivel: primerNivel.id,
-                        nombre: primerNivel.nombre
+                        nombre: primerNivel.nombre,
+                        id_asesor: primerNivel.id_asesor
                     });
                     // Llamar a onNivelChange para actualizar las lecciones
                     this.onNivelChange(primerNivel.id.toString());
