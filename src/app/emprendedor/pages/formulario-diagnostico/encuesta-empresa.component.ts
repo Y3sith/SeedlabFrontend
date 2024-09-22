@@ -48,7 +48,8 @@ export class EncuestaEmpresaComponent {
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
   listaRespuestas5: Respuesta[] = [];
-  
+  respuestasCache: any = {};
+
   isSectionSaved: { [key: number]: boolean } = {
     1: false,
     2: false,
@@ -63,7 +64,7 @@ export class EncuestaEmpresaComponent {
   acumXTrl: number = 0;
   acumXTecnica: number = 0;
   id_empresa: number | null = null;
-  maxTrl:number = 0;
+  maxTrl: number = 0;
 
   respuesta1: Respuesta = new Respuesta({});
   respuesta2: Respuesta = new Respuesta({});
@@ -215,7 +216,8 @@ export class EncuestaEmpresaComponent {
     this.route.paramMap.subscribe(params => {
       this.id_empresa = +params.get('id');
       console.log('id_empresa', this.id_empresa);
-    })
+    });
+    this.cargarRespuestasCache();
   }
 
   validateToken(): void {
@@ -1359,7 +1361,7 @@ export class EncuestaEmpresaComponent {
     }
     if (isValidForm) {
       if (!this.isSectionSaved[5]) {
-        this.saveSection(5, this.listaRespuestas5); 
+        this.saveSection(5, this.listaRespuestas5);
       }
       this.alertService.alertaActivarDesactivar('¿Esta seguro de enviar el formulario?', "warning").then((result) => {
         if (result.isConfirmed) {
@@ -1372,11 +1374,6 @@ export class EncuestaEmpresaComponent {
     }
     return isValidForm;
   }
-
-
-
-
-
 
   enviarRespuestasJson() {
     let isFormValid = true;
@@ -1401,7 +1398,7 @@ export class EncuestaEmpresaComponent {
     // Si alguna sección no es válida, se detiene el flujo y no se envian las respuestas
     if (!isFormValid) {
       this.alertService.errorAlert('Error', 'El formulario contiene errores y no puede ser enviado.');
-      return; 
+      return;
     }
     this.respuestasService.getAnwerRedis(this.token, this.id_empresa).subscribe(
       (redisData: any) => {
@@ -1469,19 +1466,68 @@ export class EncuestaEmpresaComponent {
 
   saveSection(sectionId: number, respuestas: any[]): void {
     if (this.isSectionSaved[sectionId]) {
-      return; 
+      return;
     }
 
     this.respuestasService.saveAnswersRedis(this.token, sectionId, this.id_empresa, respuestas).subscribe(
       data => {
         console.log(`Guardado sección ${sectionId} en redis`, data);
-        this.isSectionSaved[sectionId] = true; 
+        this.isSectionSaved[sectionId] = true;
       },
       error => {
         console.error(error);
       }
     );
   }
+
+  cargarRespuestasCache() {
+    this.respuestasService.getAnwerRedis(this.token, this.id_empresa).subscribe(
+      data => {
+        this.respuestasCache = data;
+        console.log(this.respuestasCache);
+        this.cargarRespuestasEnFormulario();
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
+  cargarRespuestasEnFormulario() {
+    if (this.respuestasCache.seccion1) {
+      this.respuesta1.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[0].opcion : '';
+      this.respuesta2.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[1].opcion : '';
+      this.respuesta2.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[1].texto_res : '';
+      this.respuesta3.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[2].opcion : '';
+      this.respuesta3.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[2].texto_res : '';
+      this.respuesta4.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[3].opcion : '';
+      this.respuesta4.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[3].texto_res : '';
+      this.respuesta5.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[4].opcion : '';
+      this.respuesta5.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[4].texto_res : '';
+      this.respuesta6.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[5].opcion : '';
+      this.respuesta6.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[5].texto_res : '';
+      //pregunta 3
+      this.respuesta7.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[6].opcion : '';
+      this.respuesta8.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[7].opcion : '';
+      this.respuesta9.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[8].opcion : '';
+      this.respuesta10.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[9].opcion : '';
+      this.respuesta11.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[10].opcion : '';
+      this.respuesta12.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[11].opcion : '';
+      this.respuesta13.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[12].opcion : '';
+      this.respuesta14.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[13].texto_res : '';
+      this.respuesta15.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[14].texto_res : '';
+      this.respuesta16.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[15].opcion : '';
+      this.respuesta17.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[16].texto_res : '';
+      this.respuesta18.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[17].texto_res : '';
+      this.respuesta19.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[18].texto_res : '';
+      this.respuesta20.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[19].texto_res : '';
+      this.respuesta21.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[20].opcion : '';
+      this.respuesta22.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[21].opcion : '';
+      this.respuesta23.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[22].opcion : '';
+    }
+  }
+
+
 
 
   updateProgress() {
