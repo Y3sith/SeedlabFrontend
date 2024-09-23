@@ -31,7 +31,7 @@
                                 <fa-icon 
                                     [icon]="falupa" 
                                     class="text-sm cursor-pointer"
-                                    [matTooltip]="'La imagen debe ser de 1751 x 1751 pixeles'"
+                                    [matTooltip]="'La imagen del logo debe tener como máximo 1751 x 1751 píxeles.'"
                                     matTooltipPosition="right"
                                     style="color: #adb7c7;">
                                 </fa-icon>
@@ -100,9 +100,18 @@
                 <div class="min-[860px]:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
                     <div class="w-full pt-0 mt-0">
 
-                        <label for="descripcion" class="block mt-4">Descripcion fanpage</label>
-                        <textarea id="descripcion" formControlName="descripcion" [readonly]="blockedInputs"
-                            class="w-full p-2 bg-white border rounded-md appearance-none h-36 focus:outline-none focus:ring-2 focus:ring-blue-200"></textarea>
+                        <div class="flex items-center">
+                            <label for="descripcion" class="block mb-2 mt-4">Descripcion fanpage</label>
+                            <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
+                                matTooltip="La descripción debe tener al menos 300 caracteres y máximo 470 caracteres"
+                                matTooltipPosition="right" style="color: #adb7c7;">
+                            </fa-icon>
+                        </div>
+                        <div class="relative mb-2">
+                            <textarea id="descripcion" formControlName="descripcion" [readonly]="blockedInputs"
+                                class="p-2 h-36 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
+                            </textarea>
+                        </div>
                         <div *ngIf="(formSubmitted || f['descripcion'].touched) && f['descripcion'].invalid"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <span *ngIf="f['descripcion'].errors?.['required']">Este campo es requerido *</span>

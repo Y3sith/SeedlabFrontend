@@ -376,47 +376,31 @@ export class AddAliadosComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
+  
       let maxSize = 0;
-
+  
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
       } else if (field === 'ruta_documento') {
-        maxSize = 18 * 1024 * 1024; // 20MB para documentos
+        maxSize = 18 * 1024 * 1024; // 18MB para documentos
       }
-
+  
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-
-        ////Limpia el archivo seleccionado y resetea la previsualización
+  
+        // Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-
-        // Resetea el campo correspondiente en el formulario y la previsualización
-        if (field === 'urlImagen') {
-          this.bannerForm.patchValue({ urlImagen: null });
-          this.selectedBanner = null;
-          this.bannerPreview = null; // Resetea la previsualización
-        } else if (field === 'logo') {
-          this.aliadoForm.patchValue({ logo: null });
-          this.selectedLogo = null;
-          this.logoPreview = null; // Resetea la previsualización
-        } else if (field === 'ruta_multi') {
-          this.aliadoForm.patchValue({ ruta_multi: null });
-          this.selectedruta = null;
-          this.rutaPreview = null; // Resetea la previsualización
-        }
-        this.resetFileField(field);
         return;
       }
-
+  
       // Nueva validación para las dimensiones del logo
       if (field === 'logo') {
         const img = new Image();
         img.onload = () => {
-          if (img.width !== 1751 || img.height !== 1751) {
-            this.alertService.errorAlert('Error', 'La imagen del logo debe tener exactamente 1751 x 1751 píxeles.');
+          if (img.width > 1751 || img.height > 1751) {
+            this.alertService.errorAlert('Error', 'La imagen del logo debe tener como máximo 1751 x 1751 píxeles.');
             this.resetFileField(field);
             event.target.value = ''; // Borra la selección del input
             return;
@@ -428,18 +412,15 @@ export class AddAliadosComponent {
       } else {
         this.processFile(file, field);
       }
-    } else {
-      this.resetFileField(field);
     }
   }
-
-  // Método para procesar el archivo una vez validado
+  
   private processFile(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const previewUrl = e.target.result;
       if (field === 'urlImagen') {
-        this.bannerForm.patchValue({ urlImagen: previewUrl });
+        this.bannerForm.patchValue({ urlImagen: previewUrl });  
         this.bannerPreview = previewUrl;
       } else if (field === 'logo') {
         this.aliadoForm.patchValue({ logo: previewUrl });
@@ -450,10 +431,10 @@ export class AddAliadosComponent {
       }
     };
     reader.readAsDataURL(file);
-
+  
     // Genera la previsualización solo si el archivo es de tamaño permitido
     this.generateImagePreview(file, field);
-
+  
     if (field === 'urlImagen') {
       this.selectedBanner = file;
       this.bannerForm.patchValue({ urlImagen: file });
@@ -468,16 +449,12 @@ export class AddAliadosComponent {
       this.aliadoForm.patchValue({ ruta_multi: file });
     }
   }
-  // onTextInput(event: any) {
-  //   const value = event.target.value;
-  //   this.aliadoForm.patchValue({ ruta_multi: value });
-  // }
-
+  
   onTextInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.aliadoForm.patchValue({ ruta_multi: value });
   }
-
+  
   resetFileField(field: string) {
     if (field === 'urlImagen') {
       this.bannerForm.patchValue({ urlImagen: null });
