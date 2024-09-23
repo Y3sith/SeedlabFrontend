@@ -75,6 +75,7 @@ export class RutaEmprendedorComponent implements OnInit {
   }
 
   idRespuesta(): void {
+    this.isLoading = true;
     this.rutaService.idRespuestas(this.token).subscribe(
       data => {
         this.listRespuestaId = data;

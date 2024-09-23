@@ -4,6 +4,10 @@
   </header>
 </div>
 
+<div *ngIf="isLoading" class="fixed inset-0 flex items-center justify-center z-50">
+  <div class="spinner"></div>
+</div>
+
 <div *ngIf="!isLoading">
   <div *ngIf="ishidden" class="flex justify-center md:mt-52">
     <div class="container p-4 mx-auto text-center font-poppins">
@@ -34,10 +38,7 @@
     </div>
   </div>
 
-  <div *ngIf="isLoading" class="flex items-center justify-center h-screen">
-    <!-- Aquí puedes agregar un spinner o mensaje de carga -->
-    <p>Cargando...</p>
-  </div>
+
   <!-- [ultimoElemento]="ultimoElemento" -->
   
   <app-modal-actividad 
