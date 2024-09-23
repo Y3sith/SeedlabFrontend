@@ -297,6 +297,9 @@ export class PerfilSuperadminComponent {
   //Funcion para cargar los departamentos
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
+      data => {
+        this.listDepartamentos = data;
+      },
       (err) => {
         console.log(err);
       }
@@ -317,6 +320,9 @@ export class PerfilSuperadminComponent {
 
   cargarMunicipios(departamentoId: string): void {
     this.municipioService.getMunicipios(departamentoId).subscribe(
+      data=>{
+        this.listMunicipios = data;
+      },
       (err) => {
         console.log('Error al cargar los municipios:', err);
       }
@@ -396,7 +402,9 @@ export class PerfilSuperadminComponent {
 
   tipoDocumento(): void {
     this.authService.tipoDocumento().subscribe(
-      error => {
+      data=>{
+        this.listTipoDocumento = data;
+      },error => {
         console.log(error);
       }
     )
