@@ -20,13 +20,13 @@ export class BodyComponent implements OnInit, AfterViewInit {
   bannerSwiper: Swiper | undefined;
   alliesSwiper: Swiper | undefined;
   listAliados: Aliado[] = [];
-  listBanner: Banner [] = [];
-  listFooter: Personalizaciones [] = [];
+  listBanner: Banner[] = [];
+  listFooter: Personalizaciones[] = [];
   isLoggedIn: boolean = false;
   logoUrl: File;
   sidebarColor: string = '';
   botonesColor: string = '';
-  logoFooter:File;
+  logoFooter: File;
   descripcion_footer: Text;
   paginaWeb: string;
   email: string;
@@ -44,7 +44,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
   ) { }
 
   ngOnInit(): void {
-  this.isLoggedIn = this.authService.isAuthenticated();
+    this.isLoggedIn = this.authService.isAuthenticated();
     this.getPersonalizacion();
     this.mostrarAliados();
     this.mostrarBanners();
@@ -85,12 +85,25 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.aliadoService.getbanner().subscribe(
       data => {
         this.listBanner = data;
+  
+        // Precargar las imágenes de los banners
+        this.listBanner.forEach(banner => {
+          if (typeof banner.urlImagen === 'string' && banner.urlImagen) {
+            const link = document.createElement('link');
+            link.rel = 'preload';
+            link.href = banner.urlImagen; // Aquí aseguramos que sea una cadena
+            link.as = 'image';
+            document.head.appendChild(link);
+          }
+        });
       },
       error => {
         console.log(error);
       }
     );
   }
+  
+
 
   handleImageError(event: any) {
     event.target.src = 'assets/images/default-image.jpg';
@@ -168,7 +181,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
         dynamicMainBullets: 3,
       },
     });
-    
+
   }
 
   private splitDescription(description: string, wordsPerLine: number): string[] {
@@ -180,41 +193,30 @@ export class BodyComponent implements OnInit, AfterViewInit {
     return lines;
   }
 
-  // onImageLoad(event: Event): void {
-  //   const img = event.target as HTMLImageElement;
-  //   const container = img.closest('.banner-image-container') as HTMLElement;
-  //   if (container) {
-  //     const aspectRatio = img.naturalHeight / img.naturalWidth;
-  //     container.style.paddingTop = `${aspectRatio * 100}%`;
-  //   }
-  //   this.cdr.detectChanges();
-  //   this.initBannerSwiper();
-  // }
-
   onImageLoad(event: Event): void {
     const img = event.target as HTMLImageElement;
     const container = img.closest('.banner-image-container') as HTMLElement;
-    
+
     if (container) {
       // Establecer el tamaño fijo
       const fixedWidth = 1840;
       const fixedHeight = 684;
-      
+
       // Calcular el aspect ratio basado en las dimensiones fijas
       const aspectRatio = fixedHeight / fixedWidth;
-      
+
       // Establecer el padding-top para mantener el aspect ratio
       container.style.paddingTop = `${aspectRatio * 100}%`;
-      
+
       // Establecer el ancho fijo del contenedor
       container.style.width = `${fixedWidth}px`;
-      
+
       // Asegurar que la imagen llene el contenedor
       img.style.width = '100%';
       img.style.height = '100%';
       img.style.objectFit = 'cover';
     }
-    
+
     this.cdr.detectChanges();
     this.initBannerSwiper();
   }

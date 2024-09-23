@@ -7,88 +7,67 @@ import { map, Observable, of, shareReplay, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class DashboardsService {
-
   private cache: { [key: string]: any } = {}; // Objeto para almacenar la caché
   private cacheExpiration: { [key: string]: number } = {}; // Tiempos de expiración para cada gráfica
-
-  private cacheDuration = 60 * 60 * 1000;
-
-  constructor(private http: HttpClient) { }
-
+  private cacheDuration = 60 * 60 * 1000; // Duración de 1 hora
   url = environment.apiUrl + 'dashboard/';
 
+  constructor(private http: HttpClient) {}
+
   private getCachedData(key: string, access_token: string, apiEndpoint: string): Observable<any> {
-    // Verifica si los datos están en caché y si no han expirado
     if (this.cache[key] && (Date.now() - this.cacheExpiration[key] < this.cacheDuration)) {
       return of(this.cache[key]); // Retorna los datos desde caché
     }
 
-    // Si no están en caché o han expirado, realiza la solicitud HTTP
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get<any>(`${this.url}${apiEndpoint}`, options).pipe(
       tap(data => {
-        // Almacena los datos en caché y actualiza el tiempo de expiración
-        this.cache[key] = data;
-        this.cacheExpiration[key] = Date.now();
+        this.cache[key] = data; // Almacena en caché
+        this.cacheExpiration[key] = Date.now(); // Actualiza tiempo de expiración
       }),
-      shareReplay(1) // Asegura que no se repitan múltiples solicitudes si hay varios suscriptores
+      shareReplay(1) // Para evitar múltiples solicitudes si hay varios suscriptores
     );
   }
 
-  private CreacionHeaders(access_token: any): HttpHeaders {
+  private CreacionHeaders(access_token: string): HttpHeaders {
     return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + access_token
+      'Authorization': `Bearer ${access_token}`,
+      'Content-Type': 'application/json'
     });
   }
 
-  dashboardAdmin(access_token: any): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url + "contar-usuarios", options)
+  dashboardAdmin(access_token: string): Observable<any> {
+    return this.getCachedData('dashboardAdmin', access_token, 'contar-usuarios');
   }
 
-  contarRegistrosMensual(access_token: any): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url + "listRegistrosAnioMes", options)
+  contarRegistrosMensual(access_token: string): Observable<any> {
+    return this.getCachedData('contarRegistrosMensual', access_token, 'listRegistrosAnioMes');
   }
 
-  promedioAsesorias(access_token: any, year: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options);
+  promedioAsesorias(access_token: string, year: number): Observable<any> {
+    return this.getCachedData(`promedioAsesorias_${year}`, access_token, `averageAsesorias2024?year=${year}`);
   }
 
-  emprendedoresPorDepartamento(access_token: any): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url + "emprendedor_departamento", options)
+  emprendedoresPorDepartamento(access_token: string): Observable<any> {
+    return this.getCachedData('emprendedoresPorDepartamento', access_token, 'emprendedor_departamento');
   }
 
-
-  //Aliados
-  getDashboard(access_token: any, idAsesor: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(`${this.url}dashboardAliado/${idAsesor}`, options);
+  // Aliados
+  getDashboard(access_token: string, idAsesor: number): Observable<any> {
+    return this.getCachedData(`dashboardAliado_${idAsesor}`, access_token, `dashboardAliado/${idAsesor}`);
   }
 
   graficaDatosGeneros(access_token: string): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get<any>(this.url + "generoAliado", options)
+    return this.getCachedData('graficaDatosGeneros', access_token, 'generoAliado');
   }
 
   graficaFormulario(access_token: string, id_empresa: string, tipo: number): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-
-    // Agregamos el parámetro tipo a la URL
-    return this.http.get<any>(`${this.url}graficaFormulario/${id_empresa}/${tipo}`, options)
-      .pipe(
-        map(response => {
-          console.log('Respuesta original del servidor:', response);
-          // Procesar la respuesta
-          return response.items && response.items.length > 0 ? response.items[0] : response;
-        })
-      );
+    const key = `graficaFormulario_${id_empresa}_${tipo}`;
+    return this.getCachedData(key, access_token, `graficaFormulario/${id_empresa}/${tipo}`).pipe(
+      map(response => {
+        console.log('Respuesta original del servidor:', response);
+        return response.items && response.items.length > 0 ? response.items[0] : response;
+      })
+    );
   }
-
-
-
-
 }
