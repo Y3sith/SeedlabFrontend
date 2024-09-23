@@ -8,9 +8,7 @@ import { ActividadService } from '../../../../servicios/actividad.service';
 import { faImage, faFilePdf, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
 import { Aliado } from '../../../../Modelos/aliado.model';
-import { Superadmin } from '../../../../Modelos/superadmin.model';
 import { AliadoService } from '../../../../servicios/aliado.service';
-import Pica from 'pica';
 import { NivelService } from '../../../../servicios/nivel.service';
 import { Nivel } from '../../../../Modelos/nivel.model';
 import { AlertService } from '../../../../servicios/alert.service';
@@ -19,6 +17,8 @@ import { Leccion } from '../../../../Modelos/leccion.model';
 import { ContenidoLeccionService } from '../../../../servicios/contenido-leccion.service';
 import { Contenido_Leccion } from '../../../../Modelos/contenido-leccion.model';
 import { Location } from '@angular/common';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-actnivlec',
@@ -78,6 +78,7 @@ export class ActnivlecComponent implements OnInit {
   showPdf: boolean = false;
   showTexto: boolean = false;
   Number = Number;
+  falupa = faCircleQuestion;
 
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;
@@ -369,6 +370,7 @@ export class ActnivlecComponent implements OnInit {
             (data: any) => {
               const actividadCreada = data[0];
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
+              //console.log('ID de la actividad creada y asignada:', actividadCreada.id);
               this.alertServices.successAlert('Exito', data.message);
               this.desactivarcamposActividad();
               console.log('datos enviados: ', data)
