@@ -370,6 +370,7 @@ export class ActnivlecComponent implements OnInit {
             (data: any) => {
               const actividadCreada = data[0];
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
+              //console.log('ID de la actividad creada y asignada:', actividadCreada.id);
               this.alertServices.successAlert('Exito', data.message);
               this.desactivarcamposActividad();
               console.log('datos enviados: ', data)
