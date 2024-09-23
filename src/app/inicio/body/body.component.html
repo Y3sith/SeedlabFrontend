@@ -7,7 +7,7 @@
       <mat-toolbar
         class="flex flex-col items-center justify-between w-full px-4 py-2 bg-white app-header lg:flex-row md:flex-row md:items-center lg:py-20 md:py-20 lg:px-8 md:px-8">
         <!-- Imagen -->
-        <img [src]="logoUrl" alt="Logo"
+        <img rel="preload" [src]="logoUrl" alt="Logo"
           class="w-64 h-auto mb-4 lg:mb-0 md:mb-0 lg:ml-60 md:ml-4 max-sm:w-36 max-sm:ml-4 max-sm:mb-0">
         <!-- Contenedor de los botones -->
         <div *ngIf="!isLoggedIn"
@@ -28,7 +28,7 @@
           <div *ngIf="banner.urlImagen"
             class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
             style="width: 100% !important;">
-            <img [src]="banner.urlImagen" class="" [alt]="banner.descripcion || 'Banner image'">
+            <img rel="preload" [src]="banner.urlImagen" class="" [alt]="banner.descripcion || 'Banner image'">
             <!-- <p>fffffff</p> -->
           </div>
         </ng-container>
@@ -62,7 +62,7 @@
             <div
               class="p-2 swiper-slide mt-36 max-sm:mt-44 lg:flex lg:flex-row lg:items-center max-lg:flex max-lg:flex-col max-lg:items-center"
               *ngFor="let aliado of listAliados">
-              <img [src]="aliado.logo" [alt]="aliado.nombre" class="logo-img max-lg:mb-4 md:mt-16">
+              <img rel="preload" [src]="aliado.logo" [alt]="aliado.nombre" class="logo-img max-lg:mb-4 md:mt-16">
               <div class="relative w-full -mb-24 lg:-ml-1 lg:pl-1 lg:p-1 max-lg:p-4 max-lg:text-center max-sm:-mt-20">
                 <p
                   class="text-justify ml-4 description-line mb-1 max-sm:text-[14px] max-lg:text-center">{{ aliado.descripcion }}</p>

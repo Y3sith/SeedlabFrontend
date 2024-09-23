@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Inject, ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, NgForm, ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnInit, Input,  ChangeDetectorRef } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup,  ValidationErrors, Validators } from '@angular/forms';
 import { User } from '../../../../Modelos/user.model';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { OrientadorService } from '../../../../servicios/orientador.service';

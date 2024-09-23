@@ -1,12 +1,10 @@
-import { ChangeDetectorRef, Component, ElementRef, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { AlertService } from '../../../servicios/alert.service';
-import { Console } from 'console';
-import { Banner } from '../../../Modelos/banner.model';
 import { faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
