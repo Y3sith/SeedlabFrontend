@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { AliadoService } from '../../../servicios/aliado.service';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
-import { SuperadminService } from '../../../servicios/superadmin.service';
 import * as echarts from 'echarts';
 import { DashboardsService } from '../../../servicios/dashboard.service';
 

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators, ValidationErrors, FormGroup} from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators, ValidationErrors, FormGroup} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { OrientadorService } from '../../../servicios/orientador.service';
@@ -7,9 +7,9 @@ import { Orientador } from '../../../Modelos/orientador.model';
 import { User } from '../../../Modelos/user.model';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
-import { faCircleQuestion, faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCircleQuestion, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../servicios/auth.service';
-import { error } from 'node:console';
+
 @Component({
   selector: 'app-perfil-orientador',
   templateUrl: './perfil-orientador.component.html',

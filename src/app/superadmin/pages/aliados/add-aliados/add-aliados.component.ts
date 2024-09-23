@@ -8,12 +8,13 @@ import { AlertService } from '../../../../servicios/alert.service';
 import { User } from '../../../../Modelos/user.model';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { ChangeDetectorRef } from '@angular/core';
-import { faEye, faEyeSlash, faFileUpload, faFileLines, faL, faCircleQuestion, faImage, faTrashCan, faPaintBrush, faFilePdf, faPen, } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
 import { Banner } from '../../../../Modelos/banner.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddBannerModalComponent } from '../add-banner-modal/add-banner-modal.component';
 import { Location } from '@angular/common';
+
 @Component({
   selector: 'app-add-aliados',
   templateUrl: './add-aliados.component.html',
