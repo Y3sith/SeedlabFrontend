@@ -1,6 +1,5 @@
 <div class="w-full overflow-x-hidden font-poppins ">
   <div>
-   
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <div class="flex flex-col justify-between w-full m-10 lg:flex-row md:flex-row">
       <mat-toolbar
@@ -27,7 +26,7 @@
           <div *ngIf="banner.urlImagen"
             class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
             style="width: 100% !important;">
-            <img rel="preload" loading="lazy" [src]="banner.urlImagen" class="" [alt]="banner.descripcion || 'Banner image'">
+            <img loading="lazy" [src]="banner.urlImagen" class="" [alt]="banner.descripcion || 'Banner image'">
           </div>
         </ng-container>
       </div>
@@ -71,7 +70,7 @@
         <!-- Pagination and Button container -->
         <div class="relative flex flex-col items-center space-x-2 lg:-mt-8 lg: max-sm:mb-7">
           <div
-            class="absolute transform -translate-x-1/2 -translate-y-full swiper-pagination custom-swiper-pagination -top-4 lg:-top-2 left-1/2">
+            class="absolute transform -translate-x-1/2 -translate-y-full swiper-pagination custom-swiper-pagination bottom-2 -top-4 lg:-top-2 left-1/2">
           </div>
           <button [routerLink]="['/todos-los-aliados']"
             class="bg-[#FA7D00] inline-block text-white text-center lg:text-3xl italic px-14 py-2 rounded-full font-bold mt-10 lg:mt-12">
