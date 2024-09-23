@@ -19,6 +19,8 @@ import { Leccion } from '../../../../Modelos/leccion.model';
 import { ContenidoLeccionService } from '../../../../servicios/contenido-leccion.service';
 import { Contenido_Leccion } from '../../../../Modelos/contenido-leccion.model';
 import { Location } from '@angular/common';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-actnivlec',
@@ -78,6 +80,7 @@ export class ActnivlecComponent implements OnInit {
   showPdf: boolean = false;
   showTexto: boolean = false;
   Number = Number;
+  falupa = faCircleQuestion;
 
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;

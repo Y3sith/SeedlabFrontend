@@ -12,6 +12,7 @@ import { ActividadService } from '../../../servicios/actividad.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddBannerComponent } from '../add-banner/add-banner.component';
 
+
 @Component({
   selector: 'app-perfil-aliado',
   templateUrl: './perfil-aliado.component.html',
@@ -26,6 +27,8 @@ export class PerfilAliadoComponent implements OnInit {
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   blockedInputs = true;
+  falupa = faCircleQuestion;
+
   activeField: string = '';
   token: string;
   user: User | null = null;
@@ -53,7 +56,6 @@ export class PerfilAliadoComponent implements OnInit {
   mostrarRutaMulti: boolean = true;
   private videoUrl: string = '';
   private imageUrl: string = '';
-  falupa = faCircleQuestion;
 
   constructor(
     private router: Router,

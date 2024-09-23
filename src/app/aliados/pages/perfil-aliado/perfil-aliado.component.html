@@ -27,6 +27,15 @@
                                         accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
                                 </i>
                             </button>
+                            <div class="absolute top-0 right-0 mt-2 mr-2">
+                                <fa-icon 
+                                    [icon]="falupa" 
+                                    class="text-sm cursor-pointer"
+                                    [matTooltip]="'La imagen debe ser de 1751 x 1751 pixeles'"
+                                    matTooltipPosition="right"
+                                    style="color: #adb7c7;">
+                                </fa-icon>
+                            </div>
 
 
                         </div>
@@ -97,6 +106,9 @@
                         <div *ngIf="(formSubmitted || f['descripcion'].touched) && f['descripcion'].invalid"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <span *ngIf="f['descripcion'].errors?.['required']">Este campo es requerido *</span>
+                            <span *ngIf="f['descripcion'].errors?.['minlength'] || f['descripcion'].errors?.['maxlength']">
+                                La descripción debe tener entre 300 y 470 caracteres
+                            </span>
                         </div>
 
                         <label for="urlpagina" class="block mt-4 mb-2">URL Pagina</label>
