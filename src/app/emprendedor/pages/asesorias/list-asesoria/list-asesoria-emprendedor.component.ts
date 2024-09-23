@@ -174,7 +174,6 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Asesoría creada:', result);
         this.listarAsesorias();
       }
     });

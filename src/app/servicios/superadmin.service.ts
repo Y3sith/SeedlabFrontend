@@ -58,7 +58,7 @@ export class SuperadminService {
     const options = {headers: this.CreacionHeaders(access_token),
     params: new HttpParams().set('estado', estado)
     };
-    return this.http.get<any>(this.url + "mostrarSuperAdmins/", options);
+    return this.http.get<any>(this.url + "mostrarSuperAdmins", options);
   }
 
   getsuperadmin(access_token: any, adminId: number): Observable<any> {

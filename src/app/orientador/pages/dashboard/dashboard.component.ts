@@ -88,8 +88,6 @@ export class DashboardComponent implements AfterViewInit {
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
       data => {
-        //console.log('Promedio de asesorías:', data);
-
         const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
 
@@ -201,9 +199,6 @@ export class DashboardComponent implements AfterViewInit {
 
         // Inicializar el gráfico de Asesorías
         this.graficaTopAliados();
-
-        //console.log(data);
-
         // Mover el isLoading aquí después de la inicialización de gráficos
         this.isLoading = false;
       },
@@ -299,7 +294,6 @@ export class DashboardComponent implements AfterViewInit {
   getDatosGenerosGrafica(): void {
     this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
-        //console.log('Datos de géneros recibidos:', data); // Verifica los datos aquí
         if (data && data.length > 0) {
           const dataGenero = data.map(item => item.total);
 
@@ -372,8 +366,6 @@ export class DashboardComponent implements AfterViewInit {
   getRegistrosMensuales(): void {
     this.dashboardService.contarRegistrosMensual(this.token).subscribe(
       data => {
-        //console.log('data meses', data);
-
         const emprendedoresData = data?.map(item => parseInt(item.emprendedores));
         const aliadosData = data?.map(item => parseInt(item.aliados));
         const meses = data?.map(item => this.getMonthName(item.mes)); 
@@ -463,7 +455,6 @@ export class DashboardComponent implements AfterViewInit {
   loadChartData() {
     this.dashboardService.getDashboard(this.token, this.id).subscribe(
       data => {
-        //console.log(data);
         this.pendientesFinalizadasData[0].data = [
           data['Asesorias Pendientes'] || 0,
           data['Asesorias Finalizadas'] || 0,

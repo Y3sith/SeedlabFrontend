@@ -66,7 +66,6 @@ export class ModalAddRutaComponent implements OnInit {
   ) {
 
     this.rutaId = data.rutaId;
-    console.log('id', this.rutaId)
   }
 
   /* Inicializa con esas funciones al cargar la pagina */
@@ -93,7 +92,6 @@ export class ModalAddRutaComponent implements OnInit {
     if (this.rutaId != null) {
       this.rutaService.rutaXid(this.token, this.rutaId).subscribe(
         data => {
-          console.log('Datos recibidos:', data);
           this.rutaForm.patchValue({
             nombre: data.nombre,
             fecha_creacion: data.fecha_creacion,
@@ -128,7 +126,6 @@ export class ModalAddRutaComponent implements OnInit {
           this.rutaService.updateRutas(this.token, ruta, this.rutaId).subscribe(
             data => {
               this.alertService.successAlert('Exito', data.message);
-              //location.reload();
               setTimeout(() => {
                 location.reload();
               }, 2000);
@@ -174,20 +171,4 @@ export class ModalAddRutaComponent implements OnInit {
   closeModal() {
     this.dialogRef.close();
   }
-
-  // addActividad(): void {
-  //   // En la vista inicial, obtén el token del almacenamiento local
-  //   const token = localStorage.getItem('token');
-  //   //this.router.navigate(['/actnivlec'], { queryParams: { id_ruta: this.rutaId, token: token } });
-
-  //   this.router.navigate(['/actnivlec'], { queryParams: { id_ruta: this.rutaId } });
-  //   this.dialogRef.close();
-  //   //location.reload();
-  // } ############################### ya no me sirve porque crea es en la vista de listar actividades
-
-
-  // EditarActividad(): void {
-  //   this.router.navigate(['editar-act-ruta'], { queryParams: { id_ruta: this.rutaId } });
-  //   this.dialogRef.close();
-  // }  ############## ya no me sirve porque el editar actividad esta en el list-actividad es en la vista de listar actividades
 }

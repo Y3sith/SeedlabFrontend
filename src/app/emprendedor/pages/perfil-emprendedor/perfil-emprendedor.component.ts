@@ -53,7 +53,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   listTipoDocumento: any[] = [];
   tiempoEspera = 1800;
   emprendedorForm: FormGroup;
-  registerForm: FormGroup;  
+  registerForm: FormGroup;
   listEmprendedor: PerfilEmprendedor[] = [];
   originalData: any;
   perfil: '';
@@ -74,13 +74,13 @@ export class PerfilEmprendedorComponent implements OnInit {
     private router: Router,
     private alertService: AlertService,
     private cdRef: ChangeDetectorRef,
-  ) { 
+  ) {
     this.emprendedorForm = this.fb.group({
       nombre: ['', [Validators.required, this.noNumbersValidator]],
       apellido: ['', [Validators.required, this.noNumbersValidator]],
       documento: ['', Validators.required],
       imagen_perfil: [Validators.required],
-      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
+      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
       genero: ['', Validators.required],
       direccion: [],
       id_tipo_documento: [Validators.required],
@@ -88,7 +88,7 @@ export class PerfilEmprendedorComponent implements OnInit {
       id_municipio: ['', Validators.required],
       fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
       email: ['', Validators.required],
-      password: ['',  [Validators.minLength(10), this.passwordValidator]],
+      password: ['', [Validators.minLength(10), this.passwordValidator]],
       estado: true,
     });
   }
@@ -96,9 +96,9 @@ export class PerfilEmprendedorComponent implements OnInit {
   ngOnInit(): void {
     this.validateToken();
     this.isAuthenticated = this.authServices.isAuthenticated();
-    this.verEditar(); 
+    this.verEditar();
     this.tipoDocumento();
-    this.cargarDepartamentos(); 
+    this.cargarDepartamentos();
     this.isEditing = true;
     this.initializeFormState();
   }
@@ -125,54 +125,48 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
-    //Funcion para cargar los departamentos
-    cargarDepartamentos(): void {
-      this.departamentoService.getDepartamento().subscribe(
-        (data: any[]) => {
-          console.log("DEPARTAMENTO",data);
-          this.listDepartamentos = data;
-          //this.cdRef.detectChanges(); // Forzar la detección de cambios
-        },
-        (err) => {
-          console.log(err);
-        }
-      )
-    }
-  
-    onDepartamentoSeleccionado(event: Event): void {
-      const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
-      const selectedDepartamento = target.value;
-  
-      // Guarda el departamento seleccionado en el localStorage
-      localStorage.setItem('departamento', selectedDepartamento);
-      this.emprendedorForm.get('id_municipio')?.setValue(null);
-      this.listMunicipios = [];
-      // Llama a cargarMunicipios si es necesario
-      this.cargarMunicipios(selectedDepartamento);
-    }
-  
-    cargarMunicipios(departamentoId: string): void {
-      this.municipioService.getMunicipios(departamentoId).subscribe(
-        (data) => {
-          this.listMunicipios = data;
-        console.log("MUNICIPIOS",data);
-         
-        },
-        (err) => {
-          console.log('Error al cargar los municipios:', err);
-        }
-      );
-    }
-  
-    
+  //Funcion para cargar los departamentos
+  cargarDepartamentos(): void {
+    this.departamentoService.getDepartamento().subscribe(
+      (data: any[]) => {
+        this.listDepartamentos = data;
+      },
+      (err) => {
+        console.log(err);
+      }
+    )
+  }
+
+  onDepartamentoSeleccionado(event: Event): void {
+    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const selectedDepartamento = target.value;
+
+    // Guarda el departamento seleccionado en el localStorage
+    localStorage.setItem('departamento', selectedDepartamento);
+    this.emprendedorForm.get('id_municipio')?.setValue(null);
+    this.listMunicipios = [];
+    // Llama a cargarMunicipios si es necesario
+    this.cargarMunicipios(selectedDepartamento);
+  }
+
+  cargarMunicipios(departamentoId: string): void {
+    this.municipioService.getMunicipios(departamentoId).subscribe(
+      (data) => {
+        this.listMunicipios = data;
+      },
+      (err) => {
+        console.log('Error al cargar los municipios:', err);
+      }
+    );
+  }
+
+
 
   verEditar(): void {
     if (this.token) {
       this.emprendedorService.getInfoEmprendedor(this.token, this.documento).subscribe(
         (data) => {
           this.isActive = data.estado === 'Activo';
-  
-          console.log('trae la info',data);
           // Rellenar el formulario con los datos del emprendedor
           this.emprendedorForm.patchValue({
             documento: data.documento,
@@ -186,7 +180,7 @@ export class PerfilEmprendedorComponent implements OnInit {
             fecha_nac: data.fecha_nac,
             direccion: data.direccion,
             id_departamento: data.id_departamento,
-            id_municipio: data.id_municipio, 
+            id_municipio: data.id_municipio,
             id_tipo_documento: data.id_tipo_documento,
             estado: data.estado
           });
@@ -217,9 +211,6 @@ export class PerfilEmprendedorComponent implements OnInit {
     this.authServices.tipoDocumento().subscribe(
       data => {
         this.listTipoDocumento = data;
-
-        console.log('tipos de documentos', this.listTipoDocumento);
-        //console.log('datos tipo de documento: ',data)
       },
       error => {
         console.log(error);
@@ -230,115 +221,113 @@ export class PerfilEmprendedorComponent implements OnInit {
 
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
-     this.emprendedorForm.patchValue({ imagen_perfil: null });
-     this.selectedImagen_perfil = null;
-     this.perfilPreview = null;
-   } 
- }
-
- generateImagePreview(file: File, field: string) {
-   const reader = new FileReader();
-   reader.onload = (e: any) => {
-     if (field === 'imagen_perfil') {
-       this.perfilPreview = e.target.result;
-     } 
-     this.cdRef.detectChanges();
-   };
-   reader.readAsDataURL(file);
- }
-
-
- updateEmprendedor(): void {
-  const formData = new FormData();
-  let estadoValue: string;
-
-  // Validación general
-  if (this.emprendedorForm.invalid) {
-    console.log("Formulario Invalido", this.emprendedorForm.value);
-    this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
-    this.submitted = true;
-    return;
+      this.emprendedorForm.patchValue({ imagen_perfil: null });
+      this.selectedImagen_perfil = null;
+      this.perfilPreview = null;
+    }
   }
 
-  // First pass: handle special cases and avoid duplication
-  Object.keys(this.emprendedorForm.controls).forEach((key) => {
-    const control = this.emprendedorForm.get(key);
-    if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
-      if (key === 'password') {
-        // Only include password if it's not empty
-        if (control.value.trim() !== '') {
+  generateImagePreview(file: File, field: string) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      if (field === 'imagen_perfil') {
+        this.perfilPreview = e.target.result;
+      }
+      this.cdRef.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+
+  updateEmprendedor(): void {
+    const formData = new FormData();
+    let estadoValue: string;
+
+    // Validación general
+    if (this.emprendedorForm.invalid) {
+      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
+      this.submitted = true;
+      return;
+    }
+
+    // First pass: handle special cases and avoid duplication
+    Object.keys(this.emprendedorForm.controls).forEach((key) => {
+      const control = this.emprendedorForm.get(key);
+      if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
+        if (key === 'password') {
+          // Only include password if it's not empty
+          if (control.value.trim() !== '') {
+            formData.append(key, control.value);
+          }
+        } else if (key === 'fecha_nac') {
+          const date = new Date(control.value);
+          if (!isNaN(date.getTime())) {
+            formData.append(key, date.toISOString().split('T')[0]);
+          }
+        } else if (key === 'estado') {
+          formData.append(key, control.value ? '1' : '0');
+        } else if (key !== 'imagen_perfil') {
           formData.append(key, control.value);
         }
-      } else if (key === 'fecha_nac') {
-        const date = new Date(control.value);
-        if (!isNaN(date.getTime())) {
-          formData.append(key, date.toISOString().split('T')[0]);
-        }
-      } else if (key === 'estado') {
-        formData.append(key, control.value ? '1' : '0');
-      } else if (key !== 'imagen_perfil') {
-        formData.append(key, control.value);
       }
-    }
-  });
+    });
 
-  // Append specific fields (this will overwrite any duplicates from the first pass)
-  const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
-  specificFields.forEach(field => {
-    const value = this.emprendedorForm.get(field)?.value;
-    if (value !== null && value !== undefined && value !== '') {
-      formData.append(field, value);
-    }
-  });
+    // Append specific fields (this will overwrite any duplicates from the first pass)
+    const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
+    specificFields.forEach(field => {
+      const value = this.emprendedorForm.get(field)?.value;
+      if (value !== null && value !== undefined && value !== '') {
+        formData.append(field, value);
+      }
+    });
 
- 
-  if (this.emprendedorForm.get('direccion')?.value) {
-    formData.append('direccion', this.emprendedorForm.get('direccion')?.value);
+
+    if (this.emprendedorForm.get('direccion')?.value) {
+      formData.append('direccion', this.emprendedorForm.get('direccion')?.value);
+    }
+
+    if (this.selectedImagen_perfil) {
+      formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
+    }
+
+
+
+    this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+      if (result.isConfirmed) {
+        this.emprendedorService.updateEmprendedor(this.token, formData, this.documento).subscribe(
+          (data) => {
+            setTimeout(function () {
+              location.reload();
+            }, this.tiempoEspera);
+            this.alertService.successAlert('Exito', data.message);
+          },
+          (error) => {
+            console.error('Error from server:', error);
+            this.alertService.errorAlert('Error', error.message);
+          }
+        );
+      }
+    });
   }
-
-  if (this.selectedImagen_perfil) {
-    formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
-  }
-
- 
-
-  this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
-    if (result.isConfirmed) {
-      this.emprendedorService.updateEmprendedor(this.token, formData, this.documento).subscribe(
-        (data) => {
-          console.log('Response from server:', data);
-          setTimeout(function () {
-            location.reload();
-          }, this.tiempoEspera);
-          this.alertService.successAlert('Exito', data.message);
-        },
-        (error) => {
-          console.error('Error from server:', error);
-          this.alertService.errorAlert('Error', error.message);
-        }
-      );
-    }
-  });
-}
 
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      
+
       let maxSize = 0;
-  
+
       if (field === 'imagen_perfil') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
-      } 
-  
+      }
+
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-  
+
         //Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-  
+
         // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'imagen_perfil') {
           this.emprendedorForm.patchValue({ imagen_perfil: null });
@@ -350,15 +339,15 @@ export class PerfilEmprendedorComponent implements OnInit {
       }
 
       const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const previewUrl = e.target.result;
-      if (field === 'imagen_perfil') {
-        this.emprendedorForm.patchValue({ imagen_perfil: previewUrl });
-        this.perfilPreview = previewUrl;
-      }
-    };
-    reader.readAsDataURL(file);
-  
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.emprendedorForm.patchValue({ imagen_perfil: previewUrl });
+          this.perfilPreview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
       // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
 
@@ -366,43 +355,34 @@ export class PerfilEmprendedorComponent implements OnInit {
         this.selectedImagen_perfil = file;
         this.emprendedorForm.patchValue({ imagen_perfil: file });
       }
-      
-  } else {
-    this.resetFileField(field);
-  }
-  }
- 
 
-
-
-  desactivarEmprendedor(): void {
-    // let confirmationText = this.token
-    //   ? "¿Estás seguro de desactivar tu cuenta?"
-    //   : "¿Estás seguro de desactivar tu cuenta?";
-    if (this.token) {
-      this.alertService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
-      "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momento de iniciar sección!", 'warning').then((result) => {
-        if (result.isConfirmed) {
-          this.emprendedorService.destroy(this.token, this.documento).subscribe(
-            (data) => {
-              console.log("desactivar", data);
-              this.isAuthenticated = false;
-              localStorage.clear();
-              location.reload();
-            },
-            (err) => {
-              console.log(err);
-            }
-          );
-        }
-      });
+    } else {
+      this.resetFileField(field);
     }
   }
 
 
 
 
-  // console.log("Texto de confirmación para desactivar:", confirmationText);
+  desactivarEmprendedor(): void {
+    if (this.token) {
+      this.alertService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
+        "¡Ten en cuenta que si desactivas tu cuenta tendras que validarte nuevamente por medio de tu correo electronico al momento de iniciar sección!", 'warning').then((result) => {
+          if (result.isConfirmed) {
+            this.emprendedorService.destroy(this.token, this.documento).subscribe(
+              (data) => {
+                this.isAuthenticated = false;
+                localStorage.clear();
+                location.reload();
+              },
+              (err) => {
+                console.log(err);
+              }
+            );
+          }
+        });
+    }
+  }
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -427,7 +407,7 @@ export class PerfilEmprendedorComponent implements OnInit {
 
 
 
-  
+
   trackById(index: number, item: any): number {
     return item.id;
   }
@@ -446,7 +426,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
     const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento'];
-    
+
     fieldsToToggle.forEach(field => {
       const control = this.emprendedorForm.get(field);
       if (control) {
@@ -455,17 +435,11 @@ export class PerfilEmprendedorComponent implements OnInit {
         } else {
           control.enable();
         }
-        console.log(`Field ${field} is ${control.disabled ? 'disabled' : 'enabled'}`);
-      } else {
-        console.warn(`Control for field ${field} not found in form`);
       }
     });
-  
+
     // Force change detection
     this.cdRef.detectChanges();
-  
-    // Log the entire form state
-    console.log('Form state after toggling:', this.emprendedorForm);
   }
 
   // Restaura los datos originales
@@ -510,14 +484,14 @@ export class PerfilEmprendedorComponent implements OnInit {
     if (!value) {
       return null; // Si no hay valor, no se valida
     }
-  
+
     const selectedDate = new Date(value);
     const today = new Date();
     const hundredYearsAgo = new Date();
     hundredYearsAgo.setFullYear(today.getFullYear() - 100);
     const eighteenYearsAgo = new Date();
     eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
-  
+
     if (selectedDate > today) {
       return { futureDate: 'La fecha no es válida *' };
     } else if (selectedDate < hundredYearsAgo) {
@@ -540,7 +514,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   noLettersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasLetters = /[a-zA-Z]/.test(value);
-  
+
     if (hasLetters) {
       return { hasLetters: 'El campo no debe contener letras *' };
     } else {
@@ -558,5 +532,5 @@ export class PerfilEmprendedorComponent implements OnInit {
       return null;
     }
   }
-  
+
 }

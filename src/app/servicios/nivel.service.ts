@@ -33,4 +33,9 @@ export class NivelService {
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.http.get(this.url+'/nivelXactividad/'+idActividad,options)
   }
+
+  mostrarNivelxidActividadxidAsesor(access_token:any, idActividad:number, idAsesor:number):Observable<any>{
+    const options = { headers: this.CreacionHeaders(access_token)};
+    return this.http.get(this.url+'/NivelxActividadxAsesor/'+idActividad+'/'+idAsesor,options)
+  }
 }

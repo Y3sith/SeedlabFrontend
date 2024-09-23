@@ -73,8 +73,6 @@ export class AddEmpresaComponent {
   ) {
     this.id_documentoEmpresa = this.route.snapshot.paramMap.get('documento');
     this.id_emprendedor = this.route.snapshot.paramMap.get('id_emprendedor'); 
-    console.log("EMPRENDEDOR",this.id_emprendedor);
-    console.log("DOCUMENTO",this.id_documentoEmpresa)
 
     this.addEmpresaForm = this.fb.group({
       nombre: ['', [Validators.required, this.noNumbersValidator]],
@@ -150,8 +148,6 @@ export class AddEmpresaComponent {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
-        //console.log('Departamentos cargados:', JSON.stringify(data));
-        //console.log('zzzzzzzzzzz: ',this.listDepartamentos);
       },
       (err) => {
         console.log(err);
@@ -174,7 +170,6 @@ export class AddEmpresaComponent {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       (data) => {
         this.listMunicipios = data;
-        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       (err) => {
         console.log('Error al cargar los municipios:', err);
@@ -187,7 +182,6 @@ export class AddEmpresaComponent {
       this.authService.tipoDocumento().subscribe(
         data => {
           this.listTipoDocumento = data;
-          //console.log('datos tipo de documento: ',data)
         },
         error => {
           console.log(error);
@@ -251,7 +245,6 @@ export class AddEmpresaComponent {
         this.empresa = data;
         this.apoyo = data.apoyo;
 
-        console.log('empresa', data); // Verifica los datos cargados
         this.setFormValues();
         this.cargarDepartamentos();
 
@@ -276,10 +269,8 @@ export class AddEmpresaComponent {
 
   crearEmpresa(): void {
     this.submitted = true;
-    console.log("Formulario enviado", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
 
     if (this.addEmpresaForm.invalid) {
-      console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del formulario');
       return;
     }
@@ -329,11 +320,8 @@ export class AddEmpresaComponent {
       apoyos: apoyosList
     };
 
-    console.log('Payload para la API:', payload);
-
     this.EmpresaService.addEmpresa(this.token, payload).subscribe(
       data => {
-        console.log('Respuesta de la API (empresa creada):', data);
         this.alertService.successAlert('Éxito', 'Registro exitoso');
         this.router.navigate(['list-empresa']);
       },
@@ -356,7 +344,6 @@ export class AddEmpresaComponent {
 
     this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
       response => {
-        console.log('Datos actualizados:', response);
         setTimeout(function () {
         }, this.tiempoEspera);
         this.alertService.successAlert('Exito', 'Empresa editado con exito');
@@ -434,7 +421,6 @@ export class AddEmpresaComponent {
           this.isEditing = false; // No estamos en modo edición si no hay apoyos
           this.mostrarBotonesNuevos = false;
         }
-        console.log("apoyos", this.listaApoyo);
       },
       error => {
         console.error(error);
@@ -458,9 +444,6 @@ export class AddEmpresaComponent {
         id_tipo_documento: selectedApoyo.id_tipo_documento,
         id_empresa: selectedApoyo.id_empresa,
       });
-      console.log("Apoyo seleccionado:", selectedApoyo);
-    } else {
-      console.log("No se encontró el apoyo con documento:", documento);
     }
   }
 
@@ -469,15 +452,12 @@ export class AddEmpresaComponent {
     this.submitted = true;
 
     if (this.addApoyoEmpresaForm.invalid) {
-      console.log('Formulario inválido');
-      console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
       return;
     }
 
     this.EmpresaService.updateApoyo(this.token, this.selectedApoyoDocumento, apoyos).subscribe(
       data => {
-        //console.log("funcionaaaaa", this.apoyo.documento);
         setTimeout(function () {
           location.reload();
         }, this.tiempoEspera);
@@ -505,8 +485,6 @@ export class AddEmpresaComponent {
     this.submitted = true;
   
     if (this.addApoyoEmpresaForm.invalid) {
-      console.log('Formulario inválido');
-      console.log("Formulario inválido", this.addEmpresaForm.value, this.addApoyoEmpresaForm.value);
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
       return;
     }
@@ -526,7 +504,6 @@ export class AddEmpresaComponent {
     
     this.EmpresaService.crearApoyo(this.token, apoyos).subscribe(
       data => {
-        console.log("funcionaaaaa el crearrr");
         setTimeout(function () {
           location.reload();
         }, this.tiempoEspera);

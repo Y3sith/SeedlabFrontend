@@ -15,7 +15,7 @@ export class RutaEmprendedorComponent implements OnInit {
   documento: string | null;
   user: any = null;
   currentRolId: number;
-  idRuta: number | null; 
+  idRuta: number | null;
   rutaList: Ruta[] = [];
   rutaLista: Ruta[] = [];
   modalVisible: boolean = false;
@@ -24,11 +24,12 @@ export class RutaEmprendedorComponent implements OnInit {
   nombre: any = null;
   rutaId: number;
   ultimoElemento: any;
-  listRespuestaId:any []=[];
+  listRespuestaId: any[] = [];
   ishidden: boolean = true;
+  isLoading: boolean = true;
 
   actividadForm = this.fb.group({
-    id:[null],
+    id: [null],
     nombre: [''],
     descripcion: [''],
     ruta_multi: [''],
@@ -41,12 +42,14 @@ export class RutaEmprendedorComponent implements OnInit {
     private rutaService: RutaService,
     private router: Router,
     private fb: FormBuilder,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.validateToken();
-    this.idRespuesta();
-  }
+      this.validateToken();
+      this.idRespuesta();
+      //this.listarRutaActiva();
+    }
+
 
   validateToken(): void {
     this.token = localStorage.getItem("token");
@@ -56,52 +59,53 @@ export class RutaEmprendedorComponent implements OnInit {
       let identity = JSON.parse(identityJSON);
       this.user = identity;
       this.currentRolId = this.user.id_rol;
+      console.log(this.currentRolId);
 
-      if (this.currentRolId != 5) {
+      if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
       } else {
-        this.documento = this.user.emprendedor.documento;
+       // this.documento = this.user.emprendedor.documento;
       }
     }
 
     if (!this.token) {
       this.router.navigate(['home']);
     }
+    this.idRespuesta();
   }
 
   idRespuesta(): void {
     this.rutaService.idRespuestas(this.token).subscribe(
       data => {
         this.listRespuestaId = data;
-        console.log('ID de respuestas:', this.listRespuestaId);
-  
-        // Verifica si la lista de respuestas es válida y si el ID no es 0, null o undefined
-        if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
-          console.log('ID de respuesta válido:', this.listRespuestaId[0].id);
-          // Llamar a las demás funciones solo si el ID es válido
+        if (this.currentRolId != 1 && this.currentRolId != 2) {
+          if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
+            this.ishidden = false;
+            this.listarRutaActiva();
+          } else {
+            console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
+            this.isLoading = false;
+          }
+        } else {
           this.ishidden = false;
           this.listarRutaActiva();
-        } else {
-          console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
         }
       },
       error => {
         console.error('Error al obtener el ID de respuestas:', error);
+        this.isLoading = false;
       }
     );
   }
-  
+
   listarRutaActiva(): void {
     if (this.token) {
       this.rutaService.ruta(this.token).subscribe(
         data => {
           this.rutaList = data;
-          console.log('Rutas recibidas:', this.rutaList);
-
           if (this.rutaList.length > 0) {
             const primeraRuta = this.rutaList[0];
             this.rutaId = primeraRuta.id;
-            console.log('ID de la primera ruta almacenado en this.rutaId:', this.rutaId);
             // Si quieres llamar otra función después de recibir el ID
             this.listarRutas();
           }
@@ -115,14 +119,13 @@ export class RutaEmprendedorComponent implements OnInit {
     }
   }
 
-  listarRutas():void {
-    console.log('RUTAAAAAAAAAAAAAAAAA:', this.rutaId);
+  listarRutas(): void {
     this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
-      data=> {
+      data => {
         this.rutaLista = data;
-        console.log('Rutas activas:', this.rutaLista);
+        this.isLoading = false;
       },
-      err=>{
+      err => {
         console.error(err);
       });
   }
@@ -133,7 +136,7 @@ export class RutaEmprendedorComponent implements OnInit {
     if ((index - 2) % 3 === 0) return 'item-mid';
     return 'item-single';
   }
-  
+
   getOrder(index: number): number {
     return Math.floor(index / 3) * 3 + (index % 3);
   }
@@ -163,7 +166,6 @@ export class RutaEmprendedorComponent implements OnInit {
     this.selectedActividad = actividad;
     this.selectedActividad = { ...actividad, colorIndex: index };
     //this.selectedRutaId = this.rutaList[Math.floor(index / this.rutaList[0].actividades.length)].id;
-    console.log("ACTIVIDDDAAAD", this.selectedActividad)
     this.modalVisible = true;
   }
 

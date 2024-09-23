@@ -129,8 +129,6 @@ export class DashboardComponent {
 
         // Inicializar el gráfico de Asesorías
         this.initEChartsPie();
-
-        console.log(data);
       },
       error => {
         console.log(error);
@@ -221,7 +219,6 @@ export class DashboardComponent {
   getDatosGenerosGrafica(): void {
     this.dashboardService.graficaDatosGeneros(this.token).subscribe(
       data => {
-        console.log('data generos', data);
         const dataGenero = data.map(item => item.total);
         this.doughnutChartOption = {
           tooltip: {
@@ -259,7 +256,6 @@ export class DashboardComponent {
 
         // Inicializa el gráfico aquí después de obtener los datos
         this.initEChartsDoughnut();
-        console.log(data);
       },
       error => {
         console.log(error);
@@ -280,7 +276,6 @@ export class DashboardComponent {
   loadChartData() {
     this.dashboardService.getDashboard(this.token, this.id).subscribe(
       data => {
-        console.log(data);
         this.pendientesFinalizadasData[0].data = [
           data['Asesorias Pendientes'] || 0,
           data['Asesorias Finalizadas'] || 0,

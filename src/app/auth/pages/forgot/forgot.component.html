@@ -1,5 +1,5 @@
 <div class="max-w-6xl mx-auto">
-    <div class="flex justify-center items-center h-screen font-poppins">
+    <div class="flex items-center justify-center h-screen font-poppins">
         <div
             class="py-12 container rounded overflow-hidden shadow-lg bg-white  w-11/12 lg:w-[600px] h-[450px] ">
             <div class="flex flex-col items-center justify-center text-center">
@@ -8,12 +8,12 @@
                     clave temporal,recuerda cambiarla luego.</p>
             </div>
             <form [formGroup]="passwordForm" (ngSubmit)="password()">
-                 <div class="max-w-full flex flex-wrap flex-col justify-center items-center space-x-1">
+                 <div class="flex flex-col flex-wrap items-center justify-center max-w-full space-x-1">
                 <div class="mb-4">  
-                    <input type="email" #txt1 class="w-96 h-12 text-center border rounded-md text-xl" formControlName="email">
+                    <input type="email" #txt1 class="h-12 text-xl text-center border rounded-md w-96" formControlName="email">
                 </div>
                 <div>
-                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-10 rounded" type="submit"
+                    <button type="button" class="px-10 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700" type="submit"
                     >Recuperar Cuenta</button>
                 </div>
             </div>
@@ -21,6 +21,4 @@
            
         </div>
     </div>
-
 </div>
-<!-- (click)="forgotpassword()" -->

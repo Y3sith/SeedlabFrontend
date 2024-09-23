@@ -1,8 +1,8 @@
 <form [formGroup]="aliadoForm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <div class="container mx-auto py-6 md:py-12 font-poppins ">
+    <div class="container py-6 mx-auto md:py-12 font-poppins ">
         <!-- Encabezado -->
-        <header class="flex md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
+        <header class="flex items-center justify-between mt-2 mb-6 md:flex-row md:pl-4">
             <app-header [title] [subtitle]="'Perfil'"></app-header>
         </header>
 
@@ -21,7 +21,7 @@
                             <ng-template #noImage>
                                 <span class="text-gray-500">Logo del Aliado</span>
                             </ng-template>
-                            <button class="edit-button cursor-pointer" [class.hidden]="!showEditButton" >
+                            <button class="cursor-pointer edit-button" [class.hidden]="!showEditButton">
                                 <i class="fas fa-pencil-alt">
                                     <input id="imagen_ruta" type="file" (change)="onFileSelecteds($event, 'logo')"
                                         accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
@@ -39,13 +39,14 @@
 
 
                         </div>
-                        <div class=" rounded-lg p-4 h-full w-full">
+                        <div class="w-full h-full p-4 rounded-lg ">
                             <div class="w-full">
-                                <h5 class="text-xl font-bold mt-16 max-md:mt-20 text-center md:mb-14">Información Básica</h5>
+                                <h5 class="mt-16 text-xl font-bold text-center max-md:mt-20 md:mb-14">Información Básica
+                                </h5>
 
                                 <label for="nombre" class="block mt-4 mb-2">Nombre</label>
                                 <input type="text" id="nombre" formControlName="nombre" [readonly]="blockedInputs"
-                                    class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                    class="w-full h-12 p-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
                                 <div *ngIf="(formSubmitted || f['nombre'].touched) && f['nombre'].invalid"
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
@@ -53,18 +54,19 @@
                                 </div>
 
                                 <div class="flex items-center">
-                                    <label for="password" class="block mb-2 mt-4">Contraseña</label>
-                                <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-                                    matTooltip="Puedes cambiar la contraseña si lo deseas. Si la dejas en blanco, la contraseña actual permanecerá sin cambios."
-                                    matTooltipPosition="right" style="color: #adb7c7;">
-                                </fa-icon>
+                                    <label for="password" class="block mt-4 mb-2">Contraseña</label>
+                                    <fa-icon [icon]="falupa" class="mt-2 ml-1 text-sm transform right-2"
+                                        mat-raised-button
+                                        matTooltip="Puedes cambiar la contraseña si lo deseas. Si la dejas en blanco, la contraseña actual permanecerá sin cambios."
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
                                 </div>
                                 <div class="relative mb-2">
                                     <input [type]="hide ? 'password' : 'text'" id="contrasena"
                                         formControlName="password"
-                                        class="p-2 h-12 w-full border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 placeholder-black" />
+                                        class="w-full h-12 p-2 placeholder-black bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200" />
                                     <button type="button"
-                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500"
+                                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-sm leading-5 text-gray-500"
                                         (click)="hide = !hide">
                                         <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500"></i>
                                         <i *ngIf="!hide" class="fa fa-eye text-cyan-500"></i>
@@ -75,11 +77,9 @@
                                     role="alert">
                                     La contraseña debe tener al menos 8 caracteres
                                 </div>
-
-                                
-                                <label for="correo" class="block mb-2 mt-4">Correo Electrónico</label>
+                                <label for="correo" class="block mt-4 mb-2">Correo Electrónico</label>
                                 <input type="text" id="correo" formControlName="email" [readonly]="blockedInputs"
-                                    class="p-2 h-12 w-full mb-2 border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                    class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
                                 <div *ngIf="(formSubmitted || f['email'].touched) && f['email'].invalid"
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
@@ -87,41 +87,22 @@
                                     <span *ngIf="f['email'].errors?.['email']">Ingrese un correo electrónico
                                         válido</span>
                                 </div>
-
-
                                 <div class="min-[860px]:flex md:h-2">
                                     <label for="tipodocumento" class="block mb-4 md:w-64"></label>
                                 </div>
-
-                                <!-- <h5 class="text-xl font-bold mb-4 text-center">Información Fanpage</h5> -->
-
-
-
-
-
-
                             </div>
                         </div>
                     </div>
-
 
                 </div>
                 <div class="max-[860px]:hidden w-10"></div>
                 <!-- Segunda Columna -->
                 <div class="min-[860px]:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
-                    <div class="w-full mt-0 pt-0">
-                        <div class="flex items-center">
-                            <label for="descripcion" class="block mb-2 mt-4">Descripcion fanpage</label>
-                            <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-                                matTooltip="La descripción debe tener al menos 300 caracteres y máximo 470 caracteres"
-                                matTooltipPosition="right" style="color: #adb7c7;">
-                            </fa-icon>
-                        </div>
-                        <div class="relative mb-2">
-                            <textarea id="descripcion" formControlName="descripcion" [readonly]="blockedInputs"
-                                class="p-2 h-36 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
-                            </textarea>
-                        </div>
+                    <div class="w-full pt-0 mt-0">
+
+                        <label for="descripcion" class="block mt-4">Descripcion fanpage</label>
+                        <textarea id="descripcion" formControlName="descripcion" [readonly]="blockedInputs"
+                            class="w-full p-2 bg-white border rounded-md appearance-none h-36 focus:outline-none focus:ring-2 focus:ring-blue-200"></textarea>
                         <div *ngIf="(formSubmitted || f['descripcion'].touched) && f['descripcion'].invalid"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <span *ngIf="f['descripcion'].errors?.['required']">Este campo es requerido *</span>
@@ -129,21 +110,19 @@
                                 La descripción debe tener entre 300 y 470 caracteres
                             </span>
                         </div>
-                    
 
-                        <label for="urlpagina" class="block mb-2 mt-4">URL Pagina</label>
-                                <input type="text" id="urlpagina" formControlName="urlpagina" [readonly]="blockedInputs"
-                                    class="p-2 h-12 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                                <div *ngIf="(formSubmitted || f['urlpagina'].touched) && f['urlpagina'].invalid"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['urlpagina'].errors?.['required']">Este campo es requerido *</span>
-                                </div>
+                        <label for="urlpagina" class="block mt-4 mb-2">URL Pagina</label>
+                        <input type="text" id="urlpagina" formControlName="urlpagina" [readonly]="blockedInputs"
+                            class="w-full h-12 p-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                        <div *ngIf="(formSubmitted || f['urlpagina'].touched) && f['urlpagina'].invalid"
+                            class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                            <span *ngIf="f['urlpagina'].errors?.['required']">Este campo es requerido *</span>
+                        </div>
 
                         <div class="">
                             <label class="mt-4" for="id_tipo_dato">Informacion para ver mas del aliado</label>
                             <select id="id_tipo_dato" formControlName="id_tipo_dato" (change)="onTipoDatoChange()"
-                                class="mt-1 block w-full px-2 py-1 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
+                                class="block w-full px-2 py-1 mt-1 transition duration-200 ease-in bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
                                 <option value="" disabled selected>Seleccione el tipo de dato...</option>
                                 <option *ngFor="let tipodato of tipoDeDato" [value]="tipodato.id">{{tipodato.nombre}}
                                 </option>
@@ -155,20 +134,17 @@
                             </div>
                         </div>
 
-
-                        <div class=" ">
+                        <div class="">
                             <label for="fuente" class=""></label>
                             <ng-container [ngSwitch]="Number(aliadoForm.get('id_tipo_dato').value)">
                                 <div class="mt-2" *ngSwitchCase="1">
                                     <div *ngIf="showVideo">
-                                        <label class="   flex-none justify-center" for="nombre">Link
+                                        <label class="justify-center flex-none " for="nombre">Link
                                             del video</label>
-                                        <input type="text" id="fuente" 
-                                            formControlName="ruta_multi"
-                                            [readonly]="blockedInputs" 
-                                            [placeholder]="'Ingrese el link del video'"
+                                        <input type="text" id="fuente" formControlName="ruta_multi"
+                                            [readonly]="blockedInputs" [placeholder]="'Ingrese el link del video'"
                                             (input)="onRutaMultiChange($event)"
-                                            class="p-2 h-14 w-full mb-2 border rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
+                                            class="w-full p-2 mb-2 bg-white border rounded-md appearance-none h-14 focus:outline-none focus:ring-2 focus:ring-blue-200 ">
                                         <div *ngIf="(formSubmitted || f['ruta_multi'].touched) && f['ruta_multi'].invalid"
                                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                             role="alert">
@@ -181,43 +157,42 @@
                                 <div class="mt-2" *ngSwitchCase="2">
                                     <div *ngIf="showImagen">
                                         <label
-                                            class="text-sm  relative cursor-pointer flex flex-row items-center  flex-none justify-center"
+                                            class="relative flex flex-row items-center justify-center flex-none text-sm cursor-pointer"
                                             for="nombre">Imagen
-                                            <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput 
+                                            <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
                                                 [readonly]="blockedInputs"
                                                 (change)="onFileSelecteds($event, 'ruta_multi')">
                                             <span (click)="triggerFileInput()"
-                                                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+                                                class="inline-flex items-center justify-center px-4 py-2 ml-3 text-black bg-white border-2 border-blue-300 rounded-lg hover:bg-blue-100">
                                                 Subir Imagen
-                                                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+                                                <fa-icon [icon]="faImages" class="ml-2 text-md"></fa-icon>
                                             </span>
                                         </label>
                                         <div *ngIf="aliadoForm.get('ruta_multi')?.value"
-                                            class="mt-2 text-gray-500 text-center">
+                                            class="mt-2 text-center text-gray-500">
                                             Archivo seleccionado: {{ selectedruta?.name }}
                                         </div>
                                         <div *ngIf="(formSubmitted || f['ruta_multi'].touched) && f['ruta_multi'].invalid"
                                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                             role="alert">
-                                            <span *ngIf="f['ruta_multi'].errors?.['required']">Este campo es requerido
-                                                *</span>
+                                            <span *ngIf="f['ruta_multi'].errors?.['required']">Este campo es
+                                                requerido*</span>
                                         </div>
-                                        
                                     </div>
                                 </div>
 
                                 <div class="mt-2" *ngSwitchCase="3">
                                     <div *ngIf="showPDF">
                                         <label
-                                            class=" relative cursor-pointer flex flex-row items-center flex-none justify-center"
+                                            class="relative flex flex-row items-center justify-center flex-none cursor-pointer "
                                             for="nombre">PDF
                                             <input type="file" id="fuente" class="hidden" accept="application/pdf"
                                                 [readonly]="blockedInputs" #fileInput
                                                 (change)="onFileSelecteds($event, 'ruta_documento')">
                                             <span (click)="triggerFileInput()"
-                                                class="text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100 ml-3">
+                                                class="inline-flex items-center justify-center px-4 py-2 ml-3 text-black bg-white border-2 border-blue-300 rounded-lg hover:bg-blue-100">
                                                 Subir PDF
-                                                <fa-icon [icon]="faImages" class="text-md ml-2"></fa-icon>
+                                                <fa-icon [icon]="faImages" class="ml-2 text-md"></fa-icon>
                                             </span>
                                         </label>
                                         <div *ngIf="(formSubmitted || f['ruta_multi'].touched) && f['ruta_multi'].invalid"
@@ -227,7 +202,7 @@
                                                 *</span>
                                         </div>
                                         <div *ngIf="aliadoForm.get('ruta_multi')?.value"
-                                            class="mt-2 text-gray-500 text-center">
+                                            class="mt-2 text-center text-gray-500">
                                             Archivo seleccionado: {{ aliadoForm.get('ruta_multi')?.value?.name }}
                                         </div>
                                     </div>
@@ -235,10 +210,10 @@
 
                                 <div class="mt-2" *ngSwitchCase="4">
                                     <div *ngIf="showTexto">
-                                        <label class=" flex-none justify-center" for="nombre">Texto</label>
+                                        <label class="justify-center flex-none " for="nombre">Texto</label>
                                         <input type="text" id="fuente" formControlName="ruta_multi"
                                             [readonly]="blockedInputs" (input)="onTextInput($event)"
-                                            class="p-2 h-14 w-full mb-2 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 appearance-none ">
+                                            class="w-full p-2 mb-2 bg-gray-200 border rounded-md appearance-none h-14 focus:outline-none focus:ring-2 focus:ring-blue-200 ">
                                         <div *ngIf="(formSubmitted || f['ruta_multi'].touched) && f['ruta_multi'].invalid"
                                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                             role="alert">
@@ -247,11 +222,8 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </ng-container>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -260,15 +232,15 @@
         </div>
 
 
-        <div class="mt-7 w-full flex md:justify-end justify-center">
+        <div class="flex justify-center w-full mt-7 md:justify-end">
 
             <div class="flex ">
-                <button class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full mr-2 italic"
+                <button class="px-4 py-2 mr-2 italic font-bold text-white rounded-full bg-amber-500"
                     (click)="onCancel()" *ngIf="!blockedInputs" (click)="toggleInputsLock()"
                     (click)="toggleEditButtonn()">
                     Cancelar
                 </button>
-                <button type="submit" class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full italic"
+                <button type="submit" class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500"
                     *ngIf="!blockedInputs" (click)="upadateAliado()">
                     Guardar cambios
                 </button>
@@ -278,26 +250,26 @@
                 <div class="flex justify-start">
                 </div>
                 <button id="boton"
-                    class="bg-amber-500 text-white font-bold py-2 px-4 md:-mt-4 rounded-full -pl-12 italic"
+                    class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500 md:-mt-4 -pl-12"
                     (click)="onEdit()" *ngIf="blockedInputs" (click)="toggleInputsLock()"> Editar Perfil
                 </button>
             </div>
         </div>
 
-        <div class="space-y-6 w-full rounded-lg md:py-6 max-md:p-4 md:mt-8 sm:w-3/4 md:w-2/3 mx-auto flex flex-col justify-center items-center"
-        *ngIf="idAliado">
+        <div class="flex flex-col items-center justify-center w-full mx-auto space-y-6 rounded-lg md:py-6 max-md:p-4 md:mt-8 sm:w-3/4 md:w-2/3"
+            *ngIf="idAliado">
             <ng-container>
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4 md:relative md:-top-12 md:left-1/2 md:transform md:-translate-x-1/2">
+                    class="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3 md:relative md:-top-12 md:left-1/2 md:transform md:-translate-x-1/2">
                     <div *ngFor="let banner of listBanners"
-                        class="bg-white rounded-lg shadow-md overflow-hidden relative">
-                        <img [src]="banner.urlImagen" alt="Gallery image" class="w-full h-64 object-cover">
-                        <div class="absolute top-2 right-2 flex space-x-2">
+                        class="relative overflow-hidden bg-white rounded-lg shadow-md">
+                        <img [src]="banner.urlImagen" alt="Gallery image" class="object-cover w-full h-64">
+                        <div class="absolute flex space-x-2 top-2 right-2">
                             <!-- Botón del lápiz -->
                             <button
-                                class="bg-white h-8 w-8 flex items-center justify-center rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+                                class="flex items-center justify-center w-8 h-8 transition-colors duration-200 bg-white rounded-full shadow-md hover:bg-gray-100"
                                 id="editboton" (click)="openModal(banner.id)">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4 h-4"
                                     fill="currentColor">
                                     <path
                                         d="M410.3 231l11.3-11.3-33.9-33.9-62.1-62.1L291.7 89.8l-11.3 11.3-22.6 22.6L58.6 322.9c-10.4 10.4-18 23.3-22.2 37.4L1 480.7c-2.5 8.4-.2 17.5 6.1 23.7s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L387.7 253.7 410.3 231zM160 399.4l-9.1 22.7c-4 3.1-8.5 5.4-13.3 6.9L59.4 452l23-78.1c1.4-4.9 3.8-9.4 6.9-13.3l22.7-9.1 0 32c0 8.8 7.2 16 16 16l32 0zM362.7 18.7L348.3 33.2 325.7 55.8 314.3 67.1l33.9 33.9 62.1 62.1 33.9 33.9 11.3-11.3 22.6-22.6 14.5-14.5c25-25 25-65.5 0-90.5L453.3 18.7c-25-25-65.5-25-90.5 0zm-47.4 168l-144 144c-6.2 6.2-16.4 6.2-22.6 0s-6.2-16.4 0-22.6l144-144c6.2-6.2 16.4-6.2 22.6 0s6.2 16.4 0 22.6z" />
@@ -305,9 +277,9 @@
                             </button>
                             <!-- Botón de la basurita -->
                             <button
-                                class="bg-white h-8 w-8 flex items-center justify-center rounded-full shadow-md hover:bg-gray-100 transition-colors duration-200"
+                                class="flex items-center justify-center w-8 h-8 transition-colors duration-200 bg-white rounded-full shadow-md hover:bg-gray-100"
                                 id="deleteboton" (click)="eliminarBanner(banner.id)">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="h-4 w-4"
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="w-4 h-4"
                                     fill="currentColor">
                                     <path
                                         d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z" />
@@ -317,22 +289,21 @@
                     </div>
 
                     <button (click)="openModal(null)">
-                        <label class="cursor-pointer text-center">
+                        <label class="text-center cursor-pointer">
                             <div
-                                class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
-                                <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none" viewBox="0 0 24 24"
+                                class="flex items-center justify-center w-24 h-24 mb-2 overflow-hidden transition duration-300 bg-gray-200 rounded-full sm:w-32 sm:h-32 hover:bg-gray-300">
+                                <svg class="w-12 h-12 text-gray-400 sm:h-16 sm:w-16" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M12 6v6m0 0v6m0-6h6m-6 0H6">
                                     </path>
                                 </svg>
                             </div>
-                            <span class="text-xs sm:text-sm text-gray-600">Agregar Banner</span>
+                            <span class="text-xs text-gray-600 sm:text-sm">Agregar Banner</span>
                         </label>
                     </button>
                 </div>
             </ng-container>
         </div>
-        
     </div>
 </form>

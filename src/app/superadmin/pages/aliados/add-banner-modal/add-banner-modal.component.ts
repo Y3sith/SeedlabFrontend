@@ -43,9 +43,7 @@ export class AddBannerModalComponent implements OnInit {
   ) {
     this.id_banner = data.id;
     this.idAliado = data.idAliado;
-    console.log("ALIADO", this.idAliado);
-    console.log("IDDD", this.id_banner);
-
+    
     this.bannerForm = this.formBuilder.group({
       urlImagen: [null, Validators.required],
       estadobanner: [1],
@@ -64,7 +62,6 @@ export class AddBannerModalComponent implements OnInit {
         this.user = identity;
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
-        console.log("OTRO ID", this.currentRolId);
         if (this.currentRolId != 1) {
           this.router.navigate(['home']);
         }
@@ -77,7 +74,6 @@ export class AddBannerModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateToken();
-    console.log("PARA EL TOKEN", this.currentRolId);
     this.verEditar();
     this.mostrarToggle();
     this.toggleActive();
@@ -90,7 +86,6 @@ export class AddBannerModalComponent implements OnInit {
           urlImagen: data.urlImagen,
           estadobanner: data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1
         });
-        console.log(data);
         this.isActive = data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1;
         this.bannerForm.patchValue({ estadobanner: this.isActive });
       },
@@ -125,9 +120,7 @@ export class AddBannerModalComponent implements OnInit {
       this.aliadoService.editarBanner(this.token, this.id_banner, formData).subscribe(
         data => {
           this.alertService.successAlert('Exito', data.message);
-          //console.log("ACTUALIZAAA", data);
           this.dialogRef.close();
-          //location.reload();
         },
         error => {
           console.error(error);
@@ -138,7 +131,6 @@ export class AddBannerModalComponent implements OnInit {
     } else {
       this.aliadoService.crearBanner(this.token, formData).subscribe(
         data => {
-          //console.log("funcionaaa", data)
           this.alertService.successAlert('Exito', data.message);
           this.dialogRef.close();
         },

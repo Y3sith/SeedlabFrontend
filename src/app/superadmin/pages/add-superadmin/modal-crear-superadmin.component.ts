@@ -92,21 +92,18 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.validateToken();
     this.route.paramMap.subscribe(params => {
           this.idSuperAdmin = +params.get('id');
-          //console.log('idSuperAdmin en ngOnInit:', this.idSuperAdmin);
           if (this.idSuperAdmin) {
             this.isEditing = true;
             this.verEditar();
           } else {
             this.idSuperAdmin = null; // Establece claramente que no hay un id en modo creación
             this.isEditing = false;
-            //console.log('No se encontró un ID, modo creación');
           }
         });
 
     if (this.adminId != null) {
       this.isEditing = true;
       this.superadminForm.get('password')?.setValidators([Validators.minLength(8)]);
-      //this.verEditar();
     } else {
       this.superadminForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
@@ -132,9 +129,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.authService.tipoDocumento().subscribe(
       data => {
         this.listTipoDocumento = data;
-
-        //console.log('tipos de documentos', this.listTipoDocumento);
-        //console.log('datos tipo de documento: ',data)
       },
       error => {
         console.log(error);
@@ -146,7 +140,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
-        //console.log('Departamentos cargados:',this.listDepartamentos);
       },
       (err) => {
         console.log(err);
@@ -169,7 +162,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       (data) => {
         this.listMunicipios = data;
-        //console.log('Municipios cargados:', JSON.stringify(data));
       },
       (err) => {
         console.log('Error al cargar los municipios:', err);
@@ -195,7 +187,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     if (this.idSuperAdmin != null) {
       this.superadminService.getsuperadmin(this.token,this.idSuperAdmin).subscribe(
         data => {
-          console.log('datosssss: ', data)
           this.superadminForm.patchValue({
             nombre: data.nombre,
             apellido: data.apellido,
@@ -347,9 +338,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
-    }
-    console.log('Datos del formulario:', this.superadminForm.value);
-  
+    }  
     /* Actualiza superadmin */
     if (this.idSuperAdmin != null) {
       this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
@@ -392,9 +381,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   /* Cambia el estado del toggle*/
   toggleActive() {
     this.isActive = !this.isActive;
-    //console.log("Estado después de toggle:", this.isActive);
     this.superadminForm.patchValue({ estado: this.isActive ? true : false });
-
   }
 
   /* Muestra el toggle del estado dependiendo del adminId que no sea nulo*/

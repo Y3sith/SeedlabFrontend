@@ -50,7 +50,6 @@ export class ModalAliadosComponent {
     this.aliadoService.getaliadosinau(this.idAliado).subscribe(
       data => {
         this.listAliados = Array.isArray(data) ? data : [data];
-        console.log('listAliados:', this.listAliados);
       },
       error => {
         console.error('Error al traer los aliados inactivos:', error);
@@ -59,13 +58,11 @@ export class ModalAliadosComponent {
   }
 
   getContentType(aliado: any): string {
-    console.log('Aliado en getContentType:', aliado);
     if (!aliado || !aliado.ruta_multi) {
       console.log('Aliado o ruta_multi es undefined');
       return 'unknown';
     }
     const fuente = aliado.ruta_multi.toLowerCase();
-    console.log('Fuente:', fuente);
     
     if (aliado.id_tipo_dato === 1) return 'video';
     if (fuente.includes('youtube.com') || fuente.includes('youtu.be')) return 'video';
@@ -76,9 +73,7 @@ export class ModalAliadosComponent {
 
 
   getYouTubeEmbedUrl(url: string): string {
-    console.log('URL original:', url);
     const videoId = this.getYouTubeVideoId(url);
-    console.log('Video ID:', videoId);
     return `https://www.youtube-nocookie.com/embed/${videoId}`;
   }
 
@@ -122,23 +117,18 @@ export class ModalAliadosComponent {
     this.dialogRef.close();
   }
 
-  getCorrectImageUrl(relativePath: string): string {
-    console.log('Ruta relativa original:', relativePath);
-    
+  getCorrectImageUrl(relativePath: string): string {  
     // Verifica si la ruta ya es una URL completa
     if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
-      console.log('URL completa:', relativePath);
       return relativePath;
     }
   
     // Si no es una URL completa, construye la URL
     // Elimina cualquier '/' inicial si existe
     const cleanPath = relativePath.replace(/^\//, '');
-    console.log('Ruta limpia:', cleanPath);
     
     // Construye la URL completa
     const fullUrl = `${environment.apiUrl}/storage/${cleanPath}`;
-    console.log('URL completa:', fullUrl);
     return fullUrl;
   }
 }

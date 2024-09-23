@@ -37,4 +37,11 @@ export class RespuestasService {
     return this.http.get(this.url+'/getRespuestasRedis/'+id_empresa, {headers});
   }
 
+  verificarEstadoForm(access_token:string, id_empresa:string):Observable<any>{
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer '+ access_token
+    });
+    return this.http.get(this.url+'/verificarEstadoForm/'+id_empresa, {headers});
+  }
+
 }

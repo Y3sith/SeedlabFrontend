@@ -89,7 +89,6 @@ export class ListRutaComponent implements OnInit {
         .subscribe(
           (data) => {
             this.listaRutas = data;
-            console.log('listaRutas filtrada:', this.listaRutas);
             this.isLoading = false;
           },
           (err) => {
@@ -144,11 +143,7 @@ export class ListRutaComponent implements OnInit {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  // listarActividad():void {
-  //   this.router.navigate(['list-actividades'], {queryParams: {id_ruta: this.rutaId}});
-  // }
   listarActividad(rutaId: number, estado: any): void {
-    console.log("AQUI ESTADO", estado);
     if (estado === 'Inactivo'){
       this.alertService.alertainformativa('No puedes editar actividades en una ruta que este inactiva, debes activar la ruta para poderla editar', 'error').then((result) => {
         if (result.isConfirmed) {

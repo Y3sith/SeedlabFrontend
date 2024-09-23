@@ -13,7 +13,7 @@ import { DashboardsService } from '../../../servicios/dashboard.service';
   templateUrl: './reportes.component.html',
   styleUrl: './reportes.component.css'
 })
-export class ReportesComponent implements AfterViewInit{
+export class ReportesComponent implements AfterViewInit {
   reporteForm: FormGroup;
   token: string | null = null;
   user: User | null = null;
@@ -56,7 +56,6 @@ export class ReportesComponent implements AfterViewInit{
       if (identityJSON) {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
-        console.log(this.user);
         this.currentRolId = this.user.id_rol;
         if (this.currentRolId != 5) {
           this.router.navigate(['home']);
@@ -73,8 +72,6 @@ export class ReportesComponent implements AfterViewInit{
     this.empresaService.obtenerEmpresasPorEmprendedor(this.token, doc_emprendedor).subscribe(
       data => {
         this.empresas = data;
-
-        console.log(this.empresas);
       },
       error => {
         console.error('Error al obtener las empresas:', error);
@@ -86,16 +83,11 @@ export class ReportesComponent implements AfterViewInit{
   mostrarDatosReporte(): void {
     const { tipo_reporte, empresa } = this.reporteForm.value;
     const doc_emprendedor = this.user.emprendedor.documento;
-    
-
-    console.log('Formulario:', this.reporteForm.value);
-    console.log('Documento Emprendedor:', doc_emprendedor);
 
     if (tipo_reporte && doc_emprendedor) {
       this.graficaPuntajesFormulario(tipo_reporte, empresa);
       this.reporteService.obtenerDatosFormEmp(tipo_reporte, doc_emprendedor, empresa).subscribe(
         data => {
-          console.log('Datos del reporte:', data);
           this.reportes = data;
           this.columnas = Object.keys(data[0] || {});
         },

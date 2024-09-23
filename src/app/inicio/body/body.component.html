@@ -18,7 +18,6 @@
           <a routerLink="/auth/registro" mat-button routerLinkActive="active"
             class="lg:text-base md:text-lg max-sm:text-[12px] bg-[#00B3ED] text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[28px] md:px-[30px]  max-sm:text-sm max-sm:py-1 max-sm:px-[10px]">Registrarse</a>
         </div>
-
       </mat-toolbar>
     </div>
 
@@ -27,7 +26,7 @@
       <div class="swiper-wrapper">
         <ng-container *ngFor="let banner of listBanner">
           <div *ngIf="banner.urlImagen"
-            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide banner-swiper-slide swiper-slide"
+            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
             style="width: 100% !important;">
             <img [src]="banner.urlImagen" class="" [alt]="banner.descripcion || 'Banner image'">
             <!-- <p>fffffff</p> -->

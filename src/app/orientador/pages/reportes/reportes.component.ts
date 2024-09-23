@@ -76,8 +76,6 @@ export class ReportesComponent {
       this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
           this.reportes = data;
-          console.log(this.reportes);
-
           this.totalItems = data.length;
           this.page = 1;
           this.updatePaginated();
@@ -89,7 +87,7 @@ export class ReportesComponent {
         (error) => console.error('Error al obtener datos del reporte', error)
       );
     } else {
-      console.error('Formulario inválido:', this.reporteForm.value);
+      console.error('Formulario inválido');
       this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
     }
   }
@@ -116,7 +114,7 @@ export class ReportesComponent {
         }
       )
     } else {
-      console.error('Formulario inválido:', this.reporteForm.value);
+      console.error('Formulario inválido');
       this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
     }
   }
