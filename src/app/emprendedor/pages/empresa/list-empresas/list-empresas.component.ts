@@ -135,8 +135,6 @@ export class ListEmpresasComponent implements OnInit {
         .subscribe(
             (response: any) => {
                 let mensaje: string;
-              console.log(response);
-              console.log(this.documento);
                 // Establece el mensaje dependiendo del contador
                 if (response.contador === 1) {
                     mensaje = "Esta es la primera vez que completas el formulario. Asegúrate de guardar tu progreso.";
