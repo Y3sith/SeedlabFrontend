@@ -70,6 +70,10 @@ export class BodyComponent implements OnInit, AfterViewInit {
           ...aliado,
           descripcion: this.splitDescription(aliado.descripcion, 50)
         }));
+
+        // Precargar los logos de los aliados
+        this.preloadLogos(this.listAliados);
+
         this.cdr.detectChanges();
         if (isPlatformBrowser(this.platformId)) {
           this.initSwipers();
@@ -81,11 +85,24 @@ export class BodyComponent implements OnInit, AfterViewInit {
     );
   }
 
+  preloadLogos(aliados: any[]): void {
+    aliados.forEach(aliado => {
+      if (aliado.logoUrl) { // Asegúrate de que logoUrl sea la propiedad correcta
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = aliado.logoUrl; // URL del logo
+        link.as = 'image';
+        document.head.appendChild(link);
+      }
+    });
+  }
+
+
   mostrarBanners(): void {
     this.aliadoService.getbanner().subscribe(
       data => {
         this.listBanner = data;
-  
+
         // Precargar las imágenes de los banners
         this.listBanner.forEach(banner => {
           if (typeof banner.urlImagen === 'string' && banner.urlImagen) {
@@ -102,7 +119,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
       }
     );
   }
-  
+
 
 
   handleImageError(event: any) {
