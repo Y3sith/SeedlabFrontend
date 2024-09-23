@@ -18,17 +18,29 @@
                         </h2>
                         <form [formGroup]="actividadForm">
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la
-                                    actividad</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Nombre de la actividad
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="El nombre de la actividad no puede tener mas de 39 caracteres"
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
                                 <div *ngIf="submitted && a.nombre.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="a.nombre.errors.required">Este campo es requerido *</div>
                                 </div>
                             </div>
+
+
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción de la
-                                    actividad</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Descripción de la actividad
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="La descripcion debe tener entre 300 y 470 caracteres"
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
                                     formControlName="descripcion"></textarea>
                                 <div *ngIf="submitted && a.descripcion.errors"

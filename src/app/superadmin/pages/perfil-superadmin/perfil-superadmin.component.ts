@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormControl, Validators, ValidationErrors
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
-import { Superadmin } from '../../../Modelos/superadmin.model';
 import { User } from '../../../Modelos/user.model';
 import { faCircleQuestion, faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
 import { DepartamentoService } from '../../../servicios/departamento.service';

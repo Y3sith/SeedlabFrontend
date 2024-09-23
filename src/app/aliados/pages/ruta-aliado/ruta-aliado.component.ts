@@ -19,6 +19,8 @@ import { Leccion } from '../../../Modelos/leccion.model';
 import { ContenidoLeccionService } from '../../../servicios/contenido-leccion.service';
 import { Contenido_Leccion } from '../../../Modelos/contenido-leccion.model';
 import { Location } from '@angular/common';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-ruta-aliado',
@@ -37,6 +39,8 @@ export class RutaAliadoComponent {
   listarNiveles: Nivel[] = [];
   listarLeccion: Leccion[] = [];
   listActividadContenido: Actividad[] = [];
+  falupa = faCircleQuestion;
+
   ///
   listarAsesores: any[] = [];
   userFilter: any = { nombre: '', estado: 'Activo' };

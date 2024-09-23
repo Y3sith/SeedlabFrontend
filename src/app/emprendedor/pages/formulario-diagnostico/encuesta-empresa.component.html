@@ -1,13 +1,15 @@
 <div class="container p-0 pt-2 mx-auto font-poppins ">
     <header class="flex items-center justify-between w-full mt-2 mb-6 md:pl-4">
-        <button (click)="goBack()" class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Volver
+        <button (click)="goBack()"
+            class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver
         </button>
-        <app-header [title] [subtitle]="'Agregar empresa y apoyos'"></app-header>
-      </header>
+        <app-header [title] [subtitle]="'Formulario de Maduración'"></app-header>
+    </header>
     <!-- transicion basada en el estado -->
     <div class="flex items-center justify-center w-full px-4 font-poppins">
         <div class="flex flex-col justify-around flex-1 mx-2 text-center sm:flex-row sm:mx-4">
@@ -77,7 +79,6 @@
                             </div>
                             <select [(ngModel)]="respuesta1.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-md md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -100,7 +101,6 @@
                                     <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                         <select id="1Select" [(ngModel)]="respuesta2.opcion" (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -108,8 +108,6 @@
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 "
                                             *ngIf="respuesta2.opcion === 'Si'">
-                                            <option value="" disabled selected hidden>¿Cuantos?</option>
-                                            <option value="" disabled selected hidden>Seleccione</option>
                                             <option value="1"> 1</option>
                                             <option value="2"> 2</option>
                                             <option value="3"> 3</option>
@@ -126,7 +124,6 @@
                                     <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                         <select id="3Select" [(ngModel)]="respuesta3.opcion" (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -134,8 +131,6 @@
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 "
                                             *ngIf="respuesta3.opcion === 'Si'">
-                                            <option value="" disabled selected hidden>¿Cuantos?</option>
-                                            <option value="" disabled selected hidden>Seleccione</option>
                                             <option value="1"> 1</option>
                                             <option value="2"> 2</option>
                                             <option value="3"> 3</option>
@@ -153,7 +148,6 @@
                                     <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                         <select id="1Select" [(ngModel)]="respuesta4.opcion" (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -161,8 +155,6 @@
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 "
                                             *ngIf="respuesta4.opcion === 'Si'">
-                                            <option value="" disabled selected hidden>¿Cuantos?</option>
-                                            <option value="" disabled selected hidden>Seleccione</option>
                                             <option value="1"> 1</option>
                                             <option value="2"> 2</option>
                                             <option value="3"> 3</option>
@@ -179,7 +171,7 @@
                                     <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                         <select id="1Select" [(ngModel)]="respuesta5.opcion" (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
+
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -187,8 +179,8 @@
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 "
                                             *ngIf="respuesta5.opcion === 'Si'">
-                                            <option value="" disabled selected hidden>¿Cuantos?</option>
-                                            <option value="" disabled selected hidden>Seleccione</option>
+
+
                                             <option value="1"> 1</option>
                                             <option value="2"> 2</option>
                                             <option value="3"> 3</option>
@@ -205,7 +197,7 @@
                                     <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                         <select id="1Select" [(ngModel)]="respuesta6.opcion" (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
+
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -213,8 +205,8 @@
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-md sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 "
                                             *ngIf="respuesta6.opcion === 'Si'">
-                                            <option value="" disabled selected hidden>¿Cuantos?</option>
-                                            <option value="" disabled selected hidden>Seleccione</option>
+
+
                                             <option value="1"> 1</option>
                                             <option value="2"> 2</option>
                                             <option value="3"> 3</option>
@@ -235,7 +227,7 @@
                             </div>
                             <select [(ngModel)]="respuesta7.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-md md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="No">No</option>
                             </select>
@@ -249,7 +241,7 @@
                             </div>
                             <select [(ngModel)]="respuesta8.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-md md:w-60 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="No">No</option>
                             </select>
@@ -263,7 +255,7 @@
                             </div>
                             <select [(ngModel)]="respuesta9.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="Medio">Medio</option>
                                 <option value="No">No</option>
@@ -293,7 +285,7 @@
                             </div>
                             <select [(ngModel)]="respuesta10.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="Medio">Medio</option>
                                 <option value="No">No</option>
@@ -308,7 +300,7 @@
                             </div>
                             <select [(ngModel)]="respuesta11.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="Medio">Medio</option>
                                 <option value="No">No</option>
@@ -323,7 +315,7 @@
                             </div>
                             <select [(ngModel)]="respuesta12.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="-1">
                                     < 1 año</option>
                                 <option value="1 y 2">Entre 1 y 2 años</option>
@@ -342,7 +334,7 @@
                             <div class="mt-2">
                                 <select [(ngModel)]="respuesta13.opcion" (change)="updateProgress()"
                                     class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value="Si">Sí</option>
                                     <option value="No">No</option>
                                 </select>
@@ -399,7 +391,7 @@
                             </div>
                             <select [(ngModel)]="respuesta16.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="No">No</option>
                             </select>
@@ -457,7 +449,7 @@
                             </div>
                             <select [(ngModel)]="respuesta21.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="No">No</option>
                             </select>
@@ -471,7 +463,7 @@
                             </div>
                             <select [(ngModel)]="respuesta22.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="Medio">Medio</option>
                                 <option value="No">No</option>
@@ -486,7 +478,7 @@
                             </div>
                             <select [(ngModel)]="respuesta23.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="Medio">Medio</option>
                                 <option value="No">No</option>
@@ -527,7 +519,7 @@
                                 </div>
                                 <select [(ngModel)]="respuesta24.opcion" required (change)="updateProgress()"
                                     class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value="Si">Sí</option>
                                     <option value="No">No</option>
                                 </select>
@@ -546,7 +538,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta25.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="Medio">Medio</option>
                                                 <option value="No">No</option>
@@ -560,7 +552,7 @@
                                                 class="flex flex-col w-full space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 md:w-64">
                                                 <select id="3Select" [(ngModel)]="respuesta26.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -575,7 +567,7 @@
                                                 class="flex flex-col w-full space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 md:w-64">
                                                 <select id="1Select" [(ngModel)]="respuesta27.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -590,7 +582,7 @@
                                                 class="flex flex-col w-full space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 md:w-64">
                                                 <select id="1Select" [(ngModel)]="respuesta28.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -605,7 +597,7 @@
                                                 class="flex flex-col w-full space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 md:w-64">
                                                 <select id="1Select" [(ngModel)]="respuesta29.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -620,7 +612,7 @@
                                                 class="flex flex-col w-full space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 md:w-64">
                                                 <select id="1Select" [(ngModel)]="respuesta30.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -635,7 +627,7 @@
                                                 class="flex flex-col w-full space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 md:w-64">
                                                 <select id="1Select" [(ngModel)]="respuesta31.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -650,7 +642,7 @@
                                                 class="flex flex-col w-full space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2 md:w-64">
                                                 <select id="1Select" [(ngModel)]="respuesta32.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -669,7 +661,7 @@
                                 </div>
                                 <select [(ngModel)]="respuesta33.opcion" required (change)="updateProgress()"
                                     class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value="Si">Sí</option>
                                     <option value="No">No</option>
                                 </select>
@@ -688,7 +680,7 @@
                                             <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                                 <select [(ngModel)]="respuesta34.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -702,7 +694,7 @@
                                             <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                                 <select [(ngModel)]="respuesta35.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -716,7 +708,7 @@
                                             <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                                 <select [(ngModel)]="respuesta36.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -730,7 +722,7 @@
                                             <div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                                                 <select [(ngModel)]="respuesta37.opcion"
                                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                    <option value="" disabled selected hidden>Si / No</option>
+
                                                     <option value="Si">Si</option>
                                                     <option value="Medio">Medio</option>
                                                     <option value="No">No</option>
@@ -759,7 +751,7 @@
                                 </div>
                                 <select [(ngModel)]="respuesta39.opcion" required (change)="updateProgress()"
                                     class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value="Si">Sí</option>
                                     <option value="No">No</option>
                                 </select>
@@ -777,7 +769,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta40.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Seleccione</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="Medio">Medio</option>
                                                 <option value="No">No</option>
@@ -789,7 +781,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta41.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Seleccione</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="Medio">Medio</option>
                                                 <option value="No">No</option>
@@ -801,7 +793,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta42.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Seleccione</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="Medio">Medio</option>
                                                 <option value="No">No</option>
@@ -848,7 +840,7 @@
                                 </div>
                                 <select [(ngModel)]="respuesta44.opcion" required (change)="updateProgress()"
                                     class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value="Si">Sí</option>
                                     <option value="No">No</option>
                                 </select>
@@ -867,7 +859,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta45.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="No">No</option>
                                             </select>
@@ -878,7 +870,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta46.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="No">No</option>
                                             </select>
@@ -889,7 +881,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta47.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="No">No</option>
                                             </select>
@@ -920,7 +912,7 @@
                                         }}</label>
                                     <select [(ngModel)]="respuesta49.opcion" (change)="updateProgress()"
                                         class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                        <option value="" disabled selected hidden>Si / No</option>
+
                                         <option value="Si">Si</option>
                                         <option value="No">No</option>
                                     </select>
@@ -931,7 +923,7 @@
                                         }}</label>
                                     <select [(ngModel)]="respuesta50.opcion" (change)="updateProgress()"
                                         class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                        <option value="" disabled selected hidden>Si / No</option>
+
                                         <option value="Si">Si</option>
                                         <option value="No">No</option>
                                     </select>
@@ -942,7 +934,7 @@
                                         }}</label>
                                     <select [(ngModel)]="respuesta51.opcion" (change)="updateProgress()"
                                         class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                        <option value="" disabled selected hidden>Si / No</option>
+
                                         <option value="Si">Si</option>
                                         <option value="No">No</option>
                                     </select>
@@ -953,7 +945,7 @@
                                         }}</label>
                                     <select [(ngModel)]="respuesta52.opcion" (change)="updateProgress()"
                                         class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                        <option value="" disabled selected hidden>Si / No</option>
+
                                         <option value="Si">Si</option>
                                         <option value="No">No</option>
                                     </select>
@@ -976,7 +968,7 @@
                                 </div>
                                 <select [(ngModel)]="respuesta54.opcion" required (change)="updateProgress()"
                                     class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value="Si">Sí</option>
                                     <option value="No">No</option>
                                 </select>
@@ -990,7 +982,7 @@
                                 </div>
                                 <select [(ngModel)]="respuesta55.opcion" required (change)="updateProgress()"
                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value=sub>
                                         {{preguntas[25].subPreguntas[0].texto}}</option>
                                     <option value={{preguntas[25].subPreguntas[1].texto}}>
@@ -1037,7 +1029,7 @@
                                         <select id="1Select" [(ngModel)]="respuesta56.opcion"
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
+
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -1051,7 +1043,7 @@
                                         <select id="1Select" [(ngModel)]="respuesta57.opcion"
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
+
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -1065,7 +1057,7 @@
                                         <select id="1Select" [(ngModel)]="respuesta58.opcion"
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
+
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -1079,7 +1071,7 @@
                                         <select id="1Select" [(ngModel)]="respuesta59.opcion"
                                             (change)="updateProgress()"
                                             class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                            <option value="" disabled selected hidden>Si / No</option>
+
                                             <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
@@ -1105,7 +1097,7 @@
                                 </div>
                                 <select [(ngModel)]="respuesta61.opcion" required (change)="updateProgress()"
                                     class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
+
                                     <option value="Si">Sí</option>
                                     <option value="No">No</option>
                                 </select>
@@ -1123,7 +1115,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta62.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="No">No</option>
                                             </select>
@@ -1134,7 +1126,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta63.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="No">No</option>
                                             </select>
@@ -1145,7 +1137,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta64.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="No">No</option>
                                             </select>
@@ -1156,7 +1148,7 @@
                                                 }}</label>
                                             <select [(ngModel)]="respuesta65.opcion"
                                                 class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
+
                                                 <option value="Si">Si</option>
                                                 <option value="No">No</option>
                                             </select>
@@ -1196,7 +1188,7 @@
                             </div>
                             <select [(ngModel)]="respuesta66.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="No">No</option>
                             </select>
@@ -1221,7 +1213,7 @@
                             </div>
                             <select [(ngModel)]="respuesta68.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Sí</option>
                                 <option value="No">No</option>
                             </select>
@@ -1246,7 +1238,7 @@
                             </div>
                             <select [(ngModel)]="respuesta70.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="Medio">Medio</option>
                                 <option value="No">No</option>
@@ -1302,7 +1294,7 @@
                             </div>
                             <select [(ngModel)]="respuesta73.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="Medio">Medio</option>
                                 <option value="No">No</option>
@@ -1317,7 +1309,7 @@
                             </div>
                             <select [(ngModel)]="respuesta74.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1331,7 +1323,7 @@
                             </div>
                             <select [(ngModel)]="respuesta75.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1345,7 +1337,7 @@
                             </div>
                             <select [(ngModel)]="respuesta76.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1359,7 +1351,7 @@
                             </div>
                             <select [(ngModel)]="respuesta77.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1403,7 +1395,7 @@
                             </div>
                             <select [(ngModel)]="respuesta78.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1417,7 +1409,7 @@
                             </div>
                             <select [(ngModel)]="respuesta79.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1431,7 +1423,7 @@
                             </div>
                             <select [(ngModel)]="respuesta80.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1444,7 +1436,7 @@
                             </div>
                             <select [(ngModel)]="respuesta81.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1458,7 +1450,7 @@
                             </div>
                             <select [(ngModel)]="respuesta82.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1492,7 +1484,7 @@
                             </div>
                             <select [(ngModel)]="respuesta83.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1506,7 +1498,7 @@
                             </div>
                             <select [(ngModel)]="respuesta84.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1520,7 +1512,7 @@
                             </div>
                             <select [(ngModel)]="respuesta85.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1536,7 +1528,7 @@
                             </div>
                             <select [(ngModel)]="respuesta86.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1550,7 +1542,7 @@
                             </div>
                             <select [(ngModel)]="respuesta87.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1564,7 +1556,7 @@
                             </div>
                             <select [(ngModel)]="respuesta88.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1599,7 +1591,7 @@
                             </div>
                             <select [(ngModel)]="respuesta89.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1615,7 +1607,7 @@
                             </div>
                             <select [(ngModel)]="respuesta90.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1629,7 +1621,7 @@
                             </div>
                             <select [(ngModel)]="respuesta91.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1643,7 +1635,7 @@
                             </div>
                             <select [(ngModel)]="respuesta92.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1659,7 +1651,7 @@
                             </div>
                             <select [(ngModel)]="respuesta93.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1693,7 +1685,7 @@
                             </div>
                             <select [(ngModel)]="respuesta94.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1707,7 +1699,7 @@
                             </div>
                             <select [(ngModel)]="respuesta95.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1723,7 +1715,7 @@
                             </div>
                             <select [(ngModel)]="respuesta96.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1737,7 +1729,7 @@
                             </div>
                             <select [(ngModel)]="respuesta97.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1751,7 +1743,7 @@
                             </div>
                             <select [(ngModel)]="respuesta98.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1786,7 +1778,7 @@
                             </div>
                             <select [(ngModel)]="respuesta99.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1800,7 +1792,7 @@
                             </div>
                             <select [(ngModel)]="respuesta100.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1814,7 +1806,7 @@
                             </div>
                             <select [(ngModel)]="respuesta101.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1830,7 +1822,7 @@
                             </div>
                             <select [(ngModel)]="respuesta102.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1844,7 +1836,7 @@
                             </div>
                             <select [(ngModel)]="respuesta103.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1879,7 +1871,7 @@
                             </div>
                             <select [(ngModel)]="respuesta104.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1893,7 +1885,7 @@
                             </div>
                             <select [(ngModel)]="respuesta105.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1907,7 +1899,7 @@
                             </div>
                             <select [(ngModel)]="respuesta106.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1921,7 +1913,7 @@
                             </div>
                             <select [(ngModel)]="respuesta107.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1935,7 +1927,7 @@
                             </div>
                             <select [(ngModel)]="respuesta108.opcion" required (change)="updateProgress()"
                                 class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="" disabled selected hidden>Seleccione</option>
+
                                 <option value="Si">Si</option>
                                 <option value="No">No</option>
                             </select>
@@ -1956,259 +1948,259 @@
                 </div>
             </div>
 
-        <!-- Seccion 5 -->
+            <!-- Seccion 5 -->
         </ng-container>
         <ng-container *ngIf="currentIndex === 4">
             <div class="" *ngIf="currentSubSectionIndex === 0">
 
-                    <div class="max-w-full space-y-8 md:px-8">
-                        <div class="p-4 my-4 rounded-lg shadow-md bg-gray-50 md:p-8 md:my-6">
-                            <!-- Pregunta 43 -->
-                            <div
-                                class="flex flex-col items-start pb-2 pl-8 pr-8 mb-6 space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-                                <div class="flex-grow">
-                                    <label class="text-xl font-normal">{{preguntas[42].id}}.
-                                        {{preguntas[42].nombre}}</label>
-                                </div>
-                                <select [(ngModel)]="respuesta109.opcion" required (change)="updateProgress()"
-                                    class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
-                                    <option value="Si">Si</option>
-                                    <option value="No">No</option>
-                                </select>
+                <div class="max-w-full space-y-8 md:px-8">
+                    <div class="p-4 my-4 rounded-lg shadow-md bg-gray-50 md:p-8 md:my-6">
+                        <!-- Pregunta 43 -->
+                        <div
+                            class="flex flex-col items-start pb-2 pl-8 pr-8 mb-6 space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+                            <div class="flex-grow">
+                                <label class="text-xl font-normal">{{preguntas[42].id}}.
+                                    {{preguntas[42].nombre}}</label>
                             </div>
-                            <!-- Pregunta 44 -->
-                            <div
-                                class="flex flex-col items-start pb-2 pl-8 pr-8 mb-6 space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-                                <div class="flex-grow">
-                                    <label class="text-xl font-normal">{{preguntas[43].id}}.
-                                        {{preguntas[43].nombre}}</label>
-                                </div>
-                                <select [(ngModel)]="respuesta110.opcion" required (change)="updateProgress()"
-                                    class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
-                                    <option value="Si">Si</option>
-                                    <option value="No">No</option>
-                                </select>
+                            <select [(ngModel)]="respuesta109.opcion" required (change)="updateProgress()"
+                                class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <!-- Pregunta 44 -->
+                        <div
+                            class="flex flex-col items-start pb-2 pl-8 pr-8 mb-6 space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+                            <div class="flex-grow">
+                                <label class="text-xl font-normal">{{preguntas[43].id}}.
+                                    {{preguntas[43].nombre}}</label>
                             </div>
-                            <div class="grid grid-cols-1 gap-4 pb-4 pl-8 pr-8 md:grid-cols-3">
-                                <!-- Pregunta 45 -->
-                                <div class="col-span-3" *ngIf="respuesta110.opcion === 'Si'">
-                                    <label class="block mb-4 text-xl font-normal">{{preguntas[44].id}}.
-                                        {{preguntas[44].nombre}}</label>
-                                    <!-- Subpreguntas -->
-                                    <div class="grid grid-cols-1 gap-2 m-2 sm:grid-cols-3 lg:grid-cols-4">
-                                        <!-- Subpregunta 81 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[0].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta111.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 82 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[1].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta112.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 83 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[2].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta113.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 84 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[3].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta114.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 85 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[4].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta115.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 86 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[5].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta116.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 87 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[6].texto
-                                                }}</label>
-                                            <input type="text" id="respuesta-otro" name="respuesta-otro"
-                                                [(ngModel)]="respuesta117.opcion"
-                                                class="block w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
-                                        </div>
+                            <select [(ngModel)]="respuesta110.opcion" required (change)="updateProgress()"
+                                class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4 pb-4 pl-8 pr-8 md:grid-cols-3">
+                            <!-- Pregunta 45 -->
+                            <div class="col-span-3" *ngIf="respuesta110.opcion === 'Si'">
+                                <label class="block mb-4 text-xl font-normal">{{preguntas[44].id}}.
+                                    {{preguntas[44].nombre}}</label>
+                                <!-- Subpreguntas -->
+                                <div class="grid grid-cols-1 gap-2 m-2 sm:grid-cols-3 lg:grid-cols-4">
+                                    <!-- Subpregunta 81 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[0].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta111.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
                                     </div>
-                                </div>
-                            </div>
-                            <!-- Pregunta 46 -->
-                            <div
-                                class="flex flex-col items-start pb-2 pl-8 pr-8 mb-6 space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-4">
-                                <div class="flex-grow">
-                                    <label class="text-xl font-normal">{{preguntas[45].id}}.
-                                        {{preguntas[45].nombre}}</label>
-                                </div>
-                                <select [(ngModel)]="respuesta118.opcion" required (change)="updateProgress()"
-                                    class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    <option value="" disabled selected hidden>Seleccione</option>
-                                    <option value="Si">Si</option>
-                                    <option value="No">No</option>
-                                </select>
-                            </div>
-                            <!-- Pregunta 47 -->
-                            <div class="grid grid-cols-1 gap-4 pl-8 pr-8 md:grid-cols-3">
-                                <div class="col-span-3" *ngIf="respuesta118.opcion === 'Si'">
-                                    <label class="block mb-4 text-xl font-normal">{{preguntas[46].id}}.
-                                        {{preguntas[46].nombre}}</label>
-                                    <!-- Subpreguntas -->
-                                    <div class="grid grid-cols-1 gap-2 m-2 sm:grid-cols-3 lg:grid-cols-4">
-                                        <!-- Subpregunta 88 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[0].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta119.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 89 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[1].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta120.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 90 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[2].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta121.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 91 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[3].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta122.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 92 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[4].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta123.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 93 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[5].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta124.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 94 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[6].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta125.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 95 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[7].texto
-                                                }}</label>
-                                            <select [(ngModel)]="respuesta126.opcion"
-                                                class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
-                                                <option value="" disabled selected hidden>Si / No</option>
-                                                <option value="Si">Si</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                        </div>
-                                        <!-- Subpregunta 96 -->
-                                        <div class="flex flex-col space-y-2 md:space-y-4">
-                                            <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[8].texto
-                                                }}</label>
-                                            <input type="text" id="respuesta-otro" name="respuesta-otro"
-                                                [(ngModel)]="respuesta127.opcion" (input)="updateProgress()"
-                                                class="block w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
-                                        </div>
+                                    <!-- Subpregunta 82 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[1].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta112.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 83 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[2].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta113.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 84 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[3].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta114.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 85 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[4].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta115.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 86 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[5].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta116.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 87 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[44].subPreguntas[6].texto
+                                            }}</label>
+                                        <input type="text" id="respuesta-otro" name="respuesta-otro"
+                                            [(ngModel)]="respuesta117.opcion"
+                                            class="block w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="flex justify-center h-10 space-x-4">
-                            <button
-                                class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
-                                (click)="previous()">
-                                Anterior
-                            </button>
-                            <button
-                                class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300"
-                                (click)="onSubmitSeccion5()">
-                                Finalizar
-                            </button>
+                        <!-- Pregunta 46 -->
+                        <div
+                            class="flex flex-col items-start pb-2 pl-8 pr-8 mb-6 space-y-2 md:flex-row md:items-center md:space-y-0 md:space-x-4">
+                            <div class="flex-grow">
+                                <label class="text-xl font-normal">{{preguntas[45].id}}.
+                                    {{preguntas[45].nombre}}</label>
+                            </div>
+                            <select [(ngModel)]="respuesta118.opcion" required (change)="updateProgress()"
+                                class="w-full px-3 py-2 bg-gray-200 border-0 rounded-lg md:w-56 focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                                <option value="Si">Si</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <!-- Pregunta 47 -->
+                        <div class="grid grid-cols-1 gap-4 pl-8 pr-8 md:grid-cols-3">
+                            <div class="col-span-3" *ngIf="respuesta118.opcion === 'Si'">
+                                <label class="block mb-4 text-xl font-normal">{{preguntas[46].id}}.
+                                    {{preguntas[46].nombre}}</label>
+                                <!-- Subpreguntas -->
+                                <div class="grid grid-cols-1 gap-2 m-2 sm:grid-cols-3 lg:grid-cols-4">
+                                    <!-- Subpregunta 88 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[0].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta119.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 89 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[1].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta120.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 90 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[2].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta121.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 91 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[3].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta122.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 92 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[4].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta123.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 93 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[5].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta124.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 94 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[6].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta125.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 95 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[7].texto
+                                            }}</label>
+                                        <select [(ngModel)]="respuesta126.opcion"
+                                            class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
+
+                                            <option value="Si">Si</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+                                    <!-- Subpregunta 96 -->
+                                    <div class="flex flex-col space-y-2 md:space-y-4">
+                                        <label class="text-sm text-gray-400">{{ preguntas[46].subPreguntas[8].texto
+                                            }}</label>
+                                        <input type="text" id="respuesta-otro" name="respuesta-otro"
+                                            [(ngModel)]="respuesta127.opcion" (input)="updateProgress()"
+                                            class="block w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <div class="flex justify-center h-10 space-x-4">
+                        <button
+                            class="inline-block py-0 px-16 bg-[#373435] text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+                            (click)="previous()">
+                            Anterior
+                        </button>
+                        <button
+                            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300"
+                            (click)="onSubmitSeccion5()">
+                            Finalizar
+                        </button>
+                    </div>
+                </div>
             </div>
         </ng-container>
     </div>

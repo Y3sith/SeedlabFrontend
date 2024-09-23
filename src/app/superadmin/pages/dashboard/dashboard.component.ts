@@ -390,7 +390,6 @@ export class DashboardComponent implements AfterViewInit {
           const meses = data.map(item => this.getMonthName(item.mes));
 
           const maxValue = Math.max(...emprendedoresData, ...aliadosData);
-
           this.registrosEchartsOptions = {
             tooltip: {
               trigger: 'axis',
@@ -410,7 +409,17 @@ export class DashboardComponent implements AfterViewInit {
               }
             },
             legend: {
-              data: ['Emprendedor', 'Aliados']
+              data: ['Emprendedor', 'Aliados'],
+              left: 'center',  // Centrar la leyenda en PC
+              top: 10,
+              itemGap: 20
+            },
+            grid: {
+              top: 60,
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
             },
             xAxis: [
               {

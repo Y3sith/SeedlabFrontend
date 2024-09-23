@@ -2,9 +2,8 @@ import { AngularMaterialModule } from '../angular-material.module';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
-//import { MatIconModule } from '@angular/material/icon';
+// import { MatButtonModule } from '@angular/material/button';
+// import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -14,10 +13,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { ReactiveFormsModule, FormBuilder, FormsModule, FormGroup } from '@angular/forms';
 
-//import { ColorPickerModule } from 'ngx-color-picker';
-//import { FilterPipeModule } from 'ngx-filter-pipe';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-//import { NgxPaginationModule } from 'ngx-pagination';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 import { AppComponent } from './app.component';
@@ -47,10 +43,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     AppComponent,
     BodyComponent,
     CursorutasComponent,
-   // HeaderComponent,
     MenuComponent,
-    //ModalCrearOrientadorComponent,
-    //OrientadorCrearComponent,
     RutasComponent,
     SafeUrlPipe,
     
@@ -59,20 +52,16 @@ import { NgxEchartsModule } from 'ngx-echarts';
     AngularMaterialModule,
     AppRoutingModule,
     BrowserModule,
-    //ColorPickerModule,
     CommonModule,
-    //FilterPipeModule,
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-    MatButtonModule,
-    MatDialogModule,
-    //MatIconModule,
+    // MatButtonModule,
+    // MatDialogModule,
     MatListModule,
     MatSidenav,
     MatSidenavModule,
     MatToolbarModule,
-    //NgxPaginationModule,
     ReactiveFormsModule,
     SweetAlert2Module.forRoot(),
     AuthModule,

@@ -5,7 +5,7 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Superadmin } from '../../../Modelos/superadmin.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalCrearSuperadminComponent } from '../add-superadmin/modal-crear-superadmin.component';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-superadmin',

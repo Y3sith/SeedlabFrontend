@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RutaService } from '../../../servicios/rutas.service';
-import { Ruta } from '../../../Modelos/ruta.modelo';
 import { FormBuilder } from '@angular/forms';
 import { ActividadService } from '../../../servicios/actividad.service';
 import { Actividad } from '../../../Modelos/actividad.model';

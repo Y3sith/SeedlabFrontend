@@ -7,6 +7,7 @@ import { EmprendedorService } from '../../../../servicios/emprendedor.service';
 import { Empresa } from '../../../../Modelos/empresa.model';
 import { User } from '../../../../Modelos/user.model';
 import { AlertService } from '../../../../servicios/alert.service';
+import { RespuestasService } from '../../../../servicios/respuestas.service';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class ListEmpresasComponent implements OnInit {
     private emprendedorService: EmprendedorService,
     private router: Router,
     private alertService: AlertService,
-    
+    private respuestaService: RespuestasService
   ) {
     
   }
@@ -128,15 +129,34 @@ export class ListEmpresasComponent implements OnInit {
     this.router.navigate(['add-empresa', id_emprendedor, documento ]);
   }
 
-  showInfoAlert(documento:string):any{
-    this.alertService.infoAlert("Indicaciones del formulario", "Por favor, asegúrese de completar todas las secciones requeridas antes de enviar el formulario.")
-    .then((result) => {
-       if (result.isConfirmed) {
-         this.router.navigate(['/encuesta', documento]);
-       }
- 
-    })
-  }
+
+  checkFormStatusAndShowAlert(documento: string): void {
+    this.respuestaService.verificarEstadoForm(this.token, documento)  
+        .subscribe(
+            (response: any) => {
+                let mensaje: string;
+                // Establece el mensaje dependiendo del contador
+                if (response.contador === 1) {
+                    mensaje = "Esta es la primera vez que completas el formulario. Asegúrate de guardar tu progreso.";
+                } else if (response.contador === 2) {
+                    mensaje = "Esta es la segunda vez que completas el formulario. Recuerda que este es tu último intento para realizar el formulario.";
+                }
+
+                // Muestra la alerta con el mensaje correspondiente
+                this.alertService.infoAlert("Indicaciones del formulario", mensaje)
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            // Si el usuario confirma, lo redirige al formulario
+                            this.router.navigate(['/encuesta', documento]);
+                        }
+                    });
+            },
+            (error) => {
+                console.log('Error al verificar el estado del formulario', error);
+                this.alertService.errorAlert("Error", "No se pudo verificar el estado del formulario.");
+            }
+        );
+}
 
 
 }

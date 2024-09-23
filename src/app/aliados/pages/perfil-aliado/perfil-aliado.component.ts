@@ -12,6 +12,7 @@ import { ActividadService } from '../../../servicios/actividad.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddBannerComponent } from '../add-banner/add-banner.component';
 
+
 @Component({
   selector: 'app-perfil-aliado',
   templateUrl: './perfil-aliado.component.html',
@@ -26,6 +27,8 @@ export class PerfilAliadoComponent implements OnInit {
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   blockedInputs = true;
+  falupa = faCircleQuestion;
+
   activeField: string = '';
   token: string;
   user: User | null = null;
@@ -53,7 +56,6 @@ export class PerfilAliadoComponent implements OnInit {
   mostrarRutaMulti: boolean = true;
   private videoUrl: string = '';
   private imageUrl: string = '';
-  falupa = faCircleQuestion;
 
   constructor(
     private router: Router,
@@ -418,13 +420,13 @@ export class PerfilAliadoComponent implements OnInit {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      
+  
       let maxSize = 0;
   
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
       } else if (field === 'ruta_documento') {
-        maxSize = 18 * 1024 * 1024; // 20MB para documentos
+        maxSize = 18 * 1024 * 1024; // 18MB para documentos
       }
   
       if (file.size > maxSize) {
@@ -432,32 +434,37 @@ export class PerfilAliadoComponent implements OnInit {
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
   
-        ////Limpia el archivo seleccionado y resetea la previsualización
+        // Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-  
-        // Resetea el campo correspondiente en el formulario y la previsualización
-        if (field === 'urlImagen') {
-          this.bannerForm.patchValue({ urlImagen: null });
-          this.selectedBanner = null;
-          this.bannerPreview = null; // Resetea la previsualización
-        } else if (field === 'logo') {
-          this.aliadoForm.patchValue({ logo: null });
-          this.selectedLogo = null;
-          this.logoPreview = null; // Resetea la previsualización
-        } else if (field === 'ruta_multi') {
-          this.aliadoForm.patchValue({ ruta_multi: null });
-          this.selectedruta = null;
-          this.rutaPreview = null; // Resetea la previsualización
-        }
-        this.resetFileField(field);
         return;
       }
-
-      const reader = new FileReader();
+  
+      // Nueva validación para las dimensiones del logo
+      if (field === 'logo') {
+        const img = new Image();
+        img.onload = () => {
+          if (img.width > 1751 || img.height > 1751) {
+            this.alertService.errorAlert('Error', 'La imagen del logo debe tener como máximo 1751 x 1751 píxeles.');
+            this.resetFileField(field);
+            event.target.value = ''; // Borra la selección del input
+            return;
+          } else {
+            this.processFile(file, field);
+          }
+        };
+        img.src = URL.createObjectURL(file);
+      } else {
+        this.processFile(file, field);
+      }
+    }
+  }
+  
+  private processFile(file: File, field: string) {
+    const reader = new FileReader();
     reader.onload = (e: any) => {
       const previewUrl = e.target.result;
       if (field === 'urlImagen') {
-        this.bannerForm.patchValue({ urlImagen: previewUrl });
+        this.bannerForm.patchValue({ urlImagen: previewUrl });  
         this.bannerPreview = previewUrl;
       } else if (field === 'logo') {
         this.aliadoForm.patchValue({ logo: previewUrl });
@@ -469,28 +476,29 @@ export class PerfilAliadoComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   
-      // Genera la previsualización solo si el archivo es de tamaño permitido
-      this.generateImagePreview(file, field);
-
-      if (field === 'urlImagen') {
-        this.selectedBanner = file;
-        this.bannerForm.patchValue({ urlImagen: file });
-      } else if (field === 'logo') {
-        this.selectedLogo = file;
-        this.aliadoForm.patchValue({ logo: file });
-      } else if (field === 'ruta_multi') {
-        this.selectedruta = file;
-        this.aliadoForm.patchValue({ ruta_multi: file });
-      } else if (field === 'ruta_documento') {
-        this.selectedruta = file;
-        this.aliadoForm.patchValue({ ruta_multi: file });
-      }
-      
-  } else {
-    this.resetFileField(field);
+    // Genera la previsualización solo si el archivo es de tamaño permitido
+    this.generateImagePreview(file, field);
+  
+    if (field === 'urlImagen') {
+      this.selectedBanner = file;
+      this.bannerForm.patchValue({ urlImagen: file });
+    } else if (field === 'logo') {
+      this.selectedLogo = file;
+      this.aliadoForm.patchValue({ logo: file });
+    } else if (field === 'ruta_multi') {
+      this.selectedruta = file;
+      this.aliadoForm.patchValue({ ruta_multi: file });
+    } else if (field === 'ruta_documento') {
+      this.selectedruta = file;
+      this.aliadoForm.patchValue({ ruta_multi: file });
+    }
   }
+  
+  onTextInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.aliadoForm.patchValue({ ruta_multi: value });
   }
-
+  
   resetFileField(field: string) {
     if (field === 'urlImagen') {
       this.bannerForm.patchValue({ urlImagen: null });

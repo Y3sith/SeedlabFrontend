@@ -144,7 +144,13 @@
 
                             <!-- Fecha nacimiento -->
                             <div>
-                                <label for="fecha_nac" class="block truncate text-sm font-medium text-gray-700">Fecha de Nacimiento:</label>
+                                <label for="fecha_nac" class="block truncate text-sm font-medium text-gray-700">
+                                    Fecha de Nacimiento:
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Debes ser mayor de edad."
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <input type="date" id="fecha_nac" formControlName="fecha_nac"
                                     class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                     [ngClass]="{'border-red-500': f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)}">
