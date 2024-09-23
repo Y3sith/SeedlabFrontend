@@ -48,6 +48,7 @@ export class EncuestaEmpresaComponent {
   listaRespuestas3: Respuesta[] = [];
   listaRespuestas4: Respuesta[] = [];
   listaRespuestas5: Respuesta[] = [];
+  respuestasCache: any = {};
 
   isSectionSaved: { [key: number]: boolean } = {
     1: false,
@@ -214,7 +215,8 @@ export class EncuestaEmpresaComponent {
     this.validateToken();
     this.route.paramMap.subscribe(params => {
       this.id_empresa = +params.get('id');
-    })
+    });
+    this.cargarRespuestasCache();
   }
 
   validateToken(): void {
@@ -642,6 +644,11 @@ export class EncuestaEmpresaComponent {
     if (this.respuesta54.opcion === 'Si') {
       this.respuesta55.valor = valorRespuesta26[this.respuesta55.opcion];
       this.listaRespuestas2.push(this.respuesta55);//32
+    }else{
+      this.respuesta55.texto_res = 'N/A';
+      this.respuesta55.id_pregunta = 26;
+      this.respuesta55.id_subpregunta = 33;
+      this.listaRespuestas2.push(this.respuesta55);
     }
     //pregunta27
     this.respuesta56.opcion === 'Si' ? this.respuesta56.valor = 2.5 : 0;
@@ -1354,11 +1361,6 @@ export class EncuestaEmpresaComponent {
     return isValidForm;
   }
 
-
-
-
-
-
   enviarRespuestasJson() {
     let isFormValid = true;
 
@@ -1459,6 +1461,175 @@ export class EncuestaEmpresaComponent {
       }
     );
   }
+
+  cargarRespuestasCache() {
+    this.respuestasService.getAnwerRedis(this.token, this.id_empresa).subscribe(
+      data => {
+        this.respuestasCache = data;
+        console.log(this.respuestasCache);
+        this.cargarRespuestasEnFormulario();
+      },
+      error => {
+        console.error(error);
+      }
+    )
+  }
+
+  cargarRespuestasEnFormulario() {
+    if (this.respuestasCache.seccion1) {
+      this.respuesta1.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[0].opcion : '';
+      this.respuesta2.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[1].opcion : '';
+      this.respuesta2.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[1].texto_res : '';
+      this.respuesta3.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[2].opcion : '';
+      this.respuesta3.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[2].texto_res : '';
+      this.respuesta4.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[3].opcion : '';
+      this.respuesta4.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[3].texto_res : '';
+      this.respuesta5.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[4].opcion : '';
+      this.respuesta5.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[4].texto_res : '';
+      this.respuesta6.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[5].opcion : '';
+      this.respuesta6.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[5].texto_res : '';
+      //pregunta 3
+      this.respuesta7.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[6].opcion : '';
+      this.respuesta8.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[7].opcion : '';
+      this.respuesta9.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[8].opcion : '';
+      this.respuesta10.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[9].opcion : '';
+      this.respuesta11.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[10].opcion : '';
+      this.respuesta12.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[11].opcion : '';
+      this.respuesta13.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[12].opcion : '';
+      this.respuesta14.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[13].texto_res : '';
+      this.respuesta15.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[14].texto_res : '';
+      this.respuesta16.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[15].opcion : '';
+      this.respuesta17.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[16].texto_res : '';
+      this.respuesta18.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[17].texto_res : '';
+      this.respuesta19.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[18].texto_res : '';
+      this.respuesta20.texto_res = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[19].texto_res : '';
+      this.respuesta21.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[20].opcion : '';
+      this.respuesta22.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[21].opcion : '';
+      this.respuesta23.opcion = this.respuestasCache.seccion1.length > 0 ? this.respuestasCache.seccion1[22].opcion : '';
+
+      //Seccion 2
+      this.respuesta24.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[0].opcion : '';
+      //pregunta 18
+      this.respuesta25.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[1].opcion : '';
+      this.respuesta26.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[2].opcion : '';
+      this.respuesta27.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[3].opcion : '';
+      this.respuesta28.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[4].opcion : '';
+      this.respuesta29.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[5].opcion : '';
+      this.respuesta30.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[6].opcion : '';
+      this.respuesta31.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[7].opcion : '';
+      this.respuesta32.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[8].opcion : '';
+      //pregunta 19
+      this.respuesta33.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[9].opcion : '';
+      this.respuesta34.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[10].opcion : '';
+      this.respuesta35.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[11].opcion : '';
+      this.respuesta36.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[12].opcion : '';
+      this.respuesta37.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[13].opcion : '';
+      this.respuesta38.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[14].opcion : '';
+      //pregunta 20
+      this.respuesta39.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[15].opcion : '';
+      //pregunta 21
+      this.respuesta40.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[16].opcion : '';
+      this.respuesta41.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[17].opcion : '';
+      this.respuesta42.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[18].opcion : '';
+      this.respuesta43.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[19].opcion : '';
+      //pregunta 22
+      this.respuesta44.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[20].opcion : '';
+      //pregunta 23
+      this.respuesta45.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[21].opcion : '';
+      this.respuesta46.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[22].opcion : '';
+      this.respuesta47.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[23].opcion : '';
+      this.respuesta48.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[24].opcion : '';
+      //pregunta 24
+      this.respuesta49.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[25].opcion : '';
+      this.respuesta50.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[26].opcion : '';
+      this.respuesta51.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[27].opcion : '';
+      this.respuesta52.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[28].opcion : '';
+      this.respuesta53.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[29].opcion : '';
+      //pregunta 25
+      this.respuesta54.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[30].opcion : '';
+      this.respuesta55.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[31].opcion : '';
+      this.respuesta56.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[32].opcion : '';
+      this.respuesta57.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[33].opcion : '';
+      this.respuesta58.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[34].opcion : '';
+      this.respuesta59.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[35].opcion : '';
+      this.respuesta60.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[36].opcion : '';
+      this.respuesta61.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[37].opcion : '';
+      this.respuesta62.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[38].opcion : '';
+      this.respuesta63.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[39].opcion : '';
+      this.respuesta64.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[40].opcion : '';
+      this.respuesta65.opcion = this.respuestasCache.seccion2.length > 0 ? this.respuestasCache.seccion2[41].opcion : '';
+
+      //Seccion 3
+      this.respuesta66.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[0].opcion : '';
+      this.respuesta67.texto_res = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[1].texto_res : '';
+      this.respuesta68.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[2].opcion : '';
+      this.respuesta69.texto_res = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[3].texto_res : '';
+      this.respuesta70.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[4].opcion : '';
+      this.respuesta71.texto_res = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[5].texto_res : '';
+      this.respuesta72.texto_res = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[6].texto_res : '';
+      this.respuesta73.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[7].opcion : '';
+      this.respuesta74.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[8].opcion : '';
+      this.respuesta75.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[9].opcion : '';
+      this.respuesta76.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[10].opcion : '';
+      this.respuesta77.opcion = this.respuestasCache.seccion3.length > 0 ? this.respuestasCache.seccion3[11].opcion : '';
+
+      //Seccion 4
+      this.respuesta78.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[0].opcion : '';
+      this.respuesta79.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[1].opcion : '';
+      this.respuesta80.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[2].opcion : '';
+      this.respuesta81.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[3].opcion : '';
+      this.respuesta82.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[4].opcion : '';
+      this.respuesta83.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[5].opcion : '';
+      this.respuesta84.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[6].opcion : '';
+      this.respuesta85.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[7].opcion : '';
+      this.respuesta86.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[8].opcion : '';
+      this.respuesta87.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[9].opcion : '';
+      this.respuesta88.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[10].opcion : '';
+      this.respuesta89.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[11].opcion : '';
+      this.respuesta90.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[12].opcion : '';
+      this.respuesta91.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[13].opcion : '';
+      this.respuesta92.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[14].opcion : '';
+      this.respuesta93.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[15].opcion : '';
+      this.respuesta94.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[16].opcion : '';
+      this.respuesta95.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[17].opcion : '';
+      this.respuesta96.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[18].opcion : '';
+      this.respuesta97.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[19].opcion : '';
+      this.respuesta98.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[20].opcion : '';
+      this.respuesta99.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[21].opcion : '';
+      this.respuesta100.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[22].opcion : '';
+      this.respuesta101.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[23].opcion : '';
+      this.respuesta102.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[24].opcion : '';
+      this.respuesta103.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[25].opcion : '';
+      this.respuesta104.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[26].opcion : '';
+      this.respuesta105.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[27].opcion : '';
+      this.respuesta106.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[28].opcion : '';
+      this.respuesta107.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[29].opcion : '';
+      this.respuesta108.opcion = this.respuestasCache.seccion4.length > 0 ? this.respuestasCache.seccion4[30].opcion : '';
+
+      //Seccion 5
+      this.respuesta109.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[0].opcion : '';
+      this.respuesta110.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[1].opcion : '';
+      this.respuesta111.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[2].opcion : '';
+      this.respuesta112.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[3].opcion : '';
+      this.respuesta113.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[4].opcion : '';
+      this.respuesta114.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[5].opcion : '';
+      this.respuesta115.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[6].opcion : '';
+      this.respuesta116.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[7].opcion : '';
+      this.respuesta117.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[8].opcion : '';
+      this.respuesta118.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[9].opcion : '';
+      this.respuesta119.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[10].opcion : '';
+      this.respuesta120.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[11].opcion : '';
+      this.respuesta121.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[12].opcion : '';
+      this.respuesta122.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[13].opcion : '';
+      this.respuesta123.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[14].opcion : '';
+      this.respuesta124.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[15].opcion : '';
+      this.respuesta125.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[16].opcion : '';
+      this.respuesta126.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[17].opcion : '';
+      this.respuesta127.opcion = this.respuestasCache.seccion5.length > 0 ? this.respuestasCache.seccion5[18].opcion : '';
+    }
+  }
+
+
 
 
   updateProgress() {
