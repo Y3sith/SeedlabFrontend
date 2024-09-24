@@ -169,7 +169,7 @@ export class DashboardComponent implements AfterViewInit {
             },
             {
               name: `Promedio ${this.selectedYear}`,
-              data: [promedioAnual],  // Convertir el promedio anual en un array para la gráfica
+              data: data.promedio_anual,  // Convertir el promedio anual en un array para la gráfica
               type: 'bar',
             }
           ]
