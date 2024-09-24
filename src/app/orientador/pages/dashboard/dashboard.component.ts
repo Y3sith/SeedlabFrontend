@@ -157,7 +157,7 @@ export class DashboardComponent implements AfterViewInit {
         this.totalAliados = data.aliado;
         this.totalAsesores = data.asesor;
         this.totalEmprendedores = data.emprendedor;
-        this.topAliados = data.topAliados;
+        this.topAliados = data.topAliados.original;
 
         // Configuración para la gráfica de Asesorías
         this.pieChartOption = {
