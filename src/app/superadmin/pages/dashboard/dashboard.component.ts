@@ -55,6 +55,7 @@ export class DashboardComponent implements AfterViewInit {
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.emprendedorPorDepartamento();
     this.initGraficaVacia();
+
   }
 
   ngAfterViewInit() {
@@ -63,7 +64,7 @@ export class DashboardComponent implements AfterViewInit {
     this.getRegistrosMensuales();
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.emprendedorPorDepartamento();
-    //this.graficaPuntajesFormulario();
+    this.initGraficaVacia();
 
   }
 
@@ -128,11 +129,14 @@ export class DashboardComponent implements AfterViewInit {
 
 
   promedioAsesoriasMesAnio(year: number): void {
-    this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
+    this.dashboardService.dashboardAdmin(this.token, this.selectedYear).subscribe(
       data => {
-        const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
-        const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
+        // Asignar los valores del JSON a las variables
+        const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(item.mes));
+        const promedios = data.averageAsesorias.original.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
+        const promedioAnual = parseFloat(data.averageAsesorias.original.promedio_anual); // Asegurarse de convertir a número
 
+        // Configuración de las opciones del gráfico de ECharts
         this.promedioAsesoriasEchartsOptions = {
           tooltip: {
             trigger: 'axis',
@@ -165,12 +169,16 @@ export class DashboardComponent implements AfterViewInit {
             },
             {
               name: `Promedio ${this.selectedYear}`,
-              data: data.promedio_anual,
+              data: data.promedio_anual,  // Convertir el promedio anual en un array para la gráfica
               type: 'bar',
             }
-          ],
+          ]
         };
-        this.initChart('promedio-asesorias', this.promedioAsesoriasEchartsOptions);
+
+        // Inicializar la gráfica con un pequeño retraso para asegurar que el DOM esté listo
+        
+          this.initChart('promedio-asesorias', this.promedioAsesoriasEchartsOptions);
+        
       },
       error => {
         console.error('Error al obtener promedio de asesorías:', error);
@@ -180,22 +188,26 @@ export class DashboardComponent implements AfterViewInit {
 
 
 
+
   getDatosDashboard(): void {
     this.isLoading = true;
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
+        // Asignar los datos devueltos a las variables correspondientes
         this.totalUsuarios = data;
-        this.totalSuperAdmin = data.superadmin;
-        this.totalOrientador = data.orientador;
-        this.totalAliados = data.aliado;
-        this.totalAsesores = data.asesor;
-        this.totalEmprendedores = data.emprendedor;
+        this.totalSuperAdmin = data.usuarios.superadmin;
+        this.totalOrientador = data.usuarios.orientador;
+        this.totalAliados = data.usuarios.aliado;
+        this.totalAsesores = data.usuarios.asesor;
+        this.totalEmprendedores = data.usuarios.emprendedor;
         this.topAliados = data.topAliados.original;
 
-        // Configuración para la gráfica de Asesorías
-        this.initEChartsBar();
+        // Configuración para la gráfica de barras (Top Aliados)
+        setTimeout(() => {
+          this.initEChartsBar();
+        }, 0); // Asegurarse de que el DOM esté listo antes de inicializar la gráfica
 
-        // Configuración para la gráfica de Asesorías
+        // Configuración para la gráfica de pastel (Asesorías)
         this.pieChartOption = {
           tooltip: {
             trigger: 'item'
@@ -238,8 +250,10 @@ export class DashboardComponent implements AfterViewInit {
           ]
         };
 
-        // Inicializar el gráfico de Asesorías
-        this.initChart('echarts-pie', this.pieChartOption);
+        // Inicializar el gráfico de Asesorías (Pie Chart)
+        setTimeout(() => {
+          this.initChart('echarts-pie', this.pieChartOption);
+        }, 0); // Asegurarse de que el DOM esté listo antes de inicializar la gráfica
       },
       error => {
         console.log(error);
@@ -263,7 +277,6 @@ export class DashboardComponent implements AfterViewInit {
           orient: 'vertical',
           left: 'left',
           data: ['Top Aliados'],
-
         },
         toolbox: {
           show: true,
@@ -323,6 +336,7 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
+
   getColorForIndex(index: number): string {
     // Lista de colores que se asignarán a las barras
     const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8A2BE2', '#00FA9A', '#FFD700', '#DC143C'];
@@ -333,9 +347,18 @@ export class DashboardComponent implements AfterViewInit {
 
 
   getDatosGenerosGrafica(): void {
-    this.dashboardService.graficaDatosGeneros(this.token).subscribe(
-      data => {
-        const dataGenero = data.map(item => item.total);
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
+      response => {
+        // Acceder a la propiedad original del JSON
+        const data = response.generosEmprendedores.original;
+
+        // Formatear los datos para el gráfico
+        const formattedData = data.map(item => ({
+          value: Number(item.total), // Convertir total a número
+          name: item.genero
+        }));
+
+        // Configuración de la opción del gráfico
         this.doughnutChartOption = {
           tooltip: {
             trigger: 'item'
@@ -354,26 +377,29 @@ export class DashboardComponent implements AfterViewInit {
                 borderRadius: 10
               },
               label: {
-                show: false,
-                position: 'center'
+                show: true, // Mostrar etiquetas
+                position: 'outside' // Posición afuera
               },
               emphasis: {
                 label: {
-                  show: false,
+                  show: true, // Mostrar etiqueta en énfasis
+                  fontSize: '20',
+                  fontWeight: 'bold'
                 }
               },
               labelLine: {
-                show: false
+                show: true // Mostrar líneas de etiqueta
               },
-              data: data.map(item => ({ value: item.total, name: item.genero }))
+              data: formattedData // Usar los datos formateados
             }
           ]
         };
 
+        // Inicializar el gráfico
         this.initChart('echarts-doughnut', this.doughnutChartOption);
       },
       error => {
-        console.log(error);
+        console.error('Error al obtener datos de géneros:', error);
       }
     );
   }
@@ -381,15 +407,21 @@ export class DashboardComponent implements AfterViewInit {
 
 
 
+
+
+
   getRegistrosMensuales(): void {
-    this.dashboardService.contarRegistrosMensual(this.token).subscribe(
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
-        if (Array.isArray(data) && data.length > 0) {
-          const emprendedoresData = data.map(item => parseInt(item.emprendedores));
-          const aliadosData = data.map(item => parseInt(item.aliados));
-          const meses = data.map(item => this.getMonthName(item.mes));
+        const conteoRegistros = data.conteoRegistros.original;
+
+        if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
+          const emprendedoresData = conteoRegistros.map(item => parseInt(item.emprendedores));
+          const aliadosData = conteoRegistros.map(item => parseInt(item.aliados));
+          const meses = conteoRegistros.map(item => this.getMonthName(item.mes));
 
           const maxValue = Math.max(...emprendedoresData, ...aliadosData);
+
           this.registrosEchartsOptions = {
             tooltip: {
               trigger: 'axis',
@@ -410,7 +442,7 @@ export class DashboardComponent implements AfterViewInit {
             },
             legend: {
               data: ['Emprendedor', 'Aliados'],
-              left: 'center',  // Centrar la leyenda en PC
+              left: 'center',
               top: 10,
               itemGap: 20
             },
@@ -452,8 +484,11 @@ export class DashboardComponent implements AfterViewInit {
               }
             ]
           };
-          // Usar setTimeout para asegurarse de que el DOM esté listo
-          this.initChart('echarts-registros', this.registrosEchartsOptions);
+
+          // Usar setTimeout para asegurarse de que el DOM esté listo antes de renderizar la gráfica
+          setTimeout(() => {
+            this.initChart('echarts-registros', this.registrosEchartsOptions);
+          }, 0);  // Un pequeño retraso para asegurarse de que el DOM esté disponible
         } else {
           console.error('Los datos recibidos no tienen la estructura esperada', data);
         }
@@ -465,87 +500,109 @@ export class DashboardComponent implements AfterViewInit {
   }
 
 
+
+
   getMonthName(monthNumber: number): string {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     return monthNames[monthNumber - 1];
   }
 
 
-  emprendedorPorDepartamento() {
-    this.dashboardService.emprendedoresPorDepartamento(this.token).subscribe(
-      (data: { departamento: string; total_emprendedores: number }[]) => {
-        fetch('assets/data/COL1.geo.json')
-          .then(response => response.json())
-          .then(colJson => {
-            echarts.registerMap('Colombia', colJson);
+  emprendedorPorDepartamento(): void {
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
+      (data) => {
+        // Obtener los emprendedores por departamento desde el JSON
+        const emprendedoresPorDepartamento = data.emprendedoresPorDepartamento.original.map(
+          (item: { departamento: string; total_emprendedores: string }) => ({
+            departamento: item.departamento,
+            total_emprendedores: Number(item.total_emprendedores) || 0 // Convertir a número
+          })
+        );
 
-            const mappedData = data.map(item => ({
-              name: this.normalizeName(item.departamento),
-              value: Number(item.total_emprendedores) || 0
-            }));
+        // Usamos setTimeout para dar tiempo antes de cargar el gráfico
+        setTimeout(() => {
+          // Cargar el archivo geojson para el mapa de Colombia
+          fetch('assets/data/COL1.geo.json')
+            .then(response => response.json())
+            .then(colJson => {
+              // Registrar el mapa de Colombia en ECharts
+              echarts.registerMap('Colombia', colJson);
 
-            colJson.features.forEach(feature => {
-              feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
-            });
-            const maxValue = Math.max(...data.map(item => item.total_emprendedores));
+              // Normalizar nombres y mapear los datos a formato requerido por ECharts
+              const mappedData = emprendedoresPorDepartamento.map(item => ({
+                name: this.normalizeName(item.departamento),
+                value: item.total_emprendedores
+              }));
 
-            this.emprenDeparEchartsOptions = {
-              title: {
-                text: 'Emprendedores por Departamento',
-                left: 'center'
-              },
-              tooltip: {
-                trigger: 'item',
-                formatter: function (params) {
-                  return `
-                    Departamento: ${params.name}<br>
-                    Valor: ${isNaN(params.value) ? 0 : params.value}<br>
-                  `;
-                }
-              },
-              visualMap: {
-                min: 0,
-                max: maxValue,
-                left: 'left',
-                top: 'bottom',
-                text: ['Alta', 'Baja'],
-                calculable: true
-              },
-              series: [
-                {
-                  name: 'Emprendedores',
-                  type: 'map',
-                  map: 'Colombia',
-                  roam: true,
-                  data: mappedData,
-                  nameProperty: 'NOMBRE_DPT',
-                  emphasis: {
-                    label: {
-                      show: true
+              // Normalizar los nombres de los departamentos en el archivo geojson
+              colJson.features.forEach(feature => {
+                feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
+              });
+
+              // Calcular el valor máximo de emprendedores por departamento
+              const maxValue = Math.max(...emprendedoresPorDepartamento.map(item => item.total_emprendedores));
+
+              // Configuración del gráfico ECharts
+              this.emprenDeparEchartsOptions = {
+                title: {
+                  text: 'Emprendedores por Departamento',
+                  left: 'center'
+                },
+                tooltip: {
+                  trigger: 'item',
+                  formatter: function (params) {
+                    return `
+                      Departamento: ${params.name}<br>
+                      Emprendedores: ${isNaN(params.value) ? 0 : params.value}<br>
+                    `;
+                  }
+                },
+                visualMap: {
+                  min: 0,
+                  max: maxValue,
+                  left: 'left',
+                  top: 'bottom',
+                  text: ['Alta', 'Baja'],
+                  calculable: true
+                },
+                series: [
+                  {
+                    name: 'Emprendedores',
+                    type: 'map',
+                    map: 'Colombia',
+                    roam: true,
+                    data: mappedData,
+                    nameProperty: 'NOMBRE_DPT',
+                    emphasis: {
+                      label: {
+                        show: true
+                      },
+                      itemStyle: {
+                        areaColor: '#eee'
+                      }
                     },
-                    itemStyle: {
-                      areaColor: '#eee'
-                    }
-                  },
-                  select: {
-                    label: {
-                      show: true
-                    },
-                    itemStyle: {
-                      color: 'rgb(255, 215, 0)'
+                    select: {
+                      label: {
+                        show: true
+                      },
+                      itemStyle: {
+                        color: 'rgb(255, 215, 0)'
+                      }
                     }
                   }
-                }
-              ]
-            };
+                ]
+              };
 
-            this.initChart('echarts-empXDepar', this.emprenDeparEchartsOptions);
-          })
-          .catch(error => console.error('Error al cargar el mapa:', error));
+              // Inicializar el gráfico con el archivo geojson y la configuración de ECharts
+              this.initChart('echarts-empXDepar', this.emprenDeparEchartsOptions);
+            })
+            .catch(error => console.error('Error al cargar el mapa:', error));
+        }, 1000); // Retardo de 1 segundo para cargar el gráfico
       },
       error => console.error('Error al obtener datos de emprendedores:', error)
     );
   }
+
 
   initGraficaVacia(): void {
     // Configuración de la gráfica vacía

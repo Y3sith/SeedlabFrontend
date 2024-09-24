@@ -3,6 +3,7 @@ import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
 import { DashboardsService } from '../../../servicios/dashboard.service';
+import { EmpresaService } from '../../../servicios/empresa.service';
 
 
 @Component({
@@ -31,10 +32,16 @@ export class DashboardComponent implements AfterViewInit {
   years: number[] = [];
   selectedYear: number;
   isLoading: boolean = false;
+  selectedEmpresa: string = '';
+  listEmpresas = [];
+  selectedTipo: string = '';
+  chart: any;
+  getPuntajesForm: echarts.EChartsOption;
 
   constructor(
     private dashboardService: DashboardsService,
-    private router: Router
+    private router: Router,
+    private empresaService: EmpresaService
   ) { }
 
   ngOnInit() {
@@ -46,7 +53,9 @@ export class DashboardComponent implements AfterViewInit {
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
     this.selectedYear = currentYear;
     this.promedioAsesoriasMesAnio(this.selectedYear);
-    this.loadChartData();
+    this.getEmpresas();
+    this.initGraficaVacia();
+    
   }
 
   ngAfterViewInit() {
@@ -54,7 +63,7 @@ export class DashboardComponent implements AfterViewInit {
     this.getDatosGenerosGrafica();
     this.getRegistrosMensuales();
     this.promedioAsesoriasMesAnio(this.selectedYear);
-    this.loadChartData();
+    
   }
 
   validateToken(): void {
@@ -83,13 +92,31 @@ export class DashboardComponent implements AfterViewInit {
     this.promedioAsesoriasMesAnio(this.selectedYear);
   }
 
+  getEmpresas() {
+    this.empresaService.getAllEmpresa(this.token).subscribe(
+      data => {
+        this.listEmpresas = data;
+        this.selectedEmpresa = this.listEmpresas.length > 0 ? this.listEmpresas[0].documento_empresa : null;
+        this.graficaPuntajesFormulario(+this.selectedTipo);
+      },
+      error => {
+        console.error('Error al obtener empresas:', error);
+      }
+    )
+  }
+
+  onEmpresaChange(selectedId: string): void {
+    this.selectedEmpresa = selectedId;
+    this.graficaPuntajesFormulario(+this.selectedTipo);
+  }
 
 
   promedioAsesoriasMesAnio(year: number): void {
-    this.dashboardService.promedioAsesorias(this.token, this.selectedYear).subscribe(
+    this.dashboardService.dashboardAdmin(this.token, this.selectedYear).subscribe(
       data => {
-        const meses = data.promedio_mensual.map(item => this.getMonthName(item.mes));
-        const promedios = data.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
+        const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(item.mes));
+        const promedios = data.averageAsesorias.original.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
+        const promedioAnual = data.averageAsesorias.original.promedio_anual;
 
         this.promedioAsesoriasEchartsOptions = {
           tooltip: {
@@ -123,7 +150,7 @@ export class DashboardComponent implements AfterViewInit {
             },
             {
               name: `Promedio ${this.selectedYear}`,
-              data: data.promedio_anual,
+              data: promedioAnual,
               type: 'bar',
             }
           ],
@@ -136,7 +163,7 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-    initEchartsPromedioAsesorias() {
+  initEchartsPromedioAsesorias() {
     const chartDom = document.getElementById('promedio-asesorias');
     if (chartDom) {
       const myChart = echarts.init(chartDom);
@@ -152,12 +179,13 @@ export class DashboardComponent implements AfterViewInit {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
-        this.totalSuperAdmin = data.superadmin;
-        this.totalOrientador = data.orientador;
-        this.totalAliados = data.aliado;
-        this.totalAsesores = data.asesor;
-        this.totalEmprendedores = data.emprendedor;
+        this.totalSuperAdmin = data.usuarios.superadmin;
+        this.totalOrientador = data.usuarios.orientador;
+        this.totalAliados = data.usuarios.aliado;
+        this.totalAsesores = data.usuarios.asesor;
+        this.totalEmprendedores = data.usuarios.emprendedor;
         this.topAliados = data.topAliados.original;
+
 
         // Configuración para la gráfica de Asesorías
         this.pieChartOption = {
@@ -212,6 +240,7 @@ export class DashboardComponent implements AfterViewInit {
 
   graficaTopAliados(): void {
     const chartDom = document.getElementById('echarts-bar');
+    console.log(this.topAliados);
     if (chartDom) {
       const myChart = echarts.init(chartDom);
       const option = {
@@ -256,7 +285,7 @@ export class DashboardComponent implements AfterViewInit {
             name: 'Top Aliados',
             type: 'bar',
             data: this.topAliados.map((aliado, index) => ({
-              value: aliado.asesorias,
+              value: aliado.asesoria,
               itemStyle: {
                 color: this.getColorForIndex(index)
               }
@@ -288,12 +317,20 @@ export class DashboardComponent implements AfterViewInit {
     return colors[index % colors.length]; // Asigna un color a cada barra, y repite si hay más barras que colores
   }
 
-  
+
 
 
   getDatosGenerosGrafica(): void {
-    this.dashboardService.graficaDatosGeneros(this.token).subscribe(
-      data => {
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
+      response => {
+
+        const data = response.generosEmprendedores.original;
+
+        const formattedData = data.map(item => ({
+          value: Number(item.total), // Convertir total a número
+          name: item.genero
+        }));
+
         if (data && data.length > 0) {
           const dataGenero = data.map(item => item.total);
 
@@ -312,11 +349,11 @@ export class DashboardComponent implements AfterViewInit {
                 radius: ['40%', '70%'],
                 avoidLabelOverlap: false,
                 itemStyle: {
-                  borderRadius: 20
+                  borderRadius: 10
                 },
                 label: {
-                  show: false,
-                  position: 'center'
+                  show: true,
+                  position: 'outside'
                 },
                 emphasis: {
                   label: {
@@ -326,7 +363,7 @@ export class DashboardComponent implements AfterViewInit {
                 labelLine: {
                   show: false
                 },
-                data: data.map(item => ({ value: item.total, name: item.genero }))
+                data: formattedData
               }
             ]
           };
@@ -364,79 +401,72 @@ export class DashboardComponent implements AfterViewInit {
 
 
   getRegistrosMensuales(): void {
-    this.dashboardService.contarRegistrosMensual(this.token).subscribe(
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
-        const emprendedoresData = data?.map(item => parseInt(item.emprendedores));
-        const aliadosData = data?.map(item => parseInt(item.aliados));
-        const meses = data?.map(item => this.getMonthName(item.mes)); 
+        const conteoRegistros = data.conteoRegistros.original;
 
-        this.registrosEchartsOptions = {
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'cross',
-              crossStyle: {
-                color: '#999'
-              }
-            }
-          },
-          toolbox: {
-            feature: {
-              dataView: { show: true, readOnly: false },
-              magicType: { show: true, type: ['line', 'bar'] },
-              restore: { show: true },
-              saveAsImage: { show: true }
-            }
-          },
-          legend: {
-            orient: 'horizontal',
-            left: 'left',
-            data: ['Emprendedor', 'Aliados']
-          },
-          xAxis: [
-            {
-              type: 'category',
-              data: meses,
+        if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
+          const emprendedoresData = conteoRegistros.map(item => parseInt(item.emprendedores));
+          const aliadosData = conteoRegistros.map(item => parseInt(item.aliados));
+          const meses = conteoRegistros.map(item => this.getMonthName(item.mes));
+
+          const maxValue = Math.max(...emprendedoresData, ...aliadosData);
+          
+          this.registrosEchartsOptions = {
+            tooltip: {
+              trigger: 'axis',
               axisPointer: {
-                type: 'shadow'
-              }
-            }
-          ],
-          yAxis: [
-            {
-              type: 'value',
-              name: 'Emprendedor',
-              min: 0,
-              max: Math.max(...emprendedoresData, ...aliadosData) + 10,
-              interval: 500,
-              axisLabel: {
-                formatter: '{value} '
+                type: 'cross',
+                crossStyle: {
+                  color: '#999'
+                }
               }
             },
-            {
-              type: 'value',
-              name: 'Aliados',
-              min: 0,
-              max: Math.max(...emprendedoresData, ...aliadosData) + 10,
-              interval: 500,
-              axisLabel: {
-                formatter: '{value} '
+            toolbox: {
+              feature: {
+                dataView: { show: true, readOnly: false },
+                magicType: { show: true, type: ['line', 'bar'] },
+                restore: { show: true },
+                saveAsImage: { show: true }
               }
-            }
-          ],
-          series: [
-            {
-              name: 'Emprendedor',
-              type: 'bar',
-              data: emprendedoresData
             },
-            {
-              name: 'Aliados',
-              type: 'bar',
-              data: aliadosData
-            }
-          ]
-        };
+            legend: {
+              orient: 'horizontal',
+              left: 'left',
+              data: ['Emprendedor', 'Aliados']
+            },
+            xAxis: [
+              {
+                type: 'category',
+                data: meses,
+                axisPointer: {
+                  type: 'shadow'
+                }
+              }
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                name: 'Cantidad',
+                min: 0,
+                max: maxValue + 5,
+                interval: Math.ceil(maxValue / 5)
+              }
+            ],
+            series: [
+              {
+                name: 'Emprendedor',
+                type: 'bar',
+                data: emprendedoresData
+              },
+              {
+                name: 'Aliados',
+                type: 'bar',
+                data: aliadosData
+              }
+            ]
+          };
+        }
 
         this.initEchartsRegistrosMenusales();
       },
@@ -452,70 +482,102 @@ export class DashboardComponent implements AfterViewInit {
     return monthNames[monthNumber - 1];
   }
 
-  loadChartData() {
-    this.dashboardService.getDashboard(this.token, this.id).subscribe(
-      data => {
-        this.pendientesFinalizadasData[0].data = [
-          data['Asesorias Pendientes'] || 0,
-          data['Asesorias Finalizadas'] || 0,
-          data['Asesorias Sin Asignar'] || 0,
-          data['Asesorias Asignadas'] || 0
-        ];
-
-        // Inicializar la gráfica con los datos cargados
-        this.initEChartsPie();
+  initGraficaVacia(): void {
+    // Configuración de la gráfica vacía
+    this.getPuntajesForm = {
+      title: {
+        text: 'Puntajes por Formulario (Sin datos)',
+        left: 'center'
       },
-      (error) => {
-        console.error(error);
+      radar: {
+        indicator: [
+          { name: 'General', max: 100 },
+          { name: 'Técnica', max: 100 },
+          { name: 'TRL', max: 9 },
+          { name: 'Mercado', max: 100 },
+          { name: 'Financiera', max: 100 }
+        ]
+      },
+      series: [
+        {
+          name: 'Puntajes',
+          type: 'radar',
+          data: [
+            {
+              value: [0, 0, 0, 0, 0], // Valores vacíos
+              name: 'Sin Empresa Seleccionada'
+            }
+          ]
+        }
+      ]
+    };
+
+    // Renderiza la gráfica vacía al cargar la página
+    this.initChart('echarts-formulario', this.getPuntajesForm);
+  }
+
+  graficaPuntajesFormulario(tipo: number): void {
+    if (!this.selectedEmpresa || !tipo) {
+      this.initGraficaVacia();
+      return;
+    }
+
+    this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa, tipo).subscribe(
+      data => {
+        this.getPuntajesForm = {
+          title: {
+            text: tipo === 1 ? 'Puntajes por Formulario (Primera vez)' : 'Puntajes por Formulario (Segunda vez)',
+            left: 'center'
+          },
+          radar: {
+            indicator: [
+              { name: 'General', max: 100 },
+              { name: 'Técnica', max: 100 },
+              { name: 'TRL', max: 9 },
+              { name: 'Mercado', max: 100 },
+              { name: 'Financiera', max: 100 }
+            ]
+          },
+          series: [
+            {
+              name: 'Puntajes',
+              type: 'radar',
+              data: [
+                {
+                  value: [
+                    parseFloat(data.info_general) || 0,
+                    parseFloat(data.info_tecnica) || 0,
+                    parseFloat(data.info_trl) || 0,
+                    parseFloat(data.info_mercado) || 0,
+                    parseFloat(data.info_financiera) || 0
+                  ],
+                  name: `Empresa ${this.selectedEmpresa}` // Cambia si es necesario
+                }
+              ]
+            }
+          ]
+        };
+
+        // Actualizar la gráfica con los nuevos datos
+        if (this.chart) {
+          this.chart.dispose(); // Destruye el gráfico anterior antes de crear uno nuevo
+        }
+        this.initChart('echarts-formulario', this.getPuntajesForm);
+      },
+      error => {
+        console.error('Error al obtener los puntajes del formulario:', error);
+        this.initGraficaVacia();
       }
+
     );
   }
 
-  initEChartsPie() {
-    const chartDom = document.getElementById('echarts-pie');
-    if (chartDom) {
-      echarts.dispose(chartDom); 
-      const myChart = echarts.init(chartDom);
-      const option = {
-        tooltip: {
-          trigger: 'item'
-        },
-        legend: {
-          top: '5%',
-          left: 'center'
-        },
-        series: [
-          {
-            name: 'Asesorías',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            itemStyle: {
-              borderRadius: 10
-            },
-            label: {
-              show: false,
-              position: 'center'
-            },
-            emphasis: {
-              label: {
-                show: false,
-              }
-            },
-            labelLine: {
-              show: false
-            },
-            data: this.pendientesFinalizadasLabels.map((label, index) => ({
-              value: this.pendientesFinalizadasData[0].data[index],
-              name: label
-            }))
-          }
-        ]
-      };
-      myChart.setOption(option);
-    } else {
-      console.error('No se pudo encontrar el elemento con id "echarts-pie"');
-    }
+  initChart(chartId: string, chartOptions: any): void {
+    const chartDom = document.getElementById(chartId);
+    this.chart = echarts.init(chartDom); // Inicializa el gráfico y lo almacena en this.chart
+    this.chart.setOption(chartOptions);
   }
+
+  
 
 }

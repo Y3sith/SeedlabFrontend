@@ -77,11 +77,11 @@ export class DashboardComponent {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
-        this.totalSuperAdmin = data.superadmin;
-        this.totalOrientador = data.orientador;
-        this.totalAliados = data.aliado;
-        this.totalAsesores = data.asesor;
-        this.totalEmprendedores = data.emprendedor;
+        this.totalSuperAdmin = data.usuarios.superadmin;
+        this.totalOrientador = data.usuarios.orientador;
+        this.totalAliados = data.usuarios.aliado;
+        this.totalAsesores = data.usuarios.asesor;
+        this.totalEmprendedores = data.usuarios.emprendedor;
         this.topAliados = data.topAliados.original;
 
         // Configuración para la gráfica de Top Aliados
@@ -181,7 +181,7 @@ export class DashboardComponent {
             name: 'Top Aliados',
             type: 'bar',
             data: this.topAliados.map((aliado, index) => ({
-              value: aliado.asesorias,
+              value: aliado.asesoria,
               itemStyle: {
                 color: this.getColorForIndex(index)
               }
@@ -215,9 +215,15 @@ export class DashboardComponent {
 
 
   getDatosGenerosGrafica(): void {
-    this.dashboardService.graficaDatosGeneros(this.token).subscribe(
-      data => {
-        const dataGenero = data.map(item => item.total);
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
+      response => {
+        const data = response.generosEmprendedores.original;
+        
+        const formattedData = data.map(item => ({
+          value: Number(item.total), 
+          name: item.genero
+        }));
+
         this.doughnutChartOption = {
           tooltip: {
             trigger: 'item'
@@ -236,8 +242,8 @@ export class DashboardComponent {
                 borderRadius: 10
               },
               label: {
-                show: false,
-                position: 'center'
+                show: true,
+                position: 'outside'
               },
               emphasis: {
                 label: {
@@ -247,7 +253,7 @@ export class DashboardComponent {
               labelLine: {
                 show: false
               },
-              data: data.map(item => ({ value: item.total, name: item.genero }))
+              data: formattedData
             }
           ]
         };

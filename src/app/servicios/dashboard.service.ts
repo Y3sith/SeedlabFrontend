@@ -39,20 +39,21 @@ export class DashboardsService {
     localStorage.setItem(key, JSON.stringify(cacheData)); // Guarda los datos en localStorage
   }
 
-  dashboardAdmin(access_token: any): Observable<any> {
-    const cachedData = this.getFromLocalStorage('dashboardAdmin');
-    if (cachedData) {
-      return of(cachedData); // Retorna los datos desde localStorage
-    }
-
+  dashboardAdmin(access_token: any, year?: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url + "contar-usuarios", options).pipe(
+    
+    // Si el año está presente, lo añadimos a la URL, sino enviamos solo la URL base
+    const url = year ? `${this.url}contar-usuarios?year=${year}` : `${this.url}contar-usuarios`;
+  
+    return this.http.get(url, options).pipe(
       map(data => {
         this.saveToLocalStorage('dashboardAdmin', data); // Guarda en localStorage
         return data; // Retorna los datos
       })
     );
   }
+  
+  
 
   contarRegistrosMensual(access_token: any): Observable<any> {
     const cachedData = this.getFromLocalStorage('contarRegistrosMensual');
