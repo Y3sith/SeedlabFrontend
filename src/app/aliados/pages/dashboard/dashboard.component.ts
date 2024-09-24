@@ -82,7 +82,7 @@ export class DashboardComponent {
         this.totalAliados = data.aliado;
         this.totalAsesores = data.asesor;
         this.totalEmprendedores = data.emprendedor;
-        this.topAliados = data.topAliados;
+        this.topAliados = data.topAliados.original;
 
         // Configuración para la gráfica de Top Aliados
         this.initEChartsBar();
@@ -118,9 +118,9 @@ export class DashboardComponent {
                 show: false
               },
               data: [
-                { value: data.conteoAsesorias.asesoriasAsignadas, name: 'Asesorías asignadas' },
-                { value: data.conteoAsesorias.asesoriasSinAsignar, name: 'Asesorías sin asignar' }
-              ]
+                { value: data.conteoAsesorias.original.asesoriasAsignadas, name: 'Asignadas' },
+                { value: data.conteoAsesorias.original.asesoriasSinAsignar, name: 'Sin asignar' }
+              ],
             }
           ]
         };
