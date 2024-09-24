@@ -21,30 +21,12 @@ import { access } from 'fs';
 })
 export class SuperadminService {
 
-  private cache: { [key: string]: any } = {}; // Objeto para almacenar la caché
-  private cacheExpiration: { [key: string]: number } = {}; // Tiempos de expiración para cada personalización
-  private cacheDuration = 60 * 60 * 1000;
 
   url = environment.apiUrl + 'superadmin/';
 
   constructor(private http: HttpClient) { }
 
-  private getCachedData(key: string, id: number): Observable<any> {
-    // Verifica si los datos están en caché y si no han expirado
-    if (this.cache[key] && (Date.now() - this.cacheExpiration[key] < this.cacheDuration)) {
-      return of(this.cache[key]); // Retorna los datos desde caché
-    }
-
-    // Si no están en caché o han expirado, realiza la solicitud HTTP
-    return this.http.get<any>(`${environment.apiUrl}traerPersonalizacion/${id}`).pipe(
-      tap(data => {
-        // Almacena los datos en caché y actualiza el tiempo de expiración
-        this.cache[key] = data;
-        this.cacheExpiration[key] = Date.now();
-      }),
-      shareReplay(1) // Asegura que no se repitan múltiples solicitudes si hay varios suscriptores
-    );
-  }
+  
 
   private CreacionHeaders(access_token: any): HttpHeaders {
     return new HttpHeaders({
@@ -124,8 +106,7 @@ export class SuperadminService {
   }
 
   getPersonalizacion(id: number): Observable<any> {
-    const key = `personalizacion_${id}`;
-    return this.getCachedData(key, id);
+    return this.http.get(environment.apiUrl + "traerPersonalizacion/"+id);
   }
 
   restorePersonalization(access_token: any, id): Observable<any> {
