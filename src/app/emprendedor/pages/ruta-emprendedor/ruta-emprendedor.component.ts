@@ -26,6 +26,7 @@ export class RutaEmprendedorComponent implements OnInit {
   listRespuestaId: any[] = [];
   ishidden: boolean = true;
   isLoading: boolean = true;
+  alertadeactividad: boolean = false;
 
   actividadForm = this.fb.group({
     id: [null],
@@ -108,6 +109,7 @@ export class RutaEmprendedorComponent implements OnInit {
             this.rutaId = primeraRuta.id;
             // Si quieres llamar otra función después de recibir el ID
             this.listarRutas();
+            this.checkRutasYActividades();
           } else{
             
             console.log('No hay rutas activas');
@@ -123,17 +125,24 @@ export class RutaEmprendedorComponent implements OnInit {
     }
   }
 
+  
   listarRutas(): void {
     this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
       data => {
         this.rutaLista = data;
         this.isLoading = false;
+        this.checkRutasYActividades();
       },
       err => {
         //console.error('Error al obtener rutas:',err);
         this.isLoading = false;
       });
-  }
+    }
+    checkRutasYActividades() {
+      if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
+        this.alertadeactividad = true;
+      }
+    }
 
   getItemClass(index: number): string {
     if (index === 0) return 'item-single';
