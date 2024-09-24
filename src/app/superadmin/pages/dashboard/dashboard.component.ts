@@ -190,7 +190,7 @@ export class DashboardComponent implements AfterViewInit {
         this.totalAliados = data.aliado;
         this.totalAsesores = data.asesor;
         this.totalEmprendedores = data.emprendedor;
-        this.topAliados = data.topAliados;
+        this.topAliados = data.topAliados.original;
 
         // Configuración para la gráfica de Asesorías
         this.initEChartsBar();
@@ -231,8 +231,8 @@ export class DashboardComponent implements AfterViewInit {
                 show: false
               },
               data: [
-                { value: data.conteoAsesorias.asesoriasAsignadas, name: 'Asignadas' },
-                { value: data.conteoAsesorias.asesoriasSinAsignar, name: 'Sin asignar' }
+                { value: data.conteoAsesorias.original.asesoriasAsignadas, name: 'Asignadas' },
+                { value: data.conteoAsesorias.original.asesoriasSinAsignar, name: 'Sin asignar' }
               ],
             }
           ]
@@ -297,7 +297,7 @@ export class DashboardComponent implements AfterViewInit {
             name: 'Top Aliados',
             type: 'line',
             data: this.topAliados.map((aliado, index) => ({
-              value: aliado.asesorias,
+              value: aliado.asesoria,
               itemStyle: {
                 color: this.getColorForIndex(index)
               }
