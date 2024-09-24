@@ -172,7 +172,6 @@ export class AddAliadosComponent {
     this.fileInputs.nativeElement.click();
   }
 
-
   eliminarBanner(id_aliado: number): void {
     this.alertService.alertaActivarDesactivar('¿Estas seguro de eliminar el banner?, no se mostrara en la pagina principal', 'question').then((result) => {
       if (result.isConfirmed) {
@@ -191,8 +190,6 @@ export class AddAliadosComponent {
       }
     });
   }
-
-
 
   verEditarBanners(): void {
     this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
@@ -273,6 +270,24 @@ export class AddAliadosComponent {
       estadoValue = this.aliadoForm.get('estado')?.value;
     }
 
+const nombreAliado = this.aliadoForm.get('nombre')?.value;
+if (nombreAliado){
+  if (/^\d+$/.test(nombreAliado)) {
+    this.alertService.errorAlert('Error', 'El nombre no puede estar compuesto solamente de numeros');
+    return;
+  }
+}
+
+    const nombreDescripcion = this.aliadoForm.get('descripcion')?.value;
+    if (nombreDescripcion && nombreDescripcion.length > 312) {
+      this.alertService.errorAlert('Error', 'La descripción no puede tener más de 312 caracteres.');
+      return;
+    }
+    if (nombreDescripcion && nombreDescripcion.length < 210) {
+      this.alertService.errorAlert('Error', 'La descripción no puede tener menos de 210 caracteres.');
+      return;
+    }
+
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
     formData.append('descripcion', this.aliadoForm.get('descripcion')?.value);
     formData.append('urlpagina', this.aliadoForm.get('urlpagina')?.value);
@@ -296,20 +311,25 @@ export class AddAliadosComponent {
 
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
 
-
+    
     if (this.selectedBanner) {
       formData.append('banner_urlImagen', this.selectedBanner, this.selectedBanner.name);
     }
     formData.append('banner_estadobanner', this.bannerForm.get('estadobanner')?.value);
 
+    console.log(formData);
+
     if (this.idAliado != null) {
       this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
         data => {
           this.alertService.successAlert('Exito', data.message);
+          console.log('wwwwwww',data);
         },
         error => {
-          console.error(error);
-          this.alertService.successAlert('Error', error.error.message);
+          console.error('xxxx',error);
+          console.log(formData);
+
+          // this.alertService.successAlert('Error', error.error.message);
 
         }
       )
@@ -331,7 +351,7 @@ export class AddAliadosComponent {
   /* Cambia el estado del toggle*/
   toggleActive() {
     this.isActive = !this.isActive;
-    this.aliadoForm.patchValue({ estado: this.isActive });
+    this.aliadoForm.patchValue({ estado: this.isActive ? true : false });
   }
   /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
   mostrarToggle(): void {

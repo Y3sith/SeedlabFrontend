@@ -97,10 +97,14 @@ export class ListAliadosComponent implements OnInit {
 
   /* Función para filtrar aliados por nombre, ignorando mayúsculas/minúsculas */
   buscarAliados(): Aliado[] {
-    const filterText = this.userFilter.nombre.toLowerCase(); // Convierte el texto del filtro a minúsculas
+    const filterText = this.userFilter.nombre.trim();
     return this.listaAliado.filter(aliado => {
-      const nombreLower = aliado.nombre.toLowerCase(); // Convierte el nombre del aliado a minúsculas
-      return nombreLower.includes(filterText);
+      if (typeof aliado.nombre === 'string') {
+        return aliado.nombre.includes(filterText);
+      } else {
+        // Handle the case where aliado.nombre is not a string
+        return false;
+      }
     });
   }
 
@@ -127,14 +131,16 @@ export class ListAliadosComponent implements OnInit {
   updatePaginatedData(): void {
     const start = (this.page - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-
-    const filterText = this.userFilter.nombre.toLowerCase(); // Convierte el texto del filtro a minúsculas
-
+    const filterText = this.userFilter.nombre.trim();
+  
     this.paginatedAliados = this.listaAliado
       .filter(aliado => {
-        const nombreLower = aliado.nombre.toLowerCase(); // Convierte el nombre del admin a minúsculas
-        return nombreLower.includes(filterText) &&
-        aliado.estado.toString() === this.userFilter.estadoString; // Ajuste aquí
+        if (typeof aliado.nombre === 'string') {
+          return aliado.nombre.includes(filterText) && aliado.estado.toString() === this.userFilter.estadoString;
+        } else {
+          // Handle the case where aliado.nombre is not a string
+          return false;
+        }
       })
       .slice(start, end);
   }

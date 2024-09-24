@@ -48,7 +48,7 @@
         <tbody class="space-y-6">
           <ng-container *ngIf="listaAliado.length > 0">
             <ng-container
-              *ngFor="let aliado of listaAliado | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index">
+              *ngFor="let aliado of paginatedAliados; let i = index">
               <tr class="bg-line-gray my-5 rounded-xl">
                 <td class="p-2 rounded-s-lg">{{ aliado.nombre }}</td>
                 <td class="p-2 max-sm:break-all">{{ aliado.email }}</td>
