@@ -8,6 +8,7 @@ import { Aliado } from '../../../Modelos/aliado.model';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { ModalAliadosComponent } from '../modal-aliados/modal-aliados.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-todos-los-aliados',
@@ -34,6 +35,7 @@ export class TodosLosAliadosComponent {
     private cdr: ChangeDetectorRef,
     public dialog: MatDialog,
     private personalizacionesService: SuperadminService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -80,5 +82,9 @@ export class TodosLosAliadosComponent {
         console.error("no funciona", error);
       }
     );
+  }
+
+  goBack(){
+    this.location.back();
   }
 }

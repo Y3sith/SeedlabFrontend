@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { fa1 } from '@fortawesome/free-solid-svg-icons';
+import { fa1, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -49,6 +49,7 @@ export class EncuestaEmpresaComponent {
   listaRespuestas4: Respuesta[] = [];
   listaRespuestas5: Respuesta[] = [];
   respuestasCache: any = {};
+  falupa = faCircleQuestion;
 
   isSectionSaved: { [key: number]: boolean } = {
     1: false,
