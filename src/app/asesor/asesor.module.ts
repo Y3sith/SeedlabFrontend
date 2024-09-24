@@ -10,6 +10,7 @@ import { AsesorRoutingModule } from './asesor-routing.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 
+
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import { ListRutaComponent } from './pages/list-ruta/list-ruta.component';
 import { ListActividadesComponent } from './pages/list-actividades/list-actividades.component';

@@ -1,13 +1,11 @@
-import { ChangeDetectorRef, Component, ElementRef, Injectable, Input, Output, Pipe, PipeTransform, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Pipe, PipeTransform, } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { Leccion } from '../../../Modelos/leccion.model';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from '../../../../environment/env';
-import { Contenido_Leccion } from '../../../Modelos/contenido-leccion.model';
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { RutaService } from '../../../servicios/rutas.service';
-import { Observable, tap } from 'rxjs';
 import { Ruta } from '../../../Modelos/ruta.modelo';
 import { AlertService } from '../../../servicios/alert.service';
 import { MatDialog } from '@angular/material/dialog';

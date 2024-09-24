@@ -1,4 +1,4 @@
-  import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ListAsesoresComponent } from './pages/list-asesores/list-asesores.component';
 import { AsesoriaAliadoComponent } from './pages/list-asesorias/asesoria-aliado.component';
@@ -10,7 +10,7 @@ import { AliadosRoutingModule } from './aliados-routing.module';
 import { SafePipe } from './pages/modal-aliados/modal-aliados.component';
 
 
-import { ReactiveFormsModule, FormsModule} from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MatIconModule } from '@angular/material/icon';
@@ -19,7 +19,7 @@ import { RouterModule } from '@angular/router';
 
 
 import { NgChartsModule } from 'ng2-charts';
-import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
 import { AddBannerComponent } from './pages/add-banner/add-banner.component';
 
@@ -53,7 +53,7 @@ import { ListActividadesComponent } from './pages/list-actividades/list-activida
     ModalAliadosComponent,
     SafePipe,
     ListRutaComponent,
-    ListActividadesComponent, 
+    ListActividadesComponent,
   ],
   imports: [
     CommonModule,
@@ -69,7 +69,7 @@ import { ListActividadesComponent } from './pages/list-actividades/list-activida
     MatTooltipModule,
     RouterModule,
     MatToolbarModule
-    
+
   ]
 })
 export class AliadosModule { }

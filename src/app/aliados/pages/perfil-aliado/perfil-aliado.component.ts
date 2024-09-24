@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@an
 import { Banner } from '../../../Modelos/banner.model';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { User } from '../../../Modelos/user.model';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Aliado } from '../../../Modelos/aliado.model';
 import { AlertService } from '../../../servicios/alert.service';
 import { AliadoService } from '../../../servicios/aliado.service';

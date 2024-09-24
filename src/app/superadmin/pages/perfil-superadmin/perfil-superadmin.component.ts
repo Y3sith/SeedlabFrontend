@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, Validators, ValidationErrors, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators, ValidationErrors, } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';

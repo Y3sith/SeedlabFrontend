@@ -1,7 +1,6 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { MatToolbar} from '@angular/material/toolbar';
 
-import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../../servicios/auth.service';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Personalizaciones } from '../../../Modelos/personalizaciones.model';

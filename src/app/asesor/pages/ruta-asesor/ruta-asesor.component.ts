@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef,  ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { User } from '../../../Modelos/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,9 +8,7 @@ import { ActividadService } from '../../../servicios/actividad.service';
 import { faImage, faFilePdf, } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../Modelos/actividad.model';
 import { Aliado } from '../../../Modelos/aliado.model';
-import { Superadmin } from '../../../Modelos/superadmin.model';
 import { AliadoService } from '../../../servicios/aliado.service';
-import Pica from 'pica';
 import { NivelService } from '../../../servicios/nivel.service';
 import { Nivel } from '../../../Modelos/nivel.model';
 import { AlertService } from '../../../servicios/alert.service';

@@ -1,14 +1,14 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+// import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
-import { faIdCard } from '@fortawesome/free-solid-svg-icons';
-import { faLandmarkFlag } from '@fortawesome/free-solid-svg-icons';
-import { faMountainCity } from '@fortawesome/free-solid-svg-icons';
-import { faPhone } from '@fortawesome/free-solid-svg-icons';
-import { faVenusMars } from '@fortawesome/free-solid-svg-icons';
+// import { faIdCard } from '@fortawesome/free-solid-svg-icons';
+// import { faLandmarkFlag } from '@fortawesome/free-solid-svg-icons';
+// import { faMountainCity } from '@fortawesome/free-solid-svg-icons';
+// import { faPhone } from '@fortawesome/free-solid-svg-icons';
+// import { faVenusMars } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../servicios/auth.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { EmprendedorService } from '../../../servicios/emprendedor.service';
@@ -16,7 +16,6 @@ import { MunicipioService } from '../../../servicios/municipio.service';
 import { PerfilEmprendedor } from '../../../Modelos/perfil-emprendedor.model';
 import { User } from '../../../Modelos/user.model';
 import { AlertService } from '../../../servicios/alert.service';
-import { Console } from 'console';
 
 
 @Component({
@@ -27,13 +26,13 @@ import { Console } from 'console';
 export class PerfilEmprendedorComponent implements OnInit {
   @Input() isEditing: boolean = false
   isActive: boolean = true;
-  faVenusMars = faVenusMars;
-  faMountainCity = faMountainCity;
-  faLandmarkFlag = faLandmarkFlag;
+  // faVenusMars = faVenusMars;
+  // faMountainCity = faMountainCity;
+  // faLandmarkFlag = faLandmarkFlag;
   showPassword = faEye;
-  faIdCard = faIdCard;
-  faEnvelope = faEnvelope;
-  faPhone = faPhone;
+  // faIdCard = faIdCard;
+  // faEnvelope = faEnvelope;
+  // faPhone = faPhone;
   hide = true;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];

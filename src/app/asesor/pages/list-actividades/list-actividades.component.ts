@@ -4,7 +4,6 @@ import { User } from '../../../Modelos/user.model';
 import { RutaService } from '../../../servicios/rutas.service';
 import { FormBuilder } from '@angular/forms';
 import { ActividadService } from '../../../servicios/actividad.service';
-import { Actividad } from '../../../Modelos/actividad.model';
 import { AlertService } from '../../../servicios/alert.service';
 
 @Component({

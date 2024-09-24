@@ -3,10 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AsignarAsesorModalComponent } from '../asignar-asesor-modal/asignar-asesor-modal.component';
 import { AsesoriaService } from '../../../servicios/asesoria.service';
-import { HeaderComponent } from '../../../header/header.component';
 import { Asesoria } from '../../../Modelos/asesoria.model';
 import { AlertService } from '../../../servicios/alert.service';
-import { Rol } from '../../../Modelos/rol.model';
 
 
 @Component({

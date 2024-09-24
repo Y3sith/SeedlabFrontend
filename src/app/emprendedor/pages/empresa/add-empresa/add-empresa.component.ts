@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators, AbstractControl, MinLengthValidator } from '@angular/forms';
-import { EmprendedorService } from '../../../../servicios/emprendedor.service';
+import { FormBuilder, FormGroup, ValidationErrors, Validators, AbstractControl,  } from '@angular/forms';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
 import { EmpresaService } from '../../../../servicios/empresa.service';
@@ -10,7 +9,6 @@ import { AuthService } from '../../../../servicios/auth.service';
 import { Empresa } from '../../../../Modelos/empresa.model';
 import { ApoyoEmpresa } from '../../../../Modelos/apoyo-empresa.modelo';
 import { ActivatedRoute, Router } from '@angular/router';
-import { data } from 'jquery';
 import { Location } from '@angular/common';
 
 

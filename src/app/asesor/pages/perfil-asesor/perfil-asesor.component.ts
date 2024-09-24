@@ -5,12 +5,10 @@ import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-ico
 
 import { AsesorService } from '../../../servicios/asesor.service';
 
-import { Asesor } from '../../../Modelos/asesor.model';
 import { User } from '../../../Modelos/user.model';
 import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
-import { EmprendedorService } from '../../../servicios/emprendedor.service';
 import { AuthService } from '../../../servicios/auth.service';
 
 @Component({

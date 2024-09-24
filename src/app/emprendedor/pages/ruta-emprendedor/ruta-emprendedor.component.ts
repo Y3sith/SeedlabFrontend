@@ -3,7 +3,6 @@ import { RutaService } from '../../../servicios/rutas.service';
 import { Router } from '@angular/router';
 import { Ruta } from '../../../Modelos/ruta.modelo';
 import { FormBuilder } from '@angular/forms';
-import { data } from 'jquery';
 
 @Component({
   selector: 'app-ruta-emprendedor',

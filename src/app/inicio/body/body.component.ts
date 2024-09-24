@@ -99,26 +99,55 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
 
   mostrarBanners(): void {
-    this.aliadoService.getbanner().subscribe(
-      data => {
-        this.listBanner = data;
+    const status = 'activo'; // Asume que quieres banners activos; ajusta según sea necesario
+    const expirationTime = 3600; // Tiempo de expiración en segundos (1 hora)
+    const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos desde 1970
 
-        // Precargar las imágenes de los banners
-        this.listBanner.forEach(banner => {
-          if (typeof banner.urlImagen === 'string' && banner.urlImagen) {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.href = banner.urlImagen; // Aquí aseguramos que sea una cadena
-            link.as = 'image';
-            document.head.appendChild(link);
-          }
-        });
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    // Intentar recuperar los banners de localStorage
+    const storedBanners = JSON.parse(localStorage.getItem(`banners:${status}`));
+
+    // Verificar si se encontraron y si son válidos (no han expirado)
+    if (storedBanners && (currentTime - storedBanners.timestamp < expirationTime)) {
+      // Usar los datos de localStorage
+      this.listBanner = storedBanners.data;
+
+      // Precargar las imágenes de los banners
+      this.precargarImagenes(this.listBanner);
+    } else {
+      // Si no hay datos válidos en localStorage, hacer la solicitud al servidor
+      this.aliadoService.getbanner().subscribe(
+        data => {
+          this.listBanner = data;
+
+          // Guardar en localStorage para futuras consultas
+          localStorage.setItem(`banners:${status}`, JSON.stringify({
+            data: this.listBanner,
+            timestamp: currentTime // Guardar el tiempo de creación
+          }));
+
+          // Precargar las imágenes de los banners
+          this.precargarImagenes(this.listBanner);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+    }
   }
+
+  // Método para precargar imágenes
+  precargarImagenes(banners: any[]): void {
+    banners.forEach(banner => {
+      if (typeof banner.urlImagen === 'string' && banner.urlImagen) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = banner.urlImagen; // Aquí aseguramos que sea una cadena
+        link.as = 'image';
+        document.head.appendChild(link);
+      }
+    });
+  }
+
 
 
 
@@ -134,24 +163,56 @@ export class BodyComponent implements OnInit, AfterViewInit {
   }
 
   getPersonalizacion() {
-    this.personalizacionesService.getPersonalizacion(this.id).subscribe(
-      data => {
-        this.logoUrl = data.imagen_logo;
-        this.sidebarColor = data.color_principal;
-        this.botonesColor = data.color_color_secundario;
-        this.logoFooter = data.logo_footer;
-        this.descripcion_footer = data.descripcion_footer;
-        this.paginaWeb = data.paginaWeb;
-        this.email = data.email;
-        this.telefono = data.telefono;
-        this.direccion = data.direccion;
-        this.ubicacion = data.ubicacion;
-      },
-      error => {
-        console.error("no funciona", error);
-      }
-    );
+    const expirationTime = 3600; // Tiempo de expiración en segundos (ej. 1 hora)
+    const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos desde 1970
+
+    // Intentar recuperar la personalización de localStorage
+    const storedData = JSON.parse(localStorage.getItem(`personalizacion:${this.id}`));
+
+    // Verificar si se encontró y si es válido (no ha expirado)
+    if (storedData && (currentTime - storedData.timestamp < expirationTime)) {
+      // Usar los datos de localStorage
+      const data = storedData.data;
+      this.logoUrl = data.imagen_logo;
+      this.sidebarColor = data.color_principal;
+      this.botonesColor = data.color_secundario;
+      this.logoFooter = data.logo_footer;
+      this.descripcion_footer = data.descripcion_footer;
+      this.paginaWeb = data.paginaWeb;
+      this.email = data.email;
+      this.telefono = data.telefono;
+      this.direccion = data.direccion;
+      this.ubicacion = data.ubicacion;
+    } else {
+      // Si no hay datos válidos en localStorage, hacer la solicitud al servidor
+      this.personalizacionesService.getPersonalizacion(this.id).subscribe(
+        data => {
+          // Guardar en localStorage para futuras consultas
+          localStorage.setItem(`personalizacion:${this.id}`, JSON.stringify({
+            data: data,
+            timestamp: currentTime // Guardar el tiempo de creación
+          }));
+
+          // Asignar los datos a las propiedades
+          this.logoUrl = data.imagen_logo;
+          this.sidebarColor = data.color_principal;
+          this.botonesColor = data.color_secundario;
+          this.logoFooter = data.logo_footer;
+          this.descripcion_footer = data.descripcion_footer;
+          this.paginaWeb = data.paginaWeb;
+          this.email = data.email;
+          this.telefono = data.telefono;
+          this.direccion = data.direccion;
+          this.ubicacion = data.ubicacion;
+        },
+        error => {
+          console.error("Error al obtener la personalización", error);
+        }
+      );
+    }
   }
+
+
 
   private initBannerSwiper(): void {
     if (this.bannerSwiper) {

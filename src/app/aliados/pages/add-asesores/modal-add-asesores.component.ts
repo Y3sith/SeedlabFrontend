@@ -1,4 +1,4 @@
-import {ChangeDetectorRef,Component,Inject,Input,OnInit,} from '@angular/core';
+import {ChangeDetectorRef,Component,Input,OnInit,} from '@angular/core';
 import {AbstractControl, FormBuilder,FormGroup,ValidationErrors,Validators,} from '@angular/forms';
 import {faCircleQuestion,} from '@fortawesome/free-solid-svg-icons';
 import { AliadoService } from '../../../servicios/aliado.service';

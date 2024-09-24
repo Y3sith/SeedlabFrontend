@@ -1,7 +1,6 @@
 import { Component, Inject, Pipe, PipeTransform } from '@angular/core';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Aliado } from '../../../Modelos/aliado.model';
 import { environment } from '../../../../environment/env';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
@@ -9,7 +8,7 @@ import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browse
   name: 'safe'
 })
 export class SafePipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) { }
 
   transform(value: string, type: string): SafeResourceUrl | SafeUrl {
     switch (type) {
@@ -37,7 +36,7 @@ export class ModalAliadosComponent {
     private aliadoService: AliadoService,
     public dialogRef: MatDialogRef<ModalAliadosComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ){
+  ) {
     this.idAliado = data.idAliado;
   }
 
@@ -63,7 +62,7 @@ export class ModalAliadosComponent {
       return 'unknown';
     }
     const fuente = aliado.ruta_multi.toLowerCase();
-    
+
     if (aliado.id_tipo_dato === 1) return 'video';
     if (fuente.includes('youtube.com') || fuente.includes('youtu.be')) return 'video';
     if (fuente.endsWith('.pdf')) return 'pdf';
@@ -104,29 +103,20 @@ export class ModalAliadosComponent {
     return (match && match[2].length === 11) ? match[2] : '';
   }
 
-  // ngAfterViewInit() {
-  //   this.listAliados.forEach((contenido, index) => {
-  //     if (this.getContentType(contenido) === 'video') {
-  //       const videoId = this.getYouTubeVideoId(this.listAliados.ruta_multi);
-  //       this.createYouTubePlayer(videoId, 'youtube-player-' + contenido.id);
-  //     }
-  //   });
-  // }
-
-  closeModal () :void{
+  closeModal(): void {
     this.dialogRef.close();
   }
 
-  getCorrectImageUrl(relativePath: string): string {  
+  getCorrectImageUrl(relativePath: string): string {
     // Verifica si la ruta ya es una URL completa
     if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
       return relativePath;
     }
-  
+
     // Si no es una URL completa, construye la URL
     // Elimina cualquier '/' inicial si existe
     const cleanPath = relativePath.replace(/^\//, '');
-    
+
     // Construye la URL completa
     const fullUrl = `${environment.apiUrl}/storage/${cleanPath}`;
     return fullUrl;
