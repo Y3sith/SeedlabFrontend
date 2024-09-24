@@ -48,14 +48,11 @@
         <tbody class="space-y-6">
           <ng-container *ngIf="listaAliado.length > 0">
             <ng-container
-              *ngFor="let aliado of listaAliado | filterBy:userFilter | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index">
+              *ngFor="let aliado of listaAliado | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index">
               <tr class="bg-line-gray my-5 rounded-xl">
                 <td class="p-2 rounded-s-lg">{{ aliado.nombre }}</td>
                 <td class="p-2 max-sm:break-all">{{ aliado.email }}</td>
-                <td class="p-2 hidden sm:table-cell">
-                  <span *ngIf="aliado.estado === 1">Activo</span>
-                  <span *ngIf="aliado.estado === 0">Inactivo</span>
-                </td>
+                <td class="p-2 hidden sm:table-cell">{{ aliado.estado }}</td>
                 <td class="p-2 rounded-e-lg text-center">
                   <button class="text-blue-500" (click)="editarAliado(aliado.id)">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-4 w-4" fill="currentColor">

@@ -66,7 +66,7 @@ export class ModalAliadosComponent {
     if (aliado.id_tipo_dato === 1) return 'video';
     if (fuente.includes('youtube.com') || fuente.includes('youtu.be')) return 'video';
     if (fuente.endsWith('.pdf')) return 'pdf';
-    if (/\.(jpg|jpeg|png|gif)$/i.test(fuente)) return 'image';
+    if (/\.(jpg|jpeg|png|gif|webp)$/i.test(fuente)) return 'image';
     return 'text';
   }
 

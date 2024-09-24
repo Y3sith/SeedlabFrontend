@@ -1,4 +1,3 @@
-
 import { FormGroup, FormBuilder, Validators, ValidationErrors } from '@angular/forms';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -265,13 +264,13 @@ export class AddAliadosComponent {
 
 
     const formData = new FormData();
-    let estadoValue: string;
+    let estadoValue: boolean;
     if (this.idAliado == null) {
       // Es un nuevo aliado, forzar el estado a 'true'
-      estadoValue = 'true';
+      estadoValue = true;
     } else {
       // Es una edición, usar el valor del formulario
-      estadoValue = this.aliadoForm.get('estado')?.value ? 'true' : 'false';
+      estadoValue = this.aliadoForm.get('estado')?.value;
     }
 
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
@@ -280,7 +279,7 @@ export class AddAliadosComponent {
     formData.append('id_tipo_dato', this.aliadoForm.get('id_tipo_dato')?.value);
     formData.append('email', this.aliadoForm.get('email')?.value);
     formData.append('password', this.aliadoForm.get('password')?.value);
-    formData.append('estado', estadoValue);
+    formData.append('estado', estadoValue.toString());
 
 
     if (this.selectedLogo) {

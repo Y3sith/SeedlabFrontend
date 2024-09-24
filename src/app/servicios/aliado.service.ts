@@ -37,6 +37,14 @@ export class AliadoService {
     return this.http.get(url, options);
   }
 
+  getAliadosparalistarbien(access_token: any, estado: boolean): Observable<any> {
+    const options = {
+      headers: this.CreacionHeaders(access_token),
+      params: new HttpParams().set('estado', estado)
+    };
+    return this.http.get<any>(this.url + "/mostrarAliados", options);
+  }
+
   getAliadoxid(access_token: any, idAliado: any): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(`${this.url}/traeraliadoxid/${idAliado}`, options);
