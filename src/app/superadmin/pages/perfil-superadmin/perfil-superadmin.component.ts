@@ -146,13 +146,13 @@ export class PerfilSuperadminComponent {
   updateAdministrador(): void {
     const formData = new FormData();
     let estadoValue: string;
-
+  
     const municipio = this.perfiladminForm.get('id_municipio');
     if (!municipio || municipio.value === null || municipio.value === '') {
-        this.alertService.errorAlert('Error', 'Debes seleccionar un municipio');
-        return;
+      this.alertService.errorAlert('Error', 'Debes seleccionar un municipio');
+      return;
     }
-
+  
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfiladminForm.controls).forEach((key) => {
       const control = this.perfiladminForm.get(key);
@@ -165,6 +165,18 @@ export class PerfilSuperadminComponent {
         } else if (key === 'fecha_nac') {
           const date = new Date(control.value);
           if (!isNaN(date.getTime())) {
+            // Check if the user is a minor
+            const today = new Date();
+            const birthDate = new Date(control.value);
+            let userAge = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+              userAge--;
+            }
+            if (userAge < 18) {
+              this.alertService.errorAlert('Error', 'No puedes actualizar un administrador menor de edad.');
+              return;
+            }
             formData.append(key, date.toISOString().split('T')[0]);
           }
         } else if (key === 'estado') {
@@ -174,24 +186,24 @@ export class PerfilSuperadminComponent {
         }
       }
     });
-
+  
     // Append specific fields (this will overwrite any duplicates from the first pass)
     const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
     specificFields.forEach(field => {
-        const value = this.perfiladminForm.get(field)?.value;
-        if (value !== null && value !== undefined && value !== '') {
-            formData.append(field, value);
-        }
+      const value = this.perfiladminForm.get(field)?.value;
+      if (value !== null && value !== undefined && value !== '') {
+        formData.append(field, value);
+      }
     });
-
+  
     if (this.perfiladminForm.get('direccion')?.value) {
       formData.append('direccion', this.perfiladminForm.get('direccion')?.value);
     }
-
+  
     if (this.selectedImagen_perfil) {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
-
+  
     this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
       if (result.isConfirmed) {
         this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
@@ -209,10 +221,7 @@ export class PerfilSuperadminComponent {
       }
     });
   }
-
  
-
-
   logFormErrors(): void {
     Object.keys(this.perfiladminForm.controls).forEach(key => {
       const controlErrors = this.perfiladminForm.get(key)?.errors;

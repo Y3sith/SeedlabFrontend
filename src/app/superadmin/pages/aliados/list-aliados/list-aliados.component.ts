@@ -26,6 +26,7 @@ export class ListAliadosComponent implements OnInit {
   currentRolId: number;
   isLoading: boolean = true;
   nombre: string | null = null;
+  public totalItems: number = 0;
   id: string | null;
 
   constructor(
@@ -37,46 +38,26 @@ export class ListAliadosComponent implements OnInit {
   /* Inicializa con esas funciones al cargar la página */
   ngOnInit(): void {
     this.validateToken();
-    this.cargarAliados(1); /* Cargar inicialmente con estado 'Activo' */
+    this.cargarAliados(); /* Cargar inicialmente con estado 'Activo' */
   }
 
-  cargarAliados(estado: number): void {
+  cargarAliados(): void {
+    this.isLoading = true;
     if (this.token) {
-      this.aliadoService.getinfoAliado(this.token, estado).subscribe(
-        (data: Aliado[]) => {
-          this.listaAliado = data.map((item: any) => {
-            const aliado = new Aliado(
-              item.id,
-              item.nombre,
-              item.descripcion,
-              item.logo,
-              item.ruta_multi,
-              item.urlpagina,
-              item.id_tipo_dato,
-              item.email,
-              item.password,
-              item.estado
-            );
-            aliado['estadoString'] = this.mapEstado(item.estado);
-            return aliado;
-          });
-          this.updatePaginatedData(); // Inicializa los datos paginados
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 500);
+      this.aliadoService.getAliadosparalistarbien(this.token, this.userFilter.estadoString).subscribe(
+        (data) => {
+          this.listaAliado = data;
+          console.log(this.listaAliado);
+          this.totalItems = data.length; // Actualiza el total de items
+          this.page = 1; // Reinicia la página a 1
+          this.updatePaginatedData(); // Actualiza los datos paginados
+          this.isLoading = false;
         },
-        (err) => {
-          console.log(err);
-          setTimeout(() => {
-            this.isLoading = false;
-          }, 500);
+        (error) => {
+          console.log(error);
+          this.isLoading = false;
         }
       );
-    } else {
-      console.error('Token is not available');
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 500);
     }
   }
 
@@ -105,26 +86,25 @@ export class ListAliadosComponent implements OnInit {
 
   /* Retorna los aliados dependiendo de su estado, normalmente en activo */
   onEstadoChange(event: any): void {
-    var estado = event.target.value;
-    if (estado == "Activo") {
-      this.cargarAliados(1);
-    } else {
-      this.cargarAliados(0);
-    }
+      this.cargarAliados();
   }
 
   /* Limpia el filtro de búsqueda, volviendo a retornar los aliados activos */
   limpiarFiltro(): void {
     this.userFilter = { nombre: '', estadoString: 'Activo' };
-    this.cargarAliados(1);
+    this.cargarAliados();
   }
 
   /* Función para filtrar aliados por nombre, ignorando mayúsculas/minúsculas */
   buscarAliados(): Aliado[] {
-    const filterText = this.userFilter.nombre.toLowerCase(); // Convierte el texto del filtro a minúsculas
+    const filterText = this.userFilter.nombre.trim();
     return this.listaAliado.filter(aliado => {
-      const nombreLower = aliado.nombre.toLowerCase(); // Convierte el nombre del aliado a minúsculas
-      return nombreLower.includes(filterText);
+      if (typeof aliado.nombre === 'string') {
+        return aliado.nombre.includes(filterText);
+      } else {
+        // Handle the case where aliado.nombre is not a string
+        return false;
+      }
     });
   }
 
@@ -149,9 +129,20 @@ export class ListAliadosComponent implements OnInit {
   }
 
   updatePaginatedData(): void {
-    const startIndex = (this.page - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedAliados = this.buscarAliados().slice(startIndex, endIndex);
+    const start = (this.page - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    const filterText = this.userFilter.nombre.trim();
+  
+    this.paginatedAliados = this.listaAliado
+      .filter(aliado => {
+        if (typeof aliado.nombre === 'string') {
+          return aliado.nombre.includes(filterText) && aliado.estado.toString() === this.userFilter.estadoString;
+        } else {
+          // Handle the case where aliado.nombre is not a string
+          return false;
+        }
+      })
+      .slice(start, end);
   }
 
   getTotalPages(): number {

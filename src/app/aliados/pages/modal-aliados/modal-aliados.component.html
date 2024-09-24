@@ -19,9 +19,6 @@
                    (error)="handleImageError($event)">
             </div>
           </div>
-          <div *ngSwitchCase="'text'" class="mb-4">
-            <p class="bg-gray-100 rounded-lg p-4">{{ aliado.ruta_multi }}</p>
-          </div>
           <div *ngSwitchDefault class="mb-4">
             <p class="text-gray-500 italic">Tipo de contenido no soportado</p>
           </div>

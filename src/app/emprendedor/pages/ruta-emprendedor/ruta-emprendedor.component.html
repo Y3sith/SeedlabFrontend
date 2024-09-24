@@ -49,4 +49,13 @@
     (close)="closeModal()"
     (irAModuloClicked)="handleIrAModulo($event)">
   </app-modal-actividad>
+
+  <tr *ngIf="rutaList.length === 0" class="flex justify-center md:mt-52">
+    <td colspan="4" class="text-center py-4 text-gray-500 flex justify-center w-full text-xl">No se encontraron Rutas Activas.</td>
+  </tr>
+
+  <tr *ngIf="rutaLista.length === 0" class="flex justify-center md:mt-52">
+    <td colspan="4" class="text-center py-4 text-gray-500 flex justify-center w-full text-xl">No se encontraron Actividades Activas.</td>
+  </tr>
+
 </div>

@@ -108,6 +108,10 @@ export class RutaEmprendedorComponent implements OnInit {
             this.rutaId = primeraRuta.id;
             // Si quieres llamar otra función después de recibir el ID
             this.listarRutas();
+          } else{
+            
+            console.log('No hay rutas activas');
+            this.isLoading = false;
           }
         },
         err => {
@@ -126,7 +130,8 @@ export class RutaEmprendedorComponent implements OnInit {
         this.isLoading = false;
       },
       err => {
-        console.error(err);
+        //console.error('Error al obtener rutas:',err);
+        this.isLoading = false;
       });
   }
 

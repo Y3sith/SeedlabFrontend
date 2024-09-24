@@ -21,12 +21,10 @@ import { access } from 'fs';
 })
 export class SuperadminService {
 
-
   url = environment.apiUrl + 'superadmin/';
 
   constructor(private http: HttpClient) { }
 
-  
 
   private CreacionHeaders(access_token: any): HttpHeaders {
     return new HttpHeaders({
