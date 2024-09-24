@@ -203,7 +203,7 @@
                                     {{ municipio.nombre }}
                                 </option>
                             </select>
-                            <div *ngIf="submitted && f['id_municipio'].errors" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                            <div *ngIf="f['id_municipio'].errors" class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                                 <div *ngIf="f['id_municipio'].errors['required']">Este campo es requerido *</div>
                             </div>
 
