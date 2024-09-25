@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { AsesorRoutingModule } from './asesor-routing.module';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -35,6 +36,7 @@ import { RouterModule } from '@angular/router';
     FontAwesomeModule,
     ReactiveFormsModule,
     NgxPaginationModule,
+    MatTooltipModule,
     FormsModule,
     FilterPipeModule,
     RouterModule
