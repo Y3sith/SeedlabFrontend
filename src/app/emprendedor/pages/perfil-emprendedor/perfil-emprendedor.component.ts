@@ -290,7 +290,7 @@ export class PerfilEmprendedorComponent implements OnInit {
           },
           (error) => {
             console.error('Error from server:', error);
-            this.alertService.errorAlert('Error', error.message);
+            this.alertService.errorAlert('Error', error.error.message);
           }
         );
       }
