@@ -264,7 +264,7 @@ export class PerfilAliadoComponent implements OnInit {
         this.previousImageUrl = data.id_tipo_dato === 2 ? data.ruta_multi : '';
         // Establecer una variable para controlar la visibilidad de ruta_multi
         //this.mostrarRutaMulti = data.id_tipo_dato !== 2;
-        
+        this.cdRef.detectChanges();
         this.onTipoDatoChange();
       },
       error => {
