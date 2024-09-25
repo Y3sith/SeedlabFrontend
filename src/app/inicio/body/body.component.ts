@@ -164,19 +164,18 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   getPersonalizacion() {
     const expirationTime = 3600; // Tiempo de expiración en segundos (ej. 1 hora)
-    const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos desde 1970
+    const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
 
     // Intentar recuperar la personalización de localStorage
-    const storedData = JSON.parse(localStorage.getItem(`personalizacion:${this.id}`));
+    const storedData = JSON.parse(localStorage.getItem(`personalization:${this.id}`));
 
-    // Verificar si se encontró y si es válido (no ha expirado)
+    // Verificar si se encontró y si no ha expirado
     if (storedData && (currentTime - storedData.timestamp < expirationTime)) {
       // Usar los datos de localStorage
       const data = storedData.data;
       this.logoUrl = data.imagen_logo;
       this.sidebarColor = data.color_principal;
       this.botonesColor = data.color_secundario;
-      this.logoFooter = data.logo_footer;
       this.descripcion_footer = data.descripcion_footer;
       this.paginaWeb = data.paginaWeb;
       this.email = data.email;
@@ -188,16 +187,15 @@ export class BodyComponent implements OnInit, AfterViewInit {
       this.personalizacionesService.getPersonalizacion(this.id).subscribe(
         data => {
           // Guardar en localStorage para futuras consultas
-          localStorage.setItem(`personalizacion:${this.id}`, JSON.stringify({
+          localStorage.setItem(`personalization:${this.id}`, JSON.stringify({
             data: data,
-            timestamp: currentTime // Guardar el tiempo de creación
+            timestamp: currentTime // Guardar el tiempo en segundos
           }));
 
           // Asignar los datos a las propiedades
           this.logoUrl = data.imagen_logo;
           this.sidebarColor = data.color_principal;
           this.botonesColor = data.color_secundario;
-          this.logoFooter = data.logo_footer;
           this.descripcion_footer = data.descripcion_footer;
           this.paginaWeb = data.paginaWeb;
           this.email = data.email;
@@ -211,6 +209,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
       );
     }
   }
+
 
 
 

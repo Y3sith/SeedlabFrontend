@@ -48,8 +48,8 @@ export class PersonalizacionesComponent implements OnInit {
   @ViewChild('colorPickerSecundario') colorPickerSecundario: ColorPickerDirective;
 
   sectionFields: string[][] = [
-    ['descripcion_footer', 'paginaWeb', 'email', 'telefono','direccion', 'ubicacion'], // Sección 1
-    ['nombre_sistema', 'color_principal','color_secundario', 'imagen_logo'], // Sección 2
+    ['descripcion_footer', 'paginaWeb', 'email', 'telefono', 'direccion', 'ubicacion'], // Sección 1
+    ['nombre_sistema', 'color_principal', 'color_secundario', 'imagen_logo'], // Sección 2
   ];
 
   constructor(private fb: FormBuilder,
@@ -79,7 +79,7 @@ export class PersonalizacionesComponent implements OnInit {
     this.validateToken();
   }
 
-  
+
 
   validateToken(): void {
     if (!this.token) {
@@ -101,7 +101,7 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
   }
 
@@ -172,13 +172,13 @@ export class PersonalizacionesComponent implements OnInit {
     try {
       // Verificar si los campos de la segunda sección son válidos
       const seccion2Fields = ['nombre_sistema', 'color_principal', 'color_secundario', 'imagen_logo'];
-  
+
       // Revisar si todos los campos de la sección 2 son válidos
       const seccion2Invalido = seccion2Fields.some(field => {
         const control = this.personalizacionForm.get(field);
         return control?.invalid;
       });
-  
+
       // Si algún campo de la sección 2 es inválido, no enviar el formulario
       if (seccion2Invalido) {
         console.error("Los campos de la segunda sección son inválidos");
@@ -188,7 +188,7 @@ export class PersonalizacionesComponent implements OnInit {
         });
         return; // Evitar el envío del formulario
       }
-  
+
       // Continuar con la validación general del formulario
       if (this.personalizacionForm.valid) {
         const itemslocal = localStorage.getItem('identity');
@@ -196,7 +196,7 @@ export class PersonalizacionesComponent implements OnInit {
           console.error("No se encontró 'identity' en el almacenamiento local.");
           return;
         }
-        const id_temp = JSON.parse(itemslocal).id;  
+        const id_temp = JSON.parse(itemslocal).id;
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
         formData.append('color_principal', this.personalizacionForm.get('color_principal')?.value);
@@ -208,18 +208,30 @@ export class PersonalizacionesComponent implements OnInit {
         formData.append('direccion', this.personalizacionForm.get('direccion')?.value);
         formData.append('ubicacion', this.personalizacionForm.get('ubicacion')?.value);
         formData.append('id_superadmin', id_temp);
-  
+
         if (this.selectedImagen) {
           formData.append('imagen_logo', this.selectedImagen, this.selectedImagen.name);
         }
-  
+
         this.personalizacionesService.createPersonalizacion(this.token, formData, this.idPersonalizacion).subscribe(
           data => {
-            console.log("personalizacion creada");
+            console.log("Personalización creada");
+
+            // Aquí puedes actualizar o limpiar el localStorage
+            // 1. Eliminar la personalización anterior de la caché
+            localStorage.removeItem(`personalization`);
+
+            // 2. O actualizar el localStorage con los nuevos datos
+            localStorage.setItem(`personalization`, JSON.stringify({
+              data: data, // Los nuevos datos recibidos
+              timestamp: Math.floor(Date.now() / 1000) // Tiempo actual en segundos desde 1970
+            }));
+
+            // Recargar la página o hacer alguna otra acción después
             location.reload();
           },
           error => {
-            console.error("no funciona", error);
+            console.error("No se pudo crear la personalización", error);
           }
         );
       } else {
@@ -230,13 +242,15 @@ export class PersonalizacionesComponent implements OnInit {
       console.error("Ocurrió un error:", error);
     }
   }
-  
+
+
 
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
         console.log("Personalización restaurada!!!!!!");
         location.reload();
+        localStorage.removeItem(`personalization`);
       },
       error => {
         console.error("No funciona", error);
@@ -253,13 +267,13 @@ export class PersonalizacionesComponent implements OnInit {
     });
   }
 
- next() {
+  next() {
     const form = this.personalizacionForm;
     let sectionIsValid = true;
-  
+
     // Obtener los campos de la sección actual
     const currentSectionFields = this.sectionFields[this.currentIndex];
-  
+
     currentSectionFields.forEach(field => {
       const control = form.get(field);
       if (control.invalid) {
@@ -268,7 +282,7 @@ export class PersonalizacionesComponent implements OnInit {
         sectionIsValid = false;
       }
     });
-  
+
     // Validaciones especiales
     if (this.currentIndex === 1) { // Asumiendo que email y fecha_nac están en la sección 2
       const emailControl = form.get('email');
@@ -277,7 +291,7 @@ export class PersonalizacionesComponent implements OnInit {
         emailControl.markAsDirty();
         sectionIsValid = false;
       }
-  
+
       const fechaNacControl = form.get('fecha_nac');
       if (fechaNacControl.value) {
         const fechaNac = new Date(fechaNacControl.value);
@@ -294,12 +308,12 @@ export class PersonalizacionesComponent implements OnInit {
         }
       }
     }
-  
+
     if (!sectionIsValid) {
       this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
       return;
     }
-  
+
     // Si llegamos aquí, la sección actual es válida
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
@@ -309,17 +323,17 @@ export class PersonalizacionesComponent implements OnInit {
         this.currentSubSectionIndex = 0;
       }
     }
-  
+
     // Limpiar el mensaje de error si existe
     this.clearErrorMessage();
   }
-  
+
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
     console.error(message);
     this.errorMessage = message;
   }
-  
+
   // Función auxiliar para limpiar el mensaje de error
   private clearErrorMessage() {
     this.errorMessage = '';
