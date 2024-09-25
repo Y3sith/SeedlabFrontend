@@ -70,6 +70,7 @@ export class ActnivlecComponent implements OnInit {
   niveles: any[] = [];
   leccioon: any[] = [];
   isEditing: any;
+  isLoading: boolean = false;
   contenidoLeccion: any[] = [];
   selectedFromInput: any;
 
@@ -256,6 +257,7 @@ export class ActnivlecComponent implements OnInit {
   }
   verEditar(): void {
     if (this.actividadId !== null) {
+      this.isLoading=true;
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
         data => {
           this.listActividadContenido = data;
@@ -280,20 +282,24 @@ export class ActnivlecComponent implements OnInit {
 
               this.activivarFormulariosBotones();
               // console.log('Actividad: ', data);
+              this.isLoading=false;
             },
             error => {
               console.log('Error al cargar los asesores:', error);
+              this.isLoading=false;
             }
           );
         },
         error => {
           console.log('Error al cargar la actividad: ', error);
+          this.isLoading=false;
         }
       );
     }
   }
 
   initializeNivelForm(): void {
+    this.isLoading=true;
     if (this.niveles && this.niveles.length > 0) {
       // Si hay niveles, seleccionar el primero
       const primerNivel = this.niveles[0];
@@ -325,6 +331,7 @@ export class ActnivlecComponent implements OnInit {
         fuente_contenido: primerContenido.fuente_contenido
       })
     }
+    this.isLoading=false;
   }
 
 
@@ -468,6 +475,7 @@ export class ActnivlecComponent implements OnInit {
   }
   verNivel(): void {
     if (this.token) {
+      this.isLoading=true;
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
         data => {
           this.listarNiveles = data;
@@ -482,9 +490,11 @@ export class ActnivlecComponent implements OnInit {
             // Llamar a onNivelChange para actualizar las lecciones
             this.onNivelChange(primerNivel.id.toString());
           }
+          this.isLoading=false;
         },
         error => {
           console.log(error);
+          this.isLoading=false;
         }
       )
     }
@@ -621,6 +631,7 @@ export class ActnivlecComponent implements OnInit {
   }
 
   verLeccicon(): void {
+    this.isLoading=true;
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
@@ -639,6 +650,7 @@ export class ActnivlecComponent implements OnInit {
             nombre: ''
           });
         }
+        this.isLoading=false;
       },
       error => {
         console.log(error);
@@ -710,6 +722,7 @@ export class ActnivlecComponent implements OnInit {
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
+    this.isLoading=true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
@@ -731,6 +744,7 @@ export class ActnivlecComponent implements OnInit {
           });
         }
         this.onTipoDatoChangeContenido();
+        this.isLoading=false;
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);

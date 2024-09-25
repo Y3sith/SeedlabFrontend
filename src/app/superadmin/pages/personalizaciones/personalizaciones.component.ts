@@ -6,6 +6,7 @@ import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Router } from '@angular/router';
 import { faArrowRight, faImage } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
+import { AlertService } from '../../../servicios/alert.service';
 
 @Component({
   selector: 'app-personalizaciones',
@@ -56,7 +57,8 @@ export class PersonalizacionesComponent implements OnInit {
     private personalizacionesService: SuperadminService,
     private router: Router,
     private cdRef: ChangeDetectorRef,
-    private location: Location
+    private location: Location,
+    private alertService: AlertService
   ) {
 
     this.personalizacionForm = this.fb.group({
@@ -182,6 +184,7 @@ export class PersonalizacionesComponent implements OnInit {
       // Si algún campo de la sección 2 es inválido, no enviar el formulario
       if (seccion2Invalido) {
         console.error("Los campos de la segunda sección son inválidos");
+        this.alertService.errorAlert('Error', 'Los campos de la segunda sección son inválidos');
         seccion2Fields.forEach(field => {
           const control = this.personalizacionForm.get(field);
           control?.markAsTouched(); // Marcar el campo como "tocado" para que se muestren los errores
@@ -215,8 +218,11 @@ export class PersonalizacionesComponent implements OnInit {
   
         this.personalizacionesService.createPersonalizacion(this.token, formData, this.idPersonalizacion).subscribe(
           data => {
-            console.log("personalizacion creada");
-            location.reload();
+            this.alertService.successAlert('Exito', data.message);
+            //console.log("personalizacion creada", data);
+            setTimeout(() => {
+              location.reload();
+          }, 2000);
           },
           error => {
             console.error("no funciona", error);
@@ -317,6 +323,7 @@ export class PersonalizacionesComponent implements OnInit {
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
     console.error(message);
+    this.alertService.errorAlert('Error', message);
     this.errorMessage = message;
   }
   

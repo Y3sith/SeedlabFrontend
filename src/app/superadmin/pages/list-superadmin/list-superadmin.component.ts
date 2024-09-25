@@ -31,7 +31,7 @@ export class ListSuperadminComponent implements OnInit {
   public itemsPerPage: number = 5;
   public totalItems: number = 0;
   public paginatedAdmins: Superadmin[] = [];
-  public isLoading: boolean = false;
+  isLoading: boolean = false;
   idSuperAdmin: number = null;
 
   constructor(
@@ -103,6 +103,7 @@ export class ListSuperadminComponent implements OnInit {
 
   onEstadoChange(): void {
     this.cargarSuperAdmin();
+    this.isLoading = true;
   }
 
   updatePaginatedAdmins(): void {

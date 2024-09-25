@@ -46,6 +46,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   tiempoEspera = 1800;
   ///
   idOrientador: number = null;
+  isLoading: boolean = false;
 
   orientadorForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
@@ -186,6 +187,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
 
   verEditar(): void {
+    this.isLoading = true;
     if (this.idOrientador != null) {
       this.orientadorServices.getinformacionOrientador(this.token, this.idOrientador).subscribe(
         data => {
@@ -222,9 +224,11 @@ export class ModalCrearOrientadorComponent implements OnInit {
               this.orientadorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
+          this.isLoading = false;
         },
         error => {
           console.log(error);
+          this.isLoading = false;
         }
       )
     }
