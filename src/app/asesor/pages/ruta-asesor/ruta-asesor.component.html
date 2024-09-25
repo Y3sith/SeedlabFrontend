@@ -21,7 +21,11 @@
                         <form [formGroup]="actividadForm">
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la
-                                    actividad</label>
+                                    actividad
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="El nombre no puede tener más de 39 caracteres" matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
                                 <div *ngIf="submitted && a.nombre.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
@@ -30,7 +34,12 @@
                             </div>
                             <div class="mb-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Descripción de la
-                                    actividad</label>
+                                    actividad
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                    matTooltip="La descripcion debe tener entre 300 y 470 caracteres"
+                                    matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
                                     formControlName="descripcion"></textarea>
                                 <div *ngIf="submitted && a.descripcion.errors"
@@ -234,7 +243,12 @@
                             </div>
                             <input type="hidden" id="id_leccion" formControlName="id_leccion">
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Título
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="El titulo no puede tener más de 70 caracteres"
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                </fa-icon>
+                                </label>
                                 <input formControlName="titulo" type="text" class="w-full p-2 border rounded">
                                 <div *ngIf="submittedContent && cl.titulo.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
@@ -242,7 +256,12 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="La descripcion no puede tener más de 1200 caracteres"
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                </fa-icon>
+                                </label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
                                     formControlName="descripcion"></textarea>
                                 <div *ngIf="submittedContent && cl.descripcion.errors"
