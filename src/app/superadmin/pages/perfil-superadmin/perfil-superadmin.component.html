@@ -74,11 +74,21 @@
                                             Documento</label>
                                         <input type="number" id="documento" formControlName="documento"
                                             [readonly]="blockedInputs"
-                                            class="w-full h-12 p-2 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                                            class="w-full h-12 p-2 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200"
+                                            [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}" />
                                     </div>
 
 
 
+                                </div>
+                                <div *ngIf="f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)"
+                                    class="inline-block p-2 mt-2 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
+                                    <div *ngIf="f.documento.errors.required">Este campo es requerido*</div>
+                                    <div *ngIf="f.documento.errors.lengthError">El número de documento debe tener entre
+                                        5 y 13 dígitos*</div>
+                                    <div *ngIf="f.documento.errors.hasLetters">El número de documento no puede contener
+                                        letras*</div>
                                 </div>
                                 <label for="genero" class="block mt-4 mb-2">Género</label>
                                 <select id="genero" formControlName="genero" [disabled]="blockedInputs"

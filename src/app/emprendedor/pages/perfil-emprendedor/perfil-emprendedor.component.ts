@@ -244,7 +244,7 @@ export class PerfilEmprendedorComponent implements OnInit {
 
     // Validación general
     if (this.emprendedorForm.invalid) {
-      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil');
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos.');
       this.submitted = true;
       return;
     }

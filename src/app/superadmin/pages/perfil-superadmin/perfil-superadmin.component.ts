@@ -50,7 +50,7 @@ export class PerfilSuperadminComponent {
   perfiladminForm = this.fb.group({
     nombre: ['', [Validators.required, this.noNumbersValidator]],
     apellido: ['', [Validators.required, this.noNumbersValidator]],
-    documento: ['', Validators.required],
+    documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
     imagen_perfil: [Validators.required],
     celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
     genero: ['', Validators.required],
@@ -427,6 +427,14 @@ export class PerfilSuperadminComponent {
     } else {
       return null;
     }
+  }
+
+  documentoValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 13) {
+      return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
+    }
+    return null;
   }
 
   noNumbersValidator(control: AbstractControl): ValidationErrors | null {
