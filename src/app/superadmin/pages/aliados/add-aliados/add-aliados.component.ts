@@ -323,13 +323,10 @@ if (nombreAliado){
       this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
         data => {
           this.alertService.successAlert('Exito', data.message);
-          console.log('wwwwwww',data);
+          this.router.navigate(['list-aliados']);
         },
         error => {
-          console.error('xxxx',error);
-          console.log(formData);
-
-          // this.alertService.successAlert('Error', error.error.message);
+          this.alertService.successAlert('Error', error.error.message);
 
         }
       )
@@ -338,7 +335,7 @@ if (nombreAliado){
       this.aliadoService.crearAliado(this.token, formData).subscribe(
         data => {
           this.alertService.successAlert('Exito', data.message);
-          this.router.navigate(['list-aliados'])
+          this.router.navigate(['list-aliados']);
         },
         error => {
           if (error.status === 400) {

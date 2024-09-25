@@ -49,7 +49,7 @@
             </span>
           </div>
         </div>
-  
+
         <div class="grid grid-cols-1 md:grid md:grid-cols-1">
 
 
@@ -258,7 +258,7 @@
   <div class="justify-center flex-none w-full mx-auto space-y-6 rounded-lg md:py-6 max-md:p-4 md:my-6 sm:w-3/4 md:w-2/3"
     *ngIf="idAliado">
     <ng-container>
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3 items-center h-full">
         <div *ngFor="let banner of listBanners" class="relative overflow-hidden bg-white rounded-lg shadow-md">
           <img [src]="banner.urlImagen" alt="Gallery image" class="object-cover w-full h-64">
           <div class="absolute flex space-x-2 top-2 right-2">
@@ -282,8 +282,8 @@
             </button>
           </div>
         </div>
-        <button (click)="openModal(null)">
-          <label class="text-center cursor-pointer">
+        <div class="flex justify-center items-center w-full h-full">
+          <button (click)="openModal(null)" class="flex flex-col items-center">
             <div
               class="flex items-center justify-center w-24 h-24 mb-2 overflow-hidden transition duration-300 bg-gray-200 rounded-full sm:w-32 sm:h-32 hover:bg-gray-300">
               <svg class="w-12 h-12 text-gray-400 sm:h-16 sm:w-16" fill="none" viewBox="0 0 24 24"
@@ -293,12 +293,9 @@
               </svg>
             </div>
             <span class="text-xs text-gray-600 sm:text-sm">Agregar Banner</span>
-          </label>
-        </button>
+          </button>
+        </div>
       </div>
-      <tr *ngIf="listBanners.length === 0">
-        <td colspan="4" class="py-4 text-center text-gray-500">No se encontraron Banners.</td>
-      </tr>
     </ng-container>
   </div>
 </div>
