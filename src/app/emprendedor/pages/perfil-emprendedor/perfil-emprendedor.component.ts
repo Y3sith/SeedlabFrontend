@@ -2,13 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
-// import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faEye } from '@fortawesome/free-solid-svg-icons';
-// import { faIdCard } from '@fortawesome/free-solid-svg-icons';
-// import { faLandmarkFlag } from '@fortawesome/free-solid-svg-icons';
-// import { faMountainCity } from '@fortawesome/free-solid-svg-icons';
-// import { faPhone } from '@fortawesome/free-solid-svg-icons';
-// import { faVenusMars } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from '../../../servicios/auth.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { EmprendedorService } from '../../../servicios/emprendedor.service';
@@ -26,13 +20,7 @@ import { AlertService } from '../../../servicios/alert.service';
 export class PerfilEmprendedorComponent implements OnInit {
   @Input() isEditing: boolean = false
   isActive: boolean = true;
-  // faVenusMars = faVenusMars;
-  // faMountainCity = faMountainCity;
-  // faLandmarkFlag = faLandmarkFlag;
   showPassword = faEye;
-  // faIdCard = faIdCard;
-  // faEnvelope = faEnvelope;
-  // faPhone = faPhone;
   hide = true;
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
