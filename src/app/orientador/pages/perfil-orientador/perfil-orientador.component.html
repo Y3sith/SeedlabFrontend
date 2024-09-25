@@ -77,7 +77,7 @@
                                     <div class="">
                                         <label for="documento" class="block mb-2 max-md:mt-4">Número de
                                             Documento</label>
-                                        <input type="text" id="documento" formControlName="documento"
+                                        <input type="number" id="documento" formControlName="documento"
                                             [readonly]="blockedInputs"
                                             class="w-full h-12 p-2 bg-white border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200"
                                             [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}" />
