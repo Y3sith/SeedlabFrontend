@@ -221,12 +221,6 @@ export class PersonalizacionesComponent implements OnInit {
             // 1. Eliminar la personalización anterior de la caché
             localStorage.removeItem(`personalization`);
 
-            // 2. O actualizar el localStorage con los nuevos datos
-            localStorage.setItem(`personalization`, JSON.stringify({
-              data: data, // Los nuevos datos recibidos
-              timestamp: Math.floor(Date.now() / 1000) // Tiempo actual en segundos desde 1970
-            }));
-
             // Recargar la página o hacer alguna otra acción después
             location.reload();
           },

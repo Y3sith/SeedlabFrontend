@@ -167,7 +167,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
     const currentTime = Math.floor(Date.now() / 1000); // Tiempo actual en segundos
 
     // Intentar recuperar la personalización de localStorage
-    const storedData = JSON.parse(localStorage.getItem(`personalization:${this.id}`));
+    const storedData = JSON.parse(localStorage.getItem(`personalization`));
 
     // Verificar si se encontró y si no ha expirado
     if (storedData && (currentTime - storedData.timestamp < expirationTime)) {

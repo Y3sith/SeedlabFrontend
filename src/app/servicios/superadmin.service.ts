@@ -114,27 +114,11 @@ export class SuperadminService {
     const personalization = {
       ...data,
       savedAt: new Date().getTime(), // se guarda el tiempo en que se guardó la personalización
-      updated_at: data.updated_at 
     };
     localStorage.setItem('personalization', JSON.stringify(personalization));
   }
 
-  // Método para verificar si el cache está desactualizado
-  isCacheOutdated(apiTimestamp: string): boolean {
-    const cachedData = localStorage.getItem('personalization');
-    if (cachedData) {
-      const parsedData = JSON.parse(cachedData);
-      const cacheTimestamp = parsedData.updated_at;
-      // Imprime los valores para depurar
-      console.log("Timestamp API:", apiTimestamp);
-      console.log("Timestamp Caché:", cacheTimestamp);
-
-      return new Date(apiTimestamp).getTime() > new Date(cacheTimestamp).getTime();
-    }
-    return true;
-  }
-
-  // Método unificado para obtener la personalización, ya sea del caché o de la API
+   // Método unificado para obtener la personalización, ya sea del caché o de la API
   getPersonalizacion(id: number): Observable<any> {
     const cachedData = localStorage.getItem('personalization');
 

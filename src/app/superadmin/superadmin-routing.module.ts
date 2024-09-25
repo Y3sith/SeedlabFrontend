@@ -27,7 +27,6 @@ const routes: Routes = [
       { path: 'list-superadmin', component: ListSuperadminComponent, data: { title: 'Super Admin', icon: 'fa-solid fa-user', showInMenu: true } },
       { path: 'list-ruta', component: ListRutasComponent, data: { title: 'Rutas', icon: 'fa-solid fa-location-arrow', showInMenu: true } },
       { path: 'personalizaciones', component: PersonalizacionesComponent, data: { title: 'Personalización Sistema', icon: 'fa-solid fa-paintbrush', showInMenu: true } },
-      { path: 'perfil-admin', component: PerfilSuperadminComponent, data: { title: 'Perfil', icon: 'fa-solid fa-circle-user', showInMenu: true } },
       { path: 'add-aliados', component: AddAliadosComponent, data: { showInMenu: false } },
       { path: 'add-orientador', component: ModalCrearOrientadorComponent, data:{  showInMenu: false } },
       { path: 'edit-orientador/:id', component: ModalCrearOrientadorComponent, data:{  showInMenu: false } },
@@ -39,11 +38,8 @@ const routes: Routes = [
       { path: 'list-actividades', component: ListActividadesComponent, data: {title: 'Actividades', showInMenu: false}},
       { path: 'ruta', component: RutaEmprendedorComponent, data:{title: 'Ruta General', showInMenu:true, icon:'fa-solid fa-code-fork'}},
       { path: 'curso-ruta-superadmin', component: CursoRutaEmprendedorComponent, data:{showInMenu: false}},
-
-      /////
-      { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}},
-      ////
-      
+      { path: 'reportes-admin',component: ReportesAdmComponent,data:{title : 'Reportes-Admin',icon:'fa-regular fa-file-lines', showInMenu: true}}, 
+      { path: 'perfil-admin', component: PerfilSuperadminComponent, data: { title: 'Perfil', icon: 'fa-solid fa-circle-user', showInMenu: true } },
     ]
   }
 ];
