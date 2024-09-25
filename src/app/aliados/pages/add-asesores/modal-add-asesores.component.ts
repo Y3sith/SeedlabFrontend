@@ -569,6 +569,7 @@ export class ModalAddAsesoresComponent implements OnInit {
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
     console.error(message);
+    this.alertService.errorAlert('error', message);
     this.errorMessage = message;
   }
   
