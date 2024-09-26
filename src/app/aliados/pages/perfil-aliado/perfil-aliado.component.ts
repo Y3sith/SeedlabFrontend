@@ -28,6 +28,7 @@ export class PerfilAliadoComponent implements OnInit {
   aliadoForm: FormGroup;
   blockedInputs = true;
   falupa = faCircleQuestion;
+  isLoading: boolean = false;
 
   activeField: string = '';
   token: string;
@@ -242,6 +243,7 @@ export class PerfilAliadoComponent implements OnInit {
   }
 
   verEditar(): void {
+    this.isLoading= true;
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
         let rutaMulti = data.ruta_multi;
@@ -267,9 +269,11 @@ export class PerfilAliadoComponent implements OnInit {
         //this.mostrarRutaMulti = data.id_tipo_dato !== 2;
         this.cdRef.detectChanges();
         this.onTipoDatoChange();
+        this.isLoading= false;
       },
       error => {
         console.log(error);
+        this.isLoading= false;
       }
     );
   }

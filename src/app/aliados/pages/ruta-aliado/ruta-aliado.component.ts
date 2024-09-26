@@ -72,6 +72,7 @@ export class RutaAliadoComponent {
   niveles: any[] = [];
   leccioon: any[] = [];
   isEditing: any;
+  isLoading: boolean = false;
   contenidoLeccion: any[] = [];
   selectedFromInput:any;
 
@@ -316,6 +317,7 @@ export class RutaAliadoComponent {
   
   verEditar(): void {
     if (this.actividadId !== null) {
+      this.isLoading=true;
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
         data => {
           this.listActividadContenido = data;
@@ -340,20 +342,24 @@ export class RutaAliadoComponent {
 
               this.activivarFormulariosBotones();
               // console.log('Actividad: ', data);
+              this.isLoading=false;
             },
             error => {
               console.log('Error al cargar los asesores:', error);
+              this.isLoading=false;
             }
           );
         },
         error => {
           console.log('Error al cargar la actividad: ', error);
+          this.isLoading=false;
         }
       );
     }
   }
 
   initializeNivelForm(): void {
+    this.isLoading=true;
     if (this.niveles && this.niveles.length > 0) {
       // Si hay niveles, seleccionar el primero
       const primerNivel = this.niveles[0];
@@ -384,6 +390,7 @@ export class RutaAliadoComponent {
         fuente_contenido: primerContenido.fuente_contenido
       })
     }
+    this.isLoading=false;
   }
 
 
@@ -527,6 +534,7 @@ export class RutaAliadoComponent {
   }
   verNivel(): void {
     if (this.token) {
+      this.isLoading=true;
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
         data => {
           this.listarNiveles = data;
@@ -549,9 +557,11 @@ export class RutaAliadoComponent {
                     this.onNivelChange(primerNivel.id.toString());
             
           }
+          this.isLoading=false;
         },
         error => {
           console.log(error);
+          this.isLoading=false;
         }
       )
     }
@@ -693,6 +703,7 @@ export class RutaAliadoComponent {
   }
 
   verLeccicon(): void {
+    this.isLoading=true;
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
@@ -711,6 +722,7 @@ export class RutaAliadoComponent {
             nombre: ''
           });
         }
+        this.isLoading=false;
       },
       error => {
         console.log(error);
@@ -782,6 +794,7 @@ export class RutaAliadoComponent {
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
+    this.isLoading=true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
@@ -803,6 +816,7 @@ export class RutaAliadoComponent {
           });
         }
         this.onTipoDatoChangeContenido();
+        this.isLoading=false;
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);
