@@ -4,7 +4,7 @@ import { User } from '../../../Modelos/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Router } from '@angular/router';
-import { faArrowRight, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
 import { AlertService } from '../../../servicios/alert.service';
 
@@ -43,6 +43,7 @@ export class PersonalizacionesComponent implements OnInit {
   selectedImagen: File | null = null;
   faArrowRight = faArrowRight;
   faImage = faImage;
+  falupa = faCircleQuestion;
 
 
   @ViewChild('colorPickerPrincipal') colorPickerPrincipal: ColorPickerDirective;
@@ -167,6 +168,14 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
+  validateMaxLength(field: string, maxLength: number, errorMessage: string): boolean {
+    const fieldValue = this.personalizacionForm.get(field)?.value;
+    if (fieldValue && fieldValue.length > maxLength) {
+      this.alertService.errorAlert('Error', errorMessage);
+      return false;
+    }
+    return true;
+  }
 
 
   // metodo agregar personalizacion
@@ -200,29 +209,15 @@ export class PersonalizacionesComponent implements OnInit {
           return;
         }
 
-      const nombreSistema = this.personalizacionForm.get('nombre_sistema')?.value;
-      if (nombreSistema && nombreSistema.length > 50) {
-        this.alertService.errorAlert('Error', 'El nombre del sistema no puede tener más de 50 caracteres');
-        return;
-      }
-      const direccionSistema = this.personalizacionForm.get('direccion')?.value;
-      if (direccionSistema && direccionSistema.length > 50) {
-        this.alertService.errorAlert('Error', 'La direccion del sistema no puede tener más de 50 caracteres');
-        return;
-      }
-
-      const paginaSistema = this.personalizacionForm.get('paginaWeb')?.value;
-      if (paginaSistema && paginaSistema.length > 50) {
-        this.alertService.errorAlert('Error', 'La pagina Web del sistema no puede tener más de 50 caracteres');
-        return;
-      }
-
-      const ubicacionSistema = this.personalizacionForm.get('ubicacion')?.value;
-      if (ubicacionSistema && ubicacionSistema.length > 50) {
-        this.alertService.errorAlert('Error', 'La ubicacion del sistema no puede tener más de 50 caracteres');
-        return;
-      }
-
+      if (!this.validateMaxLength('nombre_sistema', 50, 'El nombre del sistema no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('direccion', 50, 'La dirección del sistema no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('paginaWeb', 50, 'La página web no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('ubicacion', 50, 'La ubicación no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('telefono', 13, 'El telefono no puede tener más de 13 caracteres') ||
+      !this.validateMaxLength('email', 50, 'El email no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('descripcion_footer', 600, 'La descripción no puede tener más de 600 caracteres')) {
+    return; // Si alguna validación falla, se detiene el envío
+  }
         const id_temp = JSON.parse(itemslocal).id;  
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
@@ -242,14 +237,16 @@ export class PersonalizacionesComponent implements OnInit {
 
         this.personalizacionesService.createPersonalizacion(this.token, formData, this.idPersonalizacion).subscribe(
           data => {
-            console.log("Personalización creada");
-
+            //console.log("Personalización creada");
+            this.alertService.successAlert('Exito', data.message);
             // Aquí puedes actualizar o limpiar el localStorage
             // 1. Eliminar la personalización anterior de la caché
             localStorage.removeItem(`personalization`);
 
             // Recargar la página o hacer alguna otra acción después
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+          }, 2000);
           },
           error => {
             console.error("No se pudo crear la personalización", error);
@@ -269,9 +266,13 @@ export class PersonalizacionesComponent implements OnInit {
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
-        console.log("Personalización restaurada!!!!!!");
-        location.reload();
+        //console.log("Personalización restaurada!!!!!!");
+        this.alertService.successAlert('Exito', data.message);
+        //location.reload();
         localStorage.removeItem(`personalization`);
+        setTimeout(() => {
+          location.reload();
+      }, 2000);
       },
       error => {
         console.error("No funciona", error);
