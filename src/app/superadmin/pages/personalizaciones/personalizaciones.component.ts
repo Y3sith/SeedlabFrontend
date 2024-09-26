@@ -199,6 +199,30 @@ export class PersonalizacionesComponent implements OnInit {
           console.error("No se encontró 'identity' en el almacenamiento local.");
           return;
         }
+
+      const nombreSistema = this.personalizacionForm.get('nombre_sistema')?.value;
+      if (nombreSistema && nombreSistema.length > 50) {
+        this.alertService.errorAlert('Error', 'El nombre del sistema no puede tener más de 50 caracteres');
+        return;
+      }
+      const direccionSistema = this.personalizacionForm.get('direccion')?.value;
+      if (direccionSistema && direccionSistema.length > 50) {
+        this.alertService.errorAlert('Error', 'La direccion del sistema no puede tener más de 50 caracteres');
+        return;
+      }
+
+      const paginaSistema = this.personalizacionForm.get('paginaWeb')?.value;
+      if (paginaSistema && paginaSistema.length > 50) {
+        this.alertService.errorAlert('Error', 'La pagina Web del sistema no puede tener más de 50 caracteres');
+        return;
+      }
+
+      const ubicacionSistema = this.personalizacionForm.get('ubicacion')?.value;
+      if (ubicacionSistema && ubicacionSistema.length > 50) {
+        this.alertService.errorAlert('Error', 'La ubicacion del sistema no puede tener más de 50 caracteres');
+        return;
+      }
+
         const id_temp = JSON.parse(itemslocal).id;  
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
@@ -282,22 +306,6 @@ export class PersonalizacionesComponent implements OnInit {
         emailControl.markAsTouched();
         emailControl.markAsDirty();
         sectionIsValid = false;
-      }
-  
-      const fechaNacControl = form.get('fecha_nac');
-      if (fechaNacControl.value) {
-        const fechaNac = new Date(fechaNacControl.value);
-        const hoy = new Date();
-        let edad = hoy.getFullYear() - fechaNac.getFullYear();
-        const mes = hoy.getMonth() - fechaNac.getMonth();
-        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
-          edad--;
-        }
-        if (edad < 18 || edad > 100) {
-          fechaNacControl.setErrors({ 'invalidAge': true });
-          fechaNacControl.markAsTouched();
-          sectionIsValid = false;
-        }
       }
     }
   
