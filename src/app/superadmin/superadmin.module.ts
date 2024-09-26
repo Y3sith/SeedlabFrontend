@@ -30,6 +30,7 @@ import { MatTooltipModule} from '@angular/material/tooltip';
 import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { AddBannerModalComponent } from './pages/aliados/add-banner-modal/add-banner-modal.component';
 import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
+import { EChartComponent } from './pages/echart/echart.component';
 
 
 
@@ -52,7 +53,8 @@ import { ListActividadesComponent } from './pages/ruta/list-actividades/list-act
     DashboardComponent,
     AddBannerModalComponent,
     ListActividadesComponent,
-    ReportesAdmComponent
+    ReportesAdmComponent,
+    EChartComponent
     
   ],
   imports: [
