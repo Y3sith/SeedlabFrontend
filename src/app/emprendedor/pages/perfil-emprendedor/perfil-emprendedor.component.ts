@@ -51,6 +51,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   isHidden = true;
   showEditButton = false;
   falupa = faCircleQuestion;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -150,6 +151,7 @@ export class PerfilEmprendedorComponent implements OnInit {
 
 
   verEditar(): void {
+    this.isLoading = true;
     if (this.token) {
       this.emprendedorService.getInfoEmprendedor(this.token, this.documento).subscribe(
         (data) => {
@@ -186,9 +188,11 @@ export class PerfilEmprendedorComponent implements OnInit {
               this.emprendedorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
+          this.isLoading = false;
         },
         (err) => {
           console.log(err);
+          this.isLoading = false;
         }
       );
     }

@@ -237,7 +237,7 @@ export class AddEmpresaComponent {
   }
 
   cargarDatosEmpresa(): void {
-
+    this.isLoading = true;
     this.EmpresaService.traerEmpresasola(this.token, this.id_emprendedor, this.id_documentoEmpresa).subscribe(
       data => {
         this.empresa = data;
@@ -258,9 +258,11 @@ export class AddEmpresaComponent {
             this.addEmpresaForm.patchValue({ id_municipio: data.id_municipio });
           }, 500);
         }, 500);
+        this.isLoading = false;
       },
       err => {
         console.log('Error al cargar los datos de la empresa:', err);
+        this.isLoading = false;
       }
     );
   }
