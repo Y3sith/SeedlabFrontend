@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
                         this.router.navigate(['dashboard-aliado']);
                         break;
                     case '4':
-                        this.router.navigate(['home']);
+                        this.router.navigate(['asesorias']);
                         break;
                     case '5':
                         this.router.navigate(['list-empresa/']);

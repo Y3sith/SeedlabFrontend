@@ -12,10 +12,10 @@ const routes: Routes = [
     path: '',
     children: [
       {path: 'asesorias', component: AsesoriasComponent, data:{title: 'Asesorias', icon:'fa-solid fa-users-gear', showInMenu: true}},
-      {path: 'perfil-asesores', component: PerfilAsesorComponent, data:{title: 'Perfil', icon:'fa-solid fa-circle-user', showInMenu: true}},
       {path: 'list-ruta-asesor', component: ListRutaComponent, data: {title: 'Rutas', showInMenu:true, icon: 'fa-solid fa-location-arrow'}},
       {path: 'list-actividades-asesor', component: ListActividadesComponent, data:{  showInMenu: false } },
-      {path: 'Ruta-asesor', component: RutaAsesorComponent, data:{  showInMenu: false } }
+      {path: 'Ruta-asesor', component: RutaAsesorComponent, data:{  showInMenu: false } },
+      {path: 'perfil-asesores', component: PerfilAsesorComponent, data:{title: 'Perfil', icon:'fa-solid fa-circle-user', showInMenu: true}},
     ]
   }
 ];
