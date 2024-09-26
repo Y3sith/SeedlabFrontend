@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component,  OnInit } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
@@ -11,7 +11,7 @@ import { EmpresaService } from '../../../servicios/empresa.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements OnInit {
   token: string | null = null;
   user: User = null;
   id: number;
@@ -36,33 +36,26 @@ export class DashboardComponent implements AfterViewInit {
   selectedEmpresa: string = '';
   selectedTipo: string = '';
   chart: any;
+  topAliadosEchartsOptions: echarts.EChartsOption;
+
 
   constructor(
     private dashboardService: DashboardsService,
     private router: Router,
-    private empresaService: EmpresaService
+    private empresaService: EmpresaService,
   ) { }
 
   ngOnInit() {
     this.validateToken();
-    this.getDatosDashboard();
-    this.getDatosGenerosGrafica();
-    this.getRegistrosMensuales();
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
+    this.selectedYear = this.years[0];
     this.selectedYear = currentYear;
-    this.getEmpresas();
     this.promedioAsesoriasMesAnio(this.selectedYear);
-    this.emprendedorPorDepartamento();
-    this.initGraficaVacia();
-
-  }
-
-  ngAfterViewInit() {
     this.getDatosDashboard();
     this.getDatosGenerosGrafica();
     this.getRegistrosMensuales();
-    this.promedioAsesoriasMesAnio(this.selectedYear);
+    this.getEmpresas();
     this.emprendedorPorDepartamento();
     this.initGraficaVacia();
 
@@ -88,7 +81,7 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
-  //
+
   onYearChange(year: number): void {
     this.selectedYear = year;
     this.promedioAsesoriasMesAnio(this.selectedYear);
@@ -115,11 +108,18 @@ export class DashboardComponent implements AfterViewInit {
     )
   }
 
-  initChart(chartId: string, chartOptions: any): void {
-    const chartDom = document.getElementById(chartId);
-    this.chart = echarts.init(chartDom); // Inicializa el gráfico y lo almacena en this.chart
-    this.chart.setOption(chartOptions);
+  initChart(chartId: string, options: any): void {
+    setTimeout(() => {
+      const chartDom = document.getElementById(chartId);
+      if (chartDom) {
+        const chart = echarts.init(chartDom);
+        chart.setOption(options);
+      } else {
+        console.error('No se encontró el contenedor del gráfico:', chartId);
+      }
+    }, 100); // Retraso de 100ms para asegurarse de que el DOM esté listo
   }
+
 
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
@@ -134,7 +134,7 @@ export class DashboardComponent implements AfterViewInit {
         // Asignar los valores del JSON a las variables
         const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.averageAsesorias.original.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
-        const promedioAnual = parseFloat(data.averageAsesorias.original.promedio_anual); // Asegurarse de convertir a número
+        const promedioAnual = data.averageAsesorias.original.promedio_anual; // Asegurarse de convertir a número
 
         // Configuración de las opciones del gráfico de ECharts
         this.promedioAsesoriasEchartsOptions = {
@@ -169,16 +169,11 @@ export class DashboardComponent implements AfterViewInit {
             },
             {
               name: `Promedio ${this.selectedYear}`,
-              data: data.promedio_anual,  // Convertir el promedio anual en un array para la gráfica
+              data: promedioAnual,  // Convertir el promedio anual en un array para la gráfica
               type: 'bar',
             }
           ]
         };
-
-        // Inicializar la gráfica con un pequeño retraso para asegurar que el DOM esté listo
-
-        this.initChart('promedio-asesorias', this.promedioAsesoriasEchartsOptions);
-
       },
       error => {
         console.error('Error al obtener promedio de asesorías:', error);
@@ -203,10 +198,7 @@ export class DashboardComponent implements AfterViewInit {
         this.topAliados = data.topAliados.original;
 
         // Configuración para la gráfica de barras (Top Aliados)
-
         this.initEChartsBar();
-
-
         // Configuración para la gráfica de pastel (Asesorías)
         this.pieChartOption = {
           tooltip: {
@@ -249,10 +241,6 @@ export class DashboardComponent implements AfterViewInit {
             }
           ]
         };
-
-
-        this.initChart('echarts-pie', this.pieChartOption);
-        // Asegurarse de que el DOM esté listo antes de inicializar la gráfica
       },
       error => {
         console.log(error);
@@ -264,17 +252,21 @@ export class DashboardComponent implements AfterViewInit {
   }
 
   initEChartsBar(): void {
-    const chartDom = document.getElementById('echarts-bar');
-    if (chartDom) {
-      const myChart = echarts.init(chartDom);
-      const option = {
-        title: {},
+    if (this.topAliados && this.topAliados.length) {
+      this.topAliadosEchartsOptions = {
+        title: {
+          text: 'Top Aliados', // Añadir título a la gráfica
+          left: 'center'
+        },
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow' // Mostrar puntero de tipo sombra para mejor visualización
+          }
         },
         legend: {
-          orient: 'vertical',
-          left: 'left',
+          orient: 'horizontal', // Cambiar a horizontal para una mejor distribución
+          left: 'center',
           data: ['Top Aliados'],
         },
         toolbox: {
@@ -286,32 +278,33 @@ export class DashboardComponent implements AfterViewInit {
             saveAsImage: { show: true }
           }
         },
-        xAxis: [
-          {
-            type: 'category',
-            data: this.topAliados.map(aliado => aliado.nombre),
-            axisLabel: {
-              interval: 0, // Muestra todas las etiquetas
-              rotate: 30,  // Rota las etiquetas para mejor legibilidad
-              formatter: function (value: string) {
-                return value.length > 10 ? value.substring(0, 10) + '...' : value;
-              }
+        xAxis: {
+          type: 'category',
+          data: this.topAliados.map(aliado => aliado.nombre),
+          axisLabel: {
+            interval: 0, // Muestra todas las etiquetas
+            rotate: 30, // Rota las etiquetas para mejor legibilidad
+            formatter: (value: string) => {
+              return value.length > 10 ? value.substring(0, 10) + '...' : value;
             }
           }
-        ],
-        yAxis: [
-          {
-            type: 'value'
+        },
+        yAxis: {
+          type: 'value',
+          name: 'Asesorías',
+          min: 0, // Valor mínimo en el eje Y
+          axisLabel: {
+            formatter: '{value}' // Muestra el valor en el eje Y
           }
-        ],
+        },
         series: [
           {
             name: 'Top Aliados',
-            type: 'line',
+            type: 'bar', // Cambiar a 'bar' si quieres barras
             data: this.topAliados.map((aliado, index) => ({
               value: aliado.asesoria,
               itemStyle: {
-                color: this.getColorForIndex(index)
+                color: this.getColorForIndex(index) // Asignar colores
               }
             })),
             label: {
@@ -324,16 +317,15 @@ export class DashboardComponent implements AfterViewInit {
             markLine: {
               data: [{ type: 'average', name: 'Avg' }]
             },
-            barGap: '10%' // Ajusta el espacio entre las barras
+            barGap: '10%', // Ajusta el espacio entre las barras
           }
         ]
       };
-
-      myChart.setOption(option);
     } else {
-      console.error('No se pudo encontrar el elemento con id "echarts-bar"');
+      console.error('No hay datos disponibles para mostrar en la gráfica.');
     }
   }
+
 
 
   getColorForIndex(index: number): string {
@@ -626,9 +618,6 @@ export class DashboardComponent implements AfterViewInit {
         }
       ]
     };
-
-    // Renderiza la gráfica vacía al cargar la página
-    this.initChart('echarts-formulario', this.getPuntajesForm);
   }
 
 
@@ -678,7 +667,6 @@ export class DashboardComponent implements AfterViewInit {
         if (this.chart) {
           this.chart.dispose(); // Destruye el gráfico anterior antes de crear uno nuevo
         }
-        this.initChart('echarts-formulario', this.getPuntajesForm);
       },
       error => {
         console.error('Error al obtener los puntajes del formulario:', error);
