@@ -14,9 +14,9 @@ const routes: Routes = [
       { path: 'dashboard-orientador', component: DashboardComponent, data:{title: 'Dashboard', showInMenu: true, icon:'fa-solid fa-chart-pie'}},
       { path: 'list-asesorias-orientador', component: VerAsesoriasComponent, data:{title: 'Asesorias', showInMenu: true, icon:'fa-solid fa-users-gear'}},
       { path: 'reportes', component: ReportesComponent, data:{title: 'Reportes', showInMenu: true, icon:'fa-regular fa-file-lines'}}, 
-      { path: 'perfil-orientador', component: PerfilOrientadorComponent, data: { title: 'Perfil', showInMenu: true, icon:'fa-solid fa-circle-user'}},
       { path: 'ruta', component: RutaEmprendedorComponent, data:{title: 'Ruta General', showInMenu:true, icon:'fa-solid fa-code-fork'}},
       { path: 'curso-ruta-superadmin', component: CursoRutaEmprendedorComponent, data:{showInMenu: false}},
+      { path: 'perfil-orientador', component: PerfilOrientadorComponent, data: { title: 'Perfil', showInMenu: true, icon:'fa-solid fa-circle-user'}},
     ]
   }
 ];

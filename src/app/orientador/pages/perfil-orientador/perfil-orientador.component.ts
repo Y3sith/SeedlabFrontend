@@ -52,6 +52,7 @@ export class PerfilOrientadorComponent {
   tiempoEspera = 1800;
 
   falupa = faCircleQuestion;
+  isLoading: boolean = false;
 
   perfilorientadorForm = this.fb.group({
     documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
@@ -115,6 +116,7 @@ export class PerfilOrientadorComponent {
 
 
   verEditar(): void {
+    this.isLoading = true;
     if (this.token) {
       this.orientadorService.getinformacionOrientador(this.token, this.orientadorId).subscribe(
         (data) => {
@@ -155,9 +157,11 @@ export class PerfilOrientadorComponent {
               this.perfilorientadorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
+          this.isLoading = false;
         },
         error => {
           console.log(error);
+          this.isLoading = false;
         }
       );
     }
