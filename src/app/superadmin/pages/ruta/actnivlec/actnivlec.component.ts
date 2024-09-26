@@ -343,6 +343,9 @@ export class ActnivlecComponent implements OnInit {
     if (nombreActividad && nombreActividad.length > 39) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
       return;
+    } else if (nombreActividad && nombreActividad.length  < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 5 caracteres');
+      return;
     }
     if (this.actividadForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
@@ -506,6 +509,9 @@ export class ActnivlecComponent implements OnInit {
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
       return;
+    } else if (nombreNivel && nombreNivel.length < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
+      return;
     }
     const nivel: any = {
       nombre: nombreNivel,
@@ -575,6 +581,9 @@ export class ActnivlecComponent implements OnInit {
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+      return;
+    } else if (nombreLeccion && nombreLeccion.length < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre de la lección debe tener más de 5 caracteres');
       return;
     }
     if (this.leccionForm.invalid) {
@@ -783,6 +792,9 @@ export class ActnivlecComponent implements OnInit {
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
+      return;
+    } else if (tituloContenidoLeccion && tituloContenidoLeccion.length < 5) {
+      this.alertServices.errorAlert('Error', 'El titulo debe tener más de 5 caracteres');
       return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
