@@ -68,15 +68,18 @@ export class ListActividadesComponent {
   }
 
   ver(): void {
+    this.isActive = true;
     if (this.rutaId !== null) {
       this.rutaService.activadadxAliado(this.token, this.rutaId, this.idAliado, this.userFilter.estado).subscribe(
         (data) => {
           this.listAcNiLeCo = [data];
+          this.isLoading = false;
           // Extraer todas las actividades en un solo array
           this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
         },
         (error) => {
           console.log(error);
+          this.isLoading = false;
         }
       );
     }

@@ -81,11 +81,11 @@ export class AsesoriaAliadoComponent implements OnInit {
           this.separarAsesorias();
           this.showSinAsignar(); // Mostrar asesorías "Sin asignar" por defecto
           this.totalAsesorias = this.asesorias.length; // Actualiza el total de asesorías
-          this.isLoading = false; // Asegúrate de que isLoading se establece en false
+          this.isLoading = false;
         },
         error => {
           console.error('Error al obtener las asesorías:', error);
-          this.isLoading = false; // Asegúrate de que isLoading se establece en false en caso de error
+          this.isLoading = false;
         }
       );
     });
