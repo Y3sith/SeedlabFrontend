@@ -9,7 +9,7 @@ import { EmpresaService } from '../../../servicios/empresa.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements AfterViewInit {
   token: string | null = null;
@@ -176,9 +176,9 @@ export class DashboardComponent implements AfterViewInit {
         };
 
         // Inicializar la gráfica con un pequeño retraso para asegurar que el DOM esté listo
-        
-          this.initChart('promedio-asesorias', this.promedioAsesoriasEchartsOptions);
-        
+
+        this.initChart('promedio-asesorias', this.promedioAsesoriasEchartsOptions);
+
       },
       error => {
         console.error('Error al obtener promedio de asesorías:', error);
@@ -203,9 +203,9 @@ export class DashboardComponent implements AfterViewInit {
         this.topAliados = data.topAliados.original;
 
         // Configuración para la gráfica de barras (Top Aliados)
-        setTimeout(() => {
-          this.initEChartsBar();
-        }, 0); // Asegurarse de que el DOM esté listo antes de inicializar la gráfica
+
+        this.initEChartsBar();
+
 
         // Configuración para la gráfica de pastel (Asesorías)
         this.pieChartOption = {
@@ -250,10 +250,9 @@ export class DashboardComponent implements AfterViewInit {
           ]
         };
 
-        // Inicializar el gráfico de Asesorías (Pie Chart)
-        setTimeout(() => {
-          this.initChart('echarts-pie', this.pieChartOption);
-        }, 0); // Asegurarse de que el DOM esté listo antes de inicializar la gráfica
+
+        this.initChart('echarts-pie', this.pieChartOption);
+        // Asegurarse de que el DOM esté listo antes de inicializar la gráfica
       },
       error => {
         console.log(error);
@@ -404,24 +403,19 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-
-
-
-
-
-
   getRegistrosMensuales(): void {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
-        const conteoRegistros = data.conteoRegistros.original;
+        const conteoRegistros = data.conteoRegistros.original.promedios; // Accedemos correctamente a los "promedios"
 
         if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
-          const emprendedoresData = conteoRegistros.map(item => parseInt(item.emprendedores));
-          const aliadosData = conteoRegistros.map(item => parseInt(item.aliados));
+          const emprendedoresData = conteoRegistros.map(item => parseInt(item.emprendedores, 10)); // Aseguramos que sea entero
+          const aliadosData = conteoRegistros.map(item => parseInt(item.aliados, 10));
           const meses = conteoRegistros.map(item => this.getMonthName(item.mes));
 
           const maxValue = Math.max(...emprendedoresData, ...aliadosData);
 
+          // Configuración del gráfico ECharts
           this.registrosEchartsOptions = {
             tooltip: {
               trigger: 'axis',
@@ -485,12 +479,10 @@ export class DashboardComponent implements AfterViewInit {
             ]
           };
 
-          // Usar setTimeout para asegurarse de que el DOM esté listo antes de renderizar la gráfica
-          setTimeout(() => {
-            this.initChart('echarts-registros', this.registrosEchartsOptions);
-          }, 0);  // Un pequeño retraso para asegurarse de que el DOM esté disponible
+          // Inicializamos el gráfico
+          this.initChart('echarts-registros', this.registrosEchartsOptions);
         } else {
-          console.error('Los datos recibidos no tienen la estructura esperada', data);
+          console.error('Los datos recibidos no tienen la estructura esperada o están vacíos', data);
         }
       },
       error => {
@@ -498,6 +490,7 @@ export class DashboardComponent implements AfterViewInit {
       }
     );
   }
+
 
 
 

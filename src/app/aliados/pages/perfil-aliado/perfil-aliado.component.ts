@@ -142,6 +142,7 @@ export class PerfilAliadoComponent implements OnInit {
             setTimeout(function () {
               location.reload();
             }, this.tiempoEspera);
+            localStorage.removeItem(`banners:activo`);
             this.alertService.successAlert('Exito', data.message);
           },
           (error) => {
