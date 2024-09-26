@@ -143,7 +143,7 @@ export class RutaAliadoComponent {
     this.validateToken();
 
     this.route.queryParams.subscribe(params => {
-      console.log('params:', params);
+      // console.log('params:', params);
       if (params['id_ruta']) {
         this.rutaId = +params['id_ruta'];
         this.actividadForm.patchValue({ id_ruta: this.rutaId.toString() });
@@ -302,7 +302,7 @@ export class RutaAliadoComponent {
         this.aliadoService.getinfoAsesor(this.token, this.aliadoSeleccionado.id, this.userFilter.estado).subscribe(
           data => {
             this.listarAsesores = data;
-            console.log('Asesores: ', data);
+            //console.log('Asesores: ', data);
           },
           error => {
             console.log(error);
@@ -339,7 +339,7 @@ export class RutaAliadoComponent {
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
-              console.log('Actividad: ', data);
+              // console.log('Actividad: ', data);
             },
             error => {
               console.log('Error al cargar los asesores:', error);
@@ -411,7 +411,7 @@ export class RutaAliadoComponent {
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.idAliado);
     formData.append('estado', estadoValue);
-    console.log('datos: ', this.actividadForm.value);
+    // console.log('datos: ', this.actividadForm.value);
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
     } else {
@@ -419,7 +419,7 @@ export class RutaAliadoComponent {
       if (rutaMultiValue) {
         formData.append('fuente', rutaMultiValue);
       }
-      console.log('datos enviados: ', formData)
+      // console.log('datos enviados: ', formData)
     }
     if (this.actividadId == null) {
       this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
@@ -432,7 +432,7 @@ export class RutaAliadoComponent {
               //this.mostrarNivelForm = true;
               this.alertServices.successAlert('Exito', data.message);
               this.desactivarcamposActividad();
-              console.log('datos enviados: ', data)
+              // console.log('datos enviados: ', data)
               this.activarformularios();
               this.habilitarBotones();
             },
@@ -531,7 +531,7 @@ export class RutaAliadoComponent {
         data => {
           this.listarNiveles = data;
           this.niveles = data;
-          console.log('Niveles: ', data);
+          // console.log('Niveles: ', data);
 
 
           if (this.isEditing && this.niveles && this.niveles.length > 0) {
@@ -570,7 +570,7 @@ export class RutaAliadoComponent {
       id_actividad: this.nivelForm.value.id_actividad
       //id_actividad: this.actividadId
     };
-    console.log("idnivel", this.selectedNivelId);
+    // console.log("idnivel", this.selectedNivelId);
     if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
@@ -598,7 +598,7 @@ export class RutaAliadoComponent {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
         return;
       }
-      console.log('nivel data', nivel);
+      // console.log('nivel data', nivel);
       this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
@@ -661,7 +661,7 @@ export class RutaAliadoComponent {
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
-          console.log('id leccion: ', data.id);
+          // console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -669,10 +669,10 @@ export class RutaAliadoComponent {
         }
       )
     } else {
-      console.log('leccion data', leccion);
+      // console.log('leccion data', leccion);
       this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
         (data: any) => {
-          console.log('datos recibidos', data);
+          // console.log('datos recibidos', data);
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
@@ -682,7 +682,7 @@ export class RutaAliadoComponent {
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
-          console.log('id leccion: ', data.id);
+          // console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -777,15 +777,15 @@ export class RutaAliadoComponent {
       this.contenidoLeccion = [];
     } 
 
-    console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
-    console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
+    // console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
+    // console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
-        console.log('Contenido de la lección:', data);
+        // console.log('Contenido de la lección:', data);
         if (this.isEditing && data.length > 0) {
           const primerContenido = data[0];
           this.contenidoLeccionForm.patchValue({
@@ -862,7 +862,7 @@ export class RutaAliadoComponent {
     formData.append('id_tipo_dato', this.contenidoLeccionForm.get('id_tipo_dato')?.value);
     //formData.append('id_leccion', this.contenidoLeccionForm.get('id_leccion')?.value);
     formData.append('id_leccion', idLeccion);
-    console.log('id_leccion a enviar:', idLeccion);
+    // console.log('id_leccion a enviar:', idLeccion);
 
     if (this.selectedfuenteContenido) {
       formData.append('fuente_contenido', this.selectedfuenteContenido, this.selectedfuenteContenido.name);
@@ -874,11 +874,11 @@ export class RutaAliadoComponent {
     }
     const contenidoLeccionId = +this.contenidoLeccionForm.get('id_contenido')?.value;
     if (contenidoLeccionId) {
-      console.log("conteido", contenidoLeccionId)
+      // console.log("conteido", contenidoLeccionId)
       this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
-          console.log('datos recibidos: ', data);
+          // console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(contenidoLeccionId);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
@@ -893,7 +893,7 @@ export class RutaAliadoComponent {
       this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
-          console.log('datos recibidos: ', data);
+          // console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;

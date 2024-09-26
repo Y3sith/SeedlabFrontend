@@ -26,7 +26,6 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 
 import { NgChartsModule } from 'ng2-charts';
-import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
 import { MatTooltipModule} from '@angular/material/tooltip';
 import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { AddBannerModalComponent } from './pages/aliados/add-banner-modal/add-banner-modal.component';
@@ -52,7 +51,6 @@ import { EChartComponent } from './pages/echart/echart.component';
     ModalCrearOrientadorComponent,
     ActnivlecComponent,
     DashboardComponent,
-    EditarActRutaComponent,
     AddBannerModalComponent,
     ListActividadesComponent,
     ReportesAdmComponent,

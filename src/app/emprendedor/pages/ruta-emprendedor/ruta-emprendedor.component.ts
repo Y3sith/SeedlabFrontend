@@ -27,6 +27,9 @@ export class RutaEmprendedorComponent implements OnInit {
   ishidden: boolean = true;
   isLoading: boolean = true;
   alertadeactividad: boolean = false;
+  encuestademaduracion: boolean = false;
+  mostrarruta: boolean = false;
+  laruta: boolean = false;
 
   actividadForm = this.fb.group({
     id: [null],
@@ -67,7 +70,6 @@ export class RutaEmprendedorComponent implements OnInit {
        // this.documento = this.user.emprendedor.documento;
       }
     }
-
     if (!this.token) {
       this.router.navigate(['home']);
     }
@@ -86,6 +88,7 @@ export class RutaEmprendedorComponent implements OnInit {
           } else {
             console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
             this.isLoading = false;
+            this.laruta = true;
           }
         } else {
           this.ishidden = false;
@@ -109,9 +112,7 @@ export class RutaEmprendedorComponent implements OnInit {
             this.rutaId = primeraRuta.id;
             // Si quieres llamar otra función después de recibir el ID
             this.listarRutas();
-            this.checkRutasYActividades();
           } else{
-            
             console.log('No hay rutas activas');
             this.isLoading = false;
           }
@@ -131,17 +132,23 @@ export class RutaEmprendedorComponent implements OnInit {
       data => {
         this.rutaLista = data;
         this.isLoading = false;
-        this.checkRutasYActividades();
+            console.log("ruta",this.rutaList.length);
+            console.log("actividad", this.rutaLista.length);
+            if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
+              this.alertadeactividad = true;
+            }
+            console.log(this.alertadeactividad);
       },
       err => {
         //console.error('Error al obtener rutas:',err);
         this.isLoading = false;
+        console.log("ruta",this.rutaList.length);
+            console.log("actividad", this.rutaLista.length);
+            if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
+              this.alertadeactividad = true;
+            }
+            console.log(this.alertadeactividad);
       });
-    }
-    checkRutasYActividades() {
-      if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
-        this.alertadeactividad = true;
-      }
     }
 
   getItemClass(index: number): string {

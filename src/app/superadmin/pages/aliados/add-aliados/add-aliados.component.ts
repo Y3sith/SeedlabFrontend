@@ -74,6 +74,8 @@ export class AddAliadosComponent {
   showImagen: boolean = false;
   showPDF: boolean = false;
   showTexto: boolean = false;
+  isEditing: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -192,12 +194,15 @@ export class AddAliadosComponent {
   }
 
   verEditarBanners(): void {
+    this.isLoading = true;
     this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
       data => {
         this.listBanners = data;
+        this.isLoading = false;
       },
       error => {
         console.error('Error al obtener los banners:', error);
+        this.isLoading = false;
       }
     )
   }
@@ -222,6 +227,7 @@ export class AddAliadosComponent {
   }
 
   verEditar(): void {
+    this.isLoading = true;
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
         this.aliadoForm.patchValue({
@@ -236,9 +242,13 @@ export class AddAliadosComponent {
         });
         this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
         this.aliadoForm.patchValue({ estado: this.isActive });
+        this.isEditing = true;
+        this.isLoading = false;
       },
       error => {
         console.log(error);
+        this.isEditing = false;
+        this.isLoading = false;
       }
     );
   }

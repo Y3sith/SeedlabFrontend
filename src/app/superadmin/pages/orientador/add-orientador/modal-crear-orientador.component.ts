@@ -46,6 +46,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   tiempoEspera = 1800;
   ///
   idOrientador: number = null;
+  isLoading: boolean = false;
 
   orientadorForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
@@ -58,7 +59,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: [''],
+    fecha_nac: ['', this.dateRangeValidator],
     email: ['', [Validators.required,Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
@@ -186,6 +187,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
 
   verEditar(): void {
+    this.isLoading = true;
     if (this.idOrientador != null) {
       this.orientadorServices.getinformacionOrientador(this.token, this.idOrientador).subscribe(
         data => {
@@ -222,9 +224,11 @@ export class ModalCrearOrientadorComponent implements OnInit {
               this.orientadorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
+          this.isLoading = false;
         },
         error => {
           console.log(error);
+          this.isLoading = false;
         }
       )
     }
@@ -533,6 +537,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
     console.error(message);
+    this.alertService.errorAlert('error', message);
     this.errorMessage = message;
   }
   
@@ -550,5 +555,29 @@ export class ModalCrearOrientadorComponent implements OnInit {
       }
     }
 
+  }
+
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
+      return null; // Si no hay valor, no se valida
+    }
+
+    const selectedDate = new Date(value);
+    const today = new Date();
+    const hundredYearsAgo = new Date();
+    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+
+    if (selectedDate > today) {
+      return { futureDate: 'La fecha no es válida *' };
+    } else if (selectedDate < hundredYearsAgo) {
+      return { tooOld: 'La fecha no es válida *' };
+    } else if (selectedDate > eighteenYearsAgo) {
+      return { tooRecent: 'Debe tener al menos 18 años *' };
+    } else {
+      return null;
+    }
   }
 }

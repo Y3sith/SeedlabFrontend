@@ -1,14 +1,21 @@
 <div class="container mx-auto p-0 pt-2 ">
     <header class="flex items-center justify-between mt-2 mb-6 md:pl-4 w-full">
-        <button (click)="goBack()" class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300 font-poppins">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Volver
+        <button (click)="goBack()"
+            class="flex items-center justify-center bg-[#00AEEF] text-white px-4 py-2 rounded-full mr-4 hover:bg-[#0098D1] transition-colors duration-300 font-poppins">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver
         </button>
-        <app-header [title] [subtitle]="'Agregar Actividad'"></app-header>
-      </header>
-    <div class="flex items-center justify-center font-poppins">
+        <app-header [title] [subtitle]="isEditing ? 'Editar Actividad' : 'Agregar Actividad'"></app-header>
+    </header>
+
+    <div class="flex justify-center">
+        <div class="spinner " *ngIf="isLoading"></div>
+    </div>
+
+    <div class="flex items-center justify-center font-poppins" *ngIf="!isLoading" >
         <div class="w-full">
             <div class="max-w-full md:max-w-7xl mx-auto bg-gray-50 rounded-xl p-4 sm:p-8 md:p-16">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -21,7 +28,7 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-1">
                                     Nombre de la actividad
                                     <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
-                                        matTooltip="El nombre de la actividad no puede tener mas de 39 caracteres"
+                                        matTooltip="El nombre no puede tener más de 39 caracteres"
                                         matTooltipPosition="right" style="color: #adb7c7;">
                                     </fa-icon>
                                 </label>
@@ -76,7 +83,8 @@
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
                                 </div>
-                                <div *ngIf="actividadForm.get('fuente')?.value && selectedFromInput" class="mt-2 text-gray-500 text-center">
+                                <div *ngIf="actividadForm.get('fuente')?.value && selectedFromInput"
+                                    class="mt-2 text-gray-500 text-center">
                                     Archivo seleccionado: {{ selectedfuente?.name }}
                                 </div>
                             </div>
@@ -106,8 +114,9 @@
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Nivel</h2>
                         <form [formGroup]="nivelForm">
                             <!-- editar nivel -->
-                            <div  *ngIf="isEditing">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel a editar</label>
+                            <div *ngIf="isEditing">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel a
+                                    editar</label>
                                 <select (change)="onNivelChange($event.target.value)" class="w-full p-2 border rounded"
                                     formControlName="id_nivel" (change)="onNivelSelect($event)">
                                     <option *ngFor="let nivel of niveles; let i = index" class="mb-4"
@@ -123,19 +132,19 @@
                                     <div *ngIf="n.nombre.errors.required">Este campo es requerido *</div>
                                 </div>
                             </div>
-                            
+
                             <input type="hidden" id="id_actividad" formControlName="id_actividad">
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
-                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar nivel' }}</span>
+                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
+                                    isEditing ? 'Guardar' : 'Agregar nivel' }}</span>
                                 <a id="agregarNivelBtn" (click)="addNivelSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
                                 </a>
                             </div>
                         </form>
-                        
+
                         <form [formGroup]="leccionForm">
                             <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
                                 {{ isEditing ? 'Lección' : 'Agregar Lección' }}</h2>
@@ -177,8 +186,8 @@
                             <input type="hidden" id="id_nivel" formControlName="id_nivel">
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
-                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar Lección' }}</span>
+                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
+                                    isEditing ? 'Guardar' : 'Agregar Lección' }}</span>
                                 <a id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>
@@ -192,7 +201,8 @@
                         <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Contenido
                         </h2>
                         <form [formGroup]="contenidoLeccionForm">
-                            <h3 *ngIf="!isEditing" class="text-lg text-center font-semibold mb-2 font-poppins">Agregar contenido a la
+                            <h3 *ngIf="!isEditing" class="text-lg text-center font-semibold mb-2 font-poppins">Agregar
+                                contenido a la
                                 lección</h3>
                             <div class="mb-4" *ngIf="!isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para
@@ -222,7 +232,12 @@
                             </div>
                             <input type="hidden" id="id_leccion" formControlName="id_leccion">
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Título
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="El titulo no puede tener más de 70 caracteres"
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <input formControlName="titulo" type="text" class="w-full p-2 border rounded">
                                 <div *ngIf="submittedContent && cl.titulo.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
@@ -230,7 +245,12 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="La descripcion no puede tener más de 1200 caracteres"
+                                        matTooltipPosition="right" style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
                                     formControlName="descripcion"></textarea>
                                 <div *ngIf="submittedContent && cl.descripcion.errors"
@@ -289,7 +309,8 @@
                                         <div *ngIf="contenidoLeccionForm.get('fuente_contenido')?.value"
                                             class="mt-2 text-gray-500 text-center">
                                             <!-- Archivo seleccionado: {{ selectedfuenteContenido.name }} -->
-                                            Archivo seleccionado: {{contenidoLeccionForm.get('fuente_contenido')?.value?.name }}
+                                            Archivo seleccionado:
+                                            {{contenidoLeccionForm.get('fuente_contenido')?.value?.name }}
                                         </div>
                                     </div>
                                     <!--pdf-->
@@ -313,7 +334,8 @@
                                         </div>
                                         <div *ngIf="contenidoLeccionForm.get('fuente_contenido')?.value"
                                             class="mt-2 text-gray-500 text-center">
-                                            Archivo seleccionado: {{contenidoLeccionForm.get('fuente_contenido')?.value?.name }}
+                                            Archivo seleccionado:
+                                            {{contenidoLeccionForm.get('fuente_contenido')?.value?.name }}
                                             <!-- Archivo seleccionado: {{ selectedfuenteContenido?.name }} -->
                                         </div>
                                     </div>
@@ -321,8 +343,8 @@
                             </div>
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
-                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
-                                    style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar Contenido' }}</span>
+                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
+                                    isEditing ? 'Guardar' : 'Agregar Contenido' }}</span>
                                 <a id="agregarContenidoBtn" (click)="addContenidoLeccionSuperAdmin()" [routerLink]="'#'"
                                     class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
                                     <span class="text-3xl font-semibold leading-none ">+</span>

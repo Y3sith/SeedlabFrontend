@@ -73,7 +73,7 @@ export class AddEmpresaComponent {
     this.id_emprendedor = this.route.snapshot.paramMap.get('id_emprendedor'); 
 
     this.addEmpresaForm = this.fb.group({
-      nombre: ['', [Validators.required, this.noNumbersValidator]],
+      nombre: ['', [Validators.required]],
       correo: ['', [Validators.required, Validators.email]],
       id_tipo_documento: ['', Validators.required],
       documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],

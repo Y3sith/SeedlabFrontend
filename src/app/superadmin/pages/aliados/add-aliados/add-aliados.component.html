@@ -8,11 +8,14 @@
       </svg>
       Volver
     </button>
-    <app-header [title] [subtitle]="'Aliados'"></app-header>
+    <app-header [title] [subtitle]="isEditing ? 'Editar Aliado' : 'Agregar Aliado'"></app-header>
   </header>
 
+  <div class="flex justify-center">
+    <div class="spinner " *ngIf="isLoading"></div>
+  </div>
 
-  <form [formGroup]="aliadoForm" (ngSubmit)="addAliado()" class="w-full space-y-6">
+  <form [formGroup]="aliadoForm" (ngSubmit)="addAliado()" class="w-full space-y-6" *ngIf="!isLoading">
     <!-- Primera Sección -->
     <div class="w-full space-y-6">
       <!-- Contenido de la primera sección -->
@@ -257,7 +260,7 @@
   </form>
   <div class="justify-center flex-none w-full mx-auto space-y-6 rounded-lg md:py-6 max-md:p-4 md:my-6 sm:w-3/4 md:w-2/3"
     *ngIf="idAliado">
-    <ng-container>
+    <ng-container *ngIf="!isLoading">
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3 items-center h-full">
         <div *ngFor="let banner of listBanners" class="relative overflow-hidden bg-white rounded-lg shadow-md">
           <img [src]="banner.urlImagen" alt="Gallery image" class="object-cover w-full h-64">

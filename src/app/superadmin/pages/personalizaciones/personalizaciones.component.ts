@@ -4,8 +4,9 @@ import { User } from '../../../Modelos/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { Router } from '@angular/router';
-import { faArrowRight, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
 import { Location } from '@angular/common';
+import { AlertService } from '../../../servicios/alert.service';
 
 @Component({
   selector: 'app-personalizaciones',
@@ -42,6 +43,7 @@ export class PersonalizacionesComponent implements OnInit {
   selectedImagen: File | null = null;
   faArrowRight = faArrowRight;
   faImage = faImage;
+  falupa = faCircleQuestion;
 
 
   @ViewChild('colorPickerPrincipal') colorPickerPrincipal: ColorPickerDirective;
@@ -56,7 +58,8 @@ export class PersonalizacionesComponent implements OnInit {
     private personalizacionesService: SuperadminService,
     private router: Router,
     private cdRef: ChangeDetectorRef,
-    private location: Location
+    private location: Location,
+    private alertService: AlertService
   ) {
 
     this.personalizacionForm = this.fb.group({
@@ -165,6 +168,14 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
+  validateMaxLength(field: string, maxLength: number, errorMessage: string): boolean {
+    const fieldValue = this.personalizacionForm.get(field)?.value;
+    if (fieldValue && fieldValue.length > maxLength) {
+      this.alertService.errorAlert('Error', errorMessage);
+      return false;
+    }
+    return true;
+  }
 
 
   // metodo agregar personalizacion
@@ -182,6 +193,7 @@ export class PersonalizacionesComponent implements OnInit {
       // Si algún campo de la sección 2 es inválido, no enviar el formulario
       if (seccion2Invalido) {
         console.error("Los campos de la segunda sección son inválidos");
+        this.alertService.errorAlert('Error', 'Los campos de la segunda sección son inválidos');
         seccion2Fields.forEach(field => {
           const control = this.personalizacionForm.get(field);
           control?.markAsTouched(); // Marcar el campo como "tocado" para que se muestren los errores
@@ -196,7 +208,17 @@ export class PersonalizacionesComponent implements OnInit {
           console.error("No se encontró 'identity' en el almacenamiento local.");
           return;
         }
-        const id_temp = JSON.parse(itemslocal).id;
+
+      if (!this.validateMaxLength('nombre_sistema', 50, 'El nombre del sistema no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('direccion', 50, 'La dirección del sistema no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('paginaWeb', 50, 'La página web no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('ubicacion', 50, 'La ubicación no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('telefono', 13, 'El telefono no puede tener más de 13 caracteres') ||
+      !this.validateMaxLength('email', 50, 'El email no puede tener más de 50 caracteres') ||
+      !this.validateMaxLength('descripcion_footer', 600, 'La descripción no puede tener más de 600 caracteres')) {
+    return; // Si alguna validación falla, se detiene el envío
+  }
+        const id_temp = JSON.parse(itemslocal).id;  
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
         formData.append('color_principal', this.personalizacionForm.get('color_principal')?.value);
@@ -215,14 +237,16 @@ export class PersonalizacionesComponent implements OnInit {
 
         this.personalizacionesService.createPersonalizacion(this.token, formData, this.idPersonalizacion).subscribe(
           data => {
-            console.log("Personalización creada");
-
+            //console.log("Personalización creada");
+            this.alertService.successAlert('Exito', data.message);
             // Aquí puedes actualizar o limpiar el localStorage
             // 1. Eliminar la personalización anterior de la caché
             localStorage.removeItem(`personalization`);
 
             // Recargar la página o hacer alguna otra acción después
-            location.reload();
+            setTimeout(() => {
+              location.reload();
+          }, 2000);
           },
           error => {
             console.error("No se pudo crear la personalización", error);
@@ -242,9 +266,13 @@ export class PersonalizacionesComponent implements OnInit {
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
-        console.log("Personalización restaurada!!!!!!");
-        location.reload();
+        //console.log("Personalización restaurada!!!!!!");
+        this.alertService.successAlert('Exito', data.message);
+        //location.reload();
         localStorage.removeItem(`personalization`);
+        setTimeout(() => {
+          location.reload();
+      }, 2000);
       },
       error => {
         console.error("No funciona", error);
@@ -285,22 +313,6 @@ export class PersonalizacionesComponent implements OnInit {
         emailControl.markAsDirty();
         sectionIsValid = false;
       }
-
-      const fechaNacControl = form.get('fecha_nac');
-      if (fechaNacControl.value) {
-        const fechaNac = new Date(fechaNacControl.value);
-        const hoy = new Date();
-        let edad = hoy.getFullYear() - fechaNac.getFullYear();
-        const mes = hoy.getMonth() - fechaNac.getMonth();
-        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
-          edad--;
-        }
-        if (edad < 18 || edad > 100) {
-          fechaNacControl.setErrors({ 'invalidAge': true });
-          fechaNacControl.markAsTouched();
-          sectionIsValid = false;
-        }
-      }
     }
 
     if (!sectionIsValid) {
@@ -325,6 +337,7 @@ export class PersonalizacionesComponent implements OnInit {
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
     console.error(message);
+    this.alertService.errorAlert('Error', message);
     this.errorMessage = message;
   }
 

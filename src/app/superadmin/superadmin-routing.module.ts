@@ -9,7 +9,6 @@ import { ListAliadosComponent } from './pages/aliados/list-aliados/list-aliados.
 import { AddAliadosComponent } from './pages/aliados/add-aliados/add-aliados.component';
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { EditarActRutaComponent } from './pages/editar-act-ruta/editar-act-ruta.component';
 import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ModalCrearSuperadminComponent } from './pages/add-superadmin/modal-crear-superadmin.component';
@@ -34,7 +33,6 @@ const routes: Routes = [
       { path: 'edit-superAdmin/:id', component: ModalCrearSuperadminComponent, data:{  showInMenu: false } },
       { path: 'edit-aliados/:id', component: AddAliadosComponent, data: { showInMenu: false } },
       { path: 'actnivlec', component: ActnivlecComponent, data: { title: 'Act-Niv-Lec', showInMenu: false } },
-      { path: 'editar-act-ruta',component: EditarActRutaComponent,data:{title : 'Editar-Act-Ruta',showInMenu: false}},
       { path: 'list-actividades', component: ListActividadesComponent, data: {title: 'Actividades', showInMenu: false}},
       { path: 'ruta', component: RutaEmprendedorComponent, data:{title: 'Ruta General', showInMenu:true, icon:'fa-solid fa-code-fork'}},
       { path: 'curso-ruta-superadmin', component: CursoRutaEmprendedorComponent, data:{showInMenu: false}},

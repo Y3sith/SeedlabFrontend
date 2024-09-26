@@ -67,15 +67,18 @@ export class ListActividadesComponent {
   }
   
   ver(): void {
+    this.isLoading = true;
     if (this.rutaId !== null) {
       this.rutaService.actnivleccontXruta(this.token, this.rutaId, this.userFilter.estado).subscribe(
         (data) => {
           this.listAcNiLeCo = [data];
           this.todasLasActividades = this.listAcNiLeCo.flatMap(ruta => (ruta as any).actividades || []);
           console.log('Todas las actividades:', this.todasLasActividades);
+          this.isLoading = false;
         },
         (error) => {
           console.log(error);
+          this.isLoading = false;
         }
       );
     }

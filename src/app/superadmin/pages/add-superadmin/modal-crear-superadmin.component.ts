@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { SuperadminService } from '../../../servicios/superadmin.service';
 import { User } from '../../../Modelos/user.model';
@@ -42,6 +42,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   subSectionPerSection: number[] = [1, 1, 1];
   idSuperAdmin: number = null;
   errorMessage: string = '';
+  isLoading: boolean = false;
 
 
 
@@ -56,7 +57,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: [''],
+    fecha_nac: ['',this.dateRangeValidator],
     email: ['', [Validators.required,Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     estado: true,
@@ -184,6 +185,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
   /* Trae la informacion del admin cuando el adminId no sea nulo */
   verEditar(): void {
+    this.isLoading = true;
     if (this.idSuperAdmin != null) {
       this.superadminService.getsuperadmin(this.token,this.idSuperAdmin).subscribe(
         data => {
@@ -222,9 +224,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
               this.superadminForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
+          this.isLoading = false;
         },
         error => {
           console.error(error);
+          this.isLoading = false;
         }
       )
     }
@@ -526,6 +530,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
     console.error(message);
+    this.alertService.errorAlert('error', message);
     this.errorMessage = message;
   }
   
@@ -543,7 +548,30 @@ export class ModalCrearSuperadminComponent implements OnInit {
         this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
       }
     }
+  }
 
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
+      return null; // Si no hay valor, no se valida
+    }
+
+    const selectedDate = new Date(value);
+    const today = new Date();
+    const hundredYearsAgo = new Date();
+    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+
+    if (selectedDate > today) {
+      return { futureDate: 'La fecha no es válida *' };
+    } else if (selectedDate < hundredYearsAgo) {
+      return { tooOld: 'La fecha no es válida *' };
+    } else if (selectedDate > eighteenYearsAgo) {
+      return { tooRecent: 'Debe tener al menos 18 años *' };
+    } else {
+      return null;
+    }
   }
 
 }
