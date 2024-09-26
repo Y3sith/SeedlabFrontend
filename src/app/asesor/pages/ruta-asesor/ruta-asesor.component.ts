@@ -69,6 +69,7 @@ export class RutaAsesorComponent {
   niveles: any[] = [];
   leccioon: any[] = [];
   isEditing: any;
+  isLoading: boolean = false;
   contenidoLeccion: any[] = [];
   selectedFromInput: any;
 
@@ -310,6 +311,7 @@ export class RutaAsesorComponent {
 
   verEditar(): void {
     if (this.actividadId !== null) {
+      this.isLoading = true;
       this.actividadService.ActividadAsesor(this.token, this.actividadId).subscribe(
         data => {
           this.listActividadContenido = data;
@@ -333,20 +335,24 @@ export class RutaAsesorComponent {
 
               // this.activivarFormulariosBotones();
               //console.log('Actividad: ', data);
+              this.isLoading = false;
             },
             error => {
               console.log('Error al cargar los asesores:', error);
+              this.isLoading = false;
             }
           );
         },
         error => {
           console.log('Error al cargar la actividad: ', error);
+          this.isLoading = false;
         }
       );
     }
   }
 
   initializeNivelForm(): void {
+    this.isLoading = true;
     if (this.niveles && this.niveles.length > 0) {
       // Si hay niveles, seleccionar el primero
       const primerNivel = this.niveles[0];
@@ -378,6 +384,7 @@ export class RutaAsesorComponent {
         fuente_contenido: primerContenido.fuente_contenido
       })
     }
+    this.isLoading = false;
   }
 
 
@@ -388,6 +395,9 @@ export class RutaAsesorComponent {
     const nombreActividad = this.actividadForm.get('nombre')?.value;
     if (nombreActividad && nombreActividad.length > 39) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
+      return;
+    } else if (nombreActividad && nombreActividad.length  < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 5 caracteres');
       return;
     }
 
@@ -455,6 +465,7 @@ export class RutaAsesorComponent {
   }
   verNivel(): void {
     if (this.token) {
+      //this.isLoading = true;
       this.nivelService.mostrarNivelxidActividadxidAsesor(this.token, this.actividadId, this.idAsesor).subscribe(
         data => {
           this.listarNiveles = data;
@@ -473,9 +484,11 @@ export class RutaAsesorComponent {
             // Llamar a onNivelChange para actualizar las lecciones
             this.onNivelChange(primerNivel.id.toString());
           }
+          //this.isLoading = false;
         },
         error => {
           console.log(error);
+          //this.isLoading = false;
         }
       )
     }
@@ -499,6 +512,9 @@ export class RutaAsesorComponent {
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+      return;
+    } else if (nombreNivel && nombreNivel.length < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
       return;
     }
 
@@ -544,6 +560,9 @@ export class RutaAsesorComponent {
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+      return;
+    } else if (nombreLeccion && nombreLeccion.length < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre de la lección debe tener más de 5 caracteres');
       return;
     }
     if (this.leccionForm.invalid) {
@@ -600,6 +619,7 @@ export class RutaAsesorComponent {
   }
 
   verLeccicon(): void {
+    //this.isLoading = true;
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
@@ -618,6 +638,7 @@ export class RutaAsesorComponent {
             nombre: ''
           });
         }
+        //this.isLoading = false;
       },
       error => {
         console.log(error);
@@ -689,6 +710,7 @@ export class RutaAsesorComponent {
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
+    this.isLoading = true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
@@ -710,9 +732,11 @@ export class RutaAsesorComponent {
           });
         }
         this.onTipoDatoChangeContenido();
+        this.isLoading = false;
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);
+        this.isLoading = false;
       }
     );
   }
@@ -752,6 +776,9 @@ export class RutaAsesorComponent {
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
+      return;
+    } else if (tituloContenidoLeccion && tituloContenidoLeccion.length < 5) {
+      this.alertServices.errorAlert('Error', 'El titulo debe tener más de 5 caracteres');
       return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
