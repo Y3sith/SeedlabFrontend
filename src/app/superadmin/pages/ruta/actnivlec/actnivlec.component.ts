@@ -478,7 +478,7 @@ export class ActnivlecComponent implements OnInit {
   }
   verNivel(): void {
     if (this.token) {
-      this.isLoading=true;
+      //this.isLoading=true;
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
         data => {
           this.listarNiveles = data;
@@ -497,7 +497,7 @@ export class ActnivlecComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.isLoading=false;
+          //this.isLoading=false;
         }
       )
     }
@@ -640,7 +640,7 @@ export class ActnivlecComponent implements OnInit {
   }
 
   verLeccicon(): void {
-    this.isLoading=true;
+    // this.isLoading=true;
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
@@ -659,7 +659,7 @@ export class ActnivlecComponent implements OnInit {
             nombre: ''
           });
         }
-        this.isLoading=false;
+        // this.isLoading=false;
       },
       error => {
         console.log(error);
@@ -731,7 +731,7 @@ export class ActnivlecComponent implements OnInit {
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
-    this.isLoading=true;
+    //this.isLoading=true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
@@ -753,7 +753,7 @@ export class ActnivlecComponent implements OnInit {
           });
         }
         this.onTipoDatoChangeContenido();
-        this.isLoading=false;
+        //this.isLoading=false;
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);
@@ -803,6 +803,12 @@ export class ActnivlecComponent implements OnInit {
       return;
     }
 
+    if (this.contenidoLeccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+      return;
+    }
+
+
     const formData = new FormData();
     formData.append('id_leccion', idLeccion);
     let estadoValue: string;
@@ -832,7 +838,7 @@ export class ActnivlecComponent implements OnInit {
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           // console.log('datos recibidos: ', data);
-          this.cargarContenidoLeccion(contenidoLeccionId);
+          this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();

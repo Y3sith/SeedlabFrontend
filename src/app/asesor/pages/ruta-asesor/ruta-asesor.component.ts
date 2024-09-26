@@ -465,7 +465,6 @@ export class RutaAsesorComponent {
   }
   verNivel(): void {
     if (this.token) {
-      //this.isLoading = true;
       this.nivelService.mostrarNivelxidActividadxidAsesor(this.token, this.actividadId, this.idAsesor).subscribe(
         data => {
           this.listarNiveles = data;
@@ -484,11 +483,9 @@ export class RutaAsesorComponent {
             // Llamar a onNivelChange para actualizar las lecciones
             this.onNivelChange(primerNivel.id.toString());
           }
-          //this.isLoading = false;
         },
         error => {
           console.log(error);
-          //this.isLoading = false;
         }
       )
     }
@@ -619,7 +616,6 @@ export class RutaAsesorComponent {
   }
 
   verLeccicon(): void {
-    //this.isLoading = true;
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
@@ -638,7 +634,6 @@ export class RutaAsesorComponent {
             nombre: ''
           });
         }
-        //this.isLoading = false;
       },
       error => {
         console.log(error);
@@ -710,7 +705,6 @@ export class RutaAsesorComponent {
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
-    this.isLoading = true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
@@ -732,11 +726,9 @@ export class RutaAsesorComponent {
           });
         }
         this.onTipoDatoChangeContenido();
-        this.isLoading = false;
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);
-        this.isLoading = false;
       }
     );
   }
@@ -816,7 +808,7 @@ export class RutaAsesorComponent {
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           //console.log('datos recibidos: ', data);
-          this.cargarContenidoLeccion(contenidoLeccionId);
+          this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();
