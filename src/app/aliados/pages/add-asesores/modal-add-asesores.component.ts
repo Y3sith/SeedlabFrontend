@@ -49,6 +49,7 @@ export class ModalAddAsesoresComponent implements OnInit {
   /////
   idAsesor: number = null;
   errorMessage: string = '';
+  isLoading: boolean = false;
 
 
   asesorForm = this.fb.group({
@@ -208,6 +209,7 @@ export class ModalAddAsesoresComponent implements OnInit {
 
   /* Trae la informacion del asesor cuando el asesorId no sea nulo */
   verEditar(): void {
+    this.isLoading = true;
     if (this.idAsesor != null) {
       this.aliadoService.getAsesorAliado(this.token, this.idAsesor).subscribe(
         (data) => {
@@ -249,9 +251,11 @@ export class ModalAddAsesoresComponent implements OnInit {
               this.asesorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
+          this.isLoading = false;
         },
         (error) => {
           console.log(error);
+          this.isLoading = false;
         }
       );
     }

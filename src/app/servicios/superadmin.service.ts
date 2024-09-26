@@ -103,24 +103,51 @@ export class SuperadminService {
     return this.http.post(this.url + "personalizacion/" + id, formData, options);
   }
 
-  getPersonalizacion(id: number): Observable<any> {
-    return this.http.get(environment.apiUrl + "traerPersonalizacion/"+id);
-  }
 
   restorePersonalization(access_token: any, id): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(this.url + "restaurarPersonalizacion/" + id, {}, options);
   }
 
-
-
-
-
-
-  //////////////////////////
-  pdfEmpenrededorMunicipio(access_token: any): Observable<any> {
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url + "reporte-emprendedores", options)
+  // Método para guardar la personalización en localStorage
+  savePersonalizationToLocalStorage(data: any): void {
+    const personalization = {
+      ...data,
+      savedAt: new Date().getTime(), // se guarda el tiempo en que se guardó la personalización
+    };
+    localStorage.setItem('personalization', JSON.stringify(personalization));
   }
+
+   // Método unificado para obtener la personalización, ya sea del caché o de la API
+  getPersonalizacion(id: number): Observable<any> {
+    const cachedData = localStorage.getItem('personalization');
+
+    if (cachedData) {
+      const parsedData = JSON.parse(cachedData);
+      const currentTime = new Date().getTime();
+      const cacheDuration = 24 * 60 * 60 * 1000; // Duración del caché: 1 día
+
+      // Si los datos en caché aún son válidos, los devolvemos
+      if (currentTime - parsedData.savedAt < cacheDuration) {
+        return new Observable(observer => {
+          observer.next(parsedData);
+          observer.complete();
+        });
+      }
+    }
+
+    // Si el caché no es válido o no existe, hacemos la solicitud a la API
+    return this.http.get(environment.apiUrl + "traerPersonalizacion/" + id).pipe(
+      tap(data => {
+        // Guardamos la nueva personalización en el localStorage
+        this.savePersonalizationToLocalStorage(data);
+      })
+    );
+  }
+
+
+
+
+
 
 }

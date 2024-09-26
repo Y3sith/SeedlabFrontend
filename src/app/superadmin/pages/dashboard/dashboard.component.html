@@ -167,12 +167,12 @@
 
 
 
-
+    <!-- Diseño de graficas -->
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <!-- Card del mapa -->
       <div class="overflow-hidden bg-white rounded-lg shadow-lg">
         <div class="h-[400px]" id="echarts-empXDepar">
-          <!-- Aquí va tu componente de mapa -->
+          
         </div>
       </div>
 
@@ -193,7 +193,10 @@
           </div>
 
           <div class="flex-grow">
-            <div id="echarts-formulario" class="w-full h-full"></div>
+            <div id="echarts-formulario" style="width: 100%; height:100%;">
+              <app-echart [options]="getPuntajesForm" ></app-echart>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -206,7 +209,9 @@
         <h2 class="mb-4 text-lg font-semibold">Asesorias</h2>
         <!-- Chart placeholder -->
         <div class="flex items-center justify-center w-full h-48 sm:h-56 md:h-64 lg:h-72">
-          <div id="echarts-pie" style="width: 100%; height:100%;"></div>
+          <div id="echarts-pie" style="width: 100%; height:100%;">
+            <app-echart [options]="pieChartOption" ></app-echart>
+          </div>
         </div>
       </div>
 
@@ -215,16 +220,19 @@
         <h2 class="mb-4 text-lg font-semibold">Top Aliados - Asesorias</h2>
         <!-- Chart placeholder -->
         <div class="w-full h-48 sm:h-56 md:h-64 lg:h-72">
-          <div id="echarts-bar" style="width: 100%; height:100%;"></div>
+          <div id="echarts-bar" style="width: 100%; height:100%;">
+            <app-echart [options]="topAliadosEchartsOptions" ></app-echart>
+          </div>
         </div>
       </div>
 
-      <!-- Asesorias por mes -->
+      <!-- Emprendedores generos -->
       <div class="max-w-sm p-4 my-auto bg-white rounded-lg shadow sm:p-3 md:p-4 sm:max-w-md md:max-w-lg">
         <h2 class="mb-4 text-lg font-semibold">Generos Emprendedores</h2>
         <!-- Chart placeholder -->
         <div class="flex items-center justify-center w-full h-48 sm:h-56 md:h-64 lg:h-72">
-          <div id="echarts-doughnut" style="width: 100%; height: 100%;"></div>
+          <div id="echarts-doughnut" style="width: 100%; height: 100%;">
+          </div>
         </div>
       </div>
     </div>
@@ -234,19 +242,21 @@
       <div class="p-4 bg-white rounded-lg shadow sm:p-3 md:p-4">
         <h2 class="mb-4 text-lg font-semibold">Registros Mensuales</h2>
         <div class="flex items-center justify-center w-full h-80 sm:h-56 md:h-64 lg:h-72">
-          <div id="echarts-registros" style="width: 100%; height: 100%;"></div>
+          <div id="echarts-registros" style="width: 100%; height: 100%;">
+          </div>
         </div>
       </div>
 
       <!-- Promedio Asesorias anio -->
-      <div class="p-4 bg-white rounded-lg shadow sm:p-3 md:p-4">
+      <div class="p-4 bg-white rounded-lg shadow sm:p-3 md:p-4" >
         <h2 class="mb-2 text-lg font-semibold text-gray-700">Promedio de Asesorias</h2>
         <label for="yearSelect" class="mr-2 text-sm text-gray-600">Año:</label>
         <select name="year" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)"
           class="w-20 px-2 py-1 text-sm border rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option *ngFor="let year of years" [value]="year">{{ year }}</option>
         </select>
-        <div class="flex items-center justify-center w-full h-80 sm:h-56 md:h-64 lg:h-72 " id="promedio-asesorias">
+        <div id="promedio-asesorias" class="flex items-center justify-center w-full h-80 sm:h-56 md:h-64 lg:h-72 " >
+          <app-echart [options]="promedioAsesoriasEchartsOptions" style="width: 100%; height: 100%; "></app-echart>
         </div>
       </div>
     </div>

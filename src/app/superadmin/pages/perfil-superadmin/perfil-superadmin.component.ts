@@ -44,6 +44,7 @@ export class PerfilSuperadminComponent {
   isHidden = true;
   showEditButton = false;
   tiempoEspera = 1800;
+  isLoading: boolean = false;
 
 
 
@@ -105,6 +106,7 @@ export class PerfilSuperadminComponent {
 
   /* Trae los datos del admin para poder editarlo en el input, de acuerdo al id del usuario logueado */
   verEditar(): void {
+    this.isLoading = true;
     if (this.token) {
       this.superadminService.getInfoAdmin(this.token, this.adminid).subscribe(
         (data) => {
@@ -134,9 +136,11 @@ export class PerfilSuperadminComponent {
             estado: data.estado
 
           });
+          this.isLoading = false;
         },
         (err) => {
           console.log(err);
+          this.isLoading = false;
         }
       )
     }

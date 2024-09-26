@@ -40,7 +40,7 @@ export class ListRutasComponent implements OnInit {
     private router: Router,
     private modalSS: SwitchService,
     public dialog: MatDialog,
-    public alertService: AlertService,
+    public alertService: AlertService
   ) { }
   ngOnInit(): void {
     this.validateToken();
@@ -78,7 +78,9 @@ export class ListRutasComponent implements OnInit {
     this.isLoading = true;
     if (this.token) {
       this.isLoading = true;
-      this.rutaService.getAllRutas(this.token, this.userFilter.estado).subscribe(
+      this.rutaService
+        .getAllRutas(this.token, this.userFilter.estado)
+        .subscribe(
           (data) => {
             this.listaRutas = data;
             this.isLoading = false;
@@ -126,15 +128,21 @@ export class ListRutasComponent implements OnInit {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-  
+
   listarActividad(rutaId: number, estado: any): void {
-    if (estado === 'Inactivo'){
-      this.alertService.alertainformativa('No puedes editar actividades en una ruta que este inactiva, debes activar la ruta para poderla editar', 'error').then((result) => {
-        if (result.isConfirmed) {   
-        }
-      });
-    }else{
-      this.router.navigate(['list-actividades'], {queryParams: { id_ruta: rutaId},
+    if (estado === 'Inactivo') {
+      this.alertService
+        .alertainformativa(
+          'No puedes editar actividades en una ruta que este inactiva, debes activar la ruta para poderla editar',
+          'error'
+        )
+        .then((result) => {
+          if (result.isConfirmed) {
+          }
+        });
+    } else {
+      this.router.navigate(['list-actividades'], {
+        queryParams: { id_ruta: rutaId },
       });
     }
   }

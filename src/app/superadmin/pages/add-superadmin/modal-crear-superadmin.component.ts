@@ -42,6 +42,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   subSectionPerSection: number[] = [1, 1, 1];
   idSuperAdmin: number = null;
   errorMessage: string = '';
+  isLoading: boolean = false;
 
 
 
@@ -184,6 +185,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
   /* Trae la informacion del admin cuando el adminId no sea nulo */
   verEditar(): void {
+    this.isLoading = true;
     if (this.idSuperAdmin != null) {
       this.superadminService.getsuperadmin(this.token,this.idSuperAdmin).subscribe(
         data => {
@@ -222,9 +224,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
               this.superadminForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
+          this.isLoading = false;
         },
         error => {
           console.error(error);
+          this.isLoading = false;
         }
       )
     }

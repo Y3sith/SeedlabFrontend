@@ -81,11 +81,11 @@ export class AsesoriaAliadoComponent implements OnInit {
           this.separarAsesorias();
           this.showSinAsignar(); // Mostrar asesorías "Sin asignar" por defecto
           this.totalAsesorias = this.asesorias.length; // Actualiza el total de asesorías
-          this.isLoading = false; // Asegúrate de que isLoading se establece en false
+          // this.isLoading = false;
         },
         error => {
           console.error('Error al obtener las asesorías:', error);
-          this.isLoading = false; // Asegúrate de que isLoading se establece en false en caso de error
+          this.isLoading = false;
         }
       );
     });
@@ -176,27 +176,51 @@ export class AsesoriaAliadoComponent implements OnInit {
 }
 
   showSinAsignar(): void {
-    this.showAsignadasFlag = false; 
-    this.asesorias = this.asesoriasSinAsesor;
-    this.page = 1;
+    this.isLoading = true;
+    // this.showAsignadasFlag = false; 
+    // this.asesorias = this.asesoriasSinAsesor;
+    // this.page = 1;
 
-    if (this.asesoriasSinAsesor.length === 0) {
-      this.mensaje = "No hay asesorías esperando por asignación.";
-    } else {
-      this.mensaje = null;
-    }
+    // if (this.asesoriasSinAsesor.length === 0) {
+    //   this.mensaje = "No hay asesorías esperando por asignación.";
+    // } else {
+    //   this.mensaje = null;
+    // }
+    setTimeout(() => {
+      this.showAsignadasFlag = false;
+      this.asesorias = this.asesoriasSinAsesor;
+      this.page = 1;
+      if (this.asesoriasSinAsesor.length === 0) {
+        this.mensaje = "No hay asesorías esperando por asignación.";
+      } else {
+        this.mensaje = null;
+      }
+      this.isLoading = false;
+    }, 300);
+    
   }
 
   showAsignadas(): void {
-    this.showAsignadasFlag = true; 
-    this.asesorias = this.asesoriasConAsesor;
-    this.page = 1;
-
-    if (this.asesoriasConAsesor.length === 0) {
-      this.mensaje = "Aún no has asignado ninguna asesoría.";
-    } else {
-      this.mensaje = null;
-    }
+    this.isLoading = true;
+    // this.showAsignadasFlag = true; 
+    // this.asesorias = this.asesoriasConAsesor;
+    // this.page = 1;
+    // if (this.asesoriasConAsesor.length === 0) {
+    //   this.mensaje = "Aún no has asignado ninguna asesoría.";
+    // } else {
+    //   this.mensaje = null;
+    // }
+    setTimeout(() => {
+      this.showAsignadasFlag = true;
+      this.asesorias = this.asesoriasConAsesor;
+      this.page = 1;
+      if (this.asesoriasConAsesor.length === 0) {
+        this.mensaje = "Aún no has asignado ninguna asesoría.";
+      } else {
+        this.mensaje = null;
+      }
+      this.isLoading = false;
+    }, 300);
   }
 
   filtrarAsesorias(): void {

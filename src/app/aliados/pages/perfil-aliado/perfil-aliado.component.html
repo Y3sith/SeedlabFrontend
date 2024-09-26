@@ -6,8 +6,12 @@
             <app-header [title] [subtitle]="'Perfil'"></app-header>
         </header>
 
+        <div class="flex justify-center">
+            <div class="spinner " *ngIf="isLoading"></div>
+        </div>
+
         <div
-            class="w-full rounded-lg bg-[#FAFAFA] max-md:mt-20 max-[600px]:px-2 max-[600px]:py-2 min-[851px]:py-12 min-[851px]:px-16">
+            class="w-full rounded-lg bg-[#FAFAFA] max-md:mt-20 max-[600px]:px-2 max-[600px]:py-2 min-[851px]:py-12 min-[851px]:px-16" *ngIf="!isLoading">
 
             <!-- Contenido -->
             <div class="min-[860px]:flex items-center w-full">
@@ -240,7 +244,8 @@
 
         </div>
 
-
+        <div *ngIf="!isLoading">
+ 
         <div class="flex justify-center w-full mt-7 md:justify-end">
 
             <div class="flex ">
@@ -307,6 +312,7 @@
                     </div>
                   </div>
             </ng-container>
+        </div>
         </div>
     </div>
 </form>

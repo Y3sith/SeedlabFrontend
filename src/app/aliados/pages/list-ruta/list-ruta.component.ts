@@ -52,14 +52,6 @@ export class ListRutaComponent implements OnInit {
     });
   }
 
-  openModal(rutaId: number | null): void {
-    let dialogRef: MatDialogRef<ModalAddRutaComponent>;
-    dialogRef = this.dialog.open(ModalAddRutaComponent, {
-      data: { rutaId: rutaId },
-    });
-    dialogRef.afterClosed().subscribe((result) => {});
-  }
-
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -111,11 +103,6 @@ export class ListRutaComponent implements OnInit {
     this.userFilter = { nombre: '', estado: 'Activo', fecha_creacion: '' };
     this.cargarRutas();
   }
-
-  openModalSINId(): void {
-    this.openModal(null);
-  }
-
   canGoPrevious(): boolean {
     return this.page > 1;
   }
