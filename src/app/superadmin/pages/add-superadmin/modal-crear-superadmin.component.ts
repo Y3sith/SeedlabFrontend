@@ -240,19 +240,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     Object.values(this.superadminForm.controls).forEach(control => {
       control.markAsTouched();
     });
-  
-    // let errorMessage = 'Por favor, complete correctamente el formulario';
-    // Object.keys(this.superadminForm.controls).forEach(key => {
-    //   const control = this.superadminForm.get(key);
-    //   if (control.invalid && control.errors && key !== 'direccion' && 
-    //       !(key === 'password' && this.idSuperAdmin && !control.value)) {
-    //     // Add specific error messages here if needed
-    //   }
-    // });
-    // if (errorMessage !== 'Por favor, complete correctamente el formulario') {
-    //   this.alertService.errorAlert('Error de validación', errorMessage);
-    //   return;
-    // }
     const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'email', 'password'];
     for (const key of camposObligatorios) {
         const control = this.superadminForm.get(key);

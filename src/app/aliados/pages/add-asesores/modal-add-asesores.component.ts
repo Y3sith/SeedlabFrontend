@@ -270,17 +270,13 @@ export class ModalAddAsesoresComponent implements OnInit {
       control.markAsTouched();
     });
   
-    let errorMessage = 'Por favor, complete correctamente el formulario';
-    Object.keys(this.asesorForm.controls).forEach(key => {
-      const control = this.asesorForm.get(key);
-      if (control.invalid && control.errors && key !== 'direccion' && 
-          !(key === 'password' && this.idAsesor && !control.value)) {
-        // Add specific error messages here if needed
-      }
-    });
-    if (errorMessage !== 'Por favor, complete correctamente el formulario') {
-      this.alerService.errorAlert('Error de validación', errorMessage);
-      return;
+    const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'email', 'password'];
+    for (const key of camposObligatorios) {
+        const control = this.asesorForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
     }
 
     // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)

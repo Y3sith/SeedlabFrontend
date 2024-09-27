@@ -345,6 +345,15 @@ export class PerfilAliadoComponent implements OnInit {
       this.formSubmitted = true;
       return; // Detener si el formulario es inválido
     }
+
+    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina', 'documento', 'celular', 'email', 'password'];
+    for (const key of camposObligatorios) {
+        const control = this.aliadoForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
   
     const formData = new FormData();
     let estadoValue: string;
@@ -383,7 +392,7 @@ export class PerfilAliadoComponent implements OnInit {
       return;
     }
     // Agregar campos específicos que se deben asegurar que estén en el FormData
-    const specificFields = ['nombre', 'descripcion', 'email', 'id_tipo_dato'];
+    const specificFields = ['nombre', 'descripcion', 'urlpagina', 'password', 'email', ];
     specificFields.forEach(field => {
       const value = this.aliadoForm.get(field)?.value;
       if (value !== null && value !== undefined && value !== '') {

@@ -239,19 +239,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     Object.values(this.orientadorForm.controls).forEach(control => {
       control.markAsTouched();
     });
-  
-    // let errorMessage = 'Por favor, complete correctamente el formulario';
-    // Object.keys(this.orientadorForm.controls).forEach(key => {
-    //   const control = this.orientadorForm.get(key);
-    //   if (control.invalid && control.errors && key !== 'direccion' && 
-    //       !(key === 'password' && this.idOrientador && !control.value)) {
-    //     // Add specific error messages here if needed
-    //   }
-    // });
-    // if (errorMessage !== 'Por favor, complete correctamente el formulario') {
-    //   this.alerService.errorAlert('Error de validación', errorMessage);
-    //   return;
-    // }
     const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'email', 'password'];
     for (const key of camposObligatorios) {
         const control = this.orientadorForm.get(key);
