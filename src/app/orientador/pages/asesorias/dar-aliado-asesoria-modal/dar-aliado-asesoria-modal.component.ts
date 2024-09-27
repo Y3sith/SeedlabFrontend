@@ -18,7 +18,7 @@ export class DarAliadoAsesoriaModalComponent {
   token: string | null = null;
   currentRolId: number;
   docEmprendedor: string | null = null;
-
+  submitted = false;
   user: any;
 
   constructor(
@@ -50,7 +50,10 @@ export class DarAliadoAsesoriaModalComponent {
     }
   }
 
+  get f() { return this.asignarForm.controls; }
+
   onGuardar(): void {
+    this.submitted = true;
     if (this.asignarForm.valid) {
       const nombreAliado = this.asignarForm.get('nom_aliado')?.value;
       this.asesoriaService.asignarAliado(this.token, this.data.id, nombreAliado).subscribe(
