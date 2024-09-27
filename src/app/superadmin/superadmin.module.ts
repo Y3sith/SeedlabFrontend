@@ -30,7 +30,6 @@ import { MatTooltipModule} from '@angular/material/tooltip';
 import { ReportesAdmComponent } from './pages/reportes-adm/reportes-adm.component';
 import { AddBannerModalComponent } from './pages/aliados/add-banner-modal/add-banner-modal.component';
 import { ListActividadesComponent } from './pages/ruta/list-actividades/list-actividades.component';
-import { EChartComponent } from './pages/echart/echart.component';
 
 
 
@@ -53,9 +52,7 @@ import { EChartComponent } from './pages/echart/echart.component';
     DashboardComponent,
     AddBannerModalComponent,
     ListActividadesComponent,
-    ReportesAdmComponent,
-    EChartComponent
-    
+    ReportesAdmComponent, 
   ],
   imports: [
     CommonModule,
@@ -70,7 +67,8 @@ import { EChartComponent } from './pages/echart/echart.component';
     MatIconModule,
     RouterModule,
     NgChartsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    SharedModule
   ]
 })
 export class SuperadminModule { }

@@ -10,7 +10,7 @@
   </div>
 
   <!-- Contenido -->
-  <div class=" p-4 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">
+  <div class=" p-4 sm:p-6 md:p-6 lg:p-12 xl:p-20" *ngIf="!isLoading">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
       <!-- Super Admins -->
       <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
@@ -168,17 +168,19 @@
 
 
     <!-- Top Aliados -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-14">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mt-14">
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg h-full">
         <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorias</h2>
-        <div class="h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] w-full">
-          <div id="echarts-bar" style="width: 100%; height:100%;"></div>
+        <div class="h-full w-full">
+          <div id="topAliadosChar-bar" style="width: 100%; height:100%;">
+            <app-echart [options]="topAliadosEchartsOptions" ></app-echart>
+          </div>
         </div>
       </div>
-      
-    <!-- Card de la gráfica telaraña -->
+
+      <!-- Card de la gráfica telaraña -->
       <div class="overflow-hidden bg-white rounded-lg shadow-lg h-full">
-        <div class="p-6 h-[350px] flex flex-col">
+        <div class="p-6 h-[450px] flex flex-col">
           <div class="flex mb-4 space-x-4">
             <select id="empresa-select" class="w-1/2 p-2 border rounded-md"
               (change)="onEmpresaChange($event.target.value)">
@@ -191,26 +193,31 @@
               <option value="2">Segunda Vez</option>
             </select>
           </div>
-    
-          <div class="flex-grow">
-            <div id="echarts-formulario" class="w-full h-full"></div>
+          <div class="flex-grow mt-6 h-full w-full">
+            <div id="echarts-formulario" style="width: 100%; height:100%;">
+              <app-echart [options]="getPuntajesFormOrientador"></app-echart>
+            </div>
           </div>
         </div>
       </div>
-    
-      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg h-full">
+
+
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-14">
+      <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg h-[450px]">
         <h2 class="text-lg font-semibold mb-4">Generos Emprendedores</h2>
         <div class="flex justify-center items-center h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] w-full">
           <div id="echarts-doughnut" style="width: 100%; height: 100%;"></div>
         </div>
       </div>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mt-14">
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4">
         <h2 class="text-lg font-semibold mb-4">Registros Mensuales</h2>
-        <div class="flex justify-center items-center h-80 sm:h-56 md:h-64 lg:h-72 w-full">
-          <div id="echarts-registros" style="width: 100%; height: 100%;"></div>
+        <div class="flex justify-center items-center w-full h-80 sm:h-56 md:h-64 lg:h-72 w-full">
+          <div id="echarts-registros" style="width: 100%; height: 100%;">
+            <app-echart [options]="getPuntajesForm" ></app-echart>
+          </div>
         </div>
       </div>
 
