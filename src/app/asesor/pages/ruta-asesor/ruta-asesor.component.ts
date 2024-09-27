@@ -408,12 +408,20 @@ export class RutaAsesorComponent {
       return;
     }
 
-    // if (this.actividadId != null) {
     if (this.actividadForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
       return;
     }
-    // }
+
+    const camposObligatorios = ['nombre', 'descripcion'];
+    for (const key of camposObligatorios) {
+        const control = this.actividadForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
     if (this.idactividad == null) {
       estadoValue = '1'
     } else {
@@ -509,6 +517,15 @@ export class RutaAsesorComponent {
       return;
     }
 
+    const camposObligatorios = ['nombre'];
+    for (const key of camposObligatorios) {
+        const control = this.nivelForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
     const idAsesor = this.nivelForm.get('id_asesor')?.value;
     const nivel: any = {
       nombre: nombreNivel,
@@ -560,6 +577,15 @@ export class RutaAsesorComponent {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
 
+    }
+
+    const camposObligatorios = ['nombre'];
+    for (const key of camposObligatorios) {
+        const control = this.leccionForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
     }
     const leccion: any = {
       nombre: nombreLeccion,
@@ -777,6 +803,15 @@ export class RutaAsesorComponent {
     if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 1200) {
       this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 1200 caracteres');
       return;
+    }
+
+    const camposObligatorios = ['titulo','descripcion'];
+    for (const key of camposObligatorios) {
+        const control = this.contenidoLeccionForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
     }
 
     const formData = new FormData();

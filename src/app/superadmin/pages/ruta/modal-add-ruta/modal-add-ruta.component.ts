@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
 import { RutaService } from '../../../../servicios/rutas.service';
 import { Ruta } from '../../../../Modelos/ruta.modelo';
 import { User } from '../../../../Modelos/user.model';
@@ -49,7 +49,7 @@ export class ModalAddRutaComponent implements OnInit {
   showActividadForm: boolean = false;
 
   rutaForm = this.fb.group({
-    nombre: [''],
+    nombre: ['', [noWhitespaceValidator()]],
     fecha_creacion: [this.now],
     estado: [true],
   });
@@ -109,10 +109,11 @@ export class ModalAddRutaComponent implements OnInit {
       )
     }
   }
-
+  get f() { return this.rutaForm.controls; } 
   addRuta(): void {
     this.submitted = true;
     if (this.rutaForm.invalid) {
+      this.alertService.errorAlert('Error', 'Complete todos los campos correctamente')
       return;
     }
     const ruta: Ruta = {
@@ -171,4 +172,11 @@ export class ModalAddRutaComponent implements OnInit {
   closeModal() {
     this.dialogRef.close();
   }
+}
+export function noWhitespaceValidator(): ValidatorFn {
+  return (control: AbstractControl) => {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { whitespace: true };
+  };
 }
