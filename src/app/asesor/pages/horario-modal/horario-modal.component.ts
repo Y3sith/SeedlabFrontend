@@ -57,6 +57,7 @@ export class HorarioModalComponent implements OnInit {
         },
         error => {
           console.error('Error al asignar el horario', error);
+          console.log(error);
         }
       );
     } else {

@@ -79,12 +79,12 @@
 
           <!-- Contenido de la tarjeta -->
           <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{asesoria.Nombre_sol }}</h2>
-          <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong>{{ asesoria.fecha_solicitud }}
+          <p class="italic text-sm text-black ml-[4%]"><strong>Fecha: </strong>{{ asesoria.fecha_solicitud }}
           </p>
           <div
             class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
             title="{{ asesoria.notas }}">{{ asesoria.notas }}</div>
-          <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Emprendedor: </strong>{{ asesoria.Emprendedor
+          <p class="italic text-sm text-black ml-[4%]"><strong>Emprendedor: </strong>{{ asesoria.Emprendedor
             }}</p>
           <p class="italic text-sm text-black  ml-[4%]" *ngIf="asesoria.Asesor"><strong>Asesor: </strong>{{
             asesoria.Asesor }}</p>

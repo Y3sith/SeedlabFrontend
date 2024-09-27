@@ -18,6 +18,7 @@ export class AsignarAsesorModalComponent implements OnInit {
   token: string | null = null;
   user: any = null;
   currentRolId: string | null = null;
+  submitted = false;
   @Output() asesoriaAsignada = new EventEmitter<void>();
 
   constructor(
@@ -56,11 +57,14 @@ export class AsignarAsesorModalComponent implements OnInit {
     }
   }
 
+  get f() { return this.asignarForm.controls; }
+
   /*
     Este método se encarga de manejar la acción de guardar la 
     asignación de un asesor a una asesoría en un formulario.
   */
   onGuardar(): void {
+    this.submitted = true;
     if (this.asignarForm.valid) {
       const idAsesor = this.asignarForm.get('nom_asesor')?.value;
       const idAsesoria = this.data.asesoria.id_asesoria;
@@ -73,7 +77,7 @@ export class AsignarAsesorModalComponent implements OnInit {
         },
         error => {
           console.error('Error al asignar asesoría:', error);
-          this.alertService.errorAlert('Error', error.error.message);
+          //this.alertService.errorAlert('Error', error.error.message);
         }
       );
     }

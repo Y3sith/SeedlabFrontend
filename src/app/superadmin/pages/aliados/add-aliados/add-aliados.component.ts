@@ -275,6 +275,14 @@ export class AddAliadosComponent {
       }
     }
 
+    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina', 'celular','password','email' ];
+    for (const key of camposObligatorios) {
+        const control = this.aliadoForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
 
     const formData = new FormData();
     let estadoValue: boolean;
