@@ -5,6 +5,7 @@ import { RutaService } from '../../../../servicios/rutas.service';
 import { FormBuilder } from '@angular/forms';
 import { ActividadService } from '../../../../servicios/actividad.service';
 import { AlertService } from '../../../../servicios/alert.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-list-actividades',
@@ -38,7 +39,9 @@ export class ListActividadesComponent {
     private rutaService: RutaService,
     private actividadService: ActividadService,
     private alertService: AlertService,
+    private location: Location,
   ) {}
+
   ngOnInit(): void {
     this.validateToken();
     this.route.queryParams.subscribe((params) => {
@@ -47,6 +50,7 @@ export class ListActividadesComponent {
     });
     this.ver();
   }
+
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -64,6 +68,10 @@ export class ListActividadesComponent {
     if (!this.token) {
       this.router.navigate(['/home']);
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
   
   ver(): void {
