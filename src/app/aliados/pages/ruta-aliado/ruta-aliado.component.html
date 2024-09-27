@@ -58,161 +58,183 @@
                                 </div>
                             </div>
 
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato</label>
-                                <select class="w-full p-2 border rounded" formControlName="id_tipo_dato"
-                                    (change)="onTipoDatoChange()">
-                                    <option *ngFor="let tipodato of listarTipoDato" [value]="tipodato.id">
-                                        {{tipodato.nombre}}</option>
-                                </select>
-                                <div *ngIf="submitted && a.id_tipo_dato.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="a.id_tipo_dato.errors.required">Este campo es requerido *</div>
-                                </div>
-                            </div>
-                            <div class="mb-4" *ngIf="actividadForm.get('id_tipo_dato').value">
-                                <label
-                                    class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center"
-                                    for="nombre">
-                                    <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
-                                        (change)="onFileSelecteds($event, 'fuente')">
-                                    <span (click)="triggerFileInput()"
-                                        class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
-                                        Subir Imagen
-                                    </span>
-                                </label>
-                                <div *ngIf="submitted && a.fuente.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
-                                </div>
-                                <div *ngIf="actividadForm.get('fuente')?.value && selectedFromInput"
-                                    class="mt-2 text-gray-500 text-center">
-                                    Archivo seleccionado: {{ selectedfuente?.name }}
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Aliado</label>
-                                <select formControlName="id_aliado" (change)="onAliadoChange($event)"
-                                    class="w-full p-2 border rounded">
-                                    <option value="" disabled selected>Seleccione el Aliado...</option>
-                                    <option *ngFor="let aliado of listarAliadoo" [value]="aliado.id"
-                                        [selected]="aliado.id == idAliado">
-                                        {{aliado.nombre}}
-                                    </option>
-                                </select>
-                                <div *ngIf="submitted && a.id_aliado.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="a.id_aliado.errors.required">Este campo es requerido *</div>
-                                </div>
-                            </div>
-                            <div class="flex justify-center h-10 mt-4">
-                                <!--toca cambiarlo-->
-                                <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()"
-                                    class="bg-orange-500 text-white px-20 py-2 rounded-full text-lg font-semibold italic text-[30px] font-poppins">Guardar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- Nivel -->
-                    <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
-                        <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Nivel</h2>
-                        <form [formGroup]="nivelForm">
-                            <!-- editar nivel -->
-                            <div *ngIf="isEditing">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel a
-                                    editar</label>
-                                <select (change)="onNivelChange($event.target.value)" class="w-full p-2 border rounded"
-                                    formControlName="id_nivel" (change)="onNivelSelect($event)">
-                                    <option *ngFor="let nivel of niveles; let i = index" class="mb-4"
-                                        [value]="nivel.id">{{ nivel.nombre }}</option>
-                                    <option value="0">Agregar nivel</option>
-                                </select>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del nivel</label>
-                                <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
-                                <div *ngIf="submittedNivel && n.nombre.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="n.nombre.errors.required">Este campo es requerido *</div>
-                                </div>
-                            </div>
+                          <div class="mb-4">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato</label>
+                              <select class="w-full p-2 border rounded" formControlName="id_tipo_dato"
+                                  (change)="onTipoDatoChange()">
+                                  <option *ngFor="let tipodato of listarTipoDato" [value]="tipodato.id">
+                                      {{tipodato.nombre}}</option>
+                              </select>
+                              <div *ngIf="submitted && a.id_tipo_dato.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="a.id_tipo_dato.errors.required">Este campo es requerido *</div>
+                              </div>
+                          </div>
+                          <div class="mb-4" *ngIf="actividadForm.get('id_tipo_dato').value">
+                              <label
+                                  class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center"
+                                  for="nombre">
+                                  <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
+                                      (change)="onFileSelecteds($event, 'fuente')">
+                                  <span (click)="triggerFileInput()"
+                                      class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
+                                      Subir Imagen
+                                  </span>
+                              </label>
+                              <div *ngIf="submitted && a.fuente.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="a.fuente.errors.required">Este campo es requerido *</div>
+                              </div>
+                              <div *ngIf="actividadForm.get('fuente')?.value && selectedFromInput" class="mt-2 text-gray-500 text-center">
+                                  Archivo seleccionado: {{ selectedfuente?.name }}
+                              </div>
+                          </div>
+                          <div class="mb-4">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Aliado</label>
+                              <select formControlName="id_aliado" (change)="onAliadoChange($event)"
+                                  class="w-full p-2 border rounded">
+                                  <option value="" disabled selected>Seleccione el Aliado...</option>
+                                  <option *ngFor="let aliado of listarAliadoo" [value]="aliado.id" [selected]="aliado.id == idAliado">
+                                      {{aliado.nombre}}
+                                  </option>
+                              </select>
+                              <div *ngIf="submitted && a.id_aliado.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="a.id_aliado.errors.required">Este campo es requerido *</div>
+                              </div>
+                          </div>
+                          <div class="flex justify-center h-10 mt-4">
+                              <!--toca cambiarlo-->
+                              <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()"
+                                  class="bg-orange-500 text-white px-20 py-2 rounded-full text-lg font-semibold italic text-[30px] font-poppins">Guardar
+                              </button>
+                          </div>
+                      </form>
+                  </div>
+                  <!-- Nivel -->
+                  <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
+                      <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 italic font-poppins">Nivel</h2>
+                      <form [formGroup]="nivelForm">
+                          <!-- editar nivel -->
+                          <div  *ngIf="isEditing">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel a editar
+                                <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Si requiere editar el nombre del nivel, seleccione dicho nivel para editarlo en el siguiente campo, después de click en 'Guardar'" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                              </label>
+                              <select (change)="onNivelChange($event.target.value)" class="w-full p-2 border rounded"
+                                  formControlName="id_nivel" (change)="onNivelSelect($event)">
+                                  <option *ngFor="let nivel of niveles; let i = index" class="mb-4"
+                                      [value]="nivel.id">{{ nivel.nombre }}</option>
+                                  <option value="0">Agregar nivel</option>
+                              </select>
+                          </div>
+                          <div class="mb-4">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del nivel
+                                <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Solo se permite entre 5 y 70 caracteres" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                              </label>
+                              <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
+                              <div *ngIf="submittedNivel && n.nombre.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="n.nombre.errors.required">Este campo es requerido *</div>
+                              </div>
+                          </div>
+                          
+                          <div class="mb-4">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Asesor
+                                <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Elija el asesor que se encargará de las lecciones" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                              </label>
+                              <select formControlName="id_asesor" class="w-full p-2 border rounded">
+                                  <option value="">Ninguno</option>
+                                  <option *ngFor="let asesor of listarAsesores" [value]="asesor.id">
+                                      {{ asesor.nombre }} {{ asesor.apellido }}
+                                  </option>
+                              </select>
+                              <div *ngIf="submitted && n.id_asesor.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="n.id_asesor.errors.required">Este campo es requerido *</div>
+                              </div>
+                          </div>
 
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Asesor</label>
-                                <select formControlName="id_asesor" class="w-full p-2 border rounded">
-                                    <option value="">Ninguno</option>
-                                    <option *ngFor="let asesor of listarAsesores" [value]="asesor.id">
-                                        {{ asesor.nombre }} {{ asesor.apellido }}
-                                    </option>
-                                </select>
-                                <div *ngIf="submitted && n.id_asesor.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="n.id_asesor.errors.required">Este campo es requerido *</div>
-                                </div>
-                            </div>
-
-                            <input type="hidden" id="id_actividad" formControlName="id_actividad">
-                            <!-- Botón para agregar -->
-                            <div class="flex justify-end items-center mb-4">
-                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
-                                    isEditing ? 'Guardar' : 'Agregar nivel' }}</span>
-                                <a id="agregarNivelBtn" (click)="addNivelSuperAdmin()" [routerLink]="'#'"
-                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
-                                    <span class="text-3xl font-semibold leading-none ">+</span>
-                                </a>
-                            </div>
-                        </form>
-
-                        <form [formGroup]="leccionForm">
-                            <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
-                                {{ isEditing ? 'Lección' : 'Agregar Lección' }}</h2>
-                            <div class="mb-4" *ngIf="!isEditing">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para
-                                    crear la lección</label>
-                                <select formControlName="id_nivel" class="w-full p-2 border rounded"
-                                    (change)="onNivelChange($event.target.value)">
-                                    <option *ngFor="let vernivel of listarNiveles" [value]="vernivel.id">
-                                        {{vernivel.nombre}}</option>
-                                </select>
-                                <div *ngIf="submittedLeccion && l.id_nivel.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="l.id_nivel.errors.required">Este campo es requerido *</div>
-                                </div>
-                            </div>
-                            <div class="mb-4" *ngIf="isEditing">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para
-                                    editar</label>
-                                <select formControlName="id_leccion" class="w-full p-2 border rounded"
-                                    (change)="onLeccionChange($event.target.value)">
-                                    <option *ngFor="let verleccion of listarLeccion" [value]="verleccion.id">
-                                        {{verleccion.nombre}}</option>
-                                    <option value="">Agregar Leccion</option>
-                                </select>
-                                <div *ngIf="submittedContent && cl.id_leccion.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="cl.id_leccion.errors.required">Este campo es requerido *</div>
-                                </div>
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección</label>
-                                <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
-                                <div *ngIf="submittedLeccion && l.nombre.errors"
-                                    class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
-                                    <div *ngIf="l.nombre.errors.required">Este campo es requerido *</div>
-                                </div>
-                            </div>
-                            <input type="hidden" id="id_nivel" formControlName="id_nivel">
-                            <!-- Botón para agregar -->
-                            <div class="flex justify-end items-center mb-4">
-                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
-                                    isEditing ? 'Guardar' : 'Agregar Lección' }}</span>
-                                <a id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()" [routerLink]="'#'"
-                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
-                                    <span class="text-3xl font-semibold leading-none ">+</span>
-                                </a>
-                            </div>
-                        </form>
-                    </div>
+                          <input type="hidden" id="id_actividad" formControlName="id_actividad">
+                          <!-- Botón para agregar -->
+                          <div class="flex justify-end items-center mb-4">
+                              <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
+                                  style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar nivel' }}</span>
+                              <a id="agregarNivelBtn" (click)="addNivelSuperAdmin()" [routerLink]="'#'"
+                                  class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
+                                  <span class="text-3xl font-semibold leading-none ">+</span>
+                              </a>
+                          </div>
+                      </form>
+                      
+                      <form [formGroup]="leccionForm">
+                          <h2 class="text-xl text-center font-semibold text-[#FFB000] mb-4 mt-6 italic font-poppins">
+                              {{ isEditing ? 'Lección' : 'Agregar Lección' }}</h2>
+                          <div class="mb-4" *ngIf="!isEditing">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel para
+                                  crear la lección</label>
+                              <select formControlName="id_nivel" class="w-full p-2 border rounded"
+                                  (change)="onNivelChange($event.target.value)">
+                                  <option *ngFor="let vernivel of listarNiveles" [value]="vernivel.id">
+                                      {{vernivel.nombre}}</option>
+                              </select>
+                              <div *ngIf="submittedLeccion && l.id_nivel.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="l.id_nivel.errors.required">Este campo es requerido *</div>
+                              </div>
+                          </div>
+                          <div class="mb-4" *ngIf="isEditing">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para
+                                  editar
+                                  <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                  matTooltip="Si requiere editar el nombre de la lección, seleccione dicha lección para editarlo en el siguiente campo, después de click en 'Guardar'" matTooltipPosition="right"
+                                  style="color: #adb7c7;">
+                              </fa-icon>
+                            </label>
+                              <select formControlName="id_leccion" class="w-full p-2 border rounded"
+                                  (change)="onLeccionChange($event.target.value)">
+                                  <option *ngFor="let verleccion of listarLeccion" [value]="verleccion.id">
+                                      {{verleccion.nombre}}</option>
+                                  <option value="">Agregar Leccion</option>
+                              </select>
+                              <div *ngIf="submittedContent && cl.id_leccion.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="cl.id_leccion.errors.required">Este campo es requerido *</div>
+                              </div>
+                          </div>
+                          <div class="mb-4">
+                              <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección
+                                <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Solo se permite entre 5 y 70 caracteres" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                              </label>
+                              <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
+                              <div *ngIf="submittedLeccion && l.nombre.errors"
+                                  class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
+                                  <div *ngIf="l.nombre.errors.required">Este campo es requerido *</div>
+                              </div>
+                          </div>
+                          <input type="hidden" id="id_nivel" formControlName="id_nivel">
+                          <!-- Botón para agregar -->
+                          <div class="flex justify-end items-center mb-4">
+                              <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
+                                  style="font-weight: 600;">{{ isEditing ? 'Guardar' : 'Agregar Lección' }}</span>
+                              <a id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()" [routerLink]="'#'"
+                                  class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
+                                  <span class="text-3xl font-semibold leading-none ">+</span>
+                              </a>
+                          </div>
+                      </form>
+                  </div>
 
                     <!-- Contenido -->
                     <div class="bg-[#e6e6e6] p-4 rounded-lg shadow">
@@ -280,7 +302,12 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato
+                                <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="La imagen no puede pesar mas de 5MB" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                              </label>
                                 <select class="w-full p-2 border rounded" formControlName="id_tipo_dato"
                                     (change)="onTipoDatoChangeContenido()">
                                     <option *ngFor="let tipoDatoContenido of listarTipoDatoContenido"

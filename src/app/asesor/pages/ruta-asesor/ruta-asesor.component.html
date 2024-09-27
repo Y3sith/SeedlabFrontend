@@ -122,7 +122,12 @@
                             <!-- editar nivel -->
                             <div *ngIf="isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona el nivel a
-                                    editar</label>
+                                    editar
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                    matTooltip="Si requiere editar el nombre del nivel, seleccione dicho nivel para editarlo en el siguiente campo, después de click en 'Guardar'" matTooltipPosition="right"
+                                    style="color: #adb7c7;">
+                                </fa-icon>
+                            </label>
                                 <select (change)="onNivelChange($event.target.value)" class="w-full p-2 border rounded"
                                     formControlName="id_nivel" (change)="onNivelSelect($event)">
                                     <option *ngFor="let nivel of niveles; let i = index" class="mb-4"
@@ -131,7 +136,12 @@
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del nivel</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del nivel
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Solo se permite entre 5 y 70 caracteres" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <input type="text" class="w-full p-2 border rounded" formControlName="nombre">
                                 <div *ngIf="submittedNivel && n.nombre.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
@@ -183,7 +193,12 @@
                             </div>
                             <div class="mb-4" *ngIf="isEditing">
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Selecciona la lección para
-                                    editar</label>
+                                    editar
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                    matTooltip="Si requiere editar el nombre de la lección, seleccione dicha lección para editarlo en el siguiente campo, después de click en 'Guardar'" matTooltipPosition="right"
+                                    style="color: #adb7c7;">
+                                </fa-icon>
+                            </label>
                                 <select formControlName="id_leccion" class="w-full p-2 border rounded"
                                     (change)="onLeccionChange($event.target.value)">
                                     <option *ngFor="let verleccion of listarLeccion" [value]="verleccion.id">
@@ -196,7 +211,12 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la lección
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Solo se permite entre 5 y 70 caracteres" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <input formControlName="nombre" type="text" class="w-full p-2 border rounded">
                                 <div *ngIf="submittedLeccion && l.nombre.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
@@ -283,7 +303,12 @@
                                 </div>
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de dato
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="La imagen no puede pesar mas de 5MB" matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
                                 <select class="w-full p-2 border rounded" formControlName="id_tipo_dato"
                                     (change)="onTipoDatoChangeContenido()">
                                     <option *ngFor="let tipoDatoContenido of listarTipoDatoContenido"

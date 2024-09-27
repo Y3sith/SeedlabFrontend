@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReporteService } from '../../../servicios/reporte.service';
 import { AlertService } from '../../../servicios/alert.service';
+import { faCircleQuestion, } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-reportes-adm',
@@ -22,6 +24,8 @@ export class ReportesAdmComponent {
   public totalItems: number = 0;
   public paginatedReportes: string[] = [];
   tipoReporteSeleccionado: string = '';
+  falupa = faCircleQuestion;
+
 
 
   constructor(
