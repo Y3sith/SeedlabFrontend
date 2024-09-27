@@ -57,6 +57,7 @@ export class PerfilAliadoComponent implements OnInit {
   mostrarRutaMulti: boolean = true;
   private videoUrl: string = '';
   private imageUrl: string = '';
+  charCount: number = 0;
 
   constructor(
     private router: Router,
@@ -264,6 +265,7 @@ export class PerfilAliadoComponent implements OnInit {
           password: '',
           estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
+        this.updateCharCount();
         this.previousImageUrl = data.id_tipo_dato === 2 ? data.ruta_multi : '';
         // Establecer una variable para controlar la visibilidad de ruta_multi
         //this.mostrarRutaMulti = data.id_tipo_dato !== 2;
@@ -332,6 +334,11 @@ export class PerfilAliadoComponent implements OnInit {
     )
   }
 
+  updateCharCount(): void {
+    const descripcionValue = this.aliadoForm.get('descripcion')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
+
   upadateAliado(): void {
     if (this.aliadoForm.invalid || this.bannerForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar los campos requeridos.');
@@ -366,7 +373,15 @@ export class PerfilAliadoComponent implements OnInit {
         }
       }
     });
-  
+    const nombreDescripcion = this.aliadoForm.get('descripcion')?.value;
+    if (nombreDescripcion && nombreDescripcion.length > 312) {
+      this.alertService.errorAlert('Error', 'La descripción no puede tener más de 312 caracteres.');
+      return;
+    }
+    if (nombreDescripcion && nombreDescripcion.length < 210) {
+      this.alertService.errorAlert('Error', 'La descripción no puede tener menos de 210 caracteres.');
+      return;
+    }
     // Agregar campos específicos que se deben asegurar que estén en el FormData
     const specificFields = ['nombre', 'descripcion', 'email', 'id_tipo_dato'];
     specificFields.forEach(field => {
