@@ -85,6 +85,8 @@ export class RutaAliadoComponent {
 
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;
+  charCount: number = 0;
+  charCountContenido: number = 0;
 
   ////añadir actividad
   actividadForm = this.fb.group({
@@ -342,6 +344,7 @@ export class RutaAliadoComponent {
 
               this.activivarFormulariosBotones();
               // console.log('Actividad: ', data);
+              this.updateCharCount();
               this.isLoading=false;
             },
             error => {
@@ -393,6 +396,10 @@ export class RutaAliadoComponent {
     this.isLoading=false;
   }
 
+  updateCharCount(): void {
+    const descripcionValue = this.actividadForm.get('descripcion')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
 
   addActividadSuperAdmin(): void {
     this.submitted = true;
@@ -812,6 +819,7 @@ export class RutaAliadoComponent {
             id_tipo_dato: primerContenido.id_tipo_dato,
             fuente_contenido: primerContenido.fuente_contenido
           });
+          this.updateCharCountContenido();
         } else {
           // Limpiar todos los campos excepto id_leccion
           this.contenidoLeccionForm.reset({
@@ -849,6 +857,11 @@ export class RutaAliadoComponent {
         });
       }
     }
+  }
+
+  updateCharCountContenido(){
+    const descripcionContenido = this.contenidoLeccionForm.get('descripcion')?.value || '';
+    this.charCountContenido = descripcionContenido.length;
   }
 
   addContenidoLeccionSuperAdmin(): void {
@@ -939,6 +952,7 @@ export class RutaAliadoComponent {
         id_tipo_dato: '',
         fuente_contenido: ''
       });
+      this.updateCharCountContenido();
     } else if (contenidoId) {
       const selectedContenido = this.contenidoLeccion.find(c => c.id.toString() === contenidoId);
       if (selectedContenido) {
@@ -950,6 +964,7 @@ export class RutaAliadoComponent {
           id_tipo_dato: selectedContenido.id_tipo_dato,
           fuente_contenido: selectedContenido.fuente_contenido
         });
+        this.updateCharCountContenido();
       }
     }
   }
