@@ -5,6 +5,8 @@ import { User } from '../../../Modelos/user.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReporteService } from '../../../servicios/reporte.service';
 import { AlertService } from '../../../servicios/alert.service';
+import { faCircleQuestion, } from '@fortawesome/free-solid-svg-icons';
+
 
 
 
@@ -28,6 +30,7 @@ export class ReportesComponent {
   public totalItems: number = 0;
   public paginatedReportes: string[] = [];
   tipoReporteSeleccionado: string = '';
+  falupa = faCircleQuestion;
 
 
   constructor(

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { ReporteService } from '../../../servicios/reporte.service';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
@@ -23,6 +23,8 @@ export class ReportesComponent implements OnInit {
   public totalItems: number = 0;
   public paginatedReportes: string[] = [];
   tipoReporteSeleccionado: string = '';
+  falupa = faCircleQuestion;
+
 
 
   constructor(

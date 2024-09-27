@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { faEnvelope, faMobileAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faMobileAlt, faUser, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
 import { AsesorService } from '../../../servicios/asesor.service';
 
@@ -47,6 +47,8 @@ export class PerfilAsesorComponent implements OnInit {
   tiempoEspera = 1800;
   asesorId: any;
   isLoading: boolean = false;
+  falupa = faCircleQuestion;
+
 
   asesorForm = this.fb.group({
     nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
