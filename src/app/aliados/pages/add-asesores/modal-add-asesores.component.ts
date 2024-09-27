@@ -1,6 +1,6 @@
-import {ChangeDetectorRef,Component,Input,OnInit,} from '@angular/core';
-import {AbstractControl, FormBuilder,FormGroup,ValidationErrors,Validators,} from '@angular/forms';
-import {faCircleQuestion,} from '@fortawesome/free-solid-svg-icons';
+import { ChangeDetectorRef, Component, Input, OnInit, } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators, } from '@angular/forms';
+import { faCircleQuestion, } from '@fortawesome/free-solid-svg-icons';
 import { AliadoService } from '../../../servicios/aliado.service';
 import { AsesorService } from '../../../servicios/asesor.service';
 import { User } from '../../../Modelos/user.model';
@@ -35,22 +35,27 @@ export class ModalAddAsesoresComponent implements OnInit {
   nombreAliado: string | null = null;
   tiempoEspera = 1800;
   falupa = faCircleQuestion;
-  /////
   listTipoDocumento: [] = [];
   listDepartamentos: any[] = [];
   listMunicipios: any[] = [];
-  /////
   imagenPerlil_Preview: string | ArrayBuffer | null = null;
   selectedImagen_Perfil: File | null = null;
   formSubmitted = false;
   currentIndex: number = 0;
   currentSubSectionIndex: number = 0;
   subSectionPerSection: number[] = [1, 1, 1];
-  /////
   idAsesor: number = null;
   errorMessage: string = '';
   isLoading: boolean = false;
 
+/*
+  Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
+  de campos relacionados con los datos de un asesor. Se aplican validaciones específicas para garantizar que la entrada 
+  de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
+  de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
+  organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
+  El estado del asesor se inicializa como `true`, indicando que el asesor está activo por defecto.
+*/
 
   asesorForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
@@ -63,16 +68,16 @@ export class ModalAddAsesoresComponent implements OnInit {
     id_tipo_documento: ['', Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
-    fecha_nac: ['',this.dateRangeValidator],
-    email: ['', [Validators.required,Validators.email]],
+    fecha_nac: ['', this.dateRangeValidator],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     aliado: ['', Validators.required],
     estado: true,
   });
 
   sectionFields: string[][] = [
-    ['nombre', 'apellido', 'documento', 'id_tipo_documento','fecha_nac', 'genero'], // Sección 1
-    ['celular', 'email','id_departamento', 'id_municipio', 'direccion', 'password'], // Sección 2
+    ['nombre', 'apellido', 'documento', 'id_tipo_documento', 'fecha_nac', 'genero'],
+    ['celular', 'email', 'id_departamento', 'id_municipio', 'direccion', 'password'],
   ];
 
   constructor(
@@ -88,7 +93,7 @@ export class ModalAddAsesoresComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private location: Location
-  ) {}
+  ) { }
 
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
@@ -103,24 +108,25 @@ export class ModalAddAsesoresComponent implements OnInit {
         this.isEditing = false;
       }
     })
-    /*para ver si lo estan editando salga la palabra editar */
     if (this.asesorId != null) {
       this.isEditing = true;
       this.asesorForm.get('password')?.setValidators([Validators.minLength(8)]);
     } else {
       this.asesorForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
-    
     this.asesorForm.get('password')?.updateValueAndValidity();
     this.tipoDocumento();
     this.cargarDepartamentos();
   }
-
   get f() {
     return this.asesorForm.controls;
   }
 
-  /* Valida el token del login colocando el nombre del aliado para llenarlo automaticamente con el localstorage*/
+/*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+*/
+
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -145,10 +151,17 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
   }
 
-  goBack(){
+  /*
+    Este método se utiliza cuando se desea regresar a la vista anterior sin recargar la página o perder el estado actual.
+  */
+  goBack() {
     this.location.back();
   }
 
+  /*
+    El método se encarga de obtener una lista de tipos de documentos desde el servicio de autenticación (`authService`) 
+    y almacenarla en la propiedad `listTipoDocumento`. 
+  */
   tipoDocumento(): void {
     if (this.token) {
       this.authService.tipoDocumento().subscribe(
@@ -162,6 +175,10 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
   }
 
+  /*
+      Este método solicita una lista de departamentos a través del servicio `departamentoService` 
+      y la asigna a la propiedad `listDepartamentos`.
+  */
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
@@ -173,16 +190,21 @@ export class ModalAddAsesoresComponent implements OnInit {
     );
   }
 
+  /*
+    Este método se activa cuando un usuario selecciona un departamento de la lista desplegable. 
+    Finalmente, llama al método `cargarMunicipios(selectedDepartamento)`, que carga los municipios 
+    asociados al departamento seleccionado
+  */
   onDepartamentoSeleccionado(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDepartamento = target.value;
-
-    // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
-
-    // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
+
+  /*
+    Este método se encarga de obtener una lista de municipios asociados a un departamento específico.
+  */
 
   cargarMunicipios(idDepartamento: string): void {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
@@ -194,6 +216,11 @@ export class ModalAddAsesoresComponent implements OnInit {
       }
     );
   }
+
+  /*
+    Este método es una función de validación personalizada 
+    que verifica la fortaleza de una contraseña ingresada en un control de formulario.
+  */
 
   passwordValidator(control: AbstractControl) {
     const value = control.value;
@@ -207,7 +234,10 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
   }
 
-  /* Trae la informacion del asesor cuando el asesorId no sea nulo */
+  /*
+    Este método se encarga de cargar y mostrar la información de un asesor en un formulario para su edición. 
+  */
+
   verEditar(): void {
     this.isLoading = true;
     if (this.idAsesor != null) {
@@ -236,36 +266,33 @@ export class ModalAddAsesoresComponent implements OnInit {
             this.asesorForm.get('estado')?.setValue(this.isActive);
           });
 
-          // Cargar los departamentos y municipios
           this.cargarDepartamentos();
 
           setTimeout(() => {
-            // Establecer el departamento seleccionado
             this.asesorForm.patchValue({ id_municipio: data.id_departamentos });
-
-            // Cargar los municipios de ese departamento
             this.cargarMunicipios(data.id_departamento);
-
             setTimeout(() => {
-              // Establecer el municipio seleccionado
               this.asesorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
           this.isLoading = false;
         },
         (error) => {
-          console.log(error);
+          (error);
           this.isLoading = false;
         }
       );
     }
   }
 
+  /*
+    Este método gestiona la creación o actualización de un asesor mediante la recolección de datos desde un formulario reactivo (`asesorForm`) 
+    y la validación de la información ingresada. El método determina si se está editando un asesor existente o creando uno nuevo. 
+    En el caso de una actualización, se solicita confirmación al usuario antes de realizar la actualización mediante el servicio `asesorService`. 
+    Si se trata de una creación de asesor, se realiza la llamada al servicio correspondiente, mostrando alertas de éxito o error según sea necesario.
+  */
 
-  
-  /* Crear asesor o actualiza dependendiendo del asesorId */
   addAsesor(): void {
-    // Mark all form controls as touched to trigger validation
     Object.values(this.asesorForm.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -278,18 +305,14 @@ export class ModalAddAsesoresComponent implements OnInit {
             return;
         }
     }
-
-    // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
-    if (this.asesorForm.get('nombre').invalid || 
-        this.asesorForm.get('apellido').invalid || 
-        this.asesorForm.get('documento').invalid || 
-        this.asesorForm.get('celular').invalid ||
-        (this.asesorForm.get('password').invalid && (!this.idAsesor || this.asesorForm.get('password').value))) {
+    if (this.asesorForm.get('nombre').invalid ||
+      this.asesorForm.get('apellido').invalid ||
+      this.asesorForm.get('documento').invalid ||
+      this.asesorForm.get('celular').invalid ||
+      (this.asesorForm.get('password').invalid && (!this.idAsesor || this.asesorForm.get('password').value))) {
       this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
       return;
     }
-  
-    // Validaciones opcionales
     const fechaNacControl = this.asesorForm.get('fecha_nac');
     if (fechaNacControl.value) {
       const fechaNac = new Date(fechaNacControl.value);
@@ -304,40 +327,31 @@ export class ModalAddAsesoresComponent implements OnInit {
         return;
       }
     }
-  
     const emailControl = this.asesorForm.get('email');
     if (emailControl.value && !emailControl.valid) {
       this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
       return;
     }
-
     const formData = new FormData();
     let estadoValue: string;
     if (this.idAsesor == null) {
       estadoValue = '1';
     } else {
-      // Aquí falta la lógica para el caso en que idAsesor no sea null
     }
-
     formData.append('nombre', this.asesorForm.get('nombre')?.value);
     formData.append('apellido', this.asesorForm.get('apellido')?.value);
     formData.append('documento', this.asesorForm.get('documento')?.value);
     formData.append('celular', this.asesorForm.get('celular')?.value);
     formData.append('genero', this.asesorForm.get('genero')?.value);
-
-    // Agregamos la dirección solo si tiene un valor
     const direccionControl = this.asesorForm.get('direccion');
     if (direccionControl && direccionControl.value) {
       formData.append('direccion', direccionControl.value);
     }
-
     formData.append('aliado', this.nombreAliado);
     formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.asesorForm.get('id_departamento')?.value);
     formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
     formData.append('email', this.asesorForm.get('email')?.value);
-
-    // Agregamos la contraseña solo si tiene un valor o si es un nuevo asesor
     const passwordControl = this.asesorForm.get('password');
     if (passwordControl && (passwordControl.value || !this.idAsesor)) {
       if (passwordControl.valid) {
@@ -347,7 +361,6 @@ export class ModalAddAsesoresComponent implements OnInit {
         return;
       }
     }
-
     Object.keys(this.asesorForm.controls).forEach((key) => {
       const control = this.asesorForm.get(key);
       if (control?.value !== null && control?.value !== undefined) {
@@ -360,13 +373,12 @@ export class ModalAddAsesoresComponent implements OnInit {
           }
         } else if (key === 'estado') {
           formData.append(key, control.value ? '1' : '0');
-        } else if (key !== 'imagen_perfil' && key !== 'direccion' && 
-                   !(key === 'password' && this.idAsesor && !control.value)) {
+        } else if (key !== 'imagen_perfil' && key !== 'direccion' &&
+          !(key === 'password' && this.idAsesor && !control.value)) {
           formData.append(key, control.value);
         }
       }
     });
-
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
@@ -388,14 +400,14 @@ export class ModalAddAsesoresComponent implements OnInit {
           );
         }
       });
-    /* Crea asesor */
+      /* Crea asesor */
     } else {
       this.asesorService.createAsesor(this.token, formData).subscribe(
         (data) => {
-          setTimeout(function() {
+          setTimeout(function () {
           }, this.tiempoEspera);
-            this.alerService.successAlert('Exito', data.message);
-            this.router.navigate(['/list-asesores']);
+          this.alerService.successAlert('Exito', data.message);
+          this.router.navigate(['/list-asesores']);
         },
         (error) => {
           console.error('Error al crear el asesor:', error);
@@ -405,19 +417,18 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
   }
 
-  /* Cerrar el modal */
-  // cancelarModal() {
-  //   this.dialogRef.close();
-  // }
-
-  /* Cambia el estado del toggle*/
+  /*
+      Este método es útil para gestionar la activación/desactivación de un asesor en la interfaz de usuario.
+  */
   toggleActive() {
     this.isActive = !this.isActive;
-    //this.asesorForm.patchValue({ estado: this.isActive ? 'Activo' : 'Inactivo' });
     this.asesorForm.patchValue({ estado: this.isActive ? true : false });
   }
 
-  /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
+  /*
+   Este método gestiona la visibilidad de un botón en la interfaz de usuario. 
+  */
+
   mostrarToggle(): void {
     if (this.asesorId != null) {
       this.boton = false;
@@ -425,16 +436,17 @@ export class ModalAddAsesoresComponent implements OnInit {
     this.boton = true;
   }
 
+  /*
+    Este método maneja la selección de archivos desde un input de tipo archivo. 
+    Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
       let maxSize = 0;
-
       if (field === 'imagen_perfil') {
-        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+        maxSize = 5 * 1024 * 1024;
       }
-
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert(
@@ -442,19 +454,14 @@ export class ModalAddAsesoresComponent implements OnInit {
           `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`
         );
         this.resetFileField(field);
-
-        ////Limpia el archivo seleccionado y resetea la previsualización
-        event.target.value = ''; // Borra la selección del input
-
-        // Resetea el campo correspondiente en el formulario y la previsualización
+        event.target.value = '';
         if (field === 'imagen_perfil') {
           this.asesorForm.patchValue({ imagen_perfil: null });
-          this.imagenPerlil_Preview = null; // Resetea la previsualización
+          this.imagenPerlil_Preview = null;
         }
         this.resetFileField(field);
         return;
       }
-
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const previewUrl = e.target.result;
@@ -464,10 +471,7 @@ export class ModalAddAsesoresComponent implements OnInit {
         }
       };
       reader.readAsDataURL(file);
-
-      // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
-
       if (field === 'imagen_perfil') {
         this.selectedImagen_Perfil = file;
         this.asesorForm.patchValue({ imagen_perfil: file });
@@ -476,12 +480,24 @@ export class ModalAddAsesoresComponent implements OnInit {
       this.resetFileField(field);
     }
   }
+
+  /*
+    Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+    eliminando cualquier valor previamente asignado.
+  */
+
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.asesorForm.patchValue({ imagen_perfil: null });
       this.imagenPerlil_Preview = null;
     }
   }
+
+  /*
+    Este método utiliza `FileReader` para crear una vista previa de la imagen 
+    seleccionada, actualizando la propiedad correspondiente en el componente.
+  */
+
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -492,6 +508,13 @@ export class ModalAddAsesoresComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
+
+
+  /*
+    Este método recorre los controles del formulario y recopila los errores 
+    de validación, devolviendo un objeto que contiene los campos con errores para su posible 
+    visualización.
+  */
 
   getFormValidationErrors(form: FormGroup) {
     const result: any = {};
@@ -504,14 +527,15 @@ export class ModalAddAsesoresComponent implements OnInit {
     return result;
   }
 
+  /*
+    Este método es responsable de validar los campos del formulario de un componente 
+    y gestionar la navegación entre diferentes secciones del formulario.
+  */
 
   next() {
     const form = this.asesorForm;
     let sectionIsValid = true;
-  
-    // Obtener los campos de la sección actual
     const currentSectionFields = this.sectionFields[this.currentIndex];
-  
     currentSectionFields.forEach(field => {
       const control = form.get(field);
       if (control.invalid) {
@@ -520,16 +544,13 @@ export class ModalAddAsesoresComponent implements OnInit {
         sectionIsValid = false;
       }
     });
-  
-    // Validaciones especiales
-    if (this.currentIndex === 1) { // Asumiendo que email y fecha_nac están en la sección 2
+    if (this.currentIndex === 1) {
       const emailControl = form.get('email');
       if (emailControl.value && emailControl.invalid) {
         emailControl.markAsTouched();
         emailControl.markAsDirty();
         sectionIsValid = false;
       }
-  
       const fechaNacControl = form.get('fecha_nac');
       if (fechaNacControl.value) {
         const fechaNac = new Date(fechaNacControl.value);
@@ -546,13 +567,10 @@ export class ModalAddAsesoresComponent implements OnInit {
         }
       }
     }
-  
     if (!sectionIsValid) {
       this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
       return;
     }
-  
-    // Si llegamos aquí, la sección actual es válida
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
     } else {
@@ -561,22 +579,24 @@ export class ModalAddAsesoresComponent implements OnInit {
         this.currentSubSectionIndex = 0;
       }
     }
-  
-    // Limpiar el mensaje de error si existe
     this.clearErrorMessage();
   }
-  
-  // Función auxiliar para mostrar mensajes de error
+
   private showErrorMessage(message: string) {
     console.error(message);
     this.alertService.errorAlert('error', message);
     this.errorMessage = message;
   }
-  
-  // Función auxiliar para limpiar el mensaje de error
+
   private clearErrorMessage() {
     this.errorMessage = '';
   }
+
+  /*
+    Este método  es responsable de gestionar la navegación hacia atrás 
+    entre diferentes secciones y sub-secciones del formulario.
+  */
+
   previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;
@@ -588,12 +608,18 @@ export class ModalAddAsesoresComponent implements OnInit {
     }
 
   }
+
+  /*
+    Este método es un validador personalizado que se utiliza 
+    para verificar la validez de una fecha seleccionada en relación con las 
+    restricciones de edad.
+  */
+
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
-      return null; // Si no hay valor, no se valida
+      return null;
     }
-
     const selectedDate = new Date(value);
     const today = new Date();
     const hundredYearsAgo = new Date();

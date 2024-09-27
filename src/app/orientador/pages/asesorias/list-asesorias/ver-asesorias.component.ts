@@ -38,7 +38,7 @@ export class VerAsesoriasComponent implements OnInit {
 
   ngOnInit() {
     this.validateToken();
-    this.loadCurrentPage(); // Carga las asesorías correctas al iniciar la página
+    this.loadAllAsesorias(); // Carga las asesorías correctas al iniciar la página
     // Load both on init to ensure counts are accurate
   }
 
@@ -60,30 +60,38 @@ export class VerAsesoriasComponent implements OnInit {
     }
   }
 
-  loadAsesorias(pendiente: boolean): void {
-    this.isLoading = true; // Inicia la carga
-
-    this.asesoriaService.postAsesoriasOrientador(this.token, pendiente).subscribe(
+  loadAllAsesorias(): void {
+    this.isLoading = true;
+    
+    // Load unassigned asesorías
+    this.asesoriaService.postAsesoriasOrientador(this.token, true).subscribe(
       data => {
-        if (pendiente) {
-          this.asesoriasSinAsesor = data;
-          this.sinAsignarCount = this.asesoriasSinAsesor.length;
-        } else {
-          this.asesoriasConAsesor = data;
-          this.asignadasCount = this.asesoriasConAsesor.length;
-        }
-        // Total de asesorías siempre es la suma de ambos
-        this.totalAsesorias = this.asesoriasSinAsesor.length + this.asesoriasConAsesor.length;
-
-        this.isLoading = false; // Finaliza la carga
+        this.asesoriasSinAsesor = data;
+        this.sinAsignarCount = this.asesoriasSinAsesor.length;
+        this.updateTotalCount();
       },
       error => {
-        console.error('Error al obtener las asesorías:', error);
-        this.isLoading = false; // Finaliza la carga incluso si hay error
+        console.error('Error al obtener las asesorías sin asignar:', error);
+      }
+    );
+  
+    // Load assigned asesorías
+    this.asesoriaService.postAsesoriasOrientador(this.token, false).subscribe(
+      data => {
+        this.asesoriasConAsesor = data;
+        this.asignadasCount = this.asesoriasConAsesor.length;
+        this.updateTotalCount();
+      },
+      error => {
+        console.error('Error al obtener las asesorías asignadas:', error);
       }
     );
   }
 
+  updateTotalCount(): void {
+    this.totalAsesorias = this.sinAsignarCount + this.asignadasCount;
+    this.isLoading = false;
+  }
 
   // Código para la paginación
   changePage(pageNumber: number | string): void {
@@ -140,21 +148,20 @@ export class VerAsesoriasComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadAsesorias(true);
-        this.loadAsesorias(false);
+        this.loadAllAsesorias();
       }
     });
   }
 
-  loadSinAsignar(): void {
-    this.showAsignadasFlag = false;
-    this.loadAsesorias(true);
-    this.page = 1;
-  }
+loadSinAsignar(): void {
+  this.showAsignadasFlag = false;
+  this.page = 1;
+  // Use the already loaded asesoriasSinAsesor data
+}
 
-  loadAsignadas(): void {
-    this.showAsignadasFlag = true;
-    this.loadAsesorias(false);
-    this.page = 1;
-  }
+loadAsignadas(): void {
+  this.showAsignadasFlag = true;
+  this.page = 1;
+  // Use the already loaded asesoriasConAsesor data
+}
 }

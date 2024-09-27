@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -24,7 +25,9 @@ export class CrearAsesoriaModalComponent {
   currentRolId: string | null = null;
   docEmprendedor: string | null = null; 
   isorientador = new FormControl(false);
-
+  submitted = false;
+  charCount: number = 0;
+  charCount1: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -36,13 +39,13 @@ export class CrearAsesoriaModalComponent {
 
   ) {
     this.asesoriaForm = this.fb.group({
-      nombre: [''],
-      notas: [''],
+      nombre: ['', Validators.required],
+      notas: ['', Validators.required],
       isorientador: [false],
       asignacion: [false],
       fecha: [''],
       nom_aliado: ['']
-    });
+    }, { validator: this.aliadoOrientadorValidator });
 
     this.validateToken();
   }
@@ -69,6 +72,23 @@ export class CrearAsesoriaModalComponent {
     }
   }
 
+  
+  aliadoOrientadorValidator(group: FormGroup): {[key: string]: boolean} | null {
+    const nomAliado = group.get('nom_aliado');
+    const isOrientador = group.get('isorientador');
+
+    if (nomAliado && isOrientador) {
+      if ((nomAliado.value && isOrientador.value) || (!nomAliado.value && !isOrientador.value)) {
+        return { 'aliadoOrientadorInvalid': true };
+      }
+    }
+    return null;
+  }
+  
+  get f() { return this.asesoriaForm.controls; }
+
+
+
   loadAliados(): void {
     this.aliadoService.mostrarAliado(this.token).subscribe(
       (data: any[]) => {
@@ -94,8 +114,16 @@ export class CrearAsesoriaModalComponent {
     }
   }
   
+  updateCharCount(): void {
+    const descripcionValue = this.asesoriaForm.get('nombre')?.value || '';
+    const notasvalue = this.asesoriaForm.get('notas')?.value || '';
+    this.charCount = descripcionValue.length;
+    this.charCount1 = notasvalue.length;
+  }
 
   onSubmit() {
+    this.submitted = true;
+
     if (this.asesoriaForm.valid) {
       const formData = this.asesoriaForm.value;
       // Formatear la fecha actual en el formato 'YYYY-MM-DD HH:MM:SS'
@@ -129,7 +157,14 @@ export class CrearAsesoriaModalComponent {
           this.alertService.errorAlert('Error', 'Los campos de la asesoría estan vacios')
         }
       );
-    }
+    } else {
+    Object.keys(this.asesoriaForm.controls).forEach(key => {
+      const control = this.asesoriaForm.get(key);
+      if (control) {
+        control.markAsTouched();
+      }
+    });
+  }
   }
 
   /* Cerrar el modal */

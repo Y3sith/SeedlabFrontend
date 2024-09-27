@@ -41,10 +41,15 @@ export class ReportesComponent implements OnInit {
   }
 
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
   }
 
+  /*
+      Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+      formulario o cualquier otra parte de la aplicación.
+    */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -63,41 +68,41 @@ export class ReportesComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
-
+  /*
+    Este método muestra los reportes generados basados en los criterios establecidos en el formulario `reporteForm`.
+  */
   mostrarReportes() {
     if (this.reporteForm.valid) {
-      const {tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-  
+      const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
       const id_aliado = this.user.id ? this.user.id : null;
-  
       if (!id_aliado) {
         console.error('El ID del aliado no está disponible.');
         return;
       }
-    
-      // Obtener los datos del reporte para visualización
       this.reporteService.obtenerDatosAsesoriaAliado(tipo_reporte, id_aliado, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
-          this.reportes = data;  
+          this.reportes = data;
           this.totalItems = data.length;
           this.page = 1;
           this.updatePaginated();
-          this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
-          if(data.length === 0){
-            this.alertService.successAlert('Info','No hay datos para mostrar');
+          this.columnas = Object.keys(data[0] || {});
+          if (data.length === 0) {
+            this.alertService.successAlert('Info', 'No hay datos para mostrar');
           }
         },
         (error) => console.error('Error al obtener datos del reporte', error)
       );
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
     }
   }
-  
 
 
-  getReportes(formato:string) {
+  /*
+    Este método se encarga de exportar un reporte en el formato especificado.
+  */
+  getReportes(formato: string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
       const id_aliado = this.user.id ? this.user.id : null;
@@ -119,10 +124,13 @@ export class ReportesComponent implements OnInit {
       )
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
     }
   }
 
+  /*
+    Este método permite la exportación de reportes basados en los datos ingresados en el formulario `reporteForm`.
+  */
   getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
@@ -140,23 +148,32 @@ export class ReportesComponent implements OnInit {
     )
   }
 
+  /*
+    Este método maneja los cambios en el campo de selección `tipoReporte` del formulario.
+  */
   onTipoReporteChange(event: any) {
     this.tipoReporteSeleccionado = event.target.value;
 
     if (this.tipoReporteSeleccionado === 'emprendedor') {
-      // Lógica adicional cuando se selecciona "Emprendedores"
-      this.getReportes('excel'); // Llamada para cargar los reportes
+      this.getReportes('excel');
     }
   }
 
+
+  /*
+    Este método actualiza la lista de reportes paginados.
+  */
   updatePaginated(): void {
     const start = (this.page - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-
     this.paginatedReportes = this.reportes.slice(start, end);
-
   }
 
+  /*
+    Este método permite cambiar la página actual 
+    en el sistema de paginación. Acepta un argumento que 
+    determina la nueva página a la que se debe navegar.
+  */
   changePage(page: number | string): void {
     if (page === 'previous') {
       if (this.canGoPrevious()) {
@@ -174,18 +191,31 @@ export class ReportesComponent implements OnInit {
     }
   }
 
+  /*
+    Este método verifica si es posible retroceder a 
+     la página anterior en el sistema de paginación.
+  */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+  /*
+      Este método verifica si es posible avanzar a 
+      la siguiente página en el sistema de paginación.
+  */
   canGoNext(): boolean {
     return this.page < Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
+  /*
+      Este método genera un array de números que 
+      representan las páginas disponibles en el sistema de 
+      paginación, basado en la cantidad total de elementos 
+      y la cantidad de elementos por página.
+  */
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-
 
 }

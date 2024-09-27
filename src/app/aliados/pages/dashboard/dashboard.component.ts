@@ -30,13 +30,14 @@ export class DashboardComponent {
   pendientesFinalizadasData: { data: number[] }[] = [{ data: [0, 0, 0, 0] }];
   isLoading: boolean = false;
 
- 
+
 
   constructor(
     private dashboardService: DashboardsService,
     private router: Router,
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     this.getDatosDashboard();
@@ -44,14 +45,21 @@ export class DashboardComponent {
     this.loadChartData();
   };
 
-
+  /*
+  Este método permite que los datos necesarios estén listos y 
+  disponibles justo después de que la vista del componente se haya 
+  renderizado.
+  */
   ngAfterViewInit() {
     this.getDatosDashboard();
     this.getDatosGenerosGrafica();
     this.loadChartData();
   }
 
-  /* Valida el token del login */
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -72,6 +80,12 @@ export class DashboardComponent {
     }
   }
 
+  /*
+    Este método es responsable de obtener y procesar 
+    los datos necesarios para mostrar en el panel de dashboard. Este método utiliza el servicio `dashboardService` 
+    para recuperar los datos relacionados con los usuarios y las 
+    asesorías.
+  */
   getDatosDashboard(): void {
     this.isLoading = true;
     this.dashboardService.dashboardAdmin(this.token).subscribe(
@@ -84,10 +98,7 @@ export class DashboardComponent {
         this.totalEmprendedores = data.usuarios.emprendedor;
         this.topAliados = data.topAliados.original;
 
-        // Configuración para la gráfica de Top Aliados
         this.initEChartsBar();
-
-        // Configuración para la gráfica de Asesorías
         this.pieChartOption = {
           tooltip: {
             trigger: 'item'
@@ -125,7 +136,6 @@ export class DashboardComponent {
           ]
         };
 
-        // Inicializar el gráfico de Asesorías
         this.initEChartsPie();
       },
       error => {
@@ -163,8 +173,8 @@ export class DashboardComponent {
             type: 'category',
             data: this.topAliados.map(aliado => aliado.nombre),
             axisLabel: {
-              interval: 0, // Muestra todas las etiquetas
-              rotate: 30,  // Rota las etiquetas para mejor legibilidad
+              interval: 0,
+              rotate: 30,  
               formatter: function (value: string) {
                 return value.length > 10 ? value.substring(0, 10) + '...' : value;
               }
@@ -207,20 +217,29 @@ export class DashboardComponent {
     }
   }
 
+  /*
+    Este método devuelve un color específico basado 
+    en el índice proporcionado, asegurando que cada 
+    barra tenga un color distinto de una lista.
+  */
   getColorForIndex(index: number): string {
     // Lista de colores que se asignarán a las barras
     const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8A2BE2', '#00FA9A', '#FFD700', '#DC143C'];
     return colors[index % colors.length]; // Asigna un color a cada barra, y repite si hay más barras que colores
   }
 
-
+  /*
+    Este método es responsable de recuperar 
+    los datos de géneros de emprendedores desde un servicio y 
+    configurar las opciones para un gráfico de tipo dona.
+  */
   getDatosGenerosGrafica(): void {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       response => {
         const data = response.generosEmprendedores.original;
-        
+
         const formattedData = data.map(item => ({
-          value: Number(item.total), 
+          value: Number(item.total),
           name: item.genero
         }));
 
@@ -257,8 +276,6 @@ export class DashboardComponent {
             }
           ]
         };
-
-        // Inicializa el gráfico aquí después de obtener los datos
         this.initEChartsDoughnut();
       },
       error => {
@@ -277,6 +294,11 @@ export class DashboardComponent {
     }
   }
 
+  /*
+    Este método es responsable de cargar los datos 
+    para las asesorías desde el servicio de dashboard y 
+    actualizar el conjunto de datos que alimenta el gráfico.
+  */
   loadChartData() {
     this.dashboardService.getDashboard(this.token, this.id).subscribe(
       data => {
@@ -286,8 +308,6 @@ export class DashboardComponent {
           data['Asesorias Sin Asignar'] || 0,
           data['Asesorias Asignadas'] || 0
         ];
-
-        // Inicializar la gráfica con los datos cargados
         this.initEChartsPie();
       },
       (error) => {
@@ -295,6 +315,13 @@ export class DashboardComponent {
       }
     );
   }
+
+  /*
+  Este método se utiliza para inicializar y 
+  renderizar un gráfico de tipo pie en la interfaz de usuario. 
+  Este gráfico muestra datos sobre las asesorías en función de 
+  las etiquetas y valores que se les proporcionan.
+*/
 
   initEChartsPie() {
     const chartDom = document.getElementById('echarts-pie');
@@ -344,5 +371,5 @@ export class DashboardComponent {
   }
 
 
-  
+
 }
