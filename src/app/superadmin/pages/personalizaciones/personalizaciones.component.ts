@@ -44,6 +44,7 @@ export class PersonalizacionesComponent implements OnInit {
   faArrowRight = faArrowRight;
   faImage = faImage;
   falupa = faCircleQuestion;
+  charCount: number = 0;
 
 
   @ViewChild('colorPickerPrincipal') colorPickerPrincipal: ColorPickerDirective;
@@ -177,7 +178,10 @@ export class PersonalizacionesComponent implements OnInit {
     return true;
   }
 
-
+  updateCharCount(): void {
+    const descripcionValue = this.personalizacionForm.get('descripcion_footer')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
   // metodo agregar personalizacion
   addPersonalizacion(): void {
     try {

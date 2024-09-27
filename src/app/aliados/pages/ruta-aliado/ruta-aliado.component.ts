@@ -77,6 +77,8 @@ export class RutaAliadoComponent {
   idAliado: any;
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;
+  charCount: number = 0;
+  charCountContenido: number = 0;
 
 
   /*
@@ -366,7 +368,9 @@ export class RutaAliadoComponent {
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
-              this.isLoading = false;
+              // console.log('Actividad: ', data);
+              this.updateCharCount();
+              this.isLoading=false;
             },
             error => {
               console.log('Error al cargar los asesores:', error);
@@ -415,9 +419,11 @@ export class RutaAliadoComponent {
     this.isLoading = false;
   }
 
-  /*
-    Este método maneja la creación o actualización de una actividad en el contexto del Super Admin.
-  */
+  updateCharCount(): void {
+    const descripcionValue = this.actividadForm.get('descripcion')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
+
   addActividadSuperAdmin(): void {
     this.submitted = true;
     const formData = new FormData();
@@ -849,6 +855,7 @@ export class RutaAliadoComponent {
             id_tipo_dato: primerContenido.id_tipo_dato,
             fuente_contenido: primerContenido.fuente_contenido
           });
+          this.updateCharCountContenido();
         } else {
           this.contenidoLeccionForm.reset({
             id_leccion: id_leccion.toString(),
@@ -889,6 +896,11 @@ export class RutaAliadoComponent {
         });
       }
     }
+  }
+
+  updateCharCountContenido(){
+    const descripcionContenido = this.contenidoLeccionForm.get('descripcion')?.value || '';
+    this.charCountContenido = descripcionContenido.length;
   }
 
   addContenidoLeccionSuperAdmin(): void {
@@ -980,6 +992,7 @@ export class RutaAliadoComponent {
         id_tipo_dato: '',
         fuente_contenido: ''
       });
+      this.updateCharCountContenido();
     } else if (contenidoId) {
       const selectedContenido = this.contenidoLeccion.find(c => c.id.toString() === contenidoId);
       if (selectedContenido) {
@@ -991,6 +1004,7 @@ export class RutaAliadoComponent {
           id_tipo_dato: selectedContenido.id_tipo_dato,
           fuente_contenido: selectedContenido.fuente_contenido
         });
+        this.updateCharCountContenido();
       }
     }
   }
