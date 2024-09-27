@@ -46,10 +46,14 @@
                                     </fa-icon>
                                 </label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
-                                    formControlName="descripcion"></textarea>
+                                    formControlName="descripcion" maxlength="470"
+                                    (input)="updateCharCount()"></textarea>
                                 <div *ngIf="submitted && a.descripcion.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="a.descripcion.errors.required">Este campo es requerido *</div>
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">
+                                    {{ charCount }} / 470 caracteres
                                 </div>
                             </div>
 
@@ -288,10 +292,14 @@
                                 </fa-icon>
                                 </label>
                                 <textarea class="w-full p-2 border rounded" rows="3"
-                                    formControlName="descripcion"></textarea>
+                                    formControlName="descripcion" maxlength="1200"
+                                    (input)="updateCharCountContenido()"></textarea>
                                 <div *ngIf="submittedContent && cl.descripcion.errors"
                                     class="inline-block pl-2 text-red-500 rounded-lg bg-red-50">
                                     <div *ngIf="cl.descripcion.errors.required">Este campo es requerido *</div>
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">
+                                    {{ charCountContenido }} / 1200 caracteres
                                 </div>
                             </div>
                             <div class="mb-4">

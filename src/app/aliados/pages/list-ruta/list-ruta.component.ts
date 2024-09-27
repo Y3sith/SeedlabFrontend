@@ -42,8 +42,10 @@ export class ListRutaComponent implements OnInit {
     private modalSS: SwitchService,
     public dialog: MatDialog,
     public alertService: AlertService,
-  ) {}
+  ) { }
 
+
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.cargarRutas();
@@ -51,7 +53,10 @@ export class ListRutaComponent implements OnInit {
       this.modalSwitch = valor;
     });
   }
-
+  /*
+       Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+       formulario o cualquier otra parte de la aplicación.
+   */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -72,6 +77,11 @@ export class ListRutaComponent implements OnInit {
     }
   }
 
+  /*
+    Este método se encarga de cargar todas las rutas disponibles 
+    desde el servicio de rutas y actualizar la lista de rutas en 
+    el componente.
+  */
   cargarRutas(): void {
     this.isLoading = true;
     if (this.token) {
@@ -93,19 +103,37 @@ export class ListRutaComponent implements OnInit {
     }
   }
 
+  /*
+    Este método se ejecuta cuando hay un cambio en el estado 
+    del filtro de rutas. Su propósito es recargar la lista de 
+    rutas en función del nuevo estado seleccionado.
+  */
   onEstadoChange(event: any): void {
-    // const estado = event.target.value;
-    // this.userFilter.estado = estado === '1' ? 'Activo' : 'Inactivo';
     this.cargarRutas();
   }
 
+  /*
+    Este método se encarga de limpiar los filtros aplicados 
+    en la lista de rutas. Reinicia el objeto `userFilter` a 
+    sus valores predeterminados.
+  */
   limpiarFiltro(): void {
     this.userFilter = { nombre: '', estado: 'Activo', fecha_creacion: '' };
     this.cargarRutas();
   }
+
+  /*
+      Este método verifica si es posible retroceder a 
+      la página anterior en el sistema de paginación.
+    */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
+
+  /*
+    Este método verifica si es posible avanzar a 
+    la siguiente página en el sistema de paginación.
+  */
   canGoNext(): boolean {
     const totalItems = this.listaRutas.length;
     const itemsPerPage = 5;
@@ -113,6 +141,11 @@ export class ListRutaComponent implements OnInit {
     return this.page < totalPages;
   }
 
+  /*
+    Este método permite cambiar la página actual 
+    en el sistema de paginación. Acepta un argumento que 
+    determina la nueva página a la que se debe navegar.
+  */
   changePage(page: number | 'previous' | 'next'): void {
     if (page === 'previous' && this.canGoPrevious()) {
       this.page--;
@@ -123,6 +156,12 @@ export class ListRutaComponent implements OnInit {
     }
   }
 
+  /*
+    Este método genera un array de números que 
+    representan las páginas disponibles en el sistema de 
+    paginación, basado en la cantidad total de elementos 
+    y la cantidad de elementos por página.
+  */
   getPages(): number[] {
     const totalItems = this.listaRutas.length;
     const itemsPerPage = 5;
@@ -130,15 +169,21 @@ export class ListRutaComponent implements OnInit {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
+  /*
+    Este método maneja la lógica para listar actividades 
+    asociadas a una ruta específica, verificando primero 
+    si la ruta está activa.
+  */
   listarActividad(rutaId: number, estado: any): void {
-    if (estado === 'Inactivo'){
+    if (estado === 'Inactivo') {
       this.alertService.alertainformativa('No puedes editar actividades en una ruta que este inactiva, debes activar la ruta para poderla editar', 'error').then((result) => {
         if (result.isConfirmed) {
-          
+
         }
       });
-    }else{
-      this.router.navigate(['list-actividades-aliado'], {queryParams: { id_ruta: rutaId},
+    } else {
+      this.router.navigate(['list-actividades-aliado'], {
+        queryParams: { id_ruta: rutaId },
       });
     }
   }

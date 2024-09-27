@@ -83,7 +83,8 @@ export class ActnivlecComponent implements OnInit {
 
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;
-
+  charCount: number = 0;
+  charCountContenido: number = 0;
   ////añadir actividad
   actividadForm = this.fb.group({
     id: [],
@@ -281,6 +282,7 @@ export class ActnivlecComponent implements OnInit {
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
+              this.updateCharCount();
               // console.log('Actividad: ', data);
               this.isLoading=false;
             },
@@ -321,6 +323,7 @@ export class ActnivlecComponent implements OnInit {
       this.nivelForm.get('nombre')?.disable();
 
     }
+    
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
       this.contenidoLeccionForm.patchValue({
@@ -333,6 +336,12 @@ export class ActnivlecComponent implements OnInit {
     }
     this.isLoading=false;
   }
+
+  updateCharCount(): void {
+    const descripcionValue = this.actividadForm.get('descripcion')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
+
 
 
   addActividadSuperAdmin(): void {
@@ -746,6 +755,7 @@ export class ActnivlecComponent implements OnInit {
             id_tipo_dato: primerContenido.id_tipo_dato,
             fuente_contenido: primerContenido.fuente_contenido
           });
+          this.updateCharCountContenido();
         } else {
           // Limpiar todos los campos excepto id_leccion
           this.contenidoLeccionForm.reset({
@@ -784,6 +794,12 @@ export class ActnivlecComponent implements OnInit {
       }
     }
   }
+
+  updateCharCountContenido(){
+    const descripcionContenido = this.contenidoLeccionForm.get('descripcion')?.value || '';
+    this.charCountContenido = descripcionContenido.length;
+  }
+  
 
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
@@ -879,6 +895,7 @@ export class ActnivlecComponent implements OnInit {
         id_tipo_dato: '',
         fuente_contenido: ''
       });
+      this.updateCharCountContenido();
     } else if (contenidoId) {
       const selectedContenido = this.contenidoLeccion.find(c => c.id.toString() === contenidoId);
       if (selectedContenido) {
@@ -890,6 +907,7 @@ export class ActnivlecComponent implements OnInit {
           id_tipo_dato: selectedContenido.id_tipo_dato,
           fuente_contenido: selectedContenido.fuente_contenido
         });
+        this.updateCharCountContenido();
       }
     }
   }

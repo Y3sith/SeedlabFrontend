@@ -76,6 +76,7 @@ export class AddAliadosComponent {
   showTexto: boolean = false;
   isEditing: boolean = false;
   isLoading: boolean = false;
+  charCount: number = 0;
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -240,6 +241,7 @@ export class AddAliadosComponent {
           password: '',
           estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
+        this.updateCharCount();
         this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
         this.aliadoForm.patchValue({ estado: this.isActive });
         this.isEditing = true;
@@ -253,6 +255,10 @@ export class AddAliadosComponent {
     );
   }
 
+  updateCharCount(): void {
+    const descripcionValue = this.aliadoForm.get('descripcion')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
   addAliado(): void {
     if (this.idAliado == null) {
       if (this.aliadoForm.invalid || this.bannerForm.invalid) {

@@ -46,6 +46,10 @@ export class AddBannerComponent {
 
   }
 
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
 
   validateToken(): void {
     if (!this.token) {
@@ -68,12 +72,20 @@ export class AddBannerComponent {
     }
   }
 
+  /* Inicializa con esas funciones al cargar la pagina */
+
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
     this.mostrarToggle();
     this.toggleActive();
   }
+
+  /*
+     Este método permite a los usuarios editar la información de un banner 
+      existente, asegurando que el formulario se complete correctamente con 
+      los datos actuales del banner.
+  */
 
   verEditar(): void {
     this.aliadoService.getBannerxid(this.token, this.id_banner).subscribe(
@@ -91,26 +103,26 @@ export class AddBannerComponent {
     )
   }
 
-  addBanner(): void {
+  /*
+   Este método permite gestionar tanto la creación como la edición de banners 
+   de manera efectiva, asegurando que se manejen los datos de manera adecuada 
+    y se informe al usuario sobre el resultado de la operación.
+  */
 
+  addBanner(): void {
     const formData = new FormData();
     let aliado_modal = this.idAliado;
-
     let estadoValue: string;
     if (this.id_banner == null) {
       estadoValue = '1';
     } else {
       estadoValue = this.isActive ? '1' : '0';
     }
-
     if (this.selectedBanner) {
       formData.append('urlImagen', this.selectedBanner, this.selectedBanner.name);
     }
-
     formData.append('estadobanner', estadoValue);
     formData.append('id_aliado', aliado_modal);
-
-
     if (this.id_banner != null) {
       this.aliadoService.editarBanner(this.token, this.id_banner, formData).subscribe(
         data => {
@@ -123,7 +135,6 @@ export class AddBannerComponent {
           this.alertService.errorAlert('Error', error.error.message);
         }
       )
-
     } else {
       this.aliadoService.crearBanner(this.token, formData).subscribe(
         data => {
@@ -138,35 +149,30 @@ export class AddBannerComponent {
     }
   }
 
-
+  /*
+    Este método maneja la selección de archivos desde un input de tipo archivo. 
+    Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
       let maxSize = 0;
-
       if (field === 'urlImagen') {
-        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+        maxSize = 5 * 1024 * 1024;
       }
-
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-
-        //Limpia el archivo seleccionado y resetea la previsualización
-        event.target.value = ''; // Borra la selección del input
-
-        // Resetea el campo correspondiente en el formulario y la previsualización
+        event.target.value = '';
         if (field === 'urlImagen') {
           this.bannerForm.patchValue({ urlImagen: null });
           this.selectedBanner = null;
-          this.bannerPreview = null; // Resetea la previsualización
+          this.bannerPreview = null;
         }
         this.resetFileField(field);
         return;
       }
-
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const previewUrl = e.target.result;
@@ -176,20 +182,20 @@ export class AddBannerComponent {
         }
       };
       reader.readAsDataURL(file);
-
-      // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
-
       if (field === 'urlImagen') {
         this.selectedBanner = file;
         this.bannerForm.patchValue({ urlImagen: file });
       }
-
     } else {
       this.resetFileField(field);
     }
   }
 
+  /*
+   Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+   eliminando cualquier valor previamente asignado.
+   */
   resetFileField(field: string) {
     if (field === 'urlImagen') {
       this.bannerForm.patchValue({ urlImagen: null });
@@ -198,6 +204,10 @@ export class AddBannerComponent {
     }
   }
 
+  /*
+    Este método utiliza `FileReader` para crear una vista previa de la imagen 
+    seleccionada, actualizando la propiedad correspondiente en el componente.
+  */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -209,21 +219,34 @@ export class AddBannerComponent {
     reader.readAsDataURL(file);
   }
 
-  /* Cerrar el modal */
+  /*
+  Este método es útil en situaciones donde el usuario decide no continuar 
+  con la acción actual y desea salir del modal de manera limpia y rápida.
+  */
   cancelarModal() {
     this.dialogRef.close();
   }
 
+  /*
+  Este método se utiliza para simular un clic en un 
+  elemento de entrada de archivo, lo que abre el diálogo de selección de 
+  archivos del sistema operativo.
+*/
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
 
+  /*
+    Este método es útil para gestionar la activación/desactivación de un banner en la interfaz de usuario.
+  */
   toggleActive() {
     this.isActive = !this.isActive;
     this.bannerForm.patchValue({ estadobanner: this.isActive });
   }
 
-  /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
+  /*
+  Este método gestiona la visibilidad de un botón en la interfaz de usuario. 
+*/
   mostrarToggle(): void {
     this.boton = this.id_banner != null;
   }
