@@ -254,10 +254,6 @@ export class DashboardComponent implements OnInit {
   initEChartsBar(): void {
     if (this.topAliados && this.topAliados.length) {
       this.topAliadosEchartsOptions = {
-        title: {
-          text: 'Top Aliados', // Añadir título a la gráfica
-          left: 'center'
-        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -266,7 +262,7 @@ export class DashboardComponent implements OnInit {
         },
         legend: {
           orient: 'horizontal', // Cambiar a horizontal para una mejor distribución
-          left: 'center',
+          left: 'left',
           data: ['Top Aliados'],
         },
         toolbox: {
