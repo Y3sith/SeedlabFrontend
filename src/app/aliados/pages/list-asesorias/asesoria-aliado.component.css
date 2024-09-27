@@ -74,10 +74,15 @@
 
 /* Puedes añadir este estilo para asegurar que el spinner esté sobre los otros contenidos */
 .spinner-container {
-  position: fixed; /* O absolute si prefieres que se ajuste a un contenedor específico */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000; /* Asegúrate de que esté sobre otros contenidos */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 

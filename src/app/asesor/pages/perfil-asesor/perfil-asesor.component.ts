@@ -46,6 +46,7 @@ export class PerfilAsesorComponent implements OnInit {
   showEditButton = false;
   tiempoEspera = 1800;
   asesorId: any;
+  isLoading: boolean = false;
 
   asesorForm = this.fb.group({
     nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
@@ -107,6 +108,7 @@ export class PerfilAsesorComponent implements OnInit {
 
   /* Trae los datos del asesor para poder editarlo en el input, de acuerdo al id del usuario logueado */
   verEditar(): void {
+    this.isLoading = true;
     this.asesorService.getAsesorID(this.token, this.id).subscribe(
       data => {
         this.asesorForm.patchValue({
@@ -140,10 +142,11 @@ export class PerfilAsesorComponent implements OnInit {
             this.asesorForm.patchValue({ id_municipio: data.id_municipio });
           }, 500);
         }, 500);
-
+        this.isLoading = false;
       },
       error => {
         console.log(error);
+        this.isLoading = false;
       }
     )
   }

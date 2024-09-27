@@ -343,6 +343,9 @@ export class ActnivlecComponent implements OnInit {
     if (nombreActividad && nombreActividad.length > 39) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
       return;
+    } else if (nombreActividad && nombreActividad.length  < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 5 caracteres');
+      return;
     }
     if (this.actividadForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
@@ -475,7 +478,7 @@ export class ActnivlecComponent implements OnInit {
   }
   verNivel(): void {
     if (this.token) {
-      this.isLoading=true;
+      //this.isLoading=true;
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
         data => {
           this.listarNiveles = data;
@@ -494,7 +497,7 @@ export class ActnivlecComponent implements OnInit {
         },
         error => {
           console.log(error);
-          this.isLoading=false;
+          //this.isLoading=false;
         }
       )
     }
@@ -505,6 +508,9 @@ export class ActnivlecComponent implements OnInit {
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+      return;
+    } else if (nombreNivel && nombreNivel.length < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
       return;
     }
     const nivel: any = {
@@ -576,6 +582,9 @@ export class ActnivlecComponent implements OnInit {
     if (nombreLeccion && nombreLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
       return;
+    } else if (nombreLeccion && nombreLeccion.length < 5) {
+      this.alertServices.errorAlert('Error', 'El nombre de la lección debe tener más de 5 caracteres');
+      return;
     }
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
@@ -631,7 +640,7 @@ export class ActnivlecComponent implements OnInit {
   }
 
   verLeccicon(): void {
-    this.isLoading=true;
+    // this.isLoading=true;
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
@@ -650,7 +659,7 @@ export class ActnivlecComponent implements OnInit {
             nombre: ''
           });
         }
-        this.isLoading=false;
+        // this.isLoading=false;
       },
       error => {
         console.log(error);
@@ -722,7 +731,7 @@ export class ActnivlecComponent implements OnInit {
   }
 
   cargarContenidoLeccion(id_leccion: number): void {
-    this.isLoading=true;
+    //this.isLoading=true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
@@ -744,7 +753,7 @@ export class ActnivlecComponent implements OnInit {
           });
         }
         this.onTipoDatoChangeContenido();
-        this.isLoading=false;
+        //this.isLoading=false;
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);
@@ -784,12 +793,21 @@ export class ActnivlecComponent implements OnInit {
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
       return;
+    } else if (tituloContenidoLeccion && tituloContenidoLeccion.length < 5) {
+      this.alertServices.errorAlert('Error', 'El titulo debe tener más de 5 caracteres');
+      return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
     if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 1200) {
       this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 1200 caracteres');
       return;
     }
+
+    if (this.contenidoLeccionForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+      return;
+    }
+
 
     const formData = new FormData();
     formData.append('id_leccion', idLeccion);
@@ -820,7 +838,7 @@ export class ActnivlecComponent implements OnInit {
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           // console.log('datos recibidos: ', data);
-          this.cargarContenidoLeccion(contenidoLeccionId);
+          this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();

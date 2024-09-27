@@ -8,9 +8,14 @@
             </svg>
             Volver
         </button>
-        <app-header [title] [subtitle]="'Asesores'"></app-header>
+        <app-header [title] [subtitle]="isEditing ? 'Editar Asesor' : 'Agregar Asesor'"></app-header>
     </header>
 
+    <div class="flex justify-center">
+        <div class="spinner " *ngIf="isLoading"></div>
+    </div>
+
+    <div *ngIf="!isLoading">
     <!-- transicion basada en el estado -->
     <div class="w-full flex items-center justify-center px-4">
         <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
@@ -314,4 +319,5 @@
             </div>
         </div>
     </ng-container>
+    </div>
 </div>
