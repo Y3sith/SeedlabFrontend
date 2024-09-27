@@ -22,13 +22,12 @@ export class VerAsesoriasComponent implements OnInit {
   asignadasCount: number = 0;
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
-  showAsignadasFlag: boolean = false; // Flag to indicate which list is being shown
+  showAsignadasFlag: boolean = false;
   isLoading: boolean = false;
   fullHeightIndices: number[] = [];
-
-  page: number = 1; // Inicializa la página actual
-  totalAsesorias: number = 0; // variable para almacenar el total de asesorias
-  itemsPerPage: number = 8; // Número de asesorias por página
+  page: number = 1;
+  totalAsesorias: number = 0;
+  itemsPerPage: number = 8;
 
   constructor(
     private asesoriaService: AsesoriaService,
@@ -36,12 +35,17 @@ export class VerAsesoriasComponent implements OnInit {
     private router: Router
   ) { }
 
+
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
-    this.loadCurrentPage(); // Carga las asesorías correctas al iniciar la página
-    // Load both on init to ensure counts are accurate
+    this.loadCurrentPage();
   }
 
+/*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+  */ 
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -60,9 +64,11 @@ export class VerAsesoriasComponent implements OnInit {
     }
   }
 
+/*
+  Carga las asesorías desde el servicio dependiendo del estado (pendiente o asignada) y actualiza los conteos correspondientes.
+*/
   loadAsesorias(pendiente: boolean): void {
-    this.isLoading = true; // Inicia la carga
-
+    this.isLoading = true;
     this.asesoriaService.postAsesoriasOrientador(this.token, pendiente).subscribe(
       data => {
         if (pendiente) {
@@ -72,36 +78,40 @@ export class VerAsesoriasComponent implements OnInit {
           this.asesoriasConAsesor = data;
           this.asignadasCount = this.asesoriasConAsesor.length;
         }
-        // Total de asesorías siempre es la suma de ambos
         this.totalAsesorias = this.asesoriasSinAsesor.length + this.asesoriasConAsesor.length;
 
-        this.isLoading = false; // Finaliza la carga
+        this.isLoading = false;
       },
       error => {
         console.error('Error al obtener las asesorías:', error);
-        this.isLoading = false; // Finaliza la carga incluso si hay error
+        this.isLoading = false;
       }
     );
   }
 
-
-  // Código para la paginación
+/*
+  Cambia la página actual según el número de página proporcionado y carga los datos de la página correspondiente.
+*/
   changePage(pageNumber: number | string): void {
     if (pageNumber === 'previous') {
       if (this.page > 1) {
         this.page--;
-        this.loadCurrentPage(); // Carga las asesorias de la página anterior
+        this.loadCurrentPage();
       }
     } else if (pageNumber === 'next') {
       if (this.page < this.getTotalPages()) {
         this.page++;
-        this.loadCurrentPage(); // Carga las asesorias de la página siguiente
+        this.loadCurrentPage();
       }
     } else {
       this.page = pageNumber as number;
-      this.loadCurrentPage(); // Carga las asesorias de la página seleccionada
+      this.loadCurrentPage();
     }
   }
+
+/*
+  Calcula el número total de páginas en función de la cantidad de asesorías sin asignar o asignadas.
+*/
 
   getTotalPages(): number {
     if (this.asesoriasSinAsesor.length >= 2 && this.showAsignadasFlag == false) {
@@ -111,19 +121,32 @@ export class VerAsesoriasComponent implements OnInit {
     }
   }
 
+/*
+  Genera un arreglo de números que representa las páginas disponibles.
+*/
   getPages(): number[] {
     const totalPages = this.getTotalPages();
     return Array(totalPages).fill(0).map((x, i) => i + 1);
   }
-
+  
+/*
+  Verifica si hay una página anterior disponible.
+*/
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+/*
+  Verifica si hay una página siguiente disponible.
+*/
   canGoNext(): boolean {
     return this.page < this.getTotalPages();
   }
 
+/*
+  Carga la página actual de asesorías, 
+  ya sea asignadas o sin asignar, según el estado del flag.
+*/
   loadCurrentPage(): void {
     if (this.showAsignadasFlag) {
       this.loadAsignadas(); // Carga asesorías asignadas
@@ -132,6 +155,10 @@ export class VerAsesoriasComponent implements OnInit {
     }
   }
 
+/*
+  Abre un modal para asignar un aliado a una asesoría específica. 
+  Recibe como parámetro la asesoría que se va a modificar.
+*/
   openModal(asesoria: Asesoria): void {
     const dialogRef = this.dialog.open(DarAliadoAsesoriaModalComponent, {
       width: '400px',
@@ -146,12 +173,18 @@ export class VerAsesoriasComponent implements OnInit {
     });
   }
 
+/*
+  Carga las asesorías sin asignar y restablece la página actual a 1.
+*/
   loadSinAsignar(): void {
     this.showAsignadasFlag = false;
     this.loadAsesorias(true);
     this.page = 1;
   }
-
+  
+/*
+  Carga las asesorías asignadas y restablece la página actual a 1.
+*/
   loadAsignadas(): void {
     this.showAsignadasFlag = true;
     this.loadAsesorias(false);

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef,  ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { User } from '../../../Modelos/user.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -36,16 +36,13 @@ export class RutaAsesorComponent {
   listaNivelxActividadXasesor: Nivel[] = [];
   listarLeccion: Leccion[] = [];
   listActividadContenido: Actividad[] = [];
-  ///
   listarAsesores: any[] = [];
   userFilter: any = { nombre: '', estado: 'Activo' };
   aliadoSeleccionado: any | null;
   rutaId: number | null = null;
   actividadId: number | null = null;
   nivelSeleccionado: any | null;
-  ////
   currentIndex: number = 0;
-  /////
   faImages = faImage;
   faFile = faFilePdf;
   @ViewChild('fileInput') fileInput: ElementRef;
@@ -57,7 +54,6 @@ export class RutaAsesorComponent {
   idactividad: string | null;
   idcontenidoLeccion: string;
   camposDeshabilitados: boolean = false;
-  ////
   fuente: string = '';
   fuente_contenido: string = '';
   submittedActividad = false;
@@ -65,14 +61,12 @@ export class RutaAsesorComponent {
   submittedLeccion = false;
   submittedContent = false;
   submitted = false;
-
   niveles: any[] = [];
   leccioon: any[] = [];
   isEditing: any;
   isLoading: boolean = false;
   contenidoLeccion: any[] = [];
   selectedFromInput: any;
-
   showVideo: boolean = false;
   showImagen: boolean = false;
   showPdf: boolean = false;
@@ -80,14 +74,16 @@ export class RutaAsesorComponent {
   Number = Number;
   idAliado: any;
   idAsesor: any;
-
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;
   charCount: number = 0;
   charCountContenido: number = 0;
   falupa = faCircleQuestion;
 
-  ////añadir actividad
+
+  /*
+    Este objeto representa el formulario `actividadForm` utilizado para gestionar la información de una actividad.
+  */
   actividadForm = this.fb.group({
     id: [],
     nombre: ['', Validators.required],
@@ -97,8 +93,11 @@ export class RutaAsesorComponent {
     id_ruta: ['', Validators.required],
     id_aliado: ['']
   })
-  ////anadir nivel
 
+
+  /*
+      Este objeto representa el formulario `nivelForm` utilizado para gestionar la información relacionada con un nivel.
+    */
   nivelForm = this.fb.group({
     id_nivel: [],
     nombre: ['', Validators.required],
@@ -106,15 +105,18 @@ export class RutaAsesorComponent {
     id_actividad: ['', Validators.required]
   })
 
-  ///// añadir leccion
+  /*
+      Este objeto representa el formulario `leccionForm` utilizado para gestionar la información relacionada con una lección.
+    */
   leccionForm = this.fb.group({
     id_leccion: [''],
     nombre: ['', Validators.required],
     id_nivel: ['', Validators.required]
   })
 
-  ///añadir contenido por leccion
-
+  /*
+      Este objeto representa el formulario `contenidoLeccionForm` utilizado para gestionar la información relacionada con el contenido de una lección.
+    */
   contenidoLeccionForm = this.fb.group({
     id_contenido: [''],
     titulo: ['', Validators.required],
@@ -139,11 +141,12 @@ export class RutaAsesorComponent {
     private location: Location,
   ) { }
 
+
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
 
     this.route.queryParams.subscribe(params => {
-      //console.log('params:', params);
       if (params['id_ruta']) {
         this.rutaId = +params['id_ruta'];
         this.actividadForm.patchValue({ id_ruta: this.rutaId.toString() });
@@ -173,11 +176,15 @@ export class RutaAsesorComponent {
     this.onAliadoChange();
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
     if (idLeccion) {
-      this.onLeccionChange(idLeccion); // Llama la función que carga las lecciones
+      this.onLeccionChange(idLeccion);
     }
     this.selectedFromInput = false;
   }
 
+  /*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -198,14 +205,13 @@ export class RutaAsesorComponent {
     }
   }
 
-  //me trae el tipo de dato que requiere la actividad
-  tipoDato(): void {
+/*
+    Este método se encarga de obtener los tipos de dato disponibles a través del servicio `actividadService`.
+  */  tipoDato(): void {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
-
-          this.listarTipoDato = data.filter((tipo: any) => tipo.nombre === 'Imagen'); //solo me muestra imagen en el select tipo dato
-          // console.log('tipo de dato:', this.listarTipoDato);
+          this.listarTipoDato = data.filter((tipo: any) => tipo.nombre === 'Imagen');
         },
         error => {
           console.log(error);
@@ -213,7 +219,9 @@ export class RutaAsesorComponent {
       )
     }
   }
-
+ /*
+    Este método se encarga de inicializar el estado del formulario `actividadForm` deshabilitando ciertos campos.
+  */
   initializeFormState(): void {
     const fieldsToDisable = ['id_aliado'];
     fieldsToDisable.forEach(field => {
@@ -224,6 +232,9 @@ export class RutaAsesorComponent {
     });
   }
 
+/*
+    Este método permite regresar a la página anterior en la navegación.
+  */
   goBack(): void {
     this.location.back();
   }
@@ -241,6 +252,10 @@ export class RutaAsesorComponent {
     return this.contenidoLeccionForm.controls;
   }
 
+  /*
+    Este método se encarga de obtener los tipos de datos para el contenido de la lección 
+    utilizando el servicio `contenidoLeccionService`.
+  */
   tipoDatoContenido(): void {
     if (this.token) {
       this.contenidoLeccionService.getTipoDato(this.token).subscribe(
@@ -255,13 +270,14 @@ export class RutaAsesorComponent {
     }
   }
 
-  //me lista los aliados existentes activos
+/*
+    Este método se encarga de obtener la lista de aliados utilizando el servicio `superAdminService`.
+  */
   listaAliado(): void {
     if (this.token) {
       this.superAdminService.listarAliado(this.token).subscribe(
         data => {
           this.listarAliadoo = data;
-          // Si tienes this.idAliado, selecciona el aliado correspondiente
           if (this.idAliado) {
             this.aliadoSeleccionado = this.listarAliadoo.find(aliado => aliado.id == this.idAliado);
             this.onAliadoChange();
@@ -274,11 +290,16 @@ export class RutaAsesorComponent {
     }
   }
 
+/*
+    Este método permite seleccionar un aliado específico.
+  */
   selectAliado(aliado: any): void {
     this.aliadoSeleccionado = aliado;
-    //console.log("el aliado seleccionado fue: ", this.aliadoSeleccionado)
   }
 
+ /*
+    Este método maneja los cambios en la selección de un aliado.
+  */ 
   onAliadoChange(event?: any): void {
     let aliadoId: any;
 
@@ -287,7 +308,6 @@ export class RutaAsesorComponent {
     } else {
       aliadoId = this.actividadForm.get('id_aliado').value;
     }
-
     const aliadoSeleccionado = this.listarAliadoo.find(aliado => aliado.id == aliadoId);
     if (aliadoSeleccionado) {
       console.log("El aliado seleccionado fue: ", {
@@ -299,7 +319,6 @@ export class RutaAsesorComponent {
         this.aliadoService.getinfoAsesor(this.token, this.aliadoSeleccionado.id, this.userFilter.estado).subscribe(
           data => {
             this.listarAsesores = data;
-            //console.log('Asesores: ', data);
           },
           error => {
             console.log(error);
@@ -311,6 +330,9 @@ export class RutaAsesorComponent {
     }
   }
 
+/*
+    Este método se encarga de cargar los datos de una actividad existente para editarla.
+  */
   verEditar(): void {
     if (this.actividadId !== null) {
       this.isLoading = true;
@@ -320,7 +342,6 @@ export class RutaAsesorComponent {
           this.aliadoService.getinfoAsesor(this.token, data.id_aliado, this.userFilter.estado).subscribe(
             asesoresData => {
               this.listarAsesores = asesoresData;
-              // Actualizar el formulario de actividad
               this.actividadForm.patchValue({
                 nombre: data.nombre,
                 descripcion: data.descripcion,
@@ -329,14 +350,9 @@ export class RutaAsesorComponent {
                 fuente: data.fuente,
                 id_ruta: data.id_ruta,
               });
-
-              //this.niveles = data.nivel;
               this.nivelForm.patchValue({ id_actividad: this.actividadId.toString() });
               this.selectedFromInput = false;
               this.initializeNivelForm();
-
-              // this.activivarFormulariosBotones();
-              //console.log('Actividad: ', data);
               this.updateCharCount();
               this.isLoading = false;
             },
@@ -354,28 +370,25 @@ export class RutaAsesorComponent {
     }
   }
 
+/*
+    Este método inicializa el formulario de niveles y, si hay contenido de lección disponible, lo carga en el formulario correspondiente.
+  */
   initializeNivelForm(): void {
     this.isLoading = true;
     if (this.niveles && this.niveles.length > 0) {
-      // Si hay niveles, seleccionar el primero
       const primerNivel = this.niveles[0];
       this.nivelForm.patchValue({
         id_nivel: primerNivel.id,
         nombre: primerNivel.nombre,
         id_asesor: primerNivel.id_asesor
       });
-      //this.nivelForm.disable();
       this.nivelForm.get('id_asesor')?.disable();
-      // Cargar las lecciones del primer nivel
       this.onNivelChange(primerNivel.id.toString());
-      //console.log('lecciones::', this.onNivelChange(primerNivel.id.toString()));
     } else {
-      // Si no hay niveles, preparar para agregar uno nuevo
       this.nivelForm.patchValue({
         id_nivel: '',
         nombre: ''
       });
-      //this.nivelForm.get('nombre')?.disable();
     }
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
@@ -390,11 +403,17 @@ export class RutaAsesorComponent {
     this.isLoading = false;
   }
 
+/*
+  Actualiza el contador de caracteres basado en el valor del campo 'descripcion' del formulario.
+*/
   updateCharCount(): void {
     const descripcionValue = this.actividadForm.get('descripcion')?.value || '';
     this.charCount = descripcionValue.length;
   }
 
+/*
+  Agrega o actualiza una actividad en el sistema dependiendo del estado de `actividadId`.
+*/
   addActividadSuperAdmin(): void {
     this.submitted = true;
     const formData = new FormData();
@@ -403,17 +422,14 @@ export class RutaAsesorComponent {
     if (nombreActividad && nombreActividad.length > 39) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
       return;
-    } else if (nombreActividad && nombreActividad.length  < 5) {
+    } else if (nombreActividad && nombreActividad.length < 5) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 5 caracteres');
       return;
     }
-
-    // if (this.actividadId != null) {
     if (this.actividadForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
       return;
     }
-    // }
     if (this.idactividad == null) {
       estadoValue = '1'
     } else {
@@ -425,7 +441,6 @@ export class RutaAsesorComponent {
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
-    //console.log('datos: ', this.actividadForm.value);
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
     } else {
@@ -433,7 +448,6 @@ export class RutaAsesorComponent {
       if (rutaMultiValue) {
         formData.append('fuente', rutaMultiValue);
       }
-      //console.log('datos enviados: ', formData)
     }
     if (this.actividadId == null) {
       this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
@@ -444,7 +458,6 @@ export class RutaAsesorComponent {
               const actividadCreada = data[0];
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
               this.alertServices.successAlert('Exito', data.message);
-              //console.log('datos enviados: ', data)
             },
             error => {
               console.log(error);
@@ -470,16 +483,17 @@ export class RutaAsesorComponent {
       })
     }
   }
+
+  /*
+    Este método obtiene los niveles asociados a una actividad específica mediante el ID de la actividad,
+    utilizando un servicio para hacer la solicitud y procesar la respuesta.
+  */
   verNivel(): void {
     if (this.token) {
       this.nivelService.mostrarNivelxidActividadxidAsesor(this.token, this.actividadId, this.idAsesor).subscribe(
         data => {
           this.listarNiveles = data;
           this.niveles = data;
-          //console.log('Niveles: ', data);
-
-
-
           if (this.isEditing && this.niveles && this.niveles.length > 0) {
             const primerNivel = this.niveles[0];
             this.nivelForm.patchValue({
@@ -487,7 +501,6 @@ export class RutaAsesorComponent {
               nombre: primerNivel.nombre,
               id_asesor: primerNivel.id_asesor,
             });
-            // Llamar a onNivelChange para actualizar las lecciones
             this.onNivelChange(primerNivel.id.toString());
           }
         },
@@ -498,6 +511,11 @@ export class RutaAsesorComponent {
     }
   }
 
+/*
+    Este método maneja la creación o actualización de un nivel en el sistema. 
+    Valida la entrada del formulario y realiza las operaciones correspondientes
+    utilizando los servicios apropiados.
+  */
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
     const nombreNivel = this.nivelForm.get('nombre')?.value;
@@ -508,16 +526,12 @@ export class RutaAsesorComponent {
       this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
       return;
     }
-
     const idAsesor = this.nivelForm.get('id_asesor')?.value;
     const nivel: any = {
       nombre: nombreNivel,
       id_asesor: idAsesor,
-      //id_asesor: this.nivelForm.value.id_asesor,
       id_actividad: this.nivelForm.value.id_actividad
-      //id_actividad: this.actividadId
     };
-    //console.log("idnivel", this.selectedNivelId);
     if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
@@ -532,8 +546,6 @@ export class RutaAsesorComponent {
             id_nivel: data.id
           });
           this.nivelForm.reset();
-
-          //this.nivelForm.patchValue({ id_actividad: nivel.id_actividad, id_asesor: idAsesor });
           this.submittedNivel = false;
           this.nivelForm.patchValue({ id_actividad: nivel.id_actividad, id_asesor: idAsesor });
         },
@@ -546,6 +558,11 @@ export class RutaAsesorComponent {
     }
   }
 
+ /*
+    Este método maneja la creación o actualización de una lección en el sistema. 
+    Valida la entrada del formulario y realiza las operaciones correspondientes
+    utilizando los servicios apropiados.
+  */
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
@@ -559,26 +576,21 @@ export class RutaAsesorComponent {
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
-
     }
     const leccion: any = {
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
     }
-    //const leccionId = +this.leccionForm.get('id_leccion')?.value;
     const leccionId = +this.leccionForm.get('id_leccion')?.value;
     if (leccionId) {
-      //console.log("leccionIddddddddd", leccionId);
       const leccionId = +this.leccionForm.get('id_leccion')?.value;
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
-          //this.verLeccicon();
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
-          //console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -586,20 +598,14 @@ export class RutaAsesorComponent {
         }
       )
     } else {
-      //console.log('leccion data', leccion);
       this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
         (data: any) => {
-          //console.log('datos recibidos', data);
           this.alertServices.successAlert('Exito', data.message);
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
-          //this.verLeccicon();
-          //this.mostrarContenidoLeccionForm = true;
-          //this.mostrarContenidoLeccionForm = true;
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
-          //console.log('id leccion: ', data.id);
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -609,12 +615,15 @@ export class RutaAsesorComponent {
     }
   }
 
+ /*
+    Este método recupera las lecciones asociadas a un nivel específico y actualiza
+    el formulario con la información de la primera lección, si existe.
+  */
   verLeccicon(): void {
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
         if (data.length > 0) {
-          // Seleccionar la primera lección si existe
           const primeraLeccion = data[0];
           this.leccionForm.patchValue({
             id_leccion: primeraLeccion.id.toString(),
@@ -622,7 +631,6 @@ export class RutaAsesorComponent {
           });
           this.cargarContenidoLeccion(primeraLeccion.id);
         } else {
-          // Si no hay lecciones, resetear el formulario de lección
           this.leccionForm.patchValue({
             id_leccion: '',
             nombre: ''
@@ -634,14 +642,18 @@ export class RutaAsesorComponent {
       }
     )
   }
+/*
+    Este método se ejecuta cuando se cambia el nivel seleccionado en el formulario.
+    Actualiza el formulario de lecciones y recupera las lecciones asociadas al nuevo
+    nivel seleccionado.
+  */
 
   onNivelChange(id_nivel: string): void {
-    this.leccionForm.patchValue({ id_nivel: id_nivel }); // Actualizar el formulario con el nivel seleccionado
+    this.leccionForm.patchValue({ id_nivel: id_nivel });
     this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
         if (this.isEditing && data.length > 0) {
-          // Seleccionar la primera lección si existe
           const primeraLeccion = data[0];
           this.leccionForm.patchValue({
             id_leccion: primeraLeccion.id.toString(),
@@ -649,12 +661,11 @@ export class RutaAsesorComponent {
           });
           this.cargarContenidoLeccion(primeraLeccion.id);
         } else {
-          // Si no hay lecciones, resetear el formulario de lección
           this.leccionForm.patchValue({
             id_leccion: '',
             nombre: ''
           });
-          this.contenidoLeccionForm.reset(); // resetea los campos de contenido por leccion si no hay lecciones y lo toma desde nive tambien (no resetea el select de contenido si no tengo lecciones)
+          this.contenidoLeccionForm.reset(); 
           this.contenidoLeccion = [];
         }
       },
@@ -663,6 +674,12 @@ export class RutaAsesorComponent {
       }
     );
   }
+
+   /*
+    Este método se ejecuta cuando se cambia la lección seleccionada en el formulario.
+    Actualiza el formulario de lección y el formulario de contenido de lección con
+    los datos de la lección seleccionada.
+  */
   onLeccionChange(id_leccion: string): void {
     if (id_leccion && id_leccion !== '') {
       const selectedLeccion = this.listarLeccion.find(leccion => leccion.id === parseInt(id_leccion));
@@ -671,8 +688,6 @@ export class RutaAsesorComponent {
           id_leccion: selectedLeccion.id.toString(),
           nombre: selectedLeccion.nombre
         });
-
-        // Actualizar también el formulario de contenido
         this.contenidoLeccionForm.patchValue({
           id_leccion: selectedLeccion.id.toString()
         });
@@ -680,8 +695,7 @@ export class RutaAsesorComponent {
         this.cargarContenidoLeccion(parseInt(id_leccion));
       }
     } else {
-      this.leccionForm.patchValue({ //me limpia el campo de nombre cuando selecciono "agregar leccion"
-        //id_leccion: '',
+      this.leccionForm.patchValue({
         nombre: ''
       });
       this.contenidoLeccionForm.patchValue({
@@ -693,16 +707,16 @@ export class RutaAsesorComponent {
       })
       this.contenidoLeccion = [];
     }
-
-    // console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
-    // console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
+ /*
+    Este método se encarga de cargar el contenido relacionado con una lección específica.
+    Realiza una llamada al servicio para obtener el contenido según el ID de la lección.
+  */
   cargarContenidoLeccion(id_leccion: number): void {
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
-        //console.log('Contenido de la lección:', data);
         if (this.isEditing && data.length > 0) {
           const primerContenido = data[0];
           this.contenidoLeccionForm.patchValue({
@@ -715,9 +729,8 @@ export class RutaAsesorComponent {
           });
           this.updateCharCountContenido();
         } else {
-          // Limpiar todos los campos excepto id_leccion
           this.contenidoLeccionForm.reset({
-            id_leccion: id_leccion.toString(), // Mantén solo el id_leccion
+            id_leccion: id_leccion.toString(),
           });
         }
         this.onTipoDatoChangeContenido();
@@ -727,6 +740,10 @@ export class RutaAsesorComponent {
       }
     );
   }
+
+  /*
+    Este método se ejecuta cuando se selecciona un nivel en el formulario.
+  */
   onNivelSelect(event: any): void {
     const selectedNivelId = event.target.value;
     this.selectedNivelId = selectedNivelId !== '0' ? parseInt(selectedNivelId) : null;
@@ -752,17 +769,19 @@ export class RutaAsesorComponent {
     }
   }
 
-  updateCharCountContenido(){
+/*
+  Actualiza el contador de caracteres para el campo 'descripcion' en el formulario de contenido de la lección.
+*/
+  updateCharCountContenido() {
     const descripcionContenido = this.contenidoLeccionForm.get('descripcion')?.value || '';
     this.charCountContenido = descripcionContenido.length;
   }
 
+/*
+  Agrega o actualiza el contenido de una lección en el sistema, dependiendo de si el contenido ya existe o no.
+*/
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
-    // if (this.contenidoLeccionForm.invalid) {
-    //   this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
-    //   return;
-    // }
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
 
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
@@ -789,9 +808,7 @@ export class RutaAsesorComponent {
     formData.append('titulo', this.contenidoLeccionForm.get('titulo')?.value);
     formData.append('descripcion', this.contenidoLeccionForm.get('descripcion')?.value);
     formData.append('id_tipo_dato', this.contenidoLeccionForm.get('id_tipo_dato')?.value);
-    //formData.append('id_leccion', this.contenidoLeccionForm.get('id_leccion')?.value);
     formData.append('id_leccion', idLeccion);
-    //console.log('id_leccion a enviar:', idLeccion);
 
     if (this.selectedfuenteContenido) {
       formData.append('fuente_contenido', this.selectedfuenteContenido, this.selectedfuenteContenido.name);
@@ -803,15 +820,12 @@ export class RutaAsesorComponent {
     }
     const contenidoLeccionId = +this.contenidoLeccionForm.get('id_contenido')?.value;
     if (contenidoLeccionId) {
-      //console.log("conteido", contenidoLeccionId)
       this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
-          //console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
-          //location.reload();
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -822,12 +836,9 @@ export class RutaAsesorComponent {
       this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
-          //console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
-
-          //location.reload();
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -836,11 +847,15 @@ export class RutaAsesorComponent {
       )
     }
   }
+
+/*
+    Este método se utiliza para agregar o actualizar el contenido de una lección en el sistema.
+  */
+ 
   onContenidoSelect(contenidoId: string): void {
     const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
 
     if (contenidoId === 'nuevo') {
-      // Si se selecciona "Agregar contenido nuevo"
       this.contenidoLeccionForm.patchValue({
         id_leccion: currentIdLeccion,
         id_contenido: 'nuevo',
@@ -866,29 +881,42 @@ export class RutaAsesorComponent {
     }
   }
 
+/*
+    Este método busca el nombre del tipo de dato basado en el ID proporcionado.
+  */
   getTipoDatoNombre(id: string): string {
     const tipoDato = this.listarTipoDatoContenido.find(t => t.id === +id);
     return tipoDato ? tipoDato.fuente_contenido : '';
   }
 
-
-
-  ///////////////////////////////////////////////////////////////////////////////
-
+/*
+    Este método se llama cuando cambia el tipo de dato. 
+  */
   onTipoDatoChange(): void {
     this.resetFuenteField();
     this.actividadForm.get('fuente').setValidators([Validators.required]); // Siempre requerir fuente
     this.actividadForm.get('fuente').updateValueAndValidity();
   }
 
+/*
+  Actualiza el valor del campo 'fuente' en el formulario de actividad cuando se detecta una entrada de texto.
+*/
   onTextInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.actividadForm.patchValue({ fuente: value });
   }
+/*
+    Este método simula un clic en el campo de entrada de archivo.
+  */
 
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
+
+  /*
+     Este método maneja la selección de archivos desde un input de tipo archivo. 
+     Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -909,6 +937,11 @@ export class RutaAsesorComponent {
       this.resetFileField('fuente');
     }
   }
+
+  /*
+    Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+    eliminando cualquier valor previamente asignado.
+  */
   resetFileField(field: string) {
     this.actividadForm.patchValue({ fuente: null });
     this.selectedfuente = null;
@@ -920,8 +953,9 @@ export class RutaAsesorComponent {
     this.fuentePreview = null;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+  Este método gestiona los cambios en el campo 'id_tipo_dato' del formulario de contenido de lección.
+*/
   onTipoDatoChangeContenido(): void {
     const tipoDatoIdContenido = this.contenidoLeccionForm.get('id_tipo_dato').value;
     this.resetFuenteFieldContenido();
@@ -929,40 +963,44 @@ export class RutaAsesorComponent {
 
     const tipoDatoIdnumber = Number(tipoDatoIdContenido);
     switch (tipoDatoIdnumber) {
-      case 1: // Video
-      case 2: // Imagen
-      case 3: // PDF
+      case 1:
+      case 2:
+      case 3:
       default:
-        // Si no es ninguno de los anteriores, elimina cualquier validador
         this.contenidoLeccionForm.get('fuente_contenido').clearValidators();
         break;
     }
     this.contenidoLeccionForm.get('fuente_contenido').updateValueAndValidity();
-
-    // Forzar la detección de cambios
     this.cdRef.detectChanges();
   }
 
+/*
+  Este método gestiona la entrada de texto en el campo 'fuente_contenido' del formulario de contenido de lección.
+*/
   onTextInputContenido(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.contenidoLeccionForm.patchValue({ fuente_contenido: value });
-    //console.log('fuente actualizada:', value);  // Para depuración
   }
 
+/*
+  Este método simula un clic en el elemento de entrada de archivos para permitir que el usuario seleccione un archivo.
+*/
   triggerFileInputContenido() {
     this.fileInputs.nativeElement.click();
   }
 
+/*
+  Maneja la selección de archivos en el formulario de contenido de lección y valida su tamaño.
+*/
   onFileSelectedsContenido(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       let maxSize = 0;
       if (field === 'fuente_contenido') {
-        maxSize = 5 * 1024 * 1024; // Tamaño máximo para imágenes
+        maxSize = 5 * 1024 * 1024;
       } else if (field === 'fuente_documentos') {
         maxSize = 18 * 1024 * 1024;
       }
-
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertServices.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`)
@@ -976,7 +1014,7 @@ export class RutaAsesorComponent {
 
         const reader = new FileReader();
         reader.onload = (e: any) => {
-          this.fuentePreviewContenido = e.target.result;  // Guarda la vista previa
+          this.fuentePreviewContenido = e.target.result;
         };
         reader.readAsDataURL(file);
       }
@@ -985,6 +1023,9 @@ export class RutaAsesorComponent {
     }
   }
 
+/*
+  Este método maneja la selección de archivos en un campo de formulario específico. 
+*/
   resetFileFieldContenido(field: string) {
     if (field === 'fuente_contenido') {
       this.contenidoLeccionForm.patchValue({ fuente_contenido: null });
@@ -998,7 +1039,4 @@ export class RutaAsesorComponent {
     this.selectedfuenteContenido = null;
     this.fuentePreviewContenido = null;
   }
-
-  ////////////////////////////////////////////////////////////////////////
-
 }

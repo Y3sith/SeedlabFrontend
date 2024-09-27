@@ -368,7 +368,6 @@ export class RutaAliadoComponent {
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
-              // console.log('Actividad: ', data);
               this.updateCharCount();
               this.isLoading=false;
             },
@@ -419,11 +418,17 @@ export class RutaAliadoComponent {
     this.isLoading = false;
   }
 
+/*
+  Actualiza el contador de caracteres basado en el valor del campo 'descripcion' del formulario.
+*/
   updateCharCount(): void {
     const descripcionValue = this.actividadForm.get('descripcion')?.value || '';
     this.charCount = descripcionValue.length;
   }
 
+/*
+  Agrega o actualiza una actividad en el sistema dependiendo del estado de `actividadId`.
+*/
   addActividadSuperAdmin(): void {
     this.submitted = true;
     const formData = new FormData();
@@ -898,11 +903,18 @@ export class RutaAliadoComponent {
     }
   }
 
+
+/*
+  Actualiza el contador de caracteres para el campo 'descripcion' en el formulario de contenido de la lección.
+*/
   updateCharCountContenido(){
     const descripcionContenido = this.contenidoLeccionForm.get('descripcion')?.value || '';
     this.charCountContenido = descripcionContenido.length;
   }
 
+/*
+  Agrega o actualiza el contenido de una lección en el sistema, dependiendo de si el contenido ya existe o no.
+*/
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
@@ -943,15 +955,12 @@ export class RutaAliadoComponent {
     }
     const contenidoLeccionId = +this.contenidoLeccionForm.get('id_contenido')?.value;
     if (contenidoLeccionId) {
-      // console.log("conteido", contenidoLeccionId)
       this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
-          // console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
-          //location.reload();
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -962,12 +971,9 @@ export class RutaAliadoComponent {
       this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
-          // console.log('datos recibidos: ', data);
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
-
-          //location.reload();
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
@@ -1118,12 +1124,15 @@ export class RutaAliadoComponent {
     this.fileInputs.nativeElement.click();
   }
 
+/*
+  Maneja la selección de archivos en el formulario de contenido de lección y valida su tamaño.
+*/
   onFileSelectedsContenido(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       let maxSize = 0;
       if (field === 'fuente_contenido') {
-        maxSize = 5 * 1024 * 1024; // Tamaño máximo para imágenes
+        maxSize = 5 * 1024 * 1024;
       } else if (field === 'fuente_documentos') {
         maxSize = 18 * 1024 * 1024;
       }
@@ -1141,7 +1150,7 @@ export class RutaAliadoComponent {
 
         const reader = new FileReader();
         reader.onload = (e: any) => {
-          this.fuentePreviewContenido = e.target.result;  // Guarda la vista previa
+          this.fuentePreviewContenido = e.target.result;
         };
         reader.readAsDataURL(file);
       }

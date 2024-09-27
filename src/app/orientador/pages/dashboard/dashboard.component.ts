@@ -44,6 +44,7 @@ export class DashboardComponent implements AfterViewInit {
     private empresaService: EmpresaService
   ) { }
 
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     this.getDatosDashboard();
@@ -58,6 +59,11 @@ export class DashboardComponent implements AfterViewInit {
     
   }
 
+/*
+  Este método permite que los datos necesarios estén listos y 
+  disponibles justo después de que la vista del componente se haya 
+  renderizado.
+  */
   ngAfterViewInit() {
     this.getDatosDashboard();
     this.getDatosGenerosGrafica();
@@ -65,7 +71,10 @@ export class DashboardComponent implements AfterViewInit {
     this.promedioAsesoriasMesAnio(this.selectedYear);
     
   }
-
+/*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -77,7 +86,7 @@ export class DashboardComponent implements AfterViewInit {
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
         console.log(this.currentRolId);
-        if (this.currentRolId != 2) { // Asegúrate de que el rol del orientador es 2
+        if (this.currentRolId != 2) { 
           this.router.navigate(['home']);
         }
       }
@@ -87,10 +96,19 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
+  /*
+  Actualiza el año seleccionado y carga el promedio de asesorías para el año correspondiente.
+*/
+
   onYearChange(year: number): void {
     this.selectedYear = year;
     this.promedioAsesoriasMesAnio(this.selectedYear);
   }
+
+  /*
+  Obtiene la lista de empresas y selecciona la primera empresa disponible.
+  Luego, carga la gráfica de puntajes según el tipo seleccionado.
+*/
 
   getEmpresas() {
     this.empresaService.getAllEmpresa(this.token).subscribe(
@@ -105,12 +123,19 @@ export class DashboardComponent implements AfterViewInit {
     )
   }
 
+/*
+  Maneja el cambio de empresa seleccionada y actualiza la gráfica de puntajes 
+  según el tipo seleccionado.
+*/
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
     this.graficaPuntajesFormulario(+this.selectedTipo);
   }
 
-
+/*
+  Calcula el promedio de asesorías mensuales y anuales para el año seleccionado,
+  actualizando las opciones del gráfico de ECharts.
+*/
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.dashboardAdmin(this.token, this.selectedYear).subscribe(
       data => {
