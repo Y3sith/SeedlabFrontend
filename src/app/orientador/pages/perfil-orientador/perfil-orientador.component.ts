@@ -187,6 +187,15 @@ export class PerfilOrientadorComponent {
       this.submitted = true;
       return
     }
+
+    const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'email', 'password'];
+    for (const key of camposObligatorios) {
+        const control = this.perfilorientadorForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
   
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfilorientadorForm.controls).forEach((key) => {
