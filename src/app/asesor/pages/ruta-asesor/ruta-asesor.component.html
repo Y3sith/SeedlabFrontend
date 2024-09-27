@@ -8,9 +8,14 @@
             </svg>
             Volver
         </button>
-        <app-header [title] [subtitle]="'Agregar Actividad'"></app-header>
+        <app-header [title] [subtitle]="'Editar Actividad'"></app-header>
     </header>
-    <div class="flex items-center justify-center font-poppins">
+    
+    <div class="flex justify-center">
+        <div class="spinner " *ngIf="isLoading"></div>
+    </div>
+
+    <div class="flex items-center justify-center font-poppins" *ngIf="!isLoading">
         <div class="w-full">
             <div class="max-w-full md:max-w-7xl mx-auto bg-gray-50 rounded-xl p-4 sm:p-8 md:p-16">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -364,11 +369,6 @@
                         <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
                     </div>
                 </div>
-            </div>
-            <div class="mt-6 text-center">
-                <button
-                    class="bg-orange-500 text-white px-20 py-2 rounded-full text-lg font-semibold italic text-[30px] font-poppins"
-                    [routerLink]="'/list-actividades-asesor'" [queryParams]="{ id_ruta: rutaId }">Finalizar</button>
             </div>
         </div>
     </div>

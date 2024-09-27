@@ -183,12 +183,14 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
     this.showTrue = false;
     this.showFalse = true;
     this.page = 1;
+    this.listarAsesorias();
   }
 
   showAsignadas() {
     this.showTrue = true;
     this.showFalse = false;
     this.page = 1;
+    this.listarAsesorias();
   }
   manejarCambio(event: Event) {
     this.busqueda = (event.target as HTMLInputElement).value;
