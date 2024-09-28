@@ -96,6 +96,8 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
+
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     this.currentNivelIndex = 0;
@@ -111,10 +113,10 @@ export class CursoRutaEmprendedorComponent {
     }
   }
 
+  /* Valida el token del login */
   validateToken(): void {
     this.token = localStorage.getItem("token");
     let identityJSON = localStorage.getItem('identity');
-
     if (identityJSON) {
       let identity = JSON.parse(identityJSON);
       this.user = identity;
@@ -123,15 +125,16 @@ export class CursoRutaEmprendedorComponent {
       if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
       } else {
-        //this.documento = this.user.emprendedor.documento;
       }
     }
-
     if (!this.token) {
       this.router.navigate(['home']);
     }
   }
 
+  /*
+  Lista la ruta activa y obtiene la última actividad si hay rutas disponibles.
+*/
   listarRutaActiva(): void {
     if (this.token) {
       this.rutaService.ruta(this.token).subscribe(
@@ -153,6 +156,9 @@ export class CursoRutaEmprendedorComponent {
     }
   }
 
+  /*
+  Obtiene la última actividad de la ruta activa y guarda el contenido correspondiente.
+*/
   getUltimaActividad() {
     this.rutaService.ultimaActividad(this.token, this.rutaId).subscribe(
       (data) => {
@@ -165,6 +171,10 @@ export class CursoRutaEmprendedorComponent {
     );
   }
 
+/*
+  Inicializa el reproductor de YouTube para cada contenido de tipo video después de
+   que la vista se haya inicializado.
+*/
   ngAfterViewInit() {
     this.contenidoLeccion.forEach((contenido, index) => {
       if (this.getContentType(contenido) === 'video') {
@@ -174,8 +184,10 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
+/*
+  Inicializa los niveles a partir de la actividad, filtrando lecciones que tienen contenido y marcando cada nivel y lección como no expandido.
+*/
   initializeNiveles() {
-    // Mapeo de los niveles
     this.niveles = this.actividad.nivel
       .map((nivel: any) => {
         const mappedNivel = {
@@ -183,7 +195,6 @@ export class CursoRutaEmprendedorComponent {
           expanded: false,
           lecciones: nivel.lecciones
             .filter((leccion: any) => {
-              // Filtrar lecciones que tienen contenido_lecciones no vacío
               return leccion.contenido_lecciones && leccion.contenido_lecciones.length > 0;
             })
             .map((leccion: any) => {
@@ -198,45 +209,53 @@ export class CursoRutaEmprendedorComponent {
         return mappedNivel;
       })
       .filter((nivel: any) => {
-        // Filtrar niveles que tienen al menos una lección con contenido
         const hasValidLecciones = nivel.lecciones.length > 0;
         return hasValidLecciones;
       });
   }
 
+/*
+  Alterna la expansión de un nivel seleccionado, cerrando otros niveles y asegurando que las lecciones no estén expandidas.
+*/
   toggleNivel(selectedNivelIndex: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
-      // Si el nivel es el seleccionado, se expande; si no, se colapsa
       if (nivelIndex === selectedNivelIndex) {
         nivel.expanded = !nivel.expanded;
       } else {
-        nivel.expanded = false;  // Cierra todos los demás niveles
+        nivel.expanded = false;
       }
-
-      // Colapsa todas las lecciones de los otros niveles
       nivel.lecciones.forEach((leccion) => {
         leccion.expanded = false;
       });
     });
   }
 
+/*
+  Alterna la expansión de una lección en un nivel seleccionado, cerrando otras lecciones dentro del mismo nivel.
+*/
   toggleLeccion(selectedNivelIndex: number, selectedLeccionIndex: number) {
     const nivel = this.niveles[selectedNivelIndex];
     nivel.lecciones.forEach((leccion, leccionIndex) => {
-      // Si la lección es la seleccionada, se expande; si no, se colapsa
       if (leccionIndex === selectedLeccionIndex) {
         leccion.expanded = !leccion.expanded;
       } else {
-        leccion.expanded = false;  // Cierra todas las demás lecciones dentro del mismo nivel
+        leccion.expanded = false;
       }
     });
   }
+
+  /*
+  Selecciona una lección y actualiza el formulario con sus datos.
+*/
 
   selectLeccion(leccion: any) {
     this.selectedLeccion = leccion;
     this.leccionForm.patchValue(leccion);
   }
 
+  /*
+  Establece el contenido seleccionado y actualiza los índices del nivel y lección actuales.
+*/
   selectContenido(contenido: any, nivelIndex: number, leccionIndex: number) {
     this.selectedContenido = contenido;
     this.currentNivelIndex = nivelIndex;
@@ -245,31 +264,29 @@ export class CursoRutaEmprendedorComponent {
     this.closeAllExceptSelected(nivelIndex, leccionIndex, contenido.id);
   }
 
+/*
+  Cierra todos los niveles y lecciones excepto el seleccionado, asegurando que 
+  la jerarquía de expansión se mantenga.
+*/
   closeAllExceptSelected(selectedNivelIndex: number, selectedLeccionIndex: number, selectedContenidoId: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
       if (nivelIndex < selectedNivelIndex) {
-        // Colapsar todos los niveles anteriores al seleccionado
         nivel.expanded = false;
         nivel.lecciones.forEach(leccion => {
           leccion.expanded = false;
         });
       } else if (nivelIndex === selectedNivelIndex) {
-        // Expandir el nivel seleccionado
         nivel.expanded = true;
         nivel.lecciones.forEach((leccion, leccionIndex) => {
           if (leccionIndex < selectedLeccionIndex) {
-            // Colapsar todas las lecciones anteriores a la seleccionada
             leccion.expanded = false;
           } else if (leccionIndex === selectedLeccionIndex) {
-            // Expandir la lección seleccionada
             leccion.expanded = true;
           } else {
-            // Colapsar todas las lecciones posteriores a la seleccionada
             leccion.expanded = false;
           }
         });
       } else {
-        // Colapsar todos los niveles posteriores al seleccionado
         nivel.expanded = false;
         nivel.lecciones.forEach(leccion => {
           leccion.expanded = false;
@@ -278,6 +295,9 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
+/*
+  Avanza al siguiente contenido en la lección actual.
+*/
   goToNextContent() {
     if (this.showActivityDescription) {
       this.showActivityDescription = false;
@@ -301,7 +321,6 @@ export class CursoRutaEmprendedorComponent {
               }
             });
           } else {
-            // Para roles 1 y 2, simplemente navegar a la ruta deseada
             this.router.navigate(['ruta']);
           }
           return;
@@ -320,27 +339,27 @@ export class CursoRutaEmprendedorComponent {
         this.currentContenidoIndex = 0;
       }
     }
-
-    // Obtener el contenido actual después de actualizar los índices
     const newCurrentNivel = this.niveles[this.currentNivelIndex];
     const newCurrentLeccion = newCurrentNivel.lecciones[this.currentLeccionIndex];
     const newCurrentContenido = newCurrentLeccion.contenido_lecciones[this.currentContenidoIndex];
-
-    // Llamar a closeAllExceptSelected con los nuevos índices
     this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
     this.selectedContenido = newCurrentContenido;
     this.updateSelectedContent();
   }
 
+  /*
+  Regresa a la vista anterior en el historial de navegación.
+*/
   goBack(): void {
     this.location.back();
   }
 
+/*
+  Activa el botón de asesoría si se está en el último contenido de la última lección.
+*/
   boton() {
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
-
-    // Verificar si estamos en el último contenido de la última lección del último nivel
     if (
       this.currentNivelIndex === this.niveles.length - 1 &&
       this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
@@ -350,20 +369,22 @@ export class CursoRutaEmprendedorComponent {
     }
   }
 
-
+/*
+  Maneja el clic en el botón para avanzar al siguiente contenido.
+*/
   onNextContentClick() {
     this.goToNextContent();
   }
 
+/*
+  Expande todos los niveles hasta el índice del nivel actual.
+*/
   expandCurrentPath() {
-    // Expandir todos los niveles hasta el actual
     for (let i = 0; i <= this.currentNivelIndex; i++) {
       if (this.niveles[i]) {
         this.niveles[i].expanded = true;
       }
     }
-
-    // Expandir todas las lecciones del nivel actual
     if (this.niveles[this.currentNivelIndex]) {
       for (let j = 0; j <= this.currentLeccionIndex; j++) {
         if (this.niveles[this.currentNivelIndex].lecciones[j]) {
@@ -371,17 +392,21 @@ export class CursoRutaEmprendedorComponent {
         }
       }
     }
-
-    // Forzar la detección de cambios
     this.changeDetectorRef.detectChanges();
   }
 
+  /*
+  Verifica si el contenido actual corresponde a los índices proporcionados.
+*/
   isCurrentContent(nivelIndex: number, leccionIndex: number, contenidoIndex: number): boolean {
     return this.currentNivelIndex === nivelIndex &&
       this.currentLeccionIndex === leccionIndex &&
       this.currentContenidoIndex === contenidoIndex;
   }
 
+/*
+  Devuelve un objeto de estilo para el contenido basado en si es el actual.
+*/
   getContentStyle(nivelIndex: number, leccionIndex: number, contenidoIndex: number): object {
     const isCurrent = this.isCurrentContent(nivelIndex, leccionIndex, contenidoIndex);
     return {
@@ -390,6 +415,9 @@ export class CursoRutaEmprendedorComponent {
     };
   }
 
+  /*
+  Abre el modal para crear una asesoría y maneja el cierre.
+*/
   openCrearAsesoriaModal() {
     const dialogRef = this.dialog.open(CrearAsesoriaModalComponent, {
       width: '400px',
@@ -403,24 +431,24 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
+
+/*
+  Navega al contenido anterior y actualiza el estado de los niveles y lecciones seleccionados.
+*/
   goToPreviousContent() {
     if (this.currentContenidoIndex > 0) {
-      // Ir al contenido anterior en la misma lección
       this.currentContenidoIndex--;
     } else if (this.currentLeccionIndex > 0) {
-      // Ir a la lección anterior
       this.currentLeccionIndex--;
       const previousLeccion = this.niveles[this.currentNivelIndex].lecciones[this.currentLeccionIndex];
       this.currentContenidoIndex = previousLeccion.contenido_lecciones.length - 1;
     } else if (this.currentNivelIndex > 0) {
-      // Ir al nivel anterior
       this.currentNivelIndex--;
       const previousNivel = this.niveles[this.currentNivelIndex];
       this.currentLeccionIndex = previousNivel.lecciones.length - 1;
       const previousLeccion = previousNivel.lecciones[this.currentLeccionIndex];
       this.currentContenidoIndex = previousLeccion.contenido_lecciones.length - 1;
     } else {
-      // No hay contenido anterior, deshabilitar el botón
       this.buttonPreviousDisabled = true;
     }
     const newCurrentNivel = this.niveles[this.currentNivelIndex];
@@ -432,27 +460,35 @@ export class CursoRutaEmprendedorComponent {
 
   }
 
+
+/*
+  Actualiza el contenido seleccionado basado en el índice actual de nivel, lección y contenido.
+*/
   updateSelectedContent() {
 
     if (this.showActivityDescription) {
-      return; // No hacemos nada si estamos mostrando la descripción de la actividad
+      return;
     }
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
-
-
     this.selectedContenido = currentLeccion.contenido_lecciones[this.currentContenidoIndex];
     this.currentLeccionDescripcion = null;
     this.currentLeccionFuente = null;
   }
 
+/*
+  Carga la API de YouTube al añadir un script al documento.
+*/
   loadYouTubeApi() {
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.body.appendChild(tag);
   }
 
+/*
+  Crea un reproductor de YouTube con el ID del video y el ID del elemento contenedor.
+*/
   createYouTubePlayer(videoId: string, elementId: string) {
     return new (window as any).YT.Player(elementId, {
       height: '360',
@@ -464,43 +500,53 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
+  /*
+  Obtiene la URL completa de la imagen a partir de la ruta relativa.
+*/
   getCorrectImageUrl(relativePath: string): string {
-    // Elimina '/storage' del inicio si está presente
     const cleanPath = relativePath.replace(/^\/storage/, '');
-
-    // Construye la URL completa
     return `${environment.apiUrl}/api//storage${cleanPath}`;
   }
 
+  /*
+  Genera la URL de inserción de un video de YouTube a partir de su URL original.
+*/
   getYouTubeEmbedUrl(url: string): string {
     const videoId = this.getYouTubeVideoId(url);
     return `https://www.youtube-nocookie.com/embed/${videoId}`;
   }
 
+/*
+  Extrae el ID de un video de YouTube a partir de su URL.
+*/
   getYouTubeVideoId(url: string): string {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : '';
   }
 
+/*
+  Genera la URL correcta para un archivo a partir de una ruta relativa.
+*/
   getCorrectFileUrl(relativePath: string): string { 
-    // Eliminar "/api/" de la URL base si está presente
     let baseUrl = environment.apiUrl.replace('/api/', '/');
-
-    // Asegurarse de que no haya más de un "/" al final de baseUrl y al principio de relativePath
-    baseUrl = baseUrl.replace(/\/+$/, '');  // Elimina "/" al final de baseUrl
-    relativePath = relativePath.replace(/^\/+/, ''); // Elimina "/" al inicio de relativePath
-
-    // Concatenar la URL base con el path relativo
+    baseUrl = baseUrl.replace(/\/+$/, '');
+    relativePath = relativePath.replace(/^\/+/, '');
     return `${baseUrl}/${relativePath}`;
 }
 
+/*
+  Crea una URL segura para un archivo PDF a partir de una URL dada.
+*/
   getPdfUrl(url: string): SafeResourceUrl {
     const cleanUrl = url.replace(/^\/?(storage\/)?/, '');
     const fullUrl = `${environment.apiUrl}/storage/${cleanUrl}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
   }
 
+/*
+  Descarga un archivo PDF dado su ID de contenido.
+*/
   downloadPDF(contenidoId: number) {
     this.rutaService.descargarArchivo(contenidoId).subscribe({
       next: (response: HttpResponse<Blob>) => {
@@ -510,19 +556,15 @@ export class CursoRutaEmprendedorComponent {
           const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
           if (filenameMatch && filenameMatch[1]) {
             filename = filenameMatch[1].replace(/"/g, '').trim();
-            // Elimina cualquier guión bajo al final del nombre
             filename = filename.replace(/_+$/, '');
           }
         }
-
         const blob: Blob = response.body || new Blob();
         const url = window.URL.createObjectURL(blob);
-
         const link = document.createElement('a');
         link.href = url;
         link.download = filename;
         link.click();
-
         window.URL.revokeObjectURL(url);
       },
       error: (error) => {
@@ -531,6 +573,9 @@ export class CursoRutaEmprendedorComponent {
     });
   }
   
+/*
+  Obtiene el color correspondiente a un índice dado.
+*/
   getItemColor(index: number): string {
     const colors = [
       '#F4384B', // Rojo
@@ -546,12 +591,18 @@ export class CursoRutaEmprendedorComponent {
     return colors[index % colors.length];
   }
 
+/*
+  Obtiene el color para la actividad.
+*/
   getColor(): string {
     return this.actividad.colorIndex !== undefined
       ? this.getItemColor(this.actividad.colorIndex)
-      : '#FA7D00'; // Color por defecto si no hay índice
+      : '#FA7D00';
   }
 
+/*
+  Obtiene el color del texto en función del color de fondo.
+*/
   getTextColor(): string {
     const color = this.getColor();
     const r = parseInt(color.slice(1, 3), 16);
@@ -561,24 +612,29 @@ export class CursoRutaEmprendedorComponent {
     return brightness > 128 ? 'black' : 'white';
   }
 
+/*
+  Obtiene un color más claro a partir del color actual.
+*/
   getLighterColor(amount: number): string {
     const color = this.getColor();
     return this.lightenColor(color, amount);
   }
 
+/*
+  Aclara un color dado en función de la cantidad especificada.
+*/
   lightenColor(color: string, amount: number): string {
     const num = parseInt(color.replace("#", ""), 16);
-
-    // Multiplica el valor de 'amount' para un efecto de aclarado más fuerte
-    const scaleFactor = 7; // Ajusta este factor según la claridad deseada
-
+    const scaleFactor = 7;
     const r = Math.min(255, ((num >> 16) + amount * scaleFactor));
     const g = Math.min(255, (((num >> 8) & 0x00FF) + amount * scaleFactor));
     const b = Math.min(255, ((num & 0x0000FF) + amount * scaleFactor));
-
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
   }
 
+/*
+  Determina el tipo de contenido basado en la fuente y el tipo de dato.
+*/
   getContentType(contenido: any): string {
     if (!contenido || !contenido.fuente_contenido) return 'unknown';
     const fuente = contenido.fuente_contenido.toLowerCase();
