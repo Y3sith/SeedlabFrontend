@@ -46,11 +46,15 @@ export class ReportesComponent {
     })
   }
 
-
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
   }
 
+/*
+        Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+       formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -71,18 +75,19 @@ export class ReportesComponent {
     }
   }
 
+/*
+  Muestra los reportes según los filtros seleccionados en el formulario.
+*/
   mostrarReportes() {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-
-      // Obtener los datos del reporte para visualización
       this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
           this.reportes = data;
           this.totalItems = data.length;
           this.page = 1;
           this.updatePaginated();
-          this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
+          this.columnas = Object.keys(data[0] || {});
           if(data.length === 0){
             this.alertService.successAlert('Info','No hay datos para mostrar');
           }
@@ -95,7 +100,10 @@ export class ReportesComponent {
     }
   }
 
-
+/*
+  Descarga el reporte en el formato especificado (PDF o Excel) 
+  si el formulario es válido.
+*/
   getReportes(formato:string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
@@ -122,6 +130,10 @@ export class ReportesComponent {
     }
   }
 
+  /*
+  Descarga el reporte del formulario correspondiente al emprendedor 
+  especificado.
+*/
   getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
@@ -139,15 +151,22 @@ export class ReportesComponent {
     )
   }
 
+  /*
+  Maneja el cambio en la selección del tipo de reporte. 
+*/
   onTipoReporteChange(event: any) {
     this.tipoReporteSeleccionado = event.target.value;
 
     if (this.tipoReporteSeleccionado === 'emprendedor') {
-      // Lógica adicional cuando se selecciona "Emprendedores"
-      this.getReportes('excel'); // Llamada para cargar los reportes
+      this.getReportes('excel');
     }
   }
 
+  /*
+  Actualiza la paginación de los reportes. 
+  Calcula los índices de inicio y fin para la página actual 
+  y extrae los reportes correspondientes del arreglo completo.
+*/
   updatePaginated(): void {
     const start = (this.page - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
@@ -155,6 +174,10 @@ export class ReportesComponent {
     this.paginatedReportes = this.reportes.slice(start, end);
 
   }
+
+/*
+  Cambia la página actual de los reportes.
+*/
 
   changePage(page: number | string): void {
     if (page === 'previous') {
@@ -173,14 +196,22 @@ export class ReportesComponent {
     }
   }
 
+  /*
+  Verifica si se puede navegar a la página anterior.
+*/
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+/*
+  Verifica si se puede navegar a la siguiente página.
+*/
   canGoNext(): boolean {
     return this.page < Math.ceil(this.totalItems / this.itemsPerPage);
   }
-
+/*
+  Obtiene un arreglo de números que representan las páginas disponibles.
+*/
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);

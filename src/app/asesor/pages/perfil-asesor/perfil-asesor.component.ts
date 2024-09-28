@@ -374,14 +374,12 @@ export class PerfilAsesorComponent implements OnInit {
       asociados al departamento seleccionado
     */
   onDepartamentoSeleccionado(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDepartamento = target.value;
 
-    // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
     this.asesorForm.get('id_municipio')?.setValue(null);
     this.listMunicipios = [];
-    // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
 

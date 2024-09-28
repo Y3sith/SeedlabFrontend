@@ -372,7 +372,7 @@ export class RutaAsesorComponent {
 
 /*
     Este método inicializa el formulario de niveles y, si hay contenido de lección disponible, lo carga en el formulario correspondiente.
-  */
+*/
   initializeNivelForm(): void {
     this.isLoading = true;
     if (this.niveles && this.niveles.length > 0) {
@@ -515,7 +515,7 @@ export class RutaAsesorComponent {
     Este método maneja la creación o actualización de un nivel en el sistema. 
     Valida la entrada del formulario y realiza las operaciones correspondientes
     utilizando los servicios apropiados.
-  */
+*/
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
     const nombreNivel = this.nivelForm.get('nombre')?.value;
