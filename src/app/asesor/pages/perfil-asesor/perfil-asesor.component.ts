@@ -18,11 +18,9 @@ import { AuthService } from '../../../servicios/auth.service';
   providers: [AsesorService]
 })
 export class PerfilAsesorComponent implements OnInit {
-  // iconoes
   faEnvelope = faEnvelope;
   faMobileAlt = faMobileAlt;
   faUser = faUser;
-
   token: string | null = null;
   blockedInputs = true;
   id: number | null = null;
@@ -39,7 +37,6 @@ export class PerfilAsesorComponent implements OnInit {
   listMunicipios: any[] = [];
   nombreAliado: string | null = null;
   listTipoDocumento: [] = [];
-  /////
   selectedImagen_Perfil: File | null = null;
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
@@ -49,7 +46,9 @@ export class PerfilAsesorComponent implements OnInit {
   isLoading: boolean = false;
   falupa = faCircleQuestion;
 
-
+  /*
+    Formulario de creación o edición para un asesor.
+  */
   asesorForm = this.fb.group({
     nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
     apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
@@ -87,7 +86,11 @@ export class PerfilAsesorComponent implements OnInit {
     this.initializeFormState();
   }
 
-  /* Valida el token del login */
+  /*
+        Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+       formulario o cualquier otra parte de la aplicación.
+  */
+
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -131,16 +134,10 @@ export class PerfilAsesorComponent implements OnInit {
           estado: data.estado
         });
         this.cargarDepartamentos();
-
         setTimeout(() => {
-          // Establecer el departamento seleccionado
           this.asesorForm.patchValue({ id_municipio: data.id_departamentos });
-
-          // Cargar los municipios de ese departamento
           this.cargarMunicipios(data.id_departamento);
-
           setTimeout(() => {
-            // Establecer el municipio seleccionado
             this.asesorForm.patchValue({ id_municipio: data.id_municipio });
           }, 500);
         }, 500);
@@ -157,20 +154,16 @@ export class PerfilAsesorComponent implements OnInit {
   editAsesor(): void {
     const formData = new FormData();
     let estadoValue: string;
-
-    // First pass: handle special cases and avoid duplication
     Object.keys(this.asesorForm.controls).forEach((key) => {
       const control = this.asesorForm.get(key);
       if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
         if (key === 'password') {
-          // Only include password if it's not empty
           if (control.value.trim() !== '') {
             formData.append(key, control.value);
           }
         } else if (key === 'fecha_nac') {
           const date = new Date(control.value);
           if (!isNaN(date.getTime())) {
-            // Check if the user is a minor
             const today = new Date();
             const birthDate = new Date(control.value);
             let userAge = today.getFullYear() - birthDate.getFullYear();
@@ -231,6 +224,9 @@ export class PerfilAsesorComponent implements OnInit {
 
   get a() { return this.asesorForm.controls; }
 
+  /*
+    Inicializa el estado del formulario deshabilitando ciertos campos.
+  */
   initializeFormState(): void {
     const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
     fieldsToDisable.forEach(field => {
@@ -258,8 +254,6 @@ export class PerfilAsesorComponent implements OnInit {
         console.warn(`Control for field ${field} not found in form`);
       }
     });
-
-    // Force change detection
     this.cdRef.detectChanges();
   }
 
@@ -268,45 +262,47 @@ export class PerfilAsesorComponent implements OnInit {
     location.reload();
   }
 
+
+  /*
+    Muestra el botón de "Guardar Cambios".
+  */
   mostrarGuardarCambios(): void {
     this.boton = false;
   }
 
+  /*
+    Activa el modo de edición para el formulario o inputs.
+  */
   onEdit() {
     this.blockedInputs = false;
     this.showEditButton = true;
     this.toggleInputsLock();
   }
 
-
+  /*
+      Este método maneja la selección de archivos desde un input de tipo archivo. 
+      Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+    */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
       let maxSize = 0;
-
       if (field === 'imagen_perfil') {
-        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+        maxSize = 5 * 1024 * 1024;
       }
-
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-
-        //Limpia el archivo seleccionado y resetea la previsualización
-        event.target.value = ''; // Borra la selección del input
-
-        // Resetea el campo correspondiente en el formulario y la previsualización
+        event.target.value = '';
         if (field === 'imagen_perfil') {
           this.asesorForm.patchValue({ imagen_perfil: null });
           this.selectedImagen_perfil = null;
-          this.perfilPreview = null; // Resetea la previsualización
+          this.perfilPreview = null;
         }
         this.resetFileField(field);
         return;
       }
-
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const previewUrl = e.target.result;
@@ -316,20 +312,20 @@ export class PerfilAsesorComponent implements OnInit {
         }
       };
       reader.readAsDataURL(file);
-
-      // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
-
       if (field === 'imagen_perfil') {
         this.selectedImagen_perfil = file;
         this.asesorForm.patchValue({ imagen_perfil: file });
       }
-
     } else {
       this.resetFileField(field);
     }
   }
 
+  /*
+      Este método utiliza `FileReader` para crear una vista previa de la imagen 
+      seleccionada, actualizando la propiedad correspondiente en el componente.
+    */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -341,6 +337,10 @@ export class PerfilAsesorComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  /*
+      Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+      eliminando cualquier valor previamente asignado.
+    */
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.asesorForm.patchValue({ imagen_perfil: null });
@@ -353,8 +353,10 @@ export class PerfilAsesorComponent implements OnInit {
     return this.asesorForm.controls;
   }
 
-
-  //Funcion para cargar los departamentos
+  /*
+       Este método solicita una lista de departamentos a través del servicio `departamentoService` 
+       y la asigna a la propiedad `listDepartamentos`.
+   */
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
@@ -366,18 +368,24 @@ export class PerfilAsesorComponent implements OnInit {
     );
   }
 
+  /*
+      Este método se activa cuando un usuario selecciona un departamento de la lista desplegable. 
+      Finalmente, llama al método `cargarMunicipios(selectedDepartamento)`, que carga los municipios 
+      asociados al departamento seleccionado
+    */
   onDepartamentoSeleccionado(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDepartamento = target.value;
 
-    // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
     this.asesorForm.get('id_municipio')?.setValue(null);
     this.listMunicipios = [];
-    // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
 
+  /*
+      Este método se encarga de obtener una lista de municipios asociados a un departamento específico.
+    */
   cargarMunicipios(idDepartamento: string): void {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       (data) => {
@@ -389,6 +397,10 @@ export class PerfilAsesorComponent implements OnInit {
     );
   }
 
+  /*
+      El método se encarga de obtener una lista de tipos de documentos desde el servicio de autenticación (`authService`) 
+      y almacenarla en la propiedad `listTipoDocumento`. 
+    */
   tipodatoDocumento(): void {
     if (this.token) {
       this.authService.tipoDocumento().subscribe(
@@ -402,6 +414,9 @@ export class PerfilAsesorComponent implements OnInit {
     }
   }
 
+  /*
+    Valida que un campo no contenga números.
+  */
   noNumbersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasNumbers = /\d/.test(value);
@@ -413,6 +428,9 @@ export class PerfilAsesorComponent implements OnInit {
     }
   }
 
+  /*
+    Valida que un número de documento tenga una longitud específica.
+  */
   documentoValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value ? control.value.toString() : '';
     if (value.length < 5 || value.length > 13) {
@@ -421,6 +439,9 @@ export class PerfilAsesorComponent implements OnInit {
     return null;
   }
 
+  /*
+    Valida que un campo no contenga letras.
+  */
   noLettersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasLetters = /[a-zA-Z]/.test(value);
@@ -432,10 +453,13 @@ export class PerfilAsesorComponent implements OnInit {
     }
   }
 
+  /*
+    Valida que la fecha seleccionada no sea anterior a la fecha actual.
+  */
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
-      return null; // Si no hay valor, no se valida
+      return null;
     }
 
     const selectedDate = new Date(value);

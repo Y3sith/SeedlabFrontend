@@ -240,13 +240,18 @@ export class ModalCrearSuperadminComponent implements OnInit {
     Object.values(this.superadminForm.controls).forEach(control => {
       control.markAsTouched();
     });
-    const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'email', 'password'];
-    for (const key of camposObligatorios) {
-        const control = this.superadminForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            return;
-        }
+  
+    let errorMessage = 'Por favor, complete correctamente el formulario';
+    Object.keys(this.superadminForm.controls).forEach(key => {
+      const control = this.superadminForm.get(key);
+      if (control.invalid && control.errors && key !== 'direccion' && 
+          !(key === 'password' && this.idSuperAdmin && !control.value)) {
+        // Add specific error messages here if needed
+      }
+    });
+    if (errorMessage !== 'Por favor, complete correctamente el formulario') {
+      this.alertService.errorAlert('Error de validación', errorMessage);
+      return;
     }
 
     // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)

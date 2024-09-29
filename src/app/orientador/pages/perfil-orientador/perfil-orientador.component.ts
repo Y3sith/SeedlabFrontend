@@ -28,7 +28,7 @@ export class PerfilOrientadorComponent {
   errorMessage: string | null = null;
   email: string;
   token = '';
-  blockedInputs = true; // Inicialmente bloqueados
+  blockedInputs = true; 
   bloqueado = true;
   documento: string;
   user: User | null = null;
@@ -50,10 +50,13 @@ export class PerfilOrientadorComponent {
   isHidden = true;
   showEditButton = false;
   tiempoEspera = 1800;
-
   falupa = faCircleQuestion;
   isLoading: boolean = false;
 
+
+/*
+  Define un formulario reactivo para el perfil del orientador.
+*/
   perfilorientadorForm = this.fb.group({
     documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
     nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
@@ -83,6 +86,7 @@ export class PerfilOrientadorComponent {
 
   ) { }
 
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.isAuthenticated = this.authServices.isAuthenticated();
@@ -90,10 +94,12 @@ export class PerfilOrientadorComponent {
     this.cargarDepartamentos(); 
     this.tipodato();
     this.initializeFormState();
-
-    // this.isEditing = true;
   }
 
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
@@ -114,7 +120,9 @@ export class PerfilOrientadorComponent {
     }
   }
 
-
+/*
+  Carga la información del orientador para editar su perfil. 
+*/
   verEditar(): void {
     this.isLoading = true;
     if (this.token) {
@@ -141,19 +149,12 @@ export class PerfilOrientadorComponent {
           setTimeout(() => {
             this.perfilorientadorForm.get('estado')?.setValue(this.isActive);
           });
-
-          // Cargar los departamentos y municipios
           this.cargarDepartamentos();
-
           setTimeout(() => {
-            // Establecer el departamento seleccionado
             this.perfilorientadorForm.patchValue({ id_municipio: data.id_departamentos });
 
-            // Cargar los municipios de ese departamento
             this.cargarMunicipios(data.id_departamento);
-
             setTimeout(() => {
-              // Establecer el municipio seleccionado
               this.perfilorientadorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
@@ -167,6 +168,10 @@ export class PerfilOrientadorComponent {
     }
   }
 
+  /*
+  Obtiene la lista de tipos de documentos a través del servicio de autenticación. 
+  Los datos recibidos se almacenan en la propiedad listTipoDocumento.
+*/
   tipoDocumento(): void {
     this.authServices.tipoDocumento().subscribe(
       data => {
@@ -177,7 +182,10 @@ export class PerfilOrientadorComponent {
       }
     )
   }
-  
+
+/*
+  Actualiza la información del orientador utilizando un FormData. 
+*/
   updateOrientador(): void {
     const formData = new FormData();
     let estadoValue: string;
@@ -187,22 +195,10 @@ export class PerfilOrientadorComponent {
       this.submitted = true;
       return
     }
-
-    const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'email', 'password'];
-    for (const key of camposObligatorios) {
-        const control = this.perfilorientadorForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            return;
-        }
-    }
-  
-    // First pass: handle special cases and avoid duplication
     Object.keys(this.perfilorientadorForm.controls).forEach((key) => {
       const control = this.perfilorientadorForm.get(key);
       if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
         if (key === 'password') {
-          // Only include password if it's not empty
           if (control.value.trim() !== '') {
             formData.append(key, control.value);
           }
@@ -219,8 +215,6 @@ export class PerfilOrientadorComponent {
 
       }
     });
-  
-    // Append specific fields (this will overwrite any duplicates from the first pass)
     const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
     specificFields.forEach(field => {
       const value = this.perfilorientadorForm.get(field)?.value;
@@ -228,8 +222,6 @@ export class PerfilOrientadorComponent {
         formData.append(field, value);
       }
     });
-  
-   
     if (this.perfilorientadorForm.get('direccion')?.value) {
       formData.append('direccion', this.perfilorientadorForm.get('direccion')?.value);
     }
@@ -237,8 +229,6 @@ export class PerfilOrientadorComponent {
     if (this.selectedImagen_perfil) {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
-  
-
         this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
           if (result.isConfirmed) {
             this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
@@ -257,9 +247,11 @@ export class PerfilOrientadorComponent {
         });
       }
         
-
-  
-
+/*
+  Registra en la consola los errores de validación de cada control 
+  del formulario perfilorientadorForm. Para cada control que tiene 
+  errores, se imprime el nombre del control y los errores correspondientes.
+*/
     logFormErrors(): void {
       Object.keys(this.perfilorientadorForm.controls).forEach(key => {
         const controlErrors = this.perfilorientadorForm.get(key)?.errors;
@@ -273,6 +265,10 @@ export class PerfilOrientadorComponent {
 
   get f() { return this.perfilorientadorForm.controls; }
 
+  /*
+  Inicializa el estado del formulario deshabilitando ciertos campos 
+  específicos del formulario perfilorientadorForm.
+*/
   initializeFormState(): void {
     const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
     fieldsToDisable.forEach(field => {
@@ -283,7 +279,10 @@ export class PerfilOrientadorComponent {
     });
   }
 
-  //para que no me deje editar el nombre del tipo del documento
+  /*
+  Alterna el estado de bloqueo de los campos de entrada en el formulario 
+  perfilorientadorForm. 
+*/
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
     const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
@@ -300,12 +299,13 @@ export class PerfilOrientadorComponent {
         console.warn(`Control for field ${field} not found in form`);
       }
     });
-  
-    // Force change detection
     this.cdRef.detectChanges();
   
   }
-   //Funcion para cargar los departamentos
+/*
+  Carga la lista de departamentos a través del servicio departamentoService.
+  
+*/
    cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
@@ -317,18 +317,23 @@ export class PerfilOrientadorComponent {
     )
   }
 
+  /*
+      Este método se activa cuando un usuario selecciona un departamento de la lista desplegable. 
+      Finalmente, llama al método `cargarMunicipios(selectedDepartamento)`, que carga los municipios 
+      asociados al departamento seleccionado
+    */
   onDepartamentoSeleccionado(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDepartamento = target.value;
-
-    // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
     this.perfilorientadorForm.get('id_municipio')?.setValue(null);
     this.listMunicipios = [];
-    // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
 
+/*
+      Este método se encarga de obtener una lista de municipios asociados a un departamento específico.
+    */
   cargarMunicipios(departamentoId: string): void {
     this.municipioService.getMunicipios(departamentoId).subscribe(
       (data) => {
@@ -340,7 +345,10 @@ export class PerfilOrientadorComponent {
     );
   }
 
-  
+  /*
+      Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+      eliminando cualquier valor previamente asignado.
+    */ 
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.perfilorientadorForm.patchValue({ imagen_perfil: null });
@@ -348,7 +356,10 @@ export class PerfilOrientadorComponent {
       this.perfilPreview = null;
     }
   }
-
+  /*
+      Este método maneja la selección de archivos desde un input de tipo archivo. 
+      Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+    */
 
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
@@ -357,22 +368,18 @@ export class PerfilOrientadorComponent {
       let maxSize = 0;
   
       if (field === 'imagen_perfil') {
-        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+        maxSize = 5 * 1024 * 1024;
       } 
   
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-  
-        //Limpia el archivo seleccionado y resetea la previsualización
-        event.target.value = ''; // Borra la selección del input
-  
-        // Resetea el campo correspondiente en el formulario y la previsualización
+        event.target.value = ''; 
         if (field === 'imagen_perfil') {
           this.perfilorientadorForm.patchValue({ imagen_perfil: null });
           this.selectedImagen_perfil = null;
-          this.perfilPreview = null; // Resetea la previsualización
+          this.perfilPreview = null; 
         }
         this.resetFileField(field);
         return;
@@ -387,8 +394,6 @@ export class PerfilOrientadorComponent {
       }
     };
     reader.readAsDataURL(file);
-  
-      // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
 
       if (field === 'imagen_perfil') {
@@ -400,7 +405,11 @@ export class PerfilOrientadorComponent {
     this.resetFileField(field);
   }
   }
- 
+
+   /*
+      Este método utiliza `FileReader` para crear una vista previa de la imagen 
+      seleccionada, actualizando la propiedad correspondiente en el componente.
+    */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -411,7 +420,7 @@ export class PerfilOrientadorComponent {
     };
     reader.readAsDataURL(file);
   }
-    /* Restaura los datos originales */
+    // Restaura los datos originales
     onCancel(): void {
       location.reload();
     }
@@ -420,13 +429,19 @@ export class PerfilOrientadorComponent {
     mostrarGuardarCambios(): void {
       this.boton = false;
     }
-  
+   /*
+    Activa el modo de edición para el formulario o inputs.
+  */
     onEdit() {
       this.blockedInputs = false;
       this.showEditButton = true;
       this.toggleInputsLock();
     }
-
+ 
+    /*
+      El método se encarga de obtener una lista de tipos de documentos desde el servicio de autenticación (`authService`) 
+      y almacenarla en la propiedad `listTipoDocumento`. 
+    */
     tipodato(): void {
       if (this.token) {
         this.authServices.tipoDocumento().subscribe(
@@ -439,7 +454,9 @@ export class PerfilOrientadorComponent {
         )
       }
     }
-
+/*
+    Valida que un campo no contenga números.
+  */
     noNumbersValidator(control: AbstractControl): ValidationErrors | null {
       const value = control.value;
       const hasNumbers = /\d/.test(value);
@@ -451,6 +468,9 @@ export class PerfilOrientadorComponent {
       }
     }
 
+/*
+    Valida que un campo no contenga letras.
+  */
     noLettersValidator(control: AbstractControl): ValidationErrors | null {
       const value = control.value;
       const hasLetters = /[a-zA-Z]/.test(value);
@@ -462,12 +482,14 @@ export class PerfilOrientadorComponent {
       }
     }
 
+  /*
+    Valida que la fecha seleccionada no sea anterior a la fecha actual.
+  */
     dateRangeValidator(control: AbstractControl): ValidationErrors | null {
       const value = control.value;
       if (!value) {
-        return null; // Si no hay valor, no se valida
+        return null;
       }
-    
       const selectedDate = new Date(value);
       const today = new Date();
       const hundredYearsAgo = new Date();
@@ -485,7 +507,9 @@ export class PerfilOrientadorComponent {
         return null;
       }
     }
-
+/*
+    Valida que un número de documento tenga una longitud específica.
+  */
     documentoValidator(control: AbstractControl): ValidationErrors | null {
       const value = control.value ? control.value.toString() : '';
       if (value.length < 5 || value.length > 13) {
@@ -494,6 +518,9 @@ export class PerfilOrientadorComponent {
       return null;
     }
 
+  /*
+  Valida el formato del correo electrónico ingresado.
+*/
     emailValidator(control: AbstractControl): ValidationErrors | null {
       const value = control.value;
       const hasAtSymbol = /@/.test(value);
