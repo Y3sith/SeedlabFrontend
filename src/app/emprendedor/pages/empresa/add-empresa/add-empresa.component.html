@@ -186,7 +186,7 @@
                       <div
                         *ngIf="f['telefono'].invalid && (submitted || f['telefono'].dirty || f['telefono'].touched)"
                         class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                        <div *ngIf="f.telefono.errors.maxlength">El número de celular no debe tener más de 10 dígitos*</div>
+                        <div *ngIf="f.telefono.errors.maxlength">El número de telefono no debe tener más de 10 dígitos*</div>
                         <div *ngIf="f.telefono.errors.hasLetters">El número de telefono no puede contener letras*</div>
                       </div>
                     </div>
@@ -446,7 +446,7 @@
                     <input formControlName="celular"
                       class="w-full h-10 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
                       [ngClass]="{'border-red-500': g['celular'].invalid && (g['celular'].dirty || g['celular'].touched)}">
-                    <div *ngIf="f['celular'].invalid && (submitted || g['celular'].dirty || g['celular'].touched)"
+                    <div *ngIf="g['celular'].invalid && (submitted || g['celular'].dirty || g['celular'].touched)"
                       class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                       <div *ngIf="g.celular.errors.required">Este campo es requerido *</div>
                       <div *ngIf="g.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos*
@@ -459,6 +459,13 @@
                     <label for="fijo" class="text-lg font-normal">Telefono:</label>
                     <input formControlName="telefono"
                       class="w-full h-10 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100" />
+                      <div *ngIf="g['telefono'].invalid && (submitted || g['telefono'].dirty || g['telefono'].touched)"
+                      class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
+                      <div *ngIf="g.telefono.errors.required">Este campo es requerido *</div>
+                      <div *ngIf="g.telefono.errors.maxlength">El número de telefono no debe tener más de 10 dígitos*
+                      </div>
+                      <div *ngIf="g.telefono.errors.hasLetters">El número de telefono no puede contener letras*</div>
+                    </div>
                   </div>
 
                   <div class="flex items-center justify-center lg:justify-end"

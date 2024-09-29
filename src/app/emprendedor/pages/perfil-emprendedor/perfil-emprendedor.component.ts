@@ -241,6 +241,15 @@ export class PerfilEmprendedorComponent implements OnInit {
       return;
     }
 
+    const camposObligatoriosApoyo = ['nombre', 'apellido', 'celular', 'direccion'];  ///falta la direccion cuando no esta en perfil
+    for (const key of camposObligatoriosApoyo) {
+        const control = this.emprendedorForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
     // First pass: handle special cases and avoid duplication
     Object.keys(this.emprendedorForm.controls).forEach((key) => {
       const control = this.emprendedorForm.get(key);
