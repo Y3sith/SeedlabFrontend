@@ -142,6 +142,9 @@ export class ModalAliadosComponent {
     this.dialogRef.close();
   }
 
+/*
+  Esta función construye la URL completa de una imagen a partir de una ruta relativa.
+  */
   getCorrectImageUrl(relativePath: string): string {
     if (relativePath.startsWith('http://') || relativePath.startsWith('https://')) {
       return relativePath;

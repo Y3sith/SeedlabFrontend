@@ -43,6 +43,7 @@ export class ListAsesoresComponent implements OnInit {
     this.validateToken();
     this.cargarAsesores();
   }
+  
 /*
     Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
     formulario o cualquier otra parte de la aplicación.
