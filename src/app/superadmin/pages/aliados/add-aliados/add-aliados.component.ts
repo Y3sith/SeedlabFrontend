@@ -90,6 +90,14 @@ export class AddAliadosComponent {
     private location: Location
   ) {
 
+  /*
+    Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
+    de campos relacionados con los datos de un aliado. Se aplican validaciones específicas para garantizar que la entrada 
+    de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
+    de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
+    organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
+    El estado del aliado se inicializa como `true`, indicando que el aliado está activo por defecto.
+  */
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -103,6 +111,14 @@ export class AddAliadosComponent {
 
     });
 
+  /*
+    Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
+    de campos relacionados con los datos de un banner. Se aplican validaciones específicas para garantizar que la entrada 
+    de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
+    de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
+    organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
+    El estado del banner se inicializa como `true`, indicando que el banner está activo por defecto.
+  */
     this.bannerForm = this.formBuilder.group({
       urlImagen: ['', Validators.required],
       estadobanner: [1],
@@ -111,12 +127,16 @@ export class AddAliadosComponent {
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');
   }
 
+  /*
+    Este método se utiliza cuando se desea regresar a la vista anterior sin recargar la página o perder el estado actual.
+  */
   goBack(): void {
     this.location.back();
   }
 
   get f() { return this.aliadoForm.controls; }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.tipoDato();
@@ -127,6 +147,10 @@ export class AddAliadosComponent {
     this.verEditarBanners();
   }
 
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -147,6 +171,9 @@ export class AddAliadosComponent {
     }
   }
 
+  /* 
+  Este metodo lo que hace es abrir un modal para poder editar un banner del aliado
+  */
   openModal(id: number | null, idAliado: string): void {
     let dialogRef: MatDialogRef<AddBannerModalComponent>;
 
@@ -161,6 +188,9 @@ export class AddAliadosComponent {
     });
   }
 
+  /*
+  Este método se utiliza para mostrar u ocultar los botones para cuando esta creado o editando un aliado
+  */
   ocultosBotones(): void {
     if (this.idAliado != null) {
       this.boton = false;
@@ -175,6 +205,9 @@ export class AddAliadosComponent {
     this.fileInputs.nativeElement.click();
   }
 
+  /*
+  Este método se utiliza para eliminar el banner del aliado
+  */
   eliminarBanner(id_aliado: number): void {
     this.alertService.alertaActivarDesactivar('¿Estas seguro de eliminar el banner?, no se mostrara en la pagina principal', 'question').then((result) => {
       if (result.isConfirmed) {
@@ -194,6 +227,9 @@ export class AddAliadosComponent {
     });
   }
 
+  /*
+  Este método se utiliza para mostrar traer los datos de los banners y que los vea el usuario
+  */
   verEditarBanners(): void {
     this.isLoading = true;
     this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
@@ -208,6 +244,9 @@ export class AddAliadosComponent {
     )
   }
 
+  /*
+  Valida si las dimensiones de la imagen están dentro de los límites dados.
+  */
   validateImageDimensions(file: File, minWidth: number, minHeight: number, maxWidth: number, maxHeight: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -227,6 +266,9 @@ export class AddAliadosComponent {
     });
   }
 
+  /*
+  Este método se utiliza para mostrar traer los datos de los aliados y que los vea el usuario 
+  */
   verEditar(): void {
     this.isLoading = true;
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
@@ -255,10 +297,20 @@ export class AddAliadosComponent {
     );
   }
 
+  /*
+  Este método se utiliza para hacer el contador de caracteres de la descripcion del aliado
+  */
   updateCharCount(): void {
     const descripcionValue = this.aliadoForm.get('descripcion')?.value || '';
     this.charCount = descripcionValue.length;
   }
+
+  /*
+    Este método gestiona la creación o actualización de un aliado mediante la recolección de datos desde un formulario reactivo (`aliadoForm`) 
+    y la validación de la información ingresada. El método determina si se está editando un aliado existente o creando uno nuevo. 
+    En el caso de una actualización, se solicita confirmación al usuario antes de realizar la actualización mediante el servicio `aliadoService`. 
+    Si se trata de una creación de aliado, se realiza la llamada al servicio correspondiente, mostrando alertas de éxito o error según sea necesario.
+  */
   addAliado(): void {
     if (this.idAliado == null) {
       if (this.aliadoForm.invalid || this.bannerForm.invalid) {
@@ -275,6 +327,14 @@ export class AddAliadosComponent {
       }
     }
 
+    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina', 'celular','password','email' ];
+    for (const key of camposObligatorios) {
+        const control = this.aliadoForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
 
     const formData = new FormData();
     let estadoValue: boolean;
@@ -366,12 +426,16 @@ if (nombreAliado){
     this.isActive = !this.isActive;
     this.aliadoForm.patchValue({ estado: this.isActive ? true : false });
   }
+
   /* Muestra el toggle del estado dependiendo del asesorId que no sea nulo*/
   mostrarToggle(): void {
     this.boton = this.idAliado != null;
   }
 
-
+  /*
+    El método se encarga de obtener una lista de tipos de datos de multimedia desde el servicio de autenticación (`authService`) 
+    y almacenarla en la propiedad `tipoDeDato`. 
+  */
   tipoDato(): void {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
@@ -386,6 +450,9 @@ if (nombreAliado){
     }
   }
 
+  /*
+    El método se encarga de dependiendo del dato multimedia seleccioando aparezca en el selec con el input dispuesto completar
+  */
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
     this.aliadoForm.get('ruta_multi').clearValidators();
@@ -405,7 +472,10 @@ if (nombreAliado){
     this.aliadoForm.get('fuente').updateValueAndValidity();
   }
 
-
+  /*
+    Este método maneja la selección de archivos desde un input de tipo archivo. 
+    Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -448,6 +518,12 @@ if (nombreAliado){
     }
   }
   
+  /* 
+  Procesa un archivo seleccionado (imagen o logo) y actualiza los campos correspondientes en el formulario. 
+  Utiliza FileReader para convertir el archivo a un formato de URL y asigna esta URL al campo adecuado 
+  ('urlImagen', 'logo', 'ruta_multi'). También genera una previsualización del archivo si es necesario y actualiza 
+  el archivo seleccionado en las variables correspondientes según el campo ('selectedBanner', 'selectedLogo', etc.).
+  */
   private processFile(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -504,6 +580,10 @@ if (nombreAliado){
     }
   }
 
+  /*
+    Este método utiliza `FileReader` para crear una vista previa de la imagen 
+    seleccionada, actualizando la propiedad correspondiente en el componente.
+  */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -519,7 +599,11 @@ if (nombreAliado){
     reader.readAsDataURL(file);
   }
 
-
+  /*
+    Este método recorre los controles del formulario y recopila los errores 
+    de validación, devolviendo un objeto que contiene los campos con errores para su posible 
+    visualización.
+  */
   getFormValidationErrors(form: FormGroup) {
     const result: any = {};
     Object.keys(form.controls).forEach(key => {
@@ -531,10 +615,17 @@ if (nombreAliado){
     return result;
   }
 
+  /* 
+  Alterna la visibilidad de la contraseña en un campo, mostrando u ocultando el texto según el valor de `passwordVisible`.
+  */
   togglePasswordVisibility() {
     this.passwordVisible = !this.passwordVisible;
   }
 
+  /* 
+  Obtiene las dimensiones (ancho y alto) de una imagen proporcionada como archivo. 
+  Crea una promesa que se resuelve con las dimensiones cuando la imagen se carga.
+  */
   private getDimensiones(file: File): Promise<{ width: number, height: number }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -546,11 +637,18 @@ if (nombreAliado){
     });
   }
 
+  /* 
+  Verifica si un campo específico del formulario es inválido y si ha sido tocado o modificado, 
+  lo que ayuda a gestionar la validación visual en el formulario.
+  */
   isFieldInvalid(fieldName: string): boolean {
     const field = this.aliadoForm.get(fieldName);
     return field && field.invalid && (field.dirty || field.touched);
   }
 
+  /*
+  funcion para cuando se esta editando el aliado cancelar los cambios realizados antes de dar click en el boton guardar
+  */
   cancel(): void {
     this.verEditar();
   }
