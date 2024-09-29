@@ -78,13 +78,16 @@ export class PersonalizacionesComponent implements OnInit {
     })
   }
 
-
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
   }
 
 
-
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
@@ -105,21 +108,32 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
+  /*
+  Navega hacia atrás en el historial de la aplicación usando el servicio Location.
+  */
   goBack() {
     this.location.back();
   }
 
+  /*
+  Actualiza el color principal seleccionado en el formulario de personalización cuando el usuario cambia el color.
+  */
   onColorChangePrincipal(color: string): void {
     this.selectedColorPrincipal = color;
     this.personalizacionForm.get('color_principal')?.setValue(color, { emitEvent: false });
   }
 
+  /*
+  Similar a la función anterior, actualiza el color secundario en el formulario de personalización cuando el usuario cambia el color.
+  */
   onColorChangeSecundario(color: string): void {
     this.selectedColorSecundario = color;
     this.personalizacionForm.get('color_secundario')?.setValue(color, { emitEvent: false });
   }
 
-
+/*
+Maneja la selección de un archivo (como una imagen) desde un input tipo file, asigna el archivo seleccionado y genera una vista previa de la imagen.
+*/
   onFileSelecteds(event: any, type: string) {
     const file = event.target.files[0];
     if (file) {
@@ -134,7 +148,9 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
-
+/*
+Genera una vista previa de una imagen seleccionada (archivo) y la muestra en el campo adecuado, como el logo o imagen de personalización.
+*/
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -146,6 +162,9 @@ export class PersonalizacionesComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  /*
+  Resetea un campo de archivo en el formulario, eliminando tanto la imagen seleccionada como la vista previa correspondiente.
+  */
   resetFileField(field: string) {
     if (field === 'imagen') {
       this.personalizacionForm.patchValue({ imagen_logo: null });
@@ -154,6 +173,9 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
+/*
+Procesa el cambio del logo en el pie de página (footer), genera una vista previa del logo y guarda la imagen en el formulario en formato base64.
+*/
   onFooterChangeLogo(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
@@ -169,6 +191,9 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
+  /*
+  Valida si el valor de un campo específico excede un número máximo de caracteres y muestra un mensaje de error si no cumple.
+  */
   validateMaxLength(field: string, maxLength: number, errorMessage: string): boolean {
     const fieldValue = this.personalizacionForm.get(field)?.value;
     if (fieldValue && fieldValue.length > maxLength) {
@@ -178,11 +203,19 @@ export class PersonalizacionesComponent implements OnInit {
     return true;
   }
 
+  /*
+   Actualiza el contador de caracteres del campo de descripción del footer a medida que el usuario escribe.
+  */
   updateCharCount(): void {
     const descripcionValue = this.personalizacionForm.get('descripcion_footer')?.value || '';
     this.charCount = descripcionValue.length;
   }
-  // metodo agregar personalizacion
+
+  /*
+  Realiza las validaciones necesarias para agregar una personalización. Si las validaciones son exitosas,
+   envía los datos del formulario al backend para crear una nueva personalización. Si hay errores, 
+   los muestra y detiene el proceso.
+  */
   addPersonalizacion(): void {
     try {
       // Verificar si los campos de la segunda sección son válidos
@@ -265,8 +298,9 @@ export class PersonalizacionesComponent implements OnInit {
     }
   }
 
-
-
+/*
+Restaura una personalización previamente guardada, eliminando la anterior y recargando la página.
+*/
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
@@ -284,6 +318,9 @@ export class PersonalizacionesComponent implements OnInit {
     );
   }
 
+  /*
+  Recorre el formulario, detecta los errores en cada campo y los muestra en la consola.
+  */
   logFormErrors(): void {
     Object.keys(this.personalizacionForm.controls).forEach(key => {
       const controlErrors = this.personalizacionForm.get(key)?.errors;
@@ -293,6 +330,9 @@ export class PersonalizacionesComponent implements OnInit {
     });
   }
 
+  /*
+  Controla el avance a la siguiente sección/subsección del formulario de personalización, verificando que la sección actual sea válida antes de avanzar.
+  */
   next() {
     const form = this.personalizacionForm;
     let sectionIsValid = true;
@@ -338,18 +378,25 @@ export class PersonalizacionesComponent implements OnInit {
     this.clearErrorMessage();
   }
 
-  // Función auxiliar para mostrar mensajes de error
+/*
+Muestra un mensaje de error en la interfaz y en la consola.
+*/
   private showErrorMessage(message: string) {
     console.error(message);
     this.alertService.errorAlert('Error', message);
     this.errorMessage = message;
   }
 
-  // Función auxiliar para limpiar el mensaje de error
+  /*
+  Limpia cualquier mensaje de error que esté siendo mostrado.
+  */
   private clearErrorMessage() {
     this.errorMessage = '';
   }
 
+  /*
+  Controla el retroceso entre las secciones/subsecciones del formulario de personalización, permitiendo que el usuario navegue hacia la sección anterior.
+  */
   previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;

@@ -83,9 +83,8 @@ export class ModalCrearOrientadorComponent implements OnInit {
     private route: ActivatedRoute,
     private location:Location
   ) {
-    //this.orientadorId = data.orientadorId;
   }
-
+   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.route.paramMap.subscribe(params => {
@@ -102,7 +101,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
     if (this.orientadorId != null) {
       this.isEditing = true;
       this.orientadorForm.get('password')?.setValidators([Validators.minLength(8)]);
-      //this.verEditar(); // Llama a verEditar si estás editando un orientador
     } else {
       this.orientadorForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     }
@@ -111,10 +109,10 @@ export class ModalCrearOrientadorComponent implements OnInit {
     this.cargarDepartamentos();
 
   }
-
+  /*getter que facilita el acceso a los controles del formulario reactivo*/
   get f() { return this.orientadorForm.controls; } //aquii
 
-
+  /*Verifica si hay un token almacenado localmente. Si no lo encuentra, redirige al usuario a la página de inicio de sesión.*/
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
@@ -123,7 +121,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
-
+  /* Hace una petición al servicio authService para obtener los tipos de documentos disponibles y almacenarlos en la lista listTipoDocumento.*/
   tipoDocumento(): void {
     if (this.token) {
       this.authService.tipoDocumento().subscribe(
@@ -136,11 +134,11 @@ export class ModalCrearOrientadorComponent implements OnInit {
       )
     }
   }
-
+  /*Navega a la página anterior en el historial del navegador.*/
   goBack(): void {
     this.location.back();
   }
-
+  /*Carga la lista de departamentos desde el servicio correspondiente y la almacena en la lista listDepartamentos.*/
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
@@ -151,7 +149,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       }
     );
   }
-
+  /* Se ejecuta cuando el usuario selecciona un departamento. Guarda la selección en localStorage y llama a cargarMunicipios para obtener los municipios del departamento seleccionado.*/
   onDepartamentoSeleccionado(event: Event): void {
     const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
     const selectedDepartamento = target.value;
@@ -162,7 +160,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
-
+  /*Carga los municipios asociados al departamento seleccionado desde el servicio correspondiente y los almacena en la lista listMunicipios.*/
   cargarMunicipios(idDepartamento: string): void {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       data => {
@@ -173,7 +171,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       }
     );
   }
-
+  /* Es un validador personalizado para verificar si una contraseña contiene al menos una letra mayúscula y un carácter especial.*/
   passwordValidator(control: AbstractControl) {
     const value = control.value;
     const hasUpperCase = /[A-Z]+/.test(value);
@@ -185,7 +183,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
     }
   }
-
+  /*Carga los datos de un orientador específico si se está en modo de edición. Pone los valores en el formulario y ajusta la visualización de los campos de departamento y municipio.*/
   verEditar(): void {
     this.isLoading = true;
     if (this.idOrientador != null) {
@@ -233,9 +231,9 @@ export class ModalCrearOrientadorComponent implements OnInit {
       )
     }
   }
-
+  /*Valida el formulario, construye los datos para crear o actualizar un orientador, y luego envía estos datos al servicio correspondiente.
+  Realiza validaciones adicionales, como la edad y la fuerza de la contraseña.*/
   addOrientador(): void {
-    // Mark all form controls as touched to trigger validation
     Object.values(this.orientadorForm.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -245,7 +243,6 @@ export class ModalCrearOrientadorComponent implements OnInit {
       const control = this.orientadorForm.get(key);
       if (control.invalid && control.errors && key !== 'direccion' && 
           !(key === 'password' && this.idOrientador && !control.value)) {
-        // Add specific error messages here if needed
       }
     });
     if (errorMessage !== 'Por favor, complete correctamente el formulario') {
@@ -382,18 +379,19 @@ export class ModalCrearOrientadorComponent implements OnInit {
       );
     }
   }
-
+  /*Alterna el estado activo o inactivo del orientador, actualizando el formulario con el valor correspondiente.*/
   toggleActive() {
     this.isActive = !this.isActive;
     this.orientadorForm.patchValue({ estado: this.isActive ? true : false });
   }
+  /*Muestra u oculta un botón dependiendo de si se ha seleccionado un orientador para editar.*/
   mostrarToggle(): void {
     if (this.orientadorId != null) {
       this.boton = false;
     }
     this.boton = true;
   }
-
+  /*Maneja la selección de un archivo para subir, validando su tamaño y actualizando el formulario con el archivo seleccionado. Si el archivo es demasiado grande, se resetea el campo.*/
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -443,12 +441,18 @@ export class ModalCrearOrientadorComponent implements OnInit {
       this.resetFileField(field);
     }
   }
+  /*Esta función se encarga de restablecer el campo de imagen en un formulario. Si el campo es 'imagen_perfil',
+  elimina el valor actual del formulario (patchValue) y también elimina la vista previa de la imagen.*/
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.orientadorForm.patchValue({ imagen_perfil: null });
       this.imagenPerlil_Preview = null;
     }
   }
+  /*Genera una vista previa de la imagen seleccionada utilizando un FileReader. Si el campo es 'imagen_perfil',
+  se asigna el resultado de la lectura (la imagen convertida a base64)
+  a una variable que contiene la vista previa.
+  Luego, se actualiza la interfaz del componente con detectChanges()*/
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -459,7 +463,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
+  /* Esta función recorre los controles de un formulario y devuelve un objeto con los errores de validación encontrados en cada uno de los campos que contengan errores.*/
   getFormValidationErrors(form: FormGroup) {
     const result: any = {};
     Object.keys(form.controls).forEach(key => {
@@ -472,7 +476,10 @@ export class ModalCrearOrientadorComponent implements OnInit {
   }
 
  
-
+  /*Controla el flujo de navegación entre secciones del formulario.
+  Verifica si todos los campos de la sección actual son válidos antes de avanzar a la siguiente.
+  Tiene validaciones especiales para el correo electrónico y la fecha de nacimiento.
+  Si la sección es válida, avanza a la siguiente sección o subsección; si no lo es, muestra un mensaje de error.*/
   next() {
     const form = this.orientadorForm;
     let sectionIsValid = true;
@@ -514,7 +521,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
         }
       }
     }
-  
+    /* Muestra un mensaje de error usando un servicio de alertas y lo almacena en una variable para su visualización en la interfaz.*/
     if (!sectionIsValid) {
       this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
       return;
@@ -545,6 +552,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   private clearErrorMessage() {
     this.errorMessage = '';
   }
+  /*Controla la navegación hacia la sección o subsección anterior del formulario, retrocediendo en el flujo de las secciones/subsecciones.*/
  previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;
@@ -556,7 +564,9 @@ export class ModalCrearOrientadorComponent implements OnInit {
     }
 
   }
-
+  /*Es un validador personalizado para verificar que la fecha ingresada sea válida.
+  Asegura que la fecha no sea futura, que no sea demasiado antigua (más de 100 años), y que la persona tenga al menos 18 años.
+  Si la fecha no es válida, devuelve un error específico, de lo contrario, devuelve null.*/
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {

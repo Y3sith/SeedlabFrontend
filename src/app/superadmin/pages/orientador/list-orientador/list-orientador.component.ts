@@ -47,13 +47,13 @@ export class ListOrientadorComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
   ) { }
-
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.cargarOrientador(1);
     this.nose();
   }
-
+   /*Verifica si hay un token almacenado localmente. Si no lo encuentra, redirige al usuario a la página de inicio de sesión.*/
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
@@ -71,7 +71,9 @@ export class ListOrientadorComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
-
+  /*Esta función carga la lista de orientadores basándose en un estado (activo o inactivo).
+  Se muestra un indicador de carga (isLoading) mientras se realiza la solicitud.
+  Si hay un token presente, se llama al servicio mostrarOrientador, que obtiene los orientadores y los asigna a listaOrientador. */
   cargarOrientador(estado: number): void {
     this.isLoading = true; // Set isLoading to true when starting to load
     if (this.token) {
@@ -87,7 +89,7 @@ export class ListOrientadorComponent implements OnInit {
       );
     }
   }
-
+  /*Se activa al cambiar el estado en la interfaz de usuario. Dependiendo del valor del estado (Activo o Inactivo), se llama a cargarOrientador con el correspondiente valor numérico (1 o 0).*/
   onEstadoChange(event: any): void {
     const estado = event.target.value;
     this.isLoading = true; // Set isLoading to true when starting to change state
@@ -97,12 +99,12 @@ export class ListOrientadorComponent implements OnInit {
       this.cargarOrientador(0);
     }
   }
-
+  /*Restablece los filtros de búsqueda a sus valores predeterminados (nombre vacío y estado de usuario a 'Activo') y vuelve a cargar la lista de orientadores con el estado activo.*/
   limpiarFiltro(): void {
     this.userFilter = { nombre: '', estado_usuario: 'Activo' };
     this.cargarOrientador(1);
   }
-
+  /*Abre un modal para crear o editar un orientador. Se pasa el orientadorId al componente del modal y se subscriben a los eventos de cierre del modal para manejar el resultado, si es necesario.*/
   openModal(orientadorId: number | null): void {
     let dialogRef: MatDialogRef<ModalCrearOrientadorComponent>;
     dialogRef = this.dialog.open(ModalCrearOrientadorComponent, {
@@ -112,11 +114,11 @@ export class ListOrientadorComponent implements OnInit {
       // Handle the result if needed
     });
   }
-
+ /*Llama a openModal pero sin un orientadorId, lo que indica que se abrirá un modal para crear un nuevo orientador.*/
   openModalSINId(): void {
     this.openModal(null);
   }
-
+  /*Filtra la lista de orientadores en base al nombre, apellido, celular o correo electrónico, utilizando los criterios de búsqueda definidos en userFilter. Devuelve una lista filtrada.*/
   buscarOrientadores(): Orientador[] {
     return this.listaOrientador.filter(orientador =>
       orientador.nombre.toLowerCase().includes(this.userFilter.nombre.toLowerCase()) ||
@@ -125,26 +127,26 @@ export class ListOrientadorComponent implements OnInit {
       orientador.email.toLowerCase().includes(this.userFilter.nombre.toLowerCase())
     );
   }
-
+  /*Establece la variable boton a true.*/
   nose(): void {
     this.boton = true;
   }
 
-  // Pagination logic
+  /*Calcula y devuelve un arreglo con el número total de páginas necesarias para la paginación, basado en la cantidad total de orientadores filtrados y el número de elementos por página (itemsPerPage).*/
   getPages(): number[] {
     const totalItems = this.buscarOrientadores().length;
     const totalPages = Math.ceil(totalItems / this.itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-
+  /*Verifica si es posible navegar a la página anterior en la paginación (es decir, si la página actual es mayor que 1).*/
   canGoPrevious(): boolean {
     return this.page > 1;
   }
-
+  /*Verifica si es posible avanzar a la siguiente página en la paginación (es decir, si la página actual es menor que el número total de páginas).*/
   canGoNext(): boolean {
     return this.page < this.getPages().length;
   }
-
+  /*Cambia la página actual hacia adelante o hacia atrás, o establece una página específica. Comprueba las condiciones de navegación antes de cambiar.*/
   changePage(direction: 'previous' | 'next' | number): void {
     if (direction === 'previous' && this.canGoPrevious()) {
       this.page--;
@@ -154,11 +156,12 @@ export class ListOrientadorComponent implements OnInit {
       this.page = direction;
     }
   }
-
+  /*Reinicia la página actual a 1 cuando se realiza una búsqueda o un cambio en los filtros, asegurando que los resultados comiencen desde la primera página.*/
   updatePaginatedOrientador(): void {
     this.page = 1; // Reset to first page on search or filter change
   }
-
+  /*Devuelve una lista paginada de orientadores, calculando el índice de inicio y final basado en la página actual y el número de elementos por página.
+  Utiliza la función buscarOrientadores para obtener la lista filtrada y luego la segmenta según la paginación.*/
   getPaginatedOrientadores(): Orientador[] {
     const startIndex = (this.page - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
