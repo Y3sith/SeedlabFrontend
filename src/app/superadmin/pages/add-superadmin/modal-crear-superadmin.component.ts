@@ -45,7 +45,14 @@ export class ModalCrearSuperadminComponent implements OnInit {
   isLoading: boolean = false;
 
 
-
+/*
+  Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
+  de campos relacionados con los datos de un super Admin. Se aplican validaciones específicas para garantizar que la entrada 
+  de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
+  de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
+  organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
+  El estado del super Admin se inicializa como `true`, indicando que el super Admin está activo por defecto.
+*/
   superadminForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
@@ -81,11 +88,12 @@ export class ModalCrearSuperadminComponent implements OnInit {
     private location:Location
   ) {}
 
+  /*
+    Este método se utiliza cuando se desea regresar a la vista anterior sin recargar la página o perder el estado actual.
+  */
   goBack() {
     this.location.back();
   }
-
-
 
   /* Inicializa con esas funciones al cargar la pagina, 
   con los validator verificando cuando es editando y cuando es creando para que no salga error el campo vacio */
@@ -116,7 +124,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
 
   get f() { return this.superadminForm.controls; } /* Validaciones */
 
-  /* Valida el token del login */
+  /*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
@@ -126,6 +137,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
+  /*
+    El método se encarga de obtener una lista de tipos de documentos desde el servicio de autenticación (`authService`) 
+    y almacenarla en la propiedad `listTipoDocumento`. 
+  */
   tipoDocumento(): void {
     this.authService.tipoDocumento().subscribe(
       data => {
@@ -137,6 +152,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     )
   }
 
+  /*
+      Este método solicita una lista de departamentos a través del servicio `departamentoService` 
+      y la asigna a la propiedad `listDepartamentos`.
+  */
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
@@ -148,6 +167,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
     );
   }
 
+   /*
+    Este método se activa cuando un usuario selecciona un departamento de la lista desplegable. 
+    Finalmente, llama al método `cargarMunicipios(selectedDepartamento)`, que carga los municipios 
+    asociados al departamento seleccionado
+  */
   onDepartamentoSeleccionado(event: Event): void {
     const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
     const selectedDepartamento = target.value;
@@ -159,6 +183,9 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.cargarMunicipios(selectedDepartamento);
   }
 
+  /*
+    Este método se encarga de obtener una lista de municipios asociados a un departamento específico.
+  */
   cargarMunicipios(idDepartamento: string): void {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       (data) => {
@@ -170,7 +197,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     );
   }
 
-  /* Validaciones la contraseña */
+  /*
+    Este método es una función de validación personalizada 
+    que verifica la fortaleza de una contraseña ingresada en un control de formulario.
+  */
   passwordValidator(control: AbstractControl) {
     const value = control.value;
     const hasUpperCase = /[A-Z]+/.test(value);
@@ -183,7 +213,9 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
-  /* Trae la informacion del admin cuando el adminId no sea nulo */
+   /*
+    Este método se encarga de cargar y mostrar la información de un asesor en un formulario para su edición. 
+  */
   verEditar(): void {
     this.isLoading = true;
     if (this.idSuperAdmin != null) {
@@ -234,9 +266,13 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
-
+  /*
+    Este método gestiona la creación o actualización de un super Admin mediante la recolección de datos desde un formulario reactivo (`superadminForm`) 
+    y la validación de la información ingresada. El método determina si se está editando un super Admin existente o creando uno nuevo. 
+    En el caso de una actualización, se solicita confirmación al usuario antes de realizar la actualización mediante el servicio `superadminService`. 
+    Si se trata de una creación de super Admin, se realiza la llamada al servicio correspondiente, mostrando alertas de éxito o error según sea necesario.
+  */
   addSuperadmin(): void {
-    // Mark all form controls as touched to trigger validation
     Object.values(this.superadminForm.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -246,7 +282,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
       const control = this.superadminForm.get(key);
       if (control.invalid && control.errors && key !== 'direccion' && 
           !(key === 'password' && this.idSuperAdmin && !control.value)) {
-        // Add specific error messages here if needed
       }
     });
     if (errorMessage !== 'Por favor, complete correctamente el formulario') {
@@ -286,7 +321,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
       return;
     }
   
-    // El resto de tu código existente
     const formData = new FormData();
     let estadoValue: string;
     if (this.idSuperAdmin == null) {
@@ -308,7 +342,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     formData.append('municipio', this.superadminForm.get('id_municipio')?.value);
     formData.append('email', this.superadminForm.get('email')?.value);
 
-    // Agregamos la contraseña solo si tiene un valor o si es un nuevo superadmin
     const passwordControl = this.superadminForm.get('password');
     if (passwordControl && (passwordControl.value || !this.idSuperAdmin)) {
       if (passwordControl.valid) {
@@ -382,13 +415,17 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
-  /* Cambia el estado del toggle*/
+  /*
+      Este método es útil para gestionar la activación/desactivación de un super Admin en la interfaz de usuario.
+  */
   toggleActive() {
     this.isActive = !this.isActive;
     this.superadminForm.patchValue({ estado: this.isActive ? true : false });
   }
 
-  /* Muestra el toggle del estado dependiendo del adminId que no sea nulo*/
+  /*
+   Este método gestiona la visibilidad de un botón en la interfaz de usuario. 
+  */
   mostrarToggle(): void {
     if (this.adminId != null) {
       this.boton = false;
@@ -396,6 +433,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.boton = true;
   }
 
+  /*
+    Este método maneja la selección de archivos desde un input de tipo archivo. 
+    Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -448,6 +489,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
+  /*
+    Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+    eliminando cualquier valor previamente asignado.
+  */
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.superadminForm.patchValue({ imagen_perfil: null });
@@ -455,6 +500,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
+   /*
+    Este método utiliza `FileReader` para crear una vista previa de la imagen 
+    seleccionada, actualizando la propiedad correspondiente en el componente.
+  */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -466,6 +515,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  /*
+    Este método es responsable de validar los campos del formulario de un componente 
+    y gestionar la navegación entre diferentes secciones del formulario.
+  */
   next() {
     const form = this.superadminForm;
     let sectionIsValid = true;
@@ -539,6 +592,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     this.errorMessage = '';
   }
 
+  /*
+    Este método  es responsable de gestionar la navegación hacia atrás 
+    entre diferentes secciones y sub-secciones del formulario.
+  */
   previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;
@@ -550,6 +607,11 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
+  /*
+    Este método es un validador personalizado que se utiliza 
+    para verificar la validez de una fecha seleccionada en relación con las 
+    restricciones de edad.
+  */
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {

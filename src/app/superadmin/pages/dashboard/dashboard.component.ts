@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
     private empresaService: EmpresaService,
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     const currentYear = new Date().getFullYear();
@@ -61,6 +62,10 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
