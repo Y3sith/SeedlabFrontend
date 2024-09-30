@@ -110,7 +110,7 @@ export class LoginComponent implements OnInit {
                     localStorage.setItem('currentRolName', this.getRoleName(Number(this.reply.user.id_rol)));
                     this.token = this.reply.access_token;
                     if (this.reply.user.emprendedor) {
-                        localStorage.setItem('documento', this.reply.user.emprendedor.documento);
+                        localStorage.setItem('documento',  this.reply.user.emprendedor.documento.toString());
                     }
                     this.alertService.successAlert('Exito', 'Inicio de sesión exitoso');
                     setTimeout(() => {

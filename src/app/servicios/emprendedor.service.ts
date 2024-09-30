@@ -35,19 +35,19 @@ export class EmprendedorService {
   }
 
   /* Actualiza la información de un emprendedor */
-  updateEmprendedor(access_token: any, formData: FormData, documento: string): Observable<any> {
+  updateEmprendedor(access_token: any, formData: FormData, documento: number): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
     return this.http.post(this.url + "/editarEmprededor/" + documento, formData, options);
   }
 
   /* Obtiene la información del perfil de un emprendedor específico */
-  getInfoEmprendedor(access_token: any, documento: string): Observable<any> {
+  getInfoEmprendedor(access_token: any, documento: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(`${this.url}/userProfileEmprendedor/${documento}`, options);
   }
 
   /* Elimina un emprendedor del sistema */
-  destroy(access_token: any, documento: string): Observable<any> {  
+  destroy(access_token: any, documento: number): Observable<any> {  
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.delete(this.url + "/emprendedor/" + documento, options);
   }

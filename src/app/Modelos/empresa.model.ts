@@ -15,10 +15,10 @@ export class Empresa {
     profesion: string | null | undefined;
     experiencia: string | null | undefined;
     funciones: string | null | undefined;
-    id_tipo_documento:string;
-    id_departamento:string;
-    id_municipio:string;
-    id_emprendedor: string;
+    id_tipo_documento:number;
+    id_departamento:number;
+    id_municipio:number;
+    id_emprendedor: number;
     constructor(
         id:number,
         nombre: string ,
@@ -33,10 +33,10 @@ export class Empresa {
         profesion: string | null | undefined,
         experiencia: string | null | undefined,
         funciones: string | null | undefined,
-        id_tipo_documento:string,
-        id_departamento:string,
-        id_municipio:string,
-        id_emprendedor: string,     
+        id_tipo_documento:number,
+        id_departamento:number,
+        id_municipio:number,
+        id_emprendedor: number,     
     ){      this.id = id;
             this.nombre = nombre;
             this.documento = documento;
