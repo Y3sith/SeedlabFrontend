@@ -242,6 +242,7 @@ export class EncuestaEmpresaComponent {
 */
   goBack(): void {
     this.location.back();
+    this.alertService.successAlert('Info', 'Se guardaran las secciones que esten completas por 5 días, despues sera borrado');
   }
 
 /*
@@ -647,11 +648,6 @@ export class EncuestaEmpresaComponent {
     if (this.respuesta54.opcion === 'Si') {
       this.respuesta55.valor = valorRespuesta26[this.respuesta55.opcion];
       this.listaRespuestas2.push(this.respuesta55);//32
-    }else{
-      this.respuesta55.texto_res = 'N/A';
-      this.respuesta55.id_pregunta = 26;
-      this.respuesta55.id_subpregunta = 33;
-      this.listaRespuestas2.push(this.respuesta55);
     }
     //pregunta27
     this.respuesta56.opcion === 'Si' ? this.respuesta56.valor = 2.5 : 0;
@@ -763,7 +759,6 @@ export class EncuestaEmpresaComponent {
         } else if (this.listaRespuestas2[respCounter].opcion === 'No') {
           i += 1;
           respCounter += 1;
-
         } else if (this.listaRespuestas2[respCounter].opcion === 'Si') {
           respCounter++;
           continue;
@@ -780,6 +775,7 @@ export class EncuestaEmpresaComponent {
         respCounter++;
         continue;
       }
+
 
 
       if (currentPregunta.id === 27) {
@@ -827,6 +823,7 @@ export class EncuestaEmpresaComponent {
       if (!isValidForm) {
         return false;
       }
+      console.log(this.listaRespuestas2);
     }
     this.next();
     this.saveSection(2, this.listaRespuestas2);

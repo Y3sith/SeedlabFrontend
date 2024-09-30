@@ -34,6 +34,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
   direccion: string;
   ubicacion: string;
   id: number = 1;
+  isLoaded = false;
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -45,6 +46,9 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   /* Inicializa con esas funciones al cargar la página */
   ngOnInit(): void {
+    setTimeout(() => {
+      this.isLoaded = true; // Cambiar el estado a cargado
+    }, 1000);
     this.isLoggedIn = this.authService.isAuthenticated();
     this.mostrarBanners();
     this.getPersonalizacion();
