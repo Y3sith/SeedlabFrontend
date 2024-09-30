@@ -18,6 +18,10 @@ export class HeaderComponent implements AfterViewInit {
     private personalizacionService: SuperadminService
   ) {}
 
+/*
+  Inicializa el gráfico después de que la vista se ha inicializado.
+  Se llama a la función para configurar el gráfico.
+*/
   ngAfterViewInit() {
     this.personalizacionService.getPersonalizacion(this.id).subscribe(
       data => {

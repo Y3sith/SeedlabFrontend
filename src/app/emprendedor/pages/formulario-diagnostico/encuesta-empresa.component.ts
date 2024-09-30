@@ -1,22 +1,17 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
 import { fa1, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-
 import { PREGUNTAS } from './preguntas.component';
-
 import { AlertService } from '../../../servicios/alert.service';
 import { RespuestasService } from '../../../servicios/respuestas.service';
-
 import { Preguntas } from '../../../Modelos/preguntas.model';
 import { Respuesta } from '../../../Modelos/respuesta.model';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import { PuntajesService } from '../../../servicios/puntajes.service';
 import { Location } from '@angular/common';
-
 
 @Component({
   selector: 'app-encuesta-empresa',
@@ -210,7 +205,7 @@ export class EncuestaEmpresaComponent {
   ) { }
 
 
-
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.updateProgress();
     this.validateToken();
@@ -220,6 +215,7 @@ export class EncuestaEmpresaComponent {
     this.cargarRespuestasCache();
   }
 
+  /* Valida el token del login */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
@@ -241,11 +237,17 @@ export class EncuestaEmpresaComponent {
     }
   }
 
+/*
+  Regresa a la ubicación anterior en el historial de navegación.
+*/
   goBack(): void {
     this.location.back();
   }
 
-
+/*
+  Valida y procesa las respuestas de la sección 1 del formulario. 
+  Asigna valores a las respuestas, acumula puntajes y verifica la validez del formulario.
+*/
   onSubmitSeccion1(): boolean {
 
     this.id_empresa;
@@ -1346,7 +1348,6 @@ export class EncuestaEmpresaComponent {
       if (!isValidForm) {
         return false;
       }
-
     }
     if (isValidForm) {
       if (!this.isSectionSaved[5]) {
@@ -1362,10 +1363,13 @@ export class EncuestaEmpresaComponent {
     return isValidForm;
   }
 
+/*
+  Valida y envía las respuestas del formulario. 
+  Si hay errores, muestra una alerta; de lo contrario, recupera las respuestas almacenadas, 
+  envía los datos al servidor y guarda los puntajes correspondientes.
+*/
   enviarRespuestasJson() {
     let isFormValid = true;
-
-    //Validar cada sección antes de finalizar
     if (!this.onSubmitSeccion1()) {
       isFormValid = false;
     }
@@ -1381,8 +1385,6 @@ export class EncuestaEmpresaComponent {
     if (!this.onSubmitSeccion5()) {
       isFormValid = false;
     }
-
-    // Si alguna sección no es válida, se detiene el flujo y no se envian las respuestas
     if (!isFormValid) {
       this.alertService.errorAlert('Error', 'El formulario contiene errores y no puede ser enviado.');
       return;
@@ -1390,8 +1392,6 @@ export class EncuestaEmpresaComponent {
     this.respuestasService.getAnwerRedis(this.token, this.id_empresa).subscribe(
       (redisData: any) => {
         let totalRespuestas = [];
-
-        // Combinar respuestas de Redis
         if (redisData.seccion1) {
           totalRespuestas = totalRespuestas.concat(redisData.seccion1);
         }
@@ -1448,6 +1448,10 @@ export class EncuestaEmpresaComponent {
     );
   }
 
+/*
+  Guarda las respuestas de una sección si no se han guardado previamente. 
+  Actualiza el estado de la sección como guardada tras una respuesta exitosa.
+*/
   saveSection(sectionId: number, respuestas: any[]): void {
     if (this.isSectionSaved[sectionId]) {
       return;
@@ -1463,6 +1467,10 @@ export class EncuestaEmpresaComponent {
     );
   }
 
+/*
+  Carga las respuestas desde la caché y las asigna al formulario. 
+  Maneja errores en la consulta de datos.
+*/
   cargarRespuestasCache() {
     this.respuestasService.getAnwerRedis(this.token, this.id_empresa).subscribe(
       data => {
@@ -1632,12 +1640,13 @@ export class EncuestaEmpresaComponent {
 
 
 
-
+/*
+  Actualiza el porcentaje de progreso contando las preguntas respondidas 
+  y calculando el porcentaje respecto al total de preguntas.
+*/
   updateProgress() {
     let answeredQuestions = 0;
-    const totalQuestions = 100; // Ajuste este número al total real de preguntas
-
-    // Verifique cada respuesta
+    const totalQuestions = 100;
     for (let i = 1; i <= totalQuestions; i++) {
       const respuesta = this['respuesta' + i] as Respuesta;
       if (respuesta && (respuesta.opcion || respuesta.texto_res)) {
@@ -1647,12 +1656,18 @@ export class EncuestaEmpresaComponent {
 
     this.progressPercentage = Math.round((answeredQuestions / totalQuestions) * 100);
   }
+
+/*
+  Carga la siguiente sección del formulario.
+*/
   loadNextSection(): void {
     this.section++;
   }
 
-
-
+/*
+  Avanza a la siguiente subsección o a la siguiente sección si ya está en la última subsección. 
+  Actualiza el progreso del formulario.
+*/
   next() {
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
@@ -1666,6 +1681,10 @@ export class EncuestaEmpresaComponent {
 
   }
 
+  /*
+  Navega a la subsección anterior o a la sección anterior si ya está en la primera subsección. 
+  Actualiza el progreso del formulario.
+*/
   previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;
@@ -1679,9 +1698,13 @@ export class EncuestaEmpresaComponent {
 
   }
 
+/*
+  Navega a una sección específica y reinicia el índice de la subsección a 0. 
+  Actualiza el progreso del formulario.
+*/
   goToSection(index: number): void {
     this.currentIndex = index;
-    this.currentSubSectionIndex = 0; // Restablece la subsección al inicio de la sección
-    this.updateProgress(); // Actualiza el progreso si tienes una barra de progreso o indicador similar
+    this.currentSubSectionIndex = 0; 
+    this.updateProgress();
   }
 }

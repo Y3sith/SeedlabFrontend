@@ -4,25 +4,26 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+ providedIn: 'root'
 })
 export class PuntajesService {
 
-  constructor(private http: HttpClient ) {}
-  url = environment.apiUrl + 'puntajes';
+ constructor(private http: HttpClient ) {}
+ url = environment.apiUrl + 'puntajes';
 
-  savePuntajeSeccion(puntajes: any, documentoEmpresa: number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http.post<any>(`${this.url}/${documentoEmpresa}`,puntajes, { headers });
-  }
+ /* Guarda el puntaje de una sección para una empresa específica */
+ savePuntajeSeccion(puntajes: any, documentoEmpresa: number): Observable<any> {
+   const headers = new HttpHeaders({
+     'Content-Type': 'application/json'
+   });
+   return this.http.post<any>(`${this.url}/${documentoEmpresa}`,puntajes, { headers });
+ }
 
-  getPuntajes(id_empresa:number): Observable<any> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http.get<any>(this.url + id_empresa, { headers });
-  }
+ /* Obtiene los puntajes para una empresa específica */
+ getPuntajes(id_empresa:number): Observable<any> {
+   const headers = new HttpHeaders({
+     'Content-Type': 'application/json'
+   });
+   return this.http.get<any>(this.url + id_empresa, { headers });
+ }
 }
-

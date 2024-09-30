@@ -29,7 +29,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   errorMessage: string | null = null;
   email: string;
   token = '';
-  blockedInputs = true; // Inicialmente bloqueados
+  blockedInputs = true;
   bloqueado = true;
   documento: string;
   user: User | null = null;
@@ -81,6 +81,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     });
   }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.isAuthenticated = this.authServices.isAuthenticated();
@@ -91,6 +92,7 @@ export class PerfilEmprendedorComponent implements OnInit {
     this.initializeFormState();
   }
 
+  /* Valida el token del login */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem("token");
@@ -125,18 +127,24 @@ export class PerfilEmprendedorComponent implements OnInit {
     )
   }
 
+  /*
+    Maneja la selección de un departamento, guarda el valor en localStorage,
+    reinicia el campo de municipio y carga los municipios correspondientes.
+  */
   onDepartamentoSeleccionado(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDepartamento = target.value;
 
-    // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
     this.emprendedorForm.get('id_municipio')?.setValue(null);
     this.listMunicipios = [];
-    // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
 
+  /*
+    Carga los municipios correspondientes al departamento seleccionado 
+    mediante una llamada al servicio, y actualiza la lista de municipios.
+  */
   cargarMunicipios(departamentoId: string): void {
     this.municipioService.getMunicipios(departamentoId).subscribe(
       (data) => {
@@ -148,15 +156,16 @@ export class PerfilEmprendedorComponent implements OnInit {
     );
   }
 
-
-
+  /*
+    Carga la información del emprendedor para su edición. Realiza una 
+    llamada al servicio para obtener los datos y los carga en el formulario.
+  */
   verEditar(): void {
     this.isLoading = true;
     if (this.token) {
       this.emprendedorService.getInfoEmprendedor(this.token, this.documento).subscribe(
         (data) => {
           this.isActive = data.estado === 'Activo';
-          // Rellenar el formulario con los datos del emprendedor
           this.emprendedorForm.patchValue({
             documento: data.documento,
             nombre: data.nombre,
@@ -177,14 +186,9 @@ export class PerfilEmprendedorComponent implements OnInit {
           this.cargarDepartamentos();
 
           setTimeout(() => {
-            // Establecer el departamento seleccionado
             this.emprendedorForm.patchValue({ id_municipio: data.id_departamentos });
-
-            // Cargar los municipios de ese departamento
             this.cargarMunicipios(data.id_departamento);
-
             setTimeout(() => {
-              // Establecer el municipio seleccionado
               this.emprendedorForm.patchValue({ id_municipio: data.id_municipio });
             }, 500);
           }, 500);
@@ -198,6 +202,10 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+  /*
+    Carga la lista de tipos de documentos desde el servicio de autenticación 
+    y los almacena en la variable `listTipoDocumento`.
+  */
   tipoDocumento(): void {
     this.authServices.tipoDocumento().subscribe(
       data => {
@@ -209,7 +217,9 @@ export class PerfilEmprendedorComponent implements OnInit {
     )
   }
 
-
+  /*
+    Reinicia el campo de archivo especificado en el formulario. 
+  */
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.emprendedorForm.patchValue({ imagen_perfil: null });
@@ -218,6 +228,9 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+  /*
+    Genera una vista previa de la imagen seleccionada. 
+  */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -229,33 +242,31 @@ export class PerfilEmprendedorComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-
+  /*
+    Actualiza la información del emprendedor. Valida el formulario, maneja 
+    campos obligatorios y específicos, y envía los datos al servicio tras 
+    confirmación, mostrando un mensaje de éxito o error.
+  */
   updateEmprendedor(): void {
     const formData = new FormData();
     let estadoValue: string;
-
-    // Validación general
     if (this.emprendedorForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos.');
       this.submitted = true;
       return;
     }
-
     const camposObligatoriosApoyo = ['nombre', 'apellido', 'celular', 'direccion'];  ///falta la direccion cuando no esta en perfil
     for (const key of camposObligatoriosApoyo) {
-        const control = this.emprendedorForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            return;
-        }
+      const control = this.emprendedorForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        return;
+      }
     }
-
-    // First pass: handle special cases and avoid duplication
     Object.keys(this.emprendedorForm.controls).forEach((key) => {
       const control = this.emprendedorForm.get(key);
       if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
         if (key === 'password') {
-          // Only include password if it's not empty
           if (control.value.trim() !== '') {
             formData.append(key, control.value);
           }
@@ -271,8 +282,6 @@ export class PerfilEmprendedorComponent implements OnInit {
         }
       }
     });
-
-    // Append specific fields (this will overwrite any duplicates from the first pass)
     const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
     specificFields.forEach(field => {
       const value = this.emprendedorForm.get(field)?.value;
@@ -310,29 +319,27 @@ export class PerfilEmprendedorComponent implements OnInit {
     });
   }
 
+  /*
+    Maneja la selección de archivos. Verifica el tamaño del archivo para 
+    'imagen_perfil', genera una alerta si es demasiado grande, y establece 
+    la previsualización del archivo seleccionado.
+  */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
       let maxSize = 0;
-
       if (field === 'imagen_perfil') {
-        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+        maxSize = 5 * 1024 * 1024;
       }
-
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-
-        //Limpia el archivo seleccionado y resetea la previsualización
-        event.target.value = ''; // Borra la selección del input
-
-        // Resetea el campo correspondiente en el formulario y la previsualización
+        event.target.value = '';
         if (field === 'imagen_perfil') {
           this.emprendedorForm.patchValue({ imagen_perfil: null });
           this.selectedImagen_perfil = null;
-          this.perfilPreview = null; // Resetea la previsualización
+          this.perfilPreview = null;
         }
         this.resetFileField(field);
         return;
@@ -347,23 +354,21 @@ export class PerfilEmprendedorComponent implements OnInit {
         }
       };
       reader.readAsDataURL(file);
-
-      // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
-
       if (field === 'imagen_perfil') {
         this.selectedImagen_perfil = file;
         this.emprendedorForm.patchValue({ imagen_perfil: file });
       }
-
     } else {
       this.resetFileField(field);
     }
   }
 
-
-
-
+  /*
+    Desactiva la cuenta del emprendedor. Muestra una alerta de confirmación 
+    antes de proceder con la desactivación y recarga la página si la 
+    desactivación es exitosa.
+  */
   desactivarEmprendedor(): void {
     if (this.token) {
       this.alertService.DesactivarEmprendedor("¿Estás seguro de desactivar tu cuenta?",
@@ -384,34 +389,37 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+  /*
+    Valida la fortaleza de la contraseña. Se requiere al menos 
+    una letra mayúscula y un carácter especial.
+  */
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
-
-    // Si el campo está vacío, consideramos que es válido
     if (!value || value.trim() === '') {
       return null;
     }
-
     const hasUpperCase = /[A-Z]+/.test(value);
     const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
-
     if (hasUpperCase && hasSpecialChar) {
       return null;
     } else {
       return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
     }
   }
-
-
   get f() { return this.emprendedorForm.controls; }
 
-
-
-
+  /*
+    Devuelve el ID del elemento para optimizar el seguimiento
+    de cambios en la lista.
+  */
   trackById(index: number, item: any): number {
     return item.id;
   }
 
+  /*
+    Desactiva los campos especificados en el formulario
+    para evitar su edición.
+  */
   initializeFormState(): void {
     const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
     fieldsToDisable.forEach(field => {
@@ -421,12 +429,14 @@ export class PerfilEmprendedorComponent implements OnInit {
       }
     });
   }
-
-  //para que no me deje editar el nombre del tipo del documento
+  /*
+    Alterna el estado de bloqueo de los campos de entrada
+    en el formulario, permitiendo habilitar o deshabilitar
+    la edición de los mismos.
+  */
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
     const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento'];
-
     fieldsToToggle.forEach(field => {
       const control = this.emprendedorForm.get(field);
       if (control) {
@@ -437,8 +447,6 @@ export class PerfilEmprendedorComponent implements OnInit {
         }
       }
     });
-
-    // Force change detection
     this.cdRef.detectChanges();
   }
 
@@ -447,16 +455,29 @@ export class PerfilEmprendedorComponent implements OnInit {
     location.reload();
   }
 
+  /*
+    Muestra el botón de guardar cambios al ocultar
+    el botón actual.
+  */
   mostrarGuardarCambios(): void {
     this.boton = false;
   }
 
+  /*
+    Habilita la edición de campos y muestra el botón de
+    editar al desbloquear los inputs.
+  */
   onEdit() {
     this.blockedInputs = false;
     this.showEditButton = true;
     this.toggleInputsLock();
   }
 
+  /*
+    Obtiene los errores de validación del formulario y
+    los retorna como un objeto donde las claves son los
+    nombres de los controles con errores.
+  */
   getFormValidationErrors(form: FormGroup) {
     const result: any = {};
     Object.keys(form.controls).forEach(key => {
@@ -468,6 +489,11 @@ export class PerfilEmprendedorComponent implements OnInit {
     return result;
   }
 
+  /*
+    Valida que el campo no contenga números.
+    Retorna un error si se encuentra al menos un número,
+    o null si la validación es exitosa.
+  */
   noNumbersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasNumbers = /\d/.test(value);
@@ -479,10 +505,14 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+  /*
+    Valida que la fecha no sea futura, que no tenga más de 100 años 
+    y que sea de al menos 18 años. Retorna un error específico o null.
+  */
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
-      return null; // Si no hay valor, no se valida
+      return null;
     }
 
     const selectedDate = new Date(value);
@@ -503,6 +533,10 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+  /*
+    Valida que el número de documento tenga entre 5 y 13 dígitos. 
+    Retorna un error específico o null.
+  */
   documentoValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value ? control.value.toString() : '';
     if (value.length < 5 || value.length > 13) {
@@ -511,6 +545,10 @@ export class PerfilEmprendedorComponent implements OnInit {
     return null;
   }
 
+  /*
+    Valida que el campo no contenga letras. 
+    Retorna un error específico o null.
+  */
   noLettersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasLetters = /[a-zA-Z]/.test(value);
@@ -522,6 +560,10 @@ export class PerfilEmprendedorComponent implements OnInit {
     }
   }
 
+  /*
+  Valida que el correo electrónico contenga un símbolo '@'.
+  Retorna un error específico o null.
+*/
   emailValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasAtSymbol = /@/.test(value);
