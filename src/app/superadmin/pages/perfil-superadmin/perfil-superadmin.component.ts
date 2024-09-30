@@ -47,7 +47,9 @@ export class PerfilSuperadminComponent {
   isLoading: boolean = false;
 
 
-
+  /*
+    Define un formulario reactivo para el perfil del orientador.
+  */
   perfiladminForm = this.fb.group({
     nombre: ['', [Validators.required, this.noNumbersValidator]],
     apellido: ['', [Validators.required, this.noNumbersValidator]],
@@ -150,13 +152,13 @@ export class PerfilSuperadminComponent {
   updateAdministrador(): void {
     const formData = new FormData();
     let estadoValue: string;
-  
+
     const municipio = this.perfiladminForm.get('id_municipio');
     if (!municipio || municipio.value === null || municipio.value === '') {
       this.alertService.errorAlert('Error', 'Debes seleccionar un municipio');
       return;
     }
-  
+
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfiladminForm.controls).forEach((key) => {
       const control = this.perfiladminForm.get(key);
@@ -190,7 +192,7 @@ export class PerfilSuperadminComponent {
         }
       }
     });
-  
+
     // Append specific fields (this will overwrite any duplicates from the first pass)
     const specificFields = ['nombre', 'apellido', 'documento', 'celular', 'genero', 'id_tipo_documento', 'id_departamento', 'id_municipio', 'email'];
     specificFields.forEach(field => {
@@ -199,15 +201,15 @@ export class PerfilSuperadminComponent {
         formData.append(field, value);
       }
     });
-  
+
     if (this.perfiladminForm.get('direccion')?.value) {
       formData.append('direccion', this.perfiladminForm.get('direccion')?.value);
     }
-  
+
     if (this.selectedImagen_perfil) {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
-  
+
     this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
       if (result.isConfirmed) {
         this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
@@ -225,7 +227,12 @@ export class PerfilSuperadminComponent {
       }
     });
   }
- 
+
+  /*
+  Registra en la consola los errores de validación de cada control 
+  del formulario perfilorientadorForm. Para cada control que tiene 
+  errores, se imprime el nombre del control y los errores correspondientes.
+*/
   logFormErrors(): void {
     Object.keys(this.perfiladminForm.controls).forEach(key => {
       const controlErrors = this.perfiladminForm.get(key)?.errors;
@@ -234,7 +241,7 @@ export class PerfilSuperadminComponent {
       }
     });
   }
-  
+
 
   get f() {
     return this.perfiladminForm.controls;
@@ -259,6 +266,10 @@ export class PerfilSuperadminComponent {
     }
   }
 
+  /*
+    Inicializa el estado del formulario deshabilitando ciertos campos 
+    específicos del formulario perfilorientadorForm.
+  */
   initializeFormState(): void {
     const fieldsToDisable = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
     fieldsToDisable.forEach(field => {
@@ -301,13 +312,18 @@ export class PerfilSuperadminComponent {
     this.boton = false;
   }
 
+  /*
+    Activa el modo de edición para el formulario o inputs.
+  */
   onEdit() {
     this.blockedInputs = false;
     this.showEditButton = true;
     this.toggleInputsLock();
   }
 
-  //Funcion para cargar los departamentos
+  /*
+  Funcion para cargar los departamentos
+  */
   cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       data => {
@@ -319,6 +335,11 @@ export class PerfilSuperadminComponent {
     )
   }
 
+  /*
+    Este método se activa cuando un usuario selecciona un departamento de la lista desplegable. 
+    Finalmente, llama al método `cargarMunicipios(selectedDepartamento)`, que carga los municipios 
+    asociados al departamento seleccionado
+  */
   onDepartamentoSeleccionado(event: Event): void {
     const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
     const selectedDepartamento = target.value;
@@ -331,9 +352,12 @@ export class PerfilSuperadminComponent {
     this.cargarMunicipios(selectedDepartamento);
   }
 
+  /*
+      Este método se encarga de obtener una lista de municipios asociados a un departamento específico.
+    */
   cargarMunicipios(departamentoId: string): void {
     this.municipioService.getMunicipios(departamentoId).subscribe(
-      data=>{
+      data => {
         this.listMunicipios = data;
       },
       (err) => {
@@ -342,7 +366,10 @@ export class PerfilSuperadminComponent {
     );
   }
 
-
+  /*
+      Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+      eliminando cualquier valor previamente asignado.
+    */
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.perfiladminForm.patchValue({ imagen_perfil: null });
@@ -351,6 +378,10 @@ export class PerfilSuperadminComponent {
     }
   }
 
+  /*
+    Este método maneja la selección de archivos desde un input de tipo archivo. 
+    Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -402,6 +433,10 @@ export class PerfilSuperadminComponent {
     }
   }
 
+  /*
+   Este método utiliza `FileReader` para crear una vista previa de la imagen 
+   seleccionada, actualizando la propiedad correspondiente en el componente.
+ */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -413,19 +448,27 @@ export class PerfilSuperadminComponent {
     reader.readAsDataURL(file);
   }
 
+  /*
+Obtiene la lista de tipos de documentos a través del servicio de autenticación. 
+Los datos recibidos se almacenan en la propiedad listTipoDocumento.
+*/
   tipoDocumento(): void {
     this.authService.tipoDocumento().subscribe(
-      data=>{
+      data => {
         this.listTipoDocumento = data;
-      },error => {
+      }, error => {
         console.log(error);
       }
     )
   }
+
+  /*
+    Valida que un campo no contenga letras.
+  */
   noLettersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasLetters = /[a-zA-Z]/.test(value);
-  
+
     if (hasLetters) {
       return { hasLetters: 'El campo no debe contener letras *' };
     } else {
@@ -433,6 +476,9 @@ export class PerfilSuperadminComponent {
     }
   }
 
+  /*
+    Valida que un número de documento tenga una longitud específica.
+  */
   documentoValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value ? control.value.toString() : '';
     if (value.length < 5 || value.length > 13) {
@@ -441,6 +487,9 @@ export class PerfilSuperadminComponent {
     return null;
   }
 
+  /*
+    Valida que un campo no contenga números.
+  */
   noNumbersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasNumbers = /\d/.test(value);
@@ -452,19 +501,22 @@ export class PerfilSuperadminComponent {
     }
   }
 
+  /*
+  Valida que la fecha seleccionada no sea anterior a la fecha actual.
+*/
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
       return null; // Si no hay valor, no se valida
     }
-  
+
     const selectedDate = new Date(value);
     const today = new Date();
     const hundredYearsAgo = new Date();
     hundredYearsAgo.setFullYear(today.getFullYear() - 100);
     const eighteenYearsAgo = new Date();
     eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
-  
+
     if (selectedDate > today) {
       return { futureDate: 'La fecha no es válida *' };
     } else if (selectedDate < hundredYearsAgo) {

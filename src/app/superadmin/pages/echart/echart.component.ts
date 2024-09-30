@@ -12,10 +12,11 @@ export class EChartComponent {
 
   constructor(private el: ElementRef) {}
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.initChart();
   }
-
+  /*Esta función se ejecuta automáticamente cuando hay cambios en las propiedades de entrada del componente*/
   ngOnChanges(): void {
     if (this.chartInstance) {
       this.chartInstance.setOption(this.options);

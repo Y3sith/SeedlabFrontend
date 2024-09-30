@@ -1,37 +1,61 @@
 <div class="fixed z-50 inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center p-4">
-<div class="p-4 bg-white rounded-xl font-poppins" [formGroup]="asignarForm">
-  <div>
-    <h2 class="text-[#FA7D00] font-poppins font-semibold">Detalles de la Asesoría</h2>
-    <p><strong class="text-blue-400">Nombre:</strong></p>
-    <p class="-mt-2">{{ data.asesoria.Nombre_sol }}</p>
-    <p class="text-blue-400"><strong>Notas:</strong></p>
-    <p class="-mt-2">{{ data.asesoria.notas }}</p>
-    <p><strong class="text-blue-400 mt-2">Fecha de Solicitud:</strong></p>
-    <p class="-mt-2">{{ data.asesoria.fecha_solicitud }}</p>
-    <!-- Agrega más campos según sea necesario -->
+  <div class="w-full max-w-md p-4 sm:p-6 bg-white rounded-xl font-poppins overflow-y-auto max-h-[90vh]" [formGroup]="asignarForm">
+    <h2 class="text-[#FA7D00] font-poppins font-semibold text-lg sm:text-xl mb-4">Detalles de la Asesoría</h2>
+    
+    <div class="space-y-3 mb-4">
+      <div>
+        <p class="text-blue-400 font-bold">Nombre:</p>
+        <p class="mt-1">{{ data.asesoria.Nombre_sol }}</p>
+      </div>
+      <div>
+        <p class="text-blue-400 font-bold">Notas:</p>
+        <p class="mt-1">{{ data.asesoria.notas }}</p>
+      </div>
+      <div>
+        <p class="text-blue-400 font-bold">Fecha de Solicitud:</p>
+        <p class="mt-1">{{ data.asesoria.fecha_solicitud }}</p>
+      </div>
+      <!-- Agrega más campos según sea necesario -->
+    </div>
+    
+    <div class="mb-4">
+      <label class="block mb-2 text-blue-400 font-bold">
+        {{ data.asesoria.Asesor ? 'Asesor asignado:' : '¿Cuál de los asesores hará la asesoría?' }}
+      </label>
+      <ng-container *ngIf="!data.asesoria.Asesor; else asesorAsignado">
+        <select formControlName="nom_asesor" 
+                class="w-full px-3 py-2 text-gray-700 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200">
+          <option value="" disabled selected hidden>Seleccione</option>
+          <option *ngFor="let asesor of asesores" [value]="asesor.id_asesor">{{ asesor.nombre_completo }}</option>
+        </select>
+      </ng-container>
+      <ng-template #asesorAsignado>
+        <p class="w-full px-3 py-2 bg-gray-100 rounded-md">{{ data.asesoria.Asesor }}</p>
+      </ng-template>
+      <div *ngIf="f['nom_asesor'].invalid && (f['nom_asesor'].dirty || f['nom_asesor'].touched) && submitted"
+      class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+      role="alert">
+      <div *ngIf="f.nom_asesor.errors.required">Este campo es requerido *</div> 
+      </div>
+    </div>
+    
+    <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+      <ng-container *ngIf="!data.asesoria.Asesor; else soloCancelar">
+        <button type="button" (click)="onCancel()" 
+                class="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-300">
+          Cancelar
+        </button>
+        <button mat-button (click)="onGuardar()" 
+                class="w-full sm:w-auto bg-[#FA7D00] text-white py-2 px-4 rounded hover:bg-[#E56F00] transition duration-300">
+          Guardar
+        </button>
+      </ng-container>
+      <ng-template #soloCancelar>
+        <button type="button" (click)="onCancel()" 
+                class="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition duration-300">
+          Cancelar
+        </button>
+      </ng-template>
+    </div>
   </div>
-  <div class="rounded-xl pb-2 pt-2 w-full justify-start" id="nomAliadoContainer">
-    <label class="mb-1 text-blue-400 font-bold">
-      {{ data.asesoria.Asesor ? 'Asesor asignado:' : '¿Cuál de los asesores hará la asesoría?' }}
-    </label>
-    <ng-container *ngIf="!data.asesoria.Asesor; else asesorAsignado">
-      <select formControlName="nom_asesor" class="w-full outline-none h-auto text-start border rounded-md px-2 py-2 bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
-        <option value="" disabled selected hidden>Seleccione</option>
-        <option *ngFor="let asesor of asesores" [value]="asesor.id_asesor">{{ asesor.nombre_completo }}</option>
-      </select>
-    </ng-container>
-    <ng-template #asesorAsignado>
-      <p class="w-full px-2 py-2  rounded-md">{{ data.asesoria.Asesor }}</p>
-    </ng-template>
-  </div>
-  <div mat-dialog-actions class="flex justify-center mt-4">
-    <ng-container *ngIf="!data.asesoria.Asesor; else soloCancelar">
-      <button type="button" (click)="onCancel()" class="w-full md:w-auto bg-gray-500 text-white py-2 px-4 rounded mr-2">Cancelar</button>
-      <button mat-button class="w-full md:w-auto bg-[#FA7D00] text-white py-2 px-4 rounded" type="submit" (click)="onGuardar()">Guardar</button>
-    </ng-container>
-    <ng-template #soloCancelar>
-      <button type="button" (click)="onCancel()" class="w-full md:w-auto bg-gray-500 text-white py-2 px-4 rounded">Cancelar</button>
-    </ng-template>
-  </div>
-</div>
 </div>

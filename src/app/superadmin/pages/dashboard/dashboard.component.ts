@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
     private empresaService: EmpresaService,
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     const currentYear = new Date().getFullYear();
@@ -61,6 +62,10 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -81,12 +86,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
+   /*Función que maneja el cambio de año en la interfaz*/
   onYearChange(year: number): void {
     this.selectedYear = year;
     this.promedioAsesoriasMesAnio(this.selectedYear);
   }
-
+  /*Función que maneja el cambio de tipo en un select (desplegable)*/
   onSelectChange(event: any): void {
     this.selectedTipo = event.target.value;
 
@@ -95,6 +100,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  /*Función que obtiene todas las empresas disponibles*/
   getEmpresas() {
     this.empresaService.getAllEmpresa(this.token).subscribe(
       data => {
@@ -108,6 +114,7 @@ export class DashboardComponent implements OnInit {
     )
   }
 
+  /*Función para inicializar un gráfico utilizando ECharts*/
   initChart(chartId: string, options: any): void {
     setTimeout(() => {
       const chartDom = document.getElementById(chartId);
@@ -120,14 +127,14 @@ export class DashboardComponent implements OnInit {
     }, 100); // Retraso de 100ms para asegurarse de que el DOM esté listo
   }
 
-
+  /*Función que maneja el cambio de empresa seleccionada*/
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
     this.graficaPuntajesFormulario(+this.selectedTipo);
   }
 
 
-
+  /*Función que obtiene y calcula el promedio de asesorías por mes y año*/
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.dashboardAdmin(this.token, this.selectedYear).subscribe(
       data => {
@@ -183,7 +190,7 @@ export class DashboardComponent implements OnInit {
 
 
 
-
+  /*Función que obtiene los datos del dashboard (usuarios y asesorías)*/
   getDatosDashboard(): void {
     this.isLoading = true;
     this.dashboardService.dashboardAdmin(this.token).subscribe(
@@ -251,6 +258,7 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  /*Función que inicializa el gráfico de barras para "Top Aliados"*/
   initEChartsBar(): void {
     if (this.topAliados && this.topAliados.length) {
       this.topAliadosEchartsOptions = {
@@ -336,7 +344,9 @@ export class DashboardComponent implements OnInit {
 
 
 
-
+  /*Llama a un servicio que obtiene datos sobre los géneros de los emprendedores y formatea esta información para construir un gráfico de torta o dona.
+  Configura las opciones del gráfico, como el tipo de serie (pie chart), y los estilos de las etiquetas y líneas.
+  Finalmente, inicializa el gráfico con estos datos.*/
   getDatosGenerosGrafica(): void {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       response => {
@@ -395,6 +405,8 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  /*Obtiene datos mensuales sobre emprendedores y aliados a través de un servicio.
+  Mapea estos datos para extraer el número de registros por mes y organiza los valores para crear un gráfico de barras.*/
   getRegistrosMensuales(): void {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
@@ -486,13 +498,14 @@ export class DashboardComponent implements OnInit {
 
 
 
-
+  /*Convierte un número de mes en su nombre correspondiente en español. Por ejemplo, convierte "1" en "Enero" y así sucesivamente.*/
   getMonthName(monthNumber: number): string {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     return monthNames[monthNumber - 1];
   }
 
-
+  /*Llama a un servicio para obtener la cantidad de emprendedores por departamento.
+  Utiliza un archivo GeoJSON para cargar el mapa de Colombia en ECharts y asigna los datos obtenidos a los departamentos correspondientes*/
   emprendedorPorDepartamento(): void {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       (data) => {
@@ -588,7 +601,8 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-
+  /*Configura una gráfica de radar vacía que se muestra cuando no hay datos disponibles.
+  Muestra los puntajes de diferentes criterios como "General", "Técnica", "TRL", "Mercado" y "Financiera", pero con valores cero*/
   initGraficaVacia(): void {
     // Configuración de la gráfica vacía
     this.getPuntajesForm = {
@@ -620,7 +634,9 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-
+  /*Muestra una gráfica de radar que visualiza los puntajes de una empresa seleccionada en diferentes categorías (general, técnica, TRL, mercado, financiera).
+  Dependiendo del tipo (primera o segunda evaluación), ajusta el título de la gráfica y actualiza los valores con los datos obtenidos del servicio.
+  Si no hay empresa o tipo seleccionado, muestra una gráfica vacía.*/
   graficaPuntajesFormulario(tipo: number): void {
     if (!this.selectedEmpresa || !tipo) {
       this.initGraficaVacia();
@@ -678,7 +694,8 @@ export class DashboardComponent implements OnInit {
 
 
 
-
+  /*Normaliza los nombres de los departamentos eliminando tildes, espacios adicionales y convirtiendo todo a mayúsculas.
+  Esto se usa para garantizar que los nombres coincidan con el formato esperado en el archivo GeoJSON*/
   normalizeName(name: string): string {
     return name.toUpperCase()
       .replace(/Á/g, 'A')

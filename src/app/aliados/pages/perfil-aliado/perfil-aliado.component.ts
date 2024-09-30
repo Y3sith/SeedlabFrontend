@@ -11,6 +11,7 @@ import { Actividad } from '../../../Modelos/actividad.model';
 import { ActividadService } from '../../../servicios/actividad.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddBannerComponent } from '../add-banner/add-banner.component';
+import { environment } from '../../../../environment/env';
 
 
 @Component({
@@ -57,6 +58,7 @@ export class PerfilAliadoComponent implements OnInit {
   private videoUrl: string = '';
   private imageUrl: string = '';
   charCount: number = 0;
+  urlparaperfil: any;
 
   constructor(
     private router: Router,
@@ -308,13 +310,27 @@ export class PerfilAliadoComponent implements OnInit {
     );
   }
 
+  limpiarPrefijoEnviroment() {
+    const apiUrl = environment.apiUrl;
+    this.urlparaperfil = apiUrl.replace(/^\/api\//, '');
+    return this.urlparaperfil;
+  }
+
   /*
   Este método `limpiarPrefijo` elimina un prefijo específico de una URL si está presente.
 */
-  limpiarPrefijo(url: string): string {
-    const prefijo = 'http://127.0.0.1:8000/storage/';
-    return url.startsWith(prefijo) ? url.substring(prefijo.length) : url;
+limpiarPrefijo(url: string): string {
+  const apiUrl = environment.apiUrl.replace(/\/$/, '');
+  this.urlparaperfil = apiUrl.replace(/\/api\/?$/, '');
+  const prefijo = `${this.urlparaperfil}/storage/`;
+
+  if (url.startsWith(prefijo)) {
+    return url.substring(prefijo.length);
+  } else if (url.startsWith(`${apiUrl}/storage/`)) {
+    return url.substring(`${apiUrl}/storage/`.length);
   }
+  return url;
+}
 
   /*
   Este método inicializa el estado del formulario `aliadoForm` deshabilitando ciertos campos.

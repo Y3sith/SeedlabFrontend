@@ -275,6 +275,14 @@ export class AddEmpresaComponent {
       return;
     }
 
+    const camposObligatorios = ['nombre', 'correo', 'documento', 'razonSocial', 'direccion', 'telefono','celular', 'url_pagina','profesion','cargo','experiencia','funciones'];
+    for (const key of camposObligatorios) {
+        const control = this.addEmpresaForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
     
 
     const empresa: any = {
@@ -295,6 +303,16 @@ export class AddEmpresaComponent {
       id_municipio: this.addEmpresaForm.get('id_municipio')?.value,
       id_emprendedor: this.user?.emprendedor.documento,
     };
+
+    const camposObligatoriosApoyo = ['nombre', 'apellido', 'documento', 'cargo', 'email', 'celular','telefono'];
+    for (const key of camposObligatoriosApoyo) {
+        const control = this.addApoyoEmpresaForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
 
     const apoyos = this.addApoyoEmpresaForm.valid ? {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,

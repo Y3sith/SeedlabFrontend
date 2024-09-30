@@ -49,7 +49,10 @@ export class AddBannerModalComponent implements OnInit {
 
   }
 
-
+/*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+*/
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -70,6 +73,7 @@ export class AddBannerModalComponent implements OnInit {
     }
   }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
@@ -77,6 +81,9 @@ export class AddBannerModalComponent implements OnInit {
     this.toggleActive();
   }
 
+  /*
+  Este método se encarga de cargar la lista de banners.
+*/
   verEditar(): void {
     this.aliadoService.getBannerxid(this.token, this.id_banner).subscribe(
       data => {
@@ -93,8 +100,10 @@ export class AddBannerModalComponent implements OnInit {
     )
   }
 
+  /*
+  Funcion para crear o editar banners.
+  */
   addBanner(): void {
-
     const formData = new FormData();
     let aliado_modal = this.idAliado;
 
@@ -141,7 +150,10 @@ export class AddBannerModalComponent implements OnInit {
     }
   }
 
-
+  /*
+    Este método maneja la selección de archivos desde un input de tipo archivo. 
+    Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -193,7 +205,10 @@ export class AddBannerModalComponent implements OnInit {
   }
   }
 
-
+  /* 
+  Actualiza el valor del campo 'ruta_multi' en el formulario con el valor ingresado en un campo de texto. 
+  Se utiliza en un evento de entrada de texto (input).
+  */
   resetFileField(field: string) {
     if (field === 'urlImagen') {
       this.bannerForm.patchValue({ urlImagen: null });
@@ -202,6 +217,10 @@ export class AddBannerModalComponent implements OnInit {
     }
   }
 
+  /* 
+  Reinicia el campo de archivo seleccionado en el formulario, eliminando el archivo y su previsualización.
+  Aplica a los campos 'urlImagen', 'logo', o 'ruta_multi', según el campo proporcionado.
+  */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -222,6 +241,7 @@ export class AddBannerModalComponent implements OnInit {
     this.fileInput.nativeElement.click();
   }
 
+  /* Cambia el estado del toggle*/
   toggleActive() {
     this.isActive = !this.isActive;
     this.bannerForm.patchValue({ estadobanner: this.isActive });

@@ -1,6 +1,6 @@
 <!-- Incluye la hoja de estilos de Font Awesome para los íconos -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<div class="container p-0 pt-2 mx-auto ">
+<div class="container p-0 pt-2 mx-auto font-poppins">
 
   <!-- Encabezado -->
   <header class="flex flex-col items-center justify-between mb-6 md:flex-row">
@@ -31,7 +31,7 @@
           class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out md:px-4 listado-aseorias"
           (click)="showSinAsignar()">
           <span
-            class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg">
+            class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg font-poppins">
             {{ asesoriasSinAsesor.length }}
           </span>
           <span>Sin asignar</span>
@@ -78,15 +78,15 @@
           </div>
 
           <!-- Contenido de la tarjeta -->
-          <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%]">{{asesoria.Nombre_sol }}</h2>
-          <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Fecha: </strong>{{ asesoria.fecha_solicitud }}
+          <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%] font-poppins">{{asesoria.Nombre_sol }}</h2>
+          <p class="italic text-sm text-black ml-[4%] font-poppins"><strong>Fecha: </strong>{{ asesoria.fecha_solicitud }}
           </p>
           <div
             class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
             title="{{ asesoria.notas }}">{{ asesoria.notas }}</div>
-          <p class="italic text-sm text-black mt-[-22px] ml-[4%]"><strong>Emprendedor: </strong>{{ asesoria.Emprendedor
+          <p class="italic text-sm text-black ml-[4%] font-poppins"><strong>Emprendedor: </strong>{{ asesoria.Emprendedor
             }}</p>
-          <p class="italic text-sm text-black  ml-[4%]" *ngIf="asesoria.Asesor"><strong>Asesor: </strong>{{
+          <p class="italic text-sm text-black  ml-[4%] font-poppins" *ngIf="asesoria.Asesor"><strong>Asesor: </strong>{{
             asesoria.Asesor }}</p>
         </div>
 

@@ -87,7 +87,9 @@ export class ModalAddRutaComponent implements OnInit {
     }
   }
 
-
+/*
+Funcion para traer los datos de la ruta
+*/
   verEditar(): void {
     if (this.rutaId != null) {
       this.rutaService.rutaXid(this.token, this.rutaId).subscribe(
@@ -110,6 +112,9 @@ export class ModalAddRutaComponent implements OnInit {
     }
   }
 
+  /*
+  Funcion para agregar o editar la ruta
+  */
   addRuta(): void {
     this.submitted = true;
     if (this.rutaForm.invalid) {
@@ -154,6 +159,9 @@ export class ModalAddRutaComponent implements OnInit {
     }
   }
 
+/*
+Funcion para activar o desactivar el estado de la ruta por medio de un toggle
+ */
   toggleActive() {
     this.isActive = !this.isActive;
     this.rutaForm.patchValue({ estado: this.isActive ? true : false });
@@ -167,7 +175,9 @@ export class ModalAddRutaComponent implements OnInit {
     this.boton = true;
   }
 
-
+/*
+Funcion para cerrar el modal
+*/
   closeModal() {
     this.dialogRef.close();
   }
