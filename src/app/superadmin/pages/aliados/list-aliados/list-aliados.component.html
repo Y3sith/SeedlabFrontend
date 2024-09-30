@@ -9,7 +9,7 @@
                 <option value="Activo" class="text-gray-600">Activo</option>
                 <option value="Inactivo" class="text-gray-600">Inactivo</option>
             </select>            
-            <input type="text" [(ngModel)]="userFilter.nombre" 
+            <input type="text" [(ngModel)]="userFilter.nombre" (input)="updatePaginatedData()"
             class="w-full max-md:w-full max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pl-2 pr-9 rounded-full border-2 bg-form-gray" placeholder="Buscar..." required />
             <button class="absolute md:right-3 right-1 top-1.5 bg-sky-500 p-1.5 rounded-2xl">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
