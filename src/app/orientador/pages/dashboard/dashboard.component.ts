@@ -44,7 +44,7 @@ export class DashboardComponent implements AfterViewInit {
     private empresaService: EmpresaService
   ) { }
 
-/* Inicializa con esas funciones al cargar la pagina */
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     this.getDatosDashboard();
@@ -56,25 +56,25 @@ export class DashboardComponent implements AfterViewInit {
     this.promedioAsesoriasMesAnio(this.selectedYear);
     this.getEmpresas();
     this.initGraficaVacia();
-    
+
   }
 
-/*
-  Este método permite que los datos necesarios estén listos y 
-  disponibles justo después de que la vista del componente se haya 
-  renderizado.
-  */
+  /*
+    Este método permite que los datos necesarios estén listos y 
+    disponibles justo después de que la vista del componente se haya 
+    renderizado.
+    */
   ngAfterViewInit() {
     this.getDatosDashboard();
     this.getDatosGenerosGrafica();
     this.getRegistrosMensuales();
     this.promedioAsesoriasMesAnio(this.selectedYear);
-    
+
   }
-/*
-  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
-  formulario o cualquier otra parte de la aplicación.
-  */
+  /*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+    */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -86,7 +86,7 @@ export class DashboardComponent implements AfterViewInit {
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
         console.log(this.currentRolId);
-        if (this.currentRolId != 2) { 
+        if (this.currentRolId != 2) {
           this.router.navigate(['home']);
         }
       }
@@ -96,7 +96,7 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
-  /*
+/*
   Actualiza el año seleccionado y carga el promedio de asesorías para el año correspondiente.
 */
 
@@ -105,7 +105,7 @@ export class DashboardComponent implements AfterViewInit {
     this.promedioAsesoriasMesAnio(this.selectedYear);
   }
 
-  /*
+/*
   Obtiene la lista de empresas y selecciona la primera empresa disponible.
   Luego, carga la gráfica de puntajes según el tipo seleccionado.
 */
@@ -123,19 +123,19 @@ export class DashboardComponent implements AfterViewInit {
     )
   }
 
-/*
-  Maneja el cambio de empresa seleccionada y actualiza la gráfica de puntajes 
-  según el tipo seleccionado.
-*/
+  /*
+    Maneja el cambio de empresa seleccionada y actualiza la gráfica de puntajes 
+    según el tipo seleccionado.
+  */
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
     this.graficaPuntajesFormulario(+this.selectedTipo);
   }
 
-/*
-  Calcula el promedio de asesorías mensuales y anuales para el año seleccionado,
-  actualizando las opciones del gráfico de ECharts.
-*/
+  /*
+    Calcula el promedio de asesorías mensuales y anuales para el año seleccionado,
+    actualizando las opciones del gráfico de ECharts.
+  */
   promedioAsesoriasMesAnio(year: number): void {
     this.dashboardService.dashboardAdmin(this.token, this.selectedYear).subscribe(
       data => {
@@ -188,10 +188,10 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-/*
-  Inicializa el gráfico de ECharts para mostrar el promedio de asesorías
-  mensuales y anuales, utilizando las opciones configuradas.
-*/
+  /*
+    Inicializa el gráfico de ECharts para mostrar el promedio de asesorías
+    mensuales y anuales, utilizando las opciones configuradas.
+  */
   initEchartsPromedioAsesorias() {
     const chartDom = document.getElementById('promedio-asesorias');
     if (chartDom) {
@@ -202,11 +202,11 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
-/*
-  Obtiene los datos del dashboard para la administración, incluyendo el total de usuarios por rol,
-  los aliados destacados y la configuración de la gráfica de asesorías. Al finalizar, desactiva
-  el indicador de carga.
-*/
+  /*
+    Obtiene los datos del dashboard para la administración, incluyendo el total de usuarios por rol,
+    los aliados destacados y la configuración de la gráfica de asesorías. Al finalizar, desactiva
+    el indicador de carga.
+  */
   getDatosDashboard(): void {
     this.isLoading = true;
     this.dashboardService.dashboardAdmin(this.token).subscribe(
@@ -261,15 +261,15 @@ export class DashboardComponent implements AfterViewInit {
       },
       error => {
         console.log(error);
-        this.isLoading = false; 
+        this.isLoading = false;
       }
     );
   }
 
-/*
-  Configura y renderiza la gráfica de barras para mostrar el top de aliados destacados,
-  incluyendo la rotación de etiquetas y la personalización de colores por aliado.
-*/
+  /*
+    Configura y renderiza la gráfica de barras para mostrar el top de aliados destacados,
+    incluyendo la rotación de etiquetas y la personalización de colores por aliado.
+  */
   graficaTopAliados(): void {
     const chartDom = document.getElementById('echarts-bar');
     console.log(this.topAliados);
@@ -343,20 +343,20 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
-/*
-  Devuelve un color específico según el índice, utilizando una paleta predefinida
-  que se repite si el índice supera la cantidad de colores disponibles.
-*/
+  /*
+    Devuelve un color específico según el índice, utilizando una paleta predefinida
+    que se repite si el índice supera la cantidad de colores disponibles.
+  */
   getColorForIndex(index: number): string {
     const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8A2BE2', '#00FA9A', '#FFD700', '#DC143C'];
     return colors[index % colors.length]; // Asigna un color a cada barra, y repite si hay más barras que colores
   }
 
-/*
-  Obtiene y procesa los datos de géneros de emprendedores para graficar en un
-  gráfico de dona, utilizando la respuesta del servicio y configurando las opciones
-  del gráfico.
-*/
+  /*
+    Obtiene y procesa los datos de géneros de emprendedores para graficar en un
+    gráfico de dona, utilizando la respuesta del servicio y configurando las opciones
+    del gráfico.
+  */
   getDatosGenerosGrafica(): void {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       response => {
@@ -416,10 +416,10 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-/*
-  Inicializa el gráfico de dona con los datos y configuraciones previamente establecidas.
-  Verifica si el elemento DOM con el id 'echarts-doughnut' existe antes de inicializar el gráfico.
-*/
+  /*
+    Inicializa el gráfico de dona con los datos y configuraciones previamente establecidas.
+    Verifica si el elemento DOM con el id 'echarts-doughnut' existe antes de inicializar el gráfico.
+  */
   initEChartsDoughnut(): void {
     const chartDom = document.getElementById('echarts-doughnut');
     if (chartDom) {
@@ -430,10 +430,10 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
-/*
-  Inicializa el gráfico de registros mensuales utilizando los datos configurados previamente.
-  Verifica si el elemento DOM con el id 'echarts-registros' existe antes de inicializar el gráfico.
-*/
+  /*
+    Inicializa el gráfico de registros mensuales utilizando los datos configurados previamente.
+    Verifica si el elemento DOM con el id 'echarts-registros' existe antes de inicializar el gráfico.
+  */
   initEchartsRegistrosMenusales(): void {
     const chartDom = document.getElementById('echarts-registros');
     if (chartDom) {
@@ -444,10 +444,10 @@ export class DashboardComponent implements AfterViewInit {
     }
   }
 
-/*
-  Obtiene los registros mensuales de emprendedores y aliados a través del servicio de dashboard.
-  Configura las opciones para el gráfico ECharts usando los datos recibidos y luego inicializa el gráfico.
-*/
+  /*
+    Obtiene los registros mensuales de emprendedores y aliados a través del servicio de dashboard.
+    Configura las opciones para el gráfico ECharts usando los datos recibidos y luego inicializa el gráfico.
+  */
   getRegistrosMensuales(): void {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
@@ -459,7 +459,7 @@ export class DashboardComponent implements AfterViewInit {
           const meses = conteoRegistros.map(item => this.getMonthName(item.mes));
 
           const maxValue = Math.max(...emprendedoresData, ...aliadosData);
-          
+
           this.registrosEchartsOptions = {
             tooltip: {
               trigger: 'axis',
@@ -524,19 +524,18 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-/*
-  Devuelve el nombre del mes correspondiente al número de mes dado (1 a 12).
-
-*/
+  /*
+    Devuelve el nombre del mes correspondiente al número de mes dado (1 a 12).
+  */
   getMonthName(monthNumber: number): string {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     return monthNames[monthNumber - 1];
   }
 
 
-/*
-  Inicializa un gráfico de radar vacío con indicadores predefinidos.
-*/
+  /*
+    Inicializa un gráfico de radar vacío con indicadores predefinidos.
+  */
   initGraficaVacia(): void {
     this.getPuntajesForm = {
       title: {
@@ -558,7 +557,7 @@ export class DashboardComponent implements AfterViewInit {
           type: 'radar',
           data: [
             {
-              value: [0, 0, 0, 0, 0], 
+              value: [0, 0, 0, 0, 0],
               name: 'Sin Empresa Seleccionada'
             }
           ]
@@ -569,10 +568,10 @@ export class DashboardComponent implements AfterViewInit {
     this.initChart('echarts-formulario', this.getPuntajesForm);
   }
 
-/*
-  Actualiza y grafica los puntajes de un formulario según el tipo (primera o segunda vez) 
-  para la empresa seleccionada.
-*/
+  /*
+    Actualiza y grafica los puntajes de un formulario según el tipo (primera o segunda vez) 
+    para la empresa seleccionada.
+  */
   graficaPuntajesFormulario(tipo: number): void {
     if (!this.selectedEmpresa || !tipo) {
       this.initGraficaVacia();
@@ -627,10 +626,10 @@ export class DashboardComponent implements AfterViewInit {
     );
   }
 
-/*
-  Inicializa un gráfico ECharts en el elemento con el ID especificado 
-  y configura sus opciones utilizando el objeto proporcionado.
-*/
+  /*
+    Inicializa un gráfico ECharts en el elemento con el ID especificado 
+    y configura sus opciones utilizando el objeto proporcionado.
+  */
   initChart(chartId: string, chartOptions: any): void {
     const chartDom = document.getElementById(chartId);
     this.chart = echarts.init(chartDom);

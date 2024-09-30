@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { CursorutasComponent } from './ruta/cursorutas/cursorutas.component';
 import { BodyComponent } from './inicio/body/body.component';
 
 const routes: Routes = [
@@ -40,8 +39,6 @@ const routes: Routes = [
 
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: BodyComponent }, // Ruta raíz que muestra BodyComponent
-  { path: 'curso', component: CursorutasComponent }, // Ruta raíz que muestra BodyComponent
-
   { path: '**', redirectTo: 'error404', pathMatch: 'full' } // Manejo de rutas no encontradas, redirige a la ruta Not found
 ];
 
