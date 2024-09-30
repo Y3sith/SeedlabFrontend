@@ -64,60 +64,68 @@ export class ReportesComponent implements OnInit {
 
   mostrarReportes() {
     if (this.reporteForm.valid) {
-      const {tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-  
+      const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
+
       const id_aliado = this.user.id ? this.user.id : null;
-  
+
       if (!id_aliado) {
         console.error('El ID del aliado no está disponible.');
         return;
       }
-    
+
       // Obtener los datos del reporte para visualización
       this.reporteService.obtenerDatosAsesoriaAliado(tipo_reporte, id_aliado, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
-          this.reportes = data;  
+          this.reportes = data;
           this.totalItems = data.length;
           this.page = 1;
           this.updatePaginated();
           this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
-          if(data.length === 0){
-            this.alertService.successAlert('Info','No hay datos para mostrar');
+          if (data.length === 0) {
+            this.alertService.successAlert('Info', 'No hay datos para mostrar');
           }
         },
         (error) => console.error('Error al obtener datos del reporte', error)
       );
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
     }
   }
-  
 
 
-  getReportes(formato:string) {
+  //Función para descargar los reportes
+  getReportes(formato: string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-      const id_aliado = this.user.id ? this.user.id : null;
-      this.reporteService.exportarReporteAsesoriaAliado(tipo_reporte, id_aliado, fecha_inicio, fecha_fin, formato).subscribe(
-        (data: Blob) => {
 
-          const url = window.URL.createObjectURL(data);
-
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `Reporte_${tipo_reporte}.${formato === 'pdf' ? 'pdf' : 'xlsx'}`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
+      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe({
+        next: (data) => {
+          if (data) { // Verifica si data no es null
+            if (data.size > 0) { // Verifica si el tamaño es mayor a 0
+              const url = window.URL.createObjectURL(data);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `Reporte_${tipo_reporte}.${formato === 'pdf' ? 'pdf' : 'xlsx'}`;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+            } else {
+              this.alertService.errorAlert('Error', 'No hay datos disponibles para el reporte especificado.');
+            }
+          } else {
+            // Se maneja el caso donde data es null
+            this.alertService.errorAlert('Info', 'No se recibió ningún archivo para descargar.');
+          }
         },
-        error => {
+        error: (error) => {
           console.error('Error al descargar el reporte', error);
+          this.alertService.errorAlert('Error', 'Error al procesar la solicitud de reporte.');
         }
-      )
+      });
     } else {
       console.error('Formulario inválido:', this.reporteForm.value);
-      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
     }
   }
 
@@ -140,11 +148,6 @@ export class ReportesComponent implements OnInit {
 
   onTipoReporteChange(event: any) {
     this.tipoReporteSeleccionado = event.target.value;
-
-    if (this.tipoReporteSeleccionado === 'emprendedor') {
-      // Lógica adicional cuando se selecciona "Emprendedores"
-      this.getReportes('excel'); // Llamada para cargar los reportes
-    }
   }
 
   updatePaginated(): void {
