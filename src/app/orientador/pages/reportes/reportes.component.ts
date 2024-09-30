@@ -28,6 +28,8 @@ export class ReportesComponent {
   public totalItems: number = 0;
   public paginatedReportes: string[] = [];
   tipoReporteSeleccionado: string = '';
+  isReporteDisponible: boolean = false;
+  isDataReady: boolean = false;
 
 
   constructor(
@@ -72,10 +74,11 @@ export class ReportesComponent {
   mostrarReportes() {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
-
+      this.isDataReady = false;
       // Obtener los datos del reporte para visualización
       this.reporteService.obtenerDatosReporte(tipo_reporte, fecha_inicio, fecha_fin).subscribe(
         (data: any[]) => {
+          this.isDataReady = true;
           this.reportes = data;
           this.totalItems = data.length;
           this.page = 1;
@@ -132,16 +135,22 @@ export class ReportesComponent {
   getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
-        const url = window.URL.createObjectURL(data);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'Reporte_Formulario.xlsx';
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
+        if(data.size > 0){
+          const url = window.URL.createObjectURL(data);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'Reporte_Formulario.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+        }else {
+          this.isReporteDisponible = false; // Si no hay datos, ocultar el botón
+          this.alertService.errorAlert('Error', 'No ha realizado el formulario.');
+        }
       },
       error => {
         console.error('Error al descargar el reporte del formulario', error);
+        this.isReporteDisponible = false;
       }
     )
   }
