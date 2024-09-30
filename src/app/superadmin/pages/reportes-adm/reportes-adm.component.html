@@ -72,9 +72,9 @@
               class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
               {{ columna }}
             </th>
-            <th *ngIf="tipoReporteSeleccionado === 'emprendedor'"
+            <th *ngIf="isDataReady && tipoReporteSeleccionado === 'emprendedor'"
               class="px-4 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-              Exportar
+              Resultado Formulario
             </th>
           </tr>
         </thead>
@@ -87,9 +87,14 @@
               <td *ngIf="tipoReporteSeleccionado === 'emprendedor'"
                 class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">
                 <!-- Botón de Excel -->
-                <button (click)="getReporteFormulario(reporte.documento)" class="text-green-600 hover:text-green-800">
+                <button *ngIf="isReporteDisponible" (click)="getReporteFormulario(reporte.documento)"
+                  class="text-green-600 hover:text-green-800">
                   <i class="fas fa-file-excel"></i>
                 </button>
+
+                <span *ngIf="!isReporteDisponible" class="text-red-600">
+                  Reporte no disponible
+                </span>
               </td>
             </tr>
           </ng-container>
