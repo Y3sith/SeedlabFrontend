@@ -39,21 +39,23 @@ export class RutaEmprendedorComponent implements OnInit {
     id_tipo_dato: [''],
     id_asesor: [''],
     id_aliado: ['']
-  })
+  });
 
   constructor(
     private rutaService: RutaService,
     private router: Router,
     private fb: FormBuilder,
-  ) { }
+  ) {}
 
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
-      this.validateToken();
-      this.idRespuesta();
-      //this.listarRutaActiva();
-    }
+    this.validateToken();
+    this.idRespuesta();
+  }
 
-
+  /*
+    Valida el token y el rol del usuario; redirige si el usuario no tiene permisos.
+  */
   validateToken(): void {
     this.token = localStorage.getItem("token");
     let identityJSON = localStorage.getItem('identity');
@@ -62,12 +64,9 @@ export class RutaEmprendedorComponent implements OnInit {
       let identity = JSON.parse(identityJSON);
       this.user = identity;
       this.currentRolId = this.user.id_rol;
-      console.log(this.currentRolId);
 
       if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
-      } else {
-       // this.documento = this.user.emprendedor.documento;
       }
     }
     if (!this.token) {
@@ -76,6 +75,9 @@ export class RutaEmprendedorComponent implements OnInit {
     this.idRespuesta();
   }
 
+  /*
+    Obtiene el ID de respuesta del usuario y muestra la ruta si hay respuestas activas.
+  */
   idRespuesta(): void {
     this.isLoading = true;
     this.rutaService.idRespuestas(this.token).subscribe(
@@ -86,7 +88,6 @@ export class RutaEmprendedorComponent implements OnInit {
             this.ishidden = false;
             this.listarRutaActiva();
           } else {
-            console.log('ID de respuesta es 0, vacío o nulo, no se ejecutan las demás funciones.');
             this.isLoading = false;
             this.laruta = true;
           }
@@ -96,12 +97,15 @@ export class RutaEmprendedorComponent implements OnInit {
         }
       },
       error => {
-        console.error('Error al obtener el ID de respuestas:', error);
         this.isLoading = false;
+        console.error('Error al obtener el ID de respuestas:', error);
       }
     );
   }
 
+  /*
+    Lista la ruta activa del usuario.
+  */
   listarRutaActiva(): void {
     if (this.token) {
       this.rutaService.ruta(this.token).subscribe(
@@ -110,10 +114,8 @@ export class RutaEmprendedorComponent implements OnInit {
           if (this.rutaList.length > 0) {
             const primeraRuta = this.rutaList[0];
             this.rutaId = primeraRuta.id;
-            // Si quieres llamar otra función después de recibir el ID
             this.listarRutas();
-          } else{
-            console.log('No hay rutas activas');
+          } else {
             this.isLoading = false;
           }
         },
@@ -121,36 +123,32 @@ export class RutaEmprendedorComponent implements OnInit {
           console.error('Error al obtener rutas:', err);
         }
       );
-    } else {
-      console.log('No hay token disponible');
     }
   }
 
-  
+  /*
+    Lista las actividades completadas por ruta.
+  */
   listarRutas(): void {
     this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
       data => {
         this.rutaLista = data;
         this.isLoading = false;
-            console.log("ruta",this.rutaList.length);
-            console.log("actividad", this.rutaLista.length);
-            if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
-              this.alertadeactividad = true;
-            }
-            console.log(this.alertadeactividad);
+        if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
+          this.alertadeactividad = true;
+        }
       },
       err => {
-        //console.error('Error al obtener rutas:',err);
         this.isLoading = false;
-        console.log("ruta",this.rutaList.length);
-            console.log("actividad", this.rutaLista.length);
-            if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
-              this.alertadeactividad = true;
-            }
-            console.log(this.alertadeactividad);
+        if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
+          this.alertadeactividad = true;
+        }
       });
-    }
+  }
 
+  /*
+    Determina la clase CSS del ítem en función de su posición.
+  */
   getItemClass(index: number): string {
     if (index === 0) return 'item-single';
     if ((index - 1) % 3 === 0) return 'item-mid';
@@ -158,46 +156,50 @@ export class RutaEmprendedorComponent implements OnInit {
     return 'item-single';
   }
 
+  /*
+    Determina el orden visual de los ítems.
+  */
   getOrder(index: number): number {
     return Math.floor(index / 3) * 3 + (index % 3);
   }
 
+  /*
+    Asigna un color a los ítems según su posición.
+  */
   getItemColor(index: number): string {
-    const colors = [
-      '#F4384B', // Rojo
-      '#FFA300', // Amarillo oscuro
-      '#80981A', // Verde
-      '#683466', // Morado
-      '#F42CCF', // Fucsia
-      '#FFCE00', // Amarillo
-      '#00BF9E', // Agua marina
-      '#FF5F27', // Naranja
-      '#0E54A8'  // Azul oscuro
-    ];
+    const colors = ['#F4384B', '#FFA300', '#80981A', '#683466', '#F42CCF', '#FFCE00', '#00BF9E', '#FF5F27', '#0E54A8'];
     return colors[index % colors.length];
   }
 
+  /*
+    Determina la posición del círculo en función del índice.
+  */
   getCirclePositionClass(index: number): string {
     const group = Math.floor(index / 6);
     const positionInGroup = index % 6;
     return [0, 1, 4].includes(positionInGroup) ? 'circle-right' : 'circle-left';
   }
 
+  /*
+    Abre un modal con los detalles de la actividad seleccionada.
+  */
   openModal(actividad: any, index: number): void {
-    this.selectedActividad = actividad;
     this.selectedActividad = { ...actividad, colorIndex: index };
-    //this.selectedRutaId = this.rutaList[Math.floor(index / this.rutaList[0].actividades.length)].id;
     this.modalVisible = true;
   }
 
+  /*
+    Navega al módulo de la actividad seleccionada.
+  */
   handleIrAModulo(actividad: any) {
-    // Usa un servicio de estado o el router para pasar la actividad
     this.router.navigate(['curso-ruta-emprendedor'], { state: { actividad: actividad } });
   }
 
+  /*
+    Cierra el modal de la actividad.
+  */
   closeModal(): void {
     this.modalVisible = false;
     this.selectedActividad = null;
   }
 }
-

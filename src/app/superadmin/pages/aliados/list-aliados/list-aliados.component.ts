@@ -41,6 +41,9 @@ export class ListAliadosComponent implements OnInit {
     this.cargarAliados(); /* Cargar inicialmente con estado 'Activo' */
   }
 
+  /*
+  Este método se encarga de cargar la lista de aliados.
+*/
   cargarAliados(): void {
     this.isLoading = true;
     if (this.token) {
@@ -80,10 +83,6 @@ export class ListAliadosComponent implements OnInit {
     }
   }
 
-  private mapEstado(estado: boolean): string {
-    return estado ? 'Activo' : 'Inactivo';
-  }
-
   /* Retorna los aliados dependiendo de su estado, normalmente en activo */
   onEstadoChange(event: any): void {
       this.cargarAliados();
@@ -108,10 +107,18 @@ export class ListAliadosComponent implements OnInit {
     });
   }
 
+  /*
+  Direcciona a la pagina para editar el aliado
+  */
   editarAliado(id: any): void {
     this.router.navigateByUrl("edit-aliados/" + id);
   }
 
+  /*
+    Este método permite cambiar la página actual 
+    en el sistema de paginación. Acepta un argumento que 
+    determina la nueva página a la que se debe navegar.
+  */
   changePage(pageNumber: number | string): void {
     if (pageNumber === 'previous') {
       if (this.page > 1) {
@@ -128,6 +135,11 @@ export class ListAliadosComponent implements OnInit {
     this.updatePaginatedData();
   }
 
+  /* 
+  Actualiza los datos paginados de aliados según el número de página, la cantidad de ítems por página, 
+  y el filtro aplicado por nombre y estado. Filtra los aliados según el texto ingresado y estado seleccionado, 
+  luego recorta los resultados para mostrar solo la porción correspondiente a la página actual.
+  */
   updatePaginatedData(): void {
     const start = (this.page - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
@@ -145,19 +157,31 @@ export class ListAliadosComponent implements OnInit {
       .slice(start, end);
   }
 
+  /* 
+  Calcula el número total de páginas según el número total de aliados filtrados y la cantidad de ítems por página.
+  */
   getTotalPages(): number {
     return Math.ceil(this.buscarAliados().length / this.itemsPerPage);
   }
 
+  /* 
+  Genera un arreglo de números que representan las páginas disponibles, comenzando desde 1 hasta el número total de páginas.
+  */
   getPages(): number[] {
     const totalPages = this.getTotalPages();
     return Array(totalPages).fill(0).map((x, i) => i + 1);
   }
 
+  /* 
+  Verifica si es posible ir a la página anterior, devolviendo 'true' si la página actual es mayor que 1.
+  */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+  /* 
+  Verifica si es posible ir a la página siguiente, devolviendo 'true' si la página actual es menor al total de páginas.
+  */
   canGoNext(): boolean {
     return this.page < this.getTotalPages();
   }

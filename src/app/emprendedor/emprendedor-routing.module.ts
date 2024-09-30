@@ -5,7 +5,6 @@ import { ListAsesoriaEmprendedorComponent } from './pages/asesorias/list-asesori
 import { AddEmpresaComponent } from './pages/empresa/add-empresa/add-empresa.component';
 import { ListEmpresasComponent } from './pages/empresa/list-empresas/list-empresas.component';
 import { EncuestaEmpresaComponent } from './pages/formulario-diagnostico/encuesta-empresa.component';
-import { CursorutasComponent } from '../ruta/cursorutas/cursorutas.component';
 import { RutaEmprendedorComponent } from './pages/ruta-emprendedor/ruta-emprendedor.component';
 import { ModalActividadComponent } from './pages/modal-actividad/modal-actividad.component';
 import { ReportesComponent } from './pages/reportes/reportes.component';

@@ -8,10 +8,11 @@ import { map, Observable, of } from 'rxjs';
 })
 export class DashboardsService {
   url = environment.apiUrl + 'dashboard/';
-  private cacheDuration = 60 * 60 * 1000; // Duración de 1 hora
+  private cacheDuration = 60 * 60 * 1000; 
 
   constructor(private http: HttpClient) { }
 
+  /* Crea los encabezados HTTP con el token de acceso */
   private CreacionHeaders(access_token: any): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
@@ -19,134 +20,73 @@ export class DashboardsService {
     });
   }
 
+  /* Obtiene datos del almacenamiento local si están disponibles y no han expirado */
   private getFromLocalStorage(key: string): any {
     const cachedData = localStorage.getItem(key);
     if (cachedData) {
       const { data, timestamp } = JSON.parse(cachedData);
       if (Date.now() - timestamp < this.cacheDuration) {
-        return data; // Retorna los datos si no han expirado
+        return data; 
       }
-      localStorage.removeItem(key); // Elimina el caché si ha expirado
+      localStorage.removeItem(key); 
     }
-    return null; // Si no hay datos en caché
+    return null; 
   }
 
+  /* Guarda datos en el almacenamiento local con una marca de tiempo */
   private saveToLocalStorage(key: string, data: any): void {
     const cacheData = {
       data: data,
-      timestamp: Date.now() // Guarda el tiempo actual
+      timestamp: Date.now() 
     };
-    localStorage.setItem(key, JSON.stringify(cacheData)); // Guarda los datos en localStorage
+    localStorage.setItem(key, JSON.stringify(cacheData));
   }
 
+  /* Obtiene el dashboard del administrador, usando caché si está disponible */
   dashboardAdmin(access_token: any, year?: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-
-    // Si el año está presente, lo añadimos a la URL, sino enviamos solo la URL base
     const url = year ? `${this.url}contar-usuarios?year=${year}` : `${this.url}contar-usuarios`;
     const localData = this.getFromLocalStorage('dashboardAdmin');
 
     if (localData) {
-      // Emitir los datos de localStorage inmediatamente
-      return of(localData); // 'of' emite un Observable con los datos locales
+      return of(localData);
     }
 
     return this.http.get(url, options).pipe(
       map(data => {
-        this.saveToLocalStorage('dashboardAdmin', data); // Guarda en localStorage
-        return data; // Retorna los datos
+        this.saveToLocalStorage('dashboardAdmin', data);
+        return data; 
       })
     );
   }
 
-
-
-  // contarRegistrosMensual(access_token: any): Observable<any> {
-  //   const cachedData = this.getFromLocalStorage('contarRegistrosMensual');
-  //   if (cachedData) {
-  //     return of(cachedData); // Retorna los datos desde localStorage
-  //   }
-
-  //   const options = { headers: this.CreacionHeaders(access_token) };
-  //   return this.http.get(this.url + "listRegistrosAnioMes", options).pipe(
-  //     map(data => {
-  //       this.saveToLocalStorage('contarRegistrosMensual', data); // Guarda en localStorage
-  //       return data; // Retorna los datos
-  //     })
-  //   );
-  // }
-
-  // promedioAsesorias(access_token: any, year: number): Observable<any> {
-  //   const cachedData = this.getFromLocalStorage(`promedioAsesorias_${year}`);
-  //   if (cachedData) {
-  //     return of(cachedData); // Retorna los datos desde localStorage
-  //   }
-
-  //   const options = { headers: this.CreacionHeaders(access_token) };
-  //   return this.http.get(`${this.url}averageAsesorias2024?year=${year}`, options).pipe(
-  //     map(data => {
-  //       this.saveToLocalStorage(`promedioAsesorias_${year}`, data); // Guarda en localStorage
-  //       return data; // Retorna los datos
-  //     })
-  //   );
-  // }
-
-  // emprendedoresPorDepartamento(access_token: any): Observable<any> {
-  //   const cachedData = this.getFromLocalStorage('emprendedoresPorDepartamento');
-  //   if (cachedData) {
-  //     return of(cachedData); // Retorna los datos desde localStorage
-  //   }
-
-  //   const options = { headers: this.CreacionHeaders(access_token) };
-  //   return this.http.get(this.url + "emprendedor_departamento", options).pipe(
-  //     map(data => {
-  //       this.saveToLocalStorage('emprendedoresPorDepartamento', data); // Guarda en localStorage
-  //       return data; // Retorna los datos
-  //     })
-  //   );
-  // }
-
-  // Aliados
+  /* Obtiene el dashboard de un asesor específico, usando caché si está disponible */
   getDashboard(access_token: any, idAsesor: number): Observable<any> {
     const cachedData = this.getFromLocalStorage(`dashboardAliado_${idAsesor}`);
     if (cachedData) {
-      return of(cachedData); // Retorna los datos desde localStorage
+      return of(cachedData);
     }
 
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get<any>(`${this.url}dashboardAliado/${idAsesor}`, options).pipe(
       map(data => {
-        this.saveToLocalStorage(`dashboardAliado_${idAsesor}`, data); // Guarda en localStorage
-        return data; // Retorna los datos
+        this.saveToLocalStorage(`dashboardAliado_${idAsesor}`, data); 
+        return data; 
       })
     );
   }
 
-  // graficaDatosGeneros(access_token: string): Observable<any> {
-  //   const cachedData = this.getFromLocalStorage('graficaDatosGeneros');
-  //   if (cachedData) {
-  //     return of(cachedData); // Retorna los datos desde localStorage
-  //   }
-
-  //   const options = { headers: this.CreacionHeaders(access_token) };
-  //   return this.http.get<any>(this.url + "generoAliado", options).pipe(
-  //     map(data => {
-  //       this.saveToLocalStorage('graficaDatosGeneros', data); // Guarda en localStorage
-  //       return data; // Retorna los datos
-  //     })
-  //   );
-  // }
-
+  /* Obtiene datos para la gráfica de formulario, usando caché si está disponible */
   graficaFormulario(access_token: string, id_empresa: string, tipo: number): Observable<any> {
     const cachedData = this.getFromLocalStorage(`graficaFormulario_${id_empresa}_${tipo}`);
     if (cachedData) {
-      return of(cachedData); // Retorna los datos desde localStorage
+      return of(cachedData); 
     }
 
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get<any>(`${this.url}graficaFormulario/${id_empresa}/${tipo}`, options).pipe(
       map(response => {
-        this.saveToLocalStorage(`graficaFormulario_${id_empresa}_${tipo}`, response); // Guarda en localStorage
+        this.saveToLocalStorage(`graficaFormulario_${id_empresa}_${tipo}`, response);
         console.log('Respuesta original del servidor:', response);
         return response.items && response.items.length > 0 ? response.items[0] : response;
       })

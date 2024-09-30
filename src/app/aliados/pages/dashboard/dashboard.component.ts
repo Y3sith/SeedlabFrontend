@@ -31,20 +31,24 @@ export class DashboardComponent implements OnInit {
   asesoriasCharOption:echarts.EChartsOption;
   isLoading: boolean = false;
 
- 
+
 
   constructor(
     private dashboardService: DashboardsService,
     private router: Router,
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     this.getDatosDashboard();
     this.loadAsesoriasData();
   };
 
-  /* Valida el token del login */
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -65,6 +69,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  /*
+    Este método es responsable de obtener y procesar 
+    los datos necesarios para mostrar en el panel de dashboard. Este método utiliza el servicio `dashboardService` 
+    para recuperar los datos relacionados con los usuarios y las 
+    asesorías.
+  */
   getDatosDashboard(): void {
     this.isLoading = true;
     this.dashboardService.dashboardAdmin(this.token).subscribe(

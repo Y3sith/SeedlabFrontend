@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
     private empresaService: EmpresaService
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     const currentYear = new Date().getFullYear();
@@ -79,10 +80,19 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+/*
+  Actualiza el año seleccionado y carga el promedio de asesorías para el año correspondiente.
+*/
+
   onYearChange(year: number): void {
     this.selectedYear = year;
     this.getDatosDashboard(this.selectedYear);
   }
+
+/*
+  Obtiene la lista de empresas y selecciona la primera empresa disponible.
+  Luego, carga la gráfica de puntajes según el tipo seleccionado.
+*/
 
   getEmpresas() {
     this.empresaService.getAllEmpresa(this.token).subscribe(
@@ -97,6 +107,10 @@ export class DashboardComponent implements OnInit {
     )
   }
 
+  /*
+    Maneja el cambio de empresa seleccionada y actualiza la gráfica de puntajes 
+    según el tipo seleccionado.
+  */
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
     this.graficaPuntajesFormulario(+this.selectedTipo);
@@ -378,6 +392,10 @@ export class DashboardComponent implements OnInit {
     return monthNames[monthNumber - 1];
   }
 
+
+  /*
+    Inicializa un gráfico de radar vacío con indicadores predefinidos.
+  */
   initGraficaVacia(): void {
     // Configuración de la gráfica vacía
     this.getPuntajesFormOrientador = {
@@ -402,7 +420,7 @@ export class DashboardComponent implements OnInit {
           type: 'radar',
           data: [
             {
-              value: [0, 0, 0, 0, 0], // Valores vacíos
+              value: [0, 0, 0, 0, 0],
               name: 'Sin Empresa Seleccionada'
             }
           ]
@@ -414,6 +432,10 @@ export class DashboardComponent implements OnInit {
     this.initChart('echarts-formulario', this.getPuntajesFormOrientador);
   }
 
+  /*
+    Actualiza y grafica los puntajes de un formulario según el tipo (primera o segunda vez) 
+    para la empresa seleccionada.
+  */
   graficaPuntajesFormulario(tipo: number): void {
     if (!this.selectedEmpresa || !tipo) {
       this.initGraficaVacia();
@@ -449,16 +471,14 @@ export class DashboardComponent implements OnInit {
                     parseFloat(data.info_mercado) || 0,
                     parseFloat(data.info_financiera) || 0
                   ],
-                  name: `Empresa ${this.selectedEmpresa}` // Cambia si es necesario
+                  name: `Empresa ${this.selectedEmpresa}`
                 }
               ]
             }
           ]
         };
-
-        // Actualizar la gráfica con los nuevos datos
         if (this.chart) {
-          this.chart.dispose(); // Destruye el gráfico anterior antes de crear uno nuevo
+          this.chart.dispose();
         }
         //this.initChart('echarts-formulario', this.getPuntajesFormOrientador);
       },
@@ -470,9 +490,13 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  /*
+    Inicializa un gráfico ECharts en el elemento con el ID especificado 
+    y configura sus opciones utilizando el objeto proporcionado.
+  */
   initChart(chartId: string, chartOptions: any): void {
     const chartDom = document.getElementById(chartId);
-    this.chart = echarts.init(chartDom); // Inicializa el gráfico y lo almacena en this.chart
+    this.chart = echarts.init(chartDom);
     this.chart.setOption(chartOptions);
   }
 

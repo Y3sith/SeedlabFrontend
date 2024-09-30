@@ -8,27 +8,7 @@ export class AlertService {
 
   constructor() { }
 
-  // deleteAlert(title: string, text: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question', confirmButtonText?: string ){
-  //   Swal.fire({
-  //     title: title,
-  //     text: text,
-  //     icon: icon,
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: confirmButtonText || 'OK'
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       Swal.fire({
-  //         title: "Deleted!",
-  //         text: "Your file has been deleted.",
-  //         icon: "success"
-  //       });
-  //     }
-  //   });
-  // }
-
-
+  /* Muestra una alerta de confirmación para activar o desactivar algo */
   alertaActivarDesactivar(text: string, icon?: 'success' | 'error' | 'warning' | 'info' | 'question', confirmButtonText?: string, cancelButtonText?: string) {
     return Swal.fire({
       text: text,
@@ -42,6 +22,7 @@ export class AlertService {
     });
   }
 
+  /* Muestra una alerta informativa con un solo botón de confirmación */
   alertainformativa(text: string, icon?: 'success' | 'error' | 'warning' | 'info' | 'question', confirmButtonText?: string) {
     return Swal.fire({
       text: text,
@@ -52,6 +33,7 @@ export class AlertService {
     });
   }
 
+  /* Muestra una alerta de confirmación para desactivar un emprendedor */
   DesactivarEmprendedor(title: string, text: string, icon: 'success' | 'error' | 'warning' | 'info' | 'question', confirmButtonText?: string, cancelButtonText?: string) {
     return Swal.fire({
       title: title,
@@ -66,10 +48,7 @@ export class AlertService {
     });
   }
 
-
-
-
-
+  /* Muestra una alerta de éxito en forma de toast */
   successAlert(title: string, text: string) {
     const Toast = Swal.mixin({
       toast: true,
@@ -82,8 +61,8 @@ export class AlertService {
         toast.onmouseleave = Swal.resumeTimer;
       },
       customClass: {
-        popup: 'bg-blue-100', // Establecer el color de fondo verde claro
-        title: 'text-sky-500' // Establecer el color del texto del título
+        popup: 'bg-blue-100', 
+        title: 'text-sky-500'
       }
     });
     Toast.fire({
@@ -93,6 +72,7 @@ export class AlertService {
     });
   }
 
+  /* Muestra una alerta de error en forma de toast */
   errorAlert(title: string, text: string) {
     const Toast = Swal.mixin({
       toast: true,
@@ -113,12 +93,10 @@ export class AlertService {
       icon: "error",
       text: text,
       iconColor: "#FA7D00"
-
     });
-
-
   }
 
+  /* Muestra una alerta de validación */
   validationAlert(title: string, text: string) {
     Swal.fire({
       icon: 'warning',
@@ -129,22 +107,12 @@ export class AlertService {
     });
   }
 
+  /* Muestra una alerta informativa */
   infoAlert(title: string, text: string) {
     return Swal.fire({
       icon: "info",
       title: title,
       text: text,
-      //footer: '<a href="#">Why do I have this issue?</a>'
     });
   }
-
-  // warningAlert(title: string, text: string) {
-  //   Swal.fire({
-  //     icon: "warning",
-  //     title: title,
-  //     text: text,
-  //     footer: '<a href="#">Why do I have this issue?</a>'
-  //   });
-  // }
-
 }

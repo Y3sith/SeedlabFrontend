@@ -36,8 +36,11 @@ export class HorarioModalComponent implements OnInit {
     this.validateToken();
   }
 
-  /* Valida el token del login */
-  validateToken(): void {
+  /*
+      Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+      formulario o cualquier otra parte de la aplicación.
+  */  
+ validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
     }
@@ -46,6 +49,9 @@ export class HorarioModalComponent implements OnInit {
     }
   }
 
+  /*
+  Esta función se encarga de guardar la asignación del horario para una asesoría específica.
+*/
   onGuardar(): void {
     if (this.asignarForm.valid) {
       const { fecha, observaciones } = this.asignarForm.value;
@@ -57,6 +63,7 @@ export class HorarioModalComponent implements OnInit {
         },
         error => {
           console.error('Error al asignar el horario', error);
+          console.log(error);
         }
       );
     } else {
@@ -68,24 +75,22 @@ export class HorarioModalComponent implements OnInit {
   cancelarCrerAsesoria() {
     this.dialogRef.close();
   }
-dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+
+/*
+  Validador que verifica si la fecha seleccionada en el control es válida, asegurando que no sea una fecha anterior a hoy.
+*/
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
-      return null; // Si no hay valor, no se valida
+      return null;
     }
-  
     const selectedDate = new Date(value);
     const today = new Date();
-    
-    // Normalizamos la fecha de hoy para no tener en cuenta la hora
     today.setHours(0, 0, 0, 0);
-  
-    // Validación: No permitir fechas anteriores a hoy
     if (selectedDate <= today) {
       return { pastDate: 'No se permiten fechas anteriores a hoy *' };
     }
-  
-    return null; // Si la fecha es válida
+    return null;
   }
 
   get f() { return this.asignarForm.controls; }

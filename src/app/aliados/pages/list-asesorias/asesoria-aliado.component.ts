@@ -27,12 +27,10 @@ export class AsesoriaAliadoComponent implements OnInit {
   Nombre_sol: string | null = null;
   tiempoEspera = 1800;
   isLoading: boolean = false;
-
-
-  page: number = 1; // Inicializa la página actual
-  totalAsesorias: number = 0; // variable para almacenar el total de asesorias
-  itemsPerPage: number = 8; // Número de asesorias por página
-  showAsignadasFlag: boolean = false; 
+  page: number = 1;
+  totalAsesorias: number = 0;
+  itemsPerPage: number = 8;
+  showAsignadasFlag: boolean = false;
 
   constructor(
     private asesoriaService: AsesoriaService,
@@ -47,7 +45,10 @@ export class AsesoriaAliadoComponent implements OnInit {
     this.separarAsesorias();
   }
 
-  /* Valida el token del login */
+  /*
+     Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+     formulario o cualquier otra parte de la aplicación.
+ */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -66,14 +67,18 @@ export class AsesoriaAliadoComponent implements OnInit {
       this.router.navigate(['home']);
     } else {
       this.loadAsesorias(this.id_aliado, [0, 1]);
-      
+
     }
   }
 
+  /*
+    Este método carga las asesorías basándose en el rol 
+    del usuario y los estados seleccionados. 
+  */
   loadAsesorias(rol: number, estados: number[]): void {
     this.isLoading = true;
     this.asesorias = []; // Reiniciar las asesorías
-  
+
     estados.forEach(estado => {
       this.asesoriaService.getAsesoriasPorRolYEstado(this.token, rol, estado).subscribe(
         data => {
@@ -91,8 +96,12 @@ export class AsesoriaAliadoComponent implements OnInit {
     });
   }
 
-   // Código para la paginación
-   changePage(pageNumber: number | string): void {
+  /*
+    Este método permite cambiar la página actual 
+    en el sistema de paginación. Acepta un argumento que 
+    determina la nueva página a la que se debe navegar.
+  */
+  changePage(pageNumber: number | string): void {
     if (pageNumber === 'previous') {
       if (this.page > 1) {
         this.page--;
@@ -106,26 +115,49 @@ export class AsesoriaAliadoComponent implements OnInit {
     }
   }
 
+  /*
+    Este método calcula el número total de páginas necesarias 
+    para mostrar las asesorías, dependiendo de si se están 
+    mostrando asesorías "Sin Asesor" o "Con Asesor". 
+  */
   getTotalPages(): number {
-    if (this.asesoriasSinAsesor.length >= 2 && this.showAsignadasFlag == false){
+    if (this.asesoriasSinAsesor.length >= 2 && this.showAsignadasFlag == false) {
       return Math.ceil(this.asesoriasSinAsesor.length / this.itemsPerPage);
-    }else{
+    } else {
       return Math.ceil(this.asesoriasConAsesor.length / this.itemsPerPage);
     }
   }
 
+  /*
+    Este método genera un array de números que 
+    representan las páginas disponibles en el sistema de 
+    paginación, basado en la cantidad total de elementos 
+    y la cantidad de elementos por página.
+  */
   getPages(): number[] {
     const totalPages = this.getTotalPages();
     return Array(totalPages).fill(0).map((x, i) => i + 1);
   }
-
+  /*
+      Este método verifica si es posible retroceder a 
+      la página anterior en el sistema de paginación.
+    */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+  /*
+    Este método verifica si es posible avanzar a 
+    la siguiente página en el sistema de paginación.
+  */
   canGoNext(): boolean {
     return this.page < this.getTotalPages();
   }
+
+  /*
+    Este método separa las asesorías en dos categorías:
+    "Con Asesor" y "Sin Asesor".
+  */
 
   separarAsesorias(): void {
     this.asesoriasConAsesor = this.asesorias.filter(asesoria => asesoria.Asesor);
@@ -133,11 +165,16 @@ export class AsesoriaAliadoComponent implements OnInit {
 
     if (this.asesorias.length === 0) {
       this.mensaje = "No hay asesorías disponibles para mostrar.";
-    }  else {
+    } else {
       this.mensaje = null;
     }
   }
 
+  /*
+  Este método abre un modal para asignar un asesor a una 
+  asesoría específica. Utiliza el componente 
+  `AsignarAsesorModalComponent` para la interacción.
+*/
   openModal(asesoria: Asesoria): void {
     const dialogRef = this.dialog.open(AsignarAsesorModalComponent, {
       width: '400px',
@@ -145,47 +182,49 @@ export class AsesoriaAliadoComponent implements OnInit {
     });
 
     dialogRef.componentInstance.asesoriaAsignada.subscribe(() => {
-      this.loadAsesorias(this.id_aliado, [0,1]); // Recargar las asesorías
+      this.loadAsesorias(this.id_aliado, [0, 1]);
     });
 
     dialogRef.afterClosed().subscribe(result => {
     });
   }
-  
 
+  /*
+    Este método maneja la lógica para rechazar una asesoría 
+    específica. 
+  */
   rechazarAsesoria(asesoria: Asesoria): void {
     if (asesoria && asesoria.id_asesoria) {
-        this.alertService.alertaActivarDesactivar("¿Estás seguro de rechazar la asesoría?", 'question').then((result) => {
-            if (result.isConfirmed) {
-                this.asesoriaService.rechazarAsesoria(this.token, asesoria.id_asesoria, 'rechazar').subscribe(
-                    data => {
-                        this.loadAsesorias(this.currentRolId!, [1]); // Pasa un array con el estado 1
-                        this.alertService.successAlert('Éxito', data.message);
-                        setTimeout(() => {
-                            location.reload();
-                        }, this.tiempoEspera);
-                    },
-                    error => {
-                        this.alertService.errorAlert('Error', error.error.message);
-                        console.error('Error al rechazar asesoría:', error);
-                    }
-                );
+      this.alertService.alertaActivarDesactivar("¿Estás seguro de rechazar la asesoría?", 'question').then((result) => {
+        if (result.isConfirmed) {
+          this.asesoriaService.rechazarAsesoria(this.token, asesoria.id_asesoria, 'rechazar').subscribe(
+            data => {
+              this.loadAsesorias(this.currentRolId!, [1]);
+              this.alertService.successAlert('Éxito', data.message);
+              setTimeout(() => {
+                location.reload();
+              }, this.tiempoEspera);
+            },
+            error => {
+              this.alertService.errorAlert('Error', error.error.message);
+              console.error('Error al rechazar asesoría:', error);
             }
-        });
+          );
+        }
+      });
     }
-}
-
+  }
+  /*
+    Este método se encarga de mostrar las asesorías que no 
+    han sido asignadas.
+  */
   showSinAsignar(): void {
     this.isLoading = true;
-    // this.showAsignadasFlag = false; 
-    // this.asesorias = this.asesoriasSinAsesor;
-    // this.page = 1;
 
-    // if (this.asesoriasSinAsesor.length === 0) {
-    //   this.mensaje = "No hay asesorías esperando por asignación.";
-    // } else {
-    //   this.mensaje = null;
-    // }
+    /*
+      Este bloque de código establece un temporizador para realizar 
+      varias acciones después de un retraso de 300 milisegundos.
+    */
     setTimeout(() => {
       this.showAsignadasFlag = false;
       this.asesorias = this.asesoriasSinAsesor;
@@ -197,19 +236,16 @@ export class AsesoriaAliadoComponent implements OnInit {
       }
       this.isLoading = false;
     }, 300);
-    
+
   }
 
+  /*
+    Este método se encarga de mostrar las asesorías que si 
+    han sido asignadas.
+  */
   showAsignadas(): void {
     this.isLoading = true;
-    // this.showAsignadasFlag = true; 
-    // this.asesorias = this.asesoriasConAsesor;
-    // this.page = 1;
-    // if (this.asesoriasConAsesor.length === 0) {
-    //   this.mensaje = "Aún no has asignado ninguna asesoría.";
-    // } else {
-    //   this.mensaje = null;
-    // }
+
     setTimeout(() => {
       this.showAsignadasFlag = true;
       this.asesorias = this.asesoriasConAsesor;
@@ -223,14 +259,18 @@ export class AsesoriaAliadoComponent implements OnInit {
     }, 300);
   }
 
+  /*
+    Este método permite a los asesores 
+    localizar rápidamente asesorías específicas basándose en 
+    el nombre del solicitante.
+  */
   filtrarAsesorias(): void {
-    const filtro = this.Nombre_sol?.trim().toLowerCase(); // Utiliza Nombre_sol
+    const filtro = this.Nombre_sol?.trim().toLowerCase();
     if (filtro) {
       this.asesorias = this.asesorias.filter(asesoria =>
-        asesoria.nombre_sol.toLowerCase().includes(filtro) // Utiliza Nombre_sol
+        asesoria.nombre_sol.toLowerCase().includes(filtro)
       );
     } else {
-      // Si el filtro está vacío, restaura las asesorías originales
       this.separarAsesorias();
     }
   }

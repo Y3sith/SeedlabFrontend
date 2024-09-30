@@ -18,6 +18,7 @@ export class AsignarAsesorModalComponent implements OnInit {
   token: string | null = null;
   user: any = null;
   currentRolId: string | null = null;
+  submitted = false;
   @Output() asesoriaAsignada = new EventEmitter<void>();
 
   constructor(
@@ -37,23 +38,33 @@ export class AsignarAsesorModalComponent implements OnInit {
   ngOnInit() {
     this.validateToken();
   }
-  
-  /* Valida el token del login */
+
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
       const identityJSON = localStorage.getItem('identity');
-    
+
       const identity = JSON.parse(identityJSON);
       const idAliado = identity.id;
       this.cargarAsesores(idAliado);
     }
-    if (!this.token ) {
+    if (!this.token) {
       this.router.navigate(['home']);
+    }
   }
-}
 
+  get f() { return this.asignarForm.controls; }
+
+  /*
+    Este método se encarga de manejar la acción de guardar la 
+    asignación de un asesor a una asesoría en un formulario.
+  */
   onGuardar(): void {
+    this.submitted = true;
     if (this.asignarForm.valid) {
       const idAsesor = this.asignarForm.get('nom_asesor')?.value;
       const idAsesoria = this.data.asesoria.id_asesoria;
@@ -62,20 +73,27 @@ export class AsignarAsesorModalComponent implements OnInit {
         data => {
           this.asesoriaAsignada.emit(); // Emit the event
           this.dialogRef.close(true);
-          this.alertService.successAlert('Exito',data.message);
+          this.alertService.successAlert('Exito', data.message);
         },
         error => {
           console.error('Error al asignar asesoría:', error);
-          this.alertService.errorAlert('Error',error.error.message);
+          //this.alertService.errorAlert('Error', error.error.message);
         }
       );
     }
   }
-
+  /*
+    Este método se utiliza para manejar la acción de cancelar 
+    una operación en un diálogo o modal.
+  */
   onCancel(): void {
     this.dialogRef.close();
   }
 
+  /*
+    Este método se encarga de cargar la lista de 
+    asesores disponibles para un aliado específico.
+  */
   cargarAsesores(idaliado: number): void {
     this.asesoriaService.listarAsesores(this.token, idaliado).subscribe(
       data => {

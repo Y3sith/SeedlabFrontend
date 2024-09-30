@@ -46,11 +46,16 @@ export class CrearAsesoriaModalComponent {
 
     this.validateToken();
   }
-
+  
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.loadAliados();
   }
 
+  /*
+      Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+      formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -60,7 +65,6 @@ export class CrearAsesoriaModalComponent {
         let identity = JSON.parse(identityJSON);
         this.user = identity;
         this.documento = this.user.emprendedor.documento;
-        // Asigna el valor del documento del emprendedor a la variable docEmprendedor
         this.docEmprendedor = this.documento;
       }
     }
@@ -69,6 +73,9 @@ export class CrearAsesoriaModalComponent {
     }
   }
 
+/*
+  Carga la lista de aliados a través del servicio de aliados.
+*/
   loadAliados(): void {
     this.aliadoService.mostrarAliado(this.token).subscribe(
       (data: any[]) => {
@@ -83,22 +90,20 @@ export class CrearAsesoriaModalComponent {
   // Método que se ejecuta al cambiar la casilla de verificación
   onCheckboxChange(event: any) {
     const isChecked = event.target.checked;
-    
     if (isChecked) {
-      // Des-seleccionar el aliado y deshabilitar el select
-      this.asesoriaForm.get('nom_aliado')?.setValue(''); // Des-selecciona el select
-      this.asesoriaForm.get('nom_aliado')?.disable(); // Deshabilita el select
+      this.asesoriaForm.get('nom_aliado')?.setValue('');
+      this.asesoriaForm.get('nom_aliado')?.disable();
     } else {
-      // Habilitar el select
       this.asesoriaForm.get('nom_aliado')?.enable();
     }
   }
   
-
+/*
+  Envía los datos del formulario de asesoría si es válido.
+*/
   onSubmit() {
     if (this.asesoriaForm.valid) {
       const formData = this.asesoriaForm.value;
-      // Formatear la fecha actual en el formato 'YYYY-MM-DD HH:MM:SS'
       const fechaActual = new Date();
       const fechaFormateada = `${fechaActual.getFullYear()}-${(fechaActual.getMonth() + 1)
         .toString()
@@ -111,15 +116,12 @@ export class CrearAsesoriaModalComponent {
         .padStart(2, '0')}`;
       
       formData.fecha = fechaFormateada;
-      
-      // Utiliza this.docEmprendedor en lugar de obtener el documento del emprendedor del localStorage
       if (this.docEmprendedor) {
         formData.doc_emprendedor = this.docEmprendedor;
       } else {
         console.error('Documento del emprendedor no encontrado');
         return;
       }
-  
       this.asesoriaService.crearAsesoria(this.token, formData).subscribe(
         response => {
           this.dialogRef.close(formData);

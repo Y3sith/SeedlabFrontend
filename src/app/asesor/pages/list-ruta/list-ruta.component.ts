@@ -42,8 +42,10 @@ export class ListRutaComponent {
     private modalSS: SwitchService,
     public dialog: MatDialog,
     public alertService: AlertService,
-  ) {}
+  ) { }
 
+
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.cargarRutas();
@@ -52,16 +54,22 @@ export class ListRutaComponent {
     });
   }
 
+  /*
+    Método para abrir un modal de adición o edición de ruta.
+  */
   openModal(rutaId: number | null): void {
     let dialogRef: MatDialogRef<ModalAddRutaComponent>;
     dialogRef = this.dialog.open(ModalAddRutaComponent, {
       data: { rutaId: rutaId },
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => { });
   }
 
-   /* Valida el token del login */
-   validateToken(): void {
+  /*
+          Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+          formulario o cualquier otra parte de la aplicación.
+    */
+  validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
       let identityJSON = localStorage.getItem('identity');
@@ -81,6 +89,10 @@ export class ListRutaComponent {
     }
   }
 
+
+  /*
+    Método para cargar todas las rutas desde el servicio.
+  */
   cargarRutas(): void {
     this.isLoading = true;
     if (this.token) {
@@ -102,28 +114,47 @@ export class ListRutaComponent {
     }
   }
 
+  /*
+     Método que se ejecuta cuando el estado cambia en el componente.
+   */
   onEstadoChange(event: any): void {
     this.cargarRutas();
   }
 
+  /*
+    Método para limpiar los filtros de usuario y recargar las rutas.
+  */
   limpiarFiltro(): void {
     this.userFilter = { nombre: '', estado: 'Activo', fecha_creacion: '' };
     this.cargarRutas();
   }
 
+  /*
+    Método para abrir un modal sin un ID específico.
+  */
   openModalSINId(): void {
     this.openModal(null);
   }
-
+  /*
+      Método que determina si se puede navegar a la página anterior en la paginación.
+  */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
+
+  /*
+     Método que determina si se puede navegar a la siguiente página en la paginación.
+   */
   canGoNext(): boolean {
     const totalItems = this.listaRutas.length;
     const itemsPerPage = 5;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     return this.page < totalPages;
   }
+
+  /*
+    Cambia la página actual de la vista.
+  */
 
   changePage(page: number | 'previous' | 'next'): void {
     if (page === 'previous' && this.canGoPrevious()) {
@@ -135,6 +166,9 @@ export class ListRutaComponent {
     }
   }
 
+  /*
+    Obtiene una lista de números de página basada en la cantidad total de elementos.
+  */
   getPages(): number[] {
     const totalItems = this.listaRutas.length;
     const itemsPerPage = 5;
@@ -142,15 +176,19 @@ export class ListRutaComponent {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
+  /*
+    Lista las actividades de una ruta específica, dependiendo del estado de la ruta.
+  */
   listarActividad(rutaId: number, estado: any): void {
-    if (estado === 'Inactivo'){
+    if (estado === 'Inactivo') {
       this.alertService.alertainformativa('No puedes editar actividades en una ruta que este inactiva, debes activar la ruta para poderla editar', 'error').then((result) => {
         if (result.isConfirmed) {
-          
+
         }
       });
-    }else{
-      this.router.navigate(['list-actividades-asesor'], {queryParams: { id_ruta: rutaId},
+    } else {
+      this.router.navigate(['list-actividades-asesor'], {
+        queryParams: { id_ruta: rutaId },
       });
     }
   }

@@ -83,8 +83,12 @@ export class ActnivlecComponent implements OnInit {
 
   selectedNivelId: any | null = null;
   selectedLeccion: any | null = null;
+  charCount: number = 0;
+  charCountContenido: number = 0;
 
-  ////añadir actividad
+  /*
+    Este objeto representa el formulario `actividadForm` utilizado para gestionar la información de una actividad.
+  */
   actividadForm = this.fb.group({
     id: [],
     nombre: ['', Validators.required],
@@ -94,8 +98,10 @@ export class ActnivlecComponent implements OnInit {
     id_ruta: ['', Validators.required],
     id_aliado: ['', Validators.required]
   })
-  ////anadir nivel
 
+  /*
+    Este objeto representa el formulario `nivelForm` utilizado para gestionar la información relacionada con un nivel.
+  */
   nivelForm = this.fb.group({
     id_nivel: [],
     nombre: [{ value: '', disabled: true }, Validators.required],
@@ -104,7 +110,10 @@ export class ActnivlecComponent implements OnInit {
   })
   mostrarNivelForm: boolean = false;
 
-  ///// añadir leccion
+
+  /*
+    Este objeto representa el formulario `leccionForm` utilizado para gestionar la información relacionada con una lección.
+  */
   leccionForm = this.fb.group({
     id_leccion: [''],
     nombre: [{ value: '', disabled: true }, Validators.required],
@@ -112,8 +121,9 @@ export class ActnivlecComponent implements OnInit {
   })
   mostrarLeccionForm: boolean = false;
 
-  ///añadir contenido por leccion
-
+  /*
+    Este objeto representa el formulario `contenidoLeccionForm` utilizado para gestionar la información relacionada con el contenido de una lección.
+  */
   contenidoLeccionForm = this.fb.group({
     id_contenido: [''],
     titulo: [{ value: '', disabled: true }, Validators.required],
@@ -138,6 +148,8 @@ export class ActnivlecComponent implements OnInit {
     private location: Location,
   ) { }
 
+  
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
 
@@ -171,6 +183,11 @@ export class ActnivlecComponent implements OnInit {
     }
     this.selectedFromInput = false;
   }
+
+  /*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -194,11 +211,16 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  /*
+    Este método permite regresar a la página anterior en la navegación.
+  */
   goBack(): void {
     this.location.back();
   }
 
-  //me trae el tipo de dato que requiere la actividad
+  /*
+    Este método se encarga de obtener los tipos de dato disponibles a través del servicio `actividadService`.
+  */
   tipoDato(): void {
     if (this.token) {
       this.actividadService.getTipoDato(this.token).subscribe(
@@ -227,6 +249,10 @@ export class ActnivlecComponent implements OnInit {
     return this.contenidoLeccionForm.controls;
   }
 
+  /*
+    Este método se encarga de obtener los tipos de datos para el contenido de la lección 
+    utilizando el servicio `contenidoLeccionService`.
+  */
   tipoDatoContenido(): void {
     if (this.token) {
       this.contenidoLeccionService.getTipoDato(this.token).subscribe(
@@ -241,7 +267,9 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-  //me lista los aliados existentes activos
+  /*
+    Este método se encarga de obtener la lista de aliados utilizando el servicio `superAdminService`.
+  */
   listaAliado(): void {
     if (this.token) {
       this.superAdminService.listarAliado(this.token).subscribe(
@@ -255,6 +283,10 @@ export class ActnivlecComponent implements OnInit {
       )
     }
   }
+
+  /*
+    Este método se encarga de cargar los datos de una actividad existente para editarla.
+  */
   verEditar(): void {
     if (this.actividadId !== null) {
       this.isLoading=true;
@@ -281,6 +313,7 @@ export class ActnivlecComponent implements OnInit {
               this.initializeNivelForm();
 
               this.activivarFormulariosBotones();
+              this.updateCharCount();
               // console.log('Actividad: ', data);
               this.isLoading=false;
             },
@@ -298,6 +331,9 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  /*
+    Este método inicializa el formulario de niveles y, si hay contenido de lección disponible, lo carga en el formulario correspondiente.
+  */
   initializeNivelForm(): void {
     this.isLoading=true;
     if (this.niveles && this.niveles.length > 0) {
@@ -321,6 +357,7 @@ export class ActnivlecComponent implements OnInit {
       this.nivelForm.get('nombre')?.disable();
 
     }
+    
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
       this.contenidoLeccionForm.patchValue({
@@ -334,7 +371,17 @@ export class ActnivlecComponent implements OnInit {
     this.isLoading=false;
   }
 
+  /*
+  Actualiza el contador de caracteres basado en el valor del campo 'descripcion' del formulario.
+  */
+  updateCharCount(): void {
+    const descripcionValue = this.actividadForm.get('descripcion')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
 
+/*
+  Agrega o actualiza una actividad en el sistema dependiendo del estado de `actividadId`.
+*/
   addActividadSuperAdmin(): void {
     this.submitted = true;
     const formData = new FormData();
@@ -412,6 +459,9 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  /*
+    Este método desactiva el formulario de actividad y los botones asociados para evitar que el usuario realice cambios.
+  */
   desactivarcamposActividad(): void {
     this.actividadForm.disable();
     const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
@@ -426,12 +476,19 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  /*
+    Este método activa los formularios relacionados con niveles, lecciones y contenido de lecciones, permitiendo la interacción del usuario.
+  */
   activarformularios(): void {
     this.nivelForm.enable(); // Habilita el formulario de niveles
     this.leccionForm.enable();
     this.contenidoLeccionForm.enable();
   }
 
+  /*
+    Este método activa los formularios relacionados con niveles, lecciones y contenido de lecciones,
+    permitiendo la interacción del usuario. También habilita los botones necesarios para la acción del usuario.
+  */
   activivarFormulariosBotones(): void {
     this.nivelForm.enable();
     this.leccionForm.enable();
@@ -440,6 +497,10 @@ export class ActnivlecComponent implements OnInit {
     this.habilitarBotones();
   }
 
+  /*
+    Este método bloquea la interacción con los botones para agregar niveles, lecciones y contenido de lecciones,
+    deshabilitando su capacidad de clic y aplicando un estilo visual que indica que están inactivos.
+  */
   bloquearBotones(): void {
     const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
     if (agregarNivelBtn) {
@@ -459,6 +520,11 @@ export class ActnivlecComponent implements OnInit {
       agregarContenidoBtn.style.opacity = '0.5';
     }
   }
+
+  /*
+    Este método habilita la interacción con los botones para agregar niveles, lecciones y contenido de lecciones,
+    permitiendo que se puedan hacer clic y restaurando su apariencia visual a su estado normal.
+  */
   habilitarBotones(): void {
     const agregarNivelBtn = document.getElementById('agregarNivelBtn') as HTMLAnchorElement;
     if (agregarNivelBtn) {
@@ -476,6 +542,11 @@ export class ActnivlecComponent implements OnInit {
       agregarContenidoBtn.style.opacity = '1';
     }
   }
+
+  /*
+    Este método obtiene los niveles asociados a una actividad específica mediante el ID de la actividad,
+    utilizando un servicio para hacer la solicitud y procesar la respuesta.
+  */
   verNivel(): void {
     if (this.token) {
       //this.isLoading=true;
@@ -503,6 +574,11 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  /*
+    Este método maneja la creación o actualización de un nivel en el sistema. 
+    Valida la entrada del formulario y realiza las operaciones correspondientes
+    utilizando los servicios apropiados.
+  */
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
     const nombreNivel = this.nivelForm.get('nombre')?.value;
@@ -576,6 +652,11 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  /*
+    Este método maneja la creación o actualización de una lección en el sistema. 
+    Valida la entrada del formulario y realiza las operaciones correspondientes
+    utilizando los servicios apropiados.
+  */
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
@@ -639,13 +720,15 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+  /*
+    Este método recupera las lecciones asociadas a un nivel específico y actualiza
+    el formulario con la información de la primera lección, si existe.
+  */
   verLeccicon(): void {
-    // this.isLoading=true;
     this.leccionService.LeccionxNivel(this.token, parseInt(this.leccionForm.value.id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
         if (data.length > 0) {
-          // Seleccionar la primera lección si existe
           const primeraLeccion = data[0];
           this.leccionForm.patchValue({
             id_leccion: primeraLeccion.id.toString(),
@@ -653,13 +736,11 @@ export class ActnivlecComponent implements OnInit {
           });
           this.cargarContenidoLeccion(primeraLeccion.id);
         } else {
-          // Si no hay lecciones, resetear el formulario de lección
           this.leccionForm.patchValue({
             id_leccion: '',
             nombre: ''
           });
         }
-        // this.isLoading=false;
       },
       error => {
         console.log(error);
@@ -667,13 +748,17 @@ export class ActnivlecComponent implements OnInit {
     )
   }
 
+  /*
+    Este método se ejecuta cuando se cambia el nivel seleccionado en el formulario.
+    Actualiza el formulario de lecciones y recupera las lecciones asociadas al nuevo
+    nivel seleccionado.
+  */
   onNivelChange(id_nivel: string): void {
     this.leccionForm.patchValue({ id_nivel: id_nivel }); // Actualizar el formulario con el nivel seleccionado
     this.leccionService.LeccionxNivel(this.token, parseInt(id_nivel)).subscribe(
       data => {
         this.listarLeccion = data;
         if (this.isEditing && data.length > 0) {
-          // Seleccionar la primera lección si existe
           const primeraLeccion = data[0];
           this.leccionForm.patchValue({
             id_leccion: primeraLeccion.id.toString(),
@@ -681,12 +766,11 @@ export class ActnivlecComponent implements OnInit {
           });
           this.cargarContenidoLeccion(primeraLeccion.id);
         } else {
-          // Si no hay lecciones, resetear el formulario de lección
           this.leccionForm.patchValue({
             id_leccion: '',
             nombre: ''
           });
-          this.contenidoLeccionForm.reset(); // resetea los campos de contenido por leccion si no hay lecciones y lo toma desde nive tambien (no resetea el select de contenido si no tengo lecciones)
+          this.contenidoLeccionForm.reset(); 
           this.contenidoLeccion = [];
         }
       },
@@ -695,6 +779,12 @@ export class ActnivlecComponent implements OnInit {
       }
     );
   }
+
+  /*
+    Este método se ejecuta cuando se cambia la lección seleccionada en el formulario.
+    Actualiza el formulario de lección y el formulario de contenido de lección con
+    los datos de la lección seleccionada.
+  */
   onLeccionChange(id_leccion: string): void {
     if (id_leccion && id_leccion !== '') {
       const selectedLeccion = this.listarLeccion.find(leccion => leccion.id === parseInt(id_leccion));
@@ -725,11 +815,12 @@ export class ActnivlecComponent implements OnInit {
       })
       this.contenidoLeccion = [];
     }
-
-    // console.log('id_leccion actual en leccionForm:', this.leccionForm.get('id_leccion').value);
-    // console.log('id_leccion actual en contenidoLeccionForm:', this.contenidoLeccionForm.get('id_leccion').value);
   }
 
+  /*
+    Este método se encarga de cargar el contenido relacionado con una lección específica.
+    Realiza una llamada al servicio para obtener el contenido según el ID de la lección.
+  */
   cargarContenidoLeccion(id_leccion: number): void {
     //this.isLoading=true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
@@ -746,6 +837,7 @@ export class ActnivlecComponent implements OnInit {
             id_tipo_dato: primerContenido.id_tipo_dato,
             fuente_contenido: primerContenido.fuente_contenido
           });
+          this.updateCharCountContenido();
         } else {
           // Limpiar todos los campos excepto id_leccion
           this.contenidoLeccionForm.reset({
@@ -760,6 +852,10 @@ export class ActnivlecComponent implements OnInit {
       }
     );
   }
+
+  /*
+    Este método se ejecuta cuando se selecciona un nivel en el formulario.
+  */
   onNivelSelect(event: any): void {
     const selectedNivelId = event.target.value;
     this.selectedNivelId = selectedNivelId !== '0' ? parseInt(selectedNivelId) : null;
@@ -785,6 +881,18 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+
+  /*
+    Actualiza el contador de caracteres para el campo 'descripcion' en el formulario de contenido de la lección.
+  */
+  updateCharCountContenido(){
+    const descripcionContenido = this.contenidoLeccionForm.get('descripcion')?.value || '';
+    this.charCountContenido = descripcionContenido.length;
+  }
+  
+  /*
+    Agrega o actualiza el contenido de una lección en el sistema, dependiendo de si el contenido ya existe o no.
+  */
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
@@ -866,6 +974,10 @@ export class ActnivlecComponent implements OnInit {
       )
     }
   }
+
+  /*
+    Este método se utiliza para agregar o actualizar el contenido de una lección en el sistema.
+  */
   onContenidoSelect(contenidoId: string): void {
     const currentIdLeccion = this.contenidoLeccionForm.get('id_leccion').value;
 
@@ -879,6 +991,7 @@ export class ActnivlecComponent implements OnInit {
         id_tipo_dato: '',
         fuente_contenido: ''
       });
+      this.updateCharCountContenido();
     } else if (contenidoId) {
       const selectedContenido = this.contenidoLeccion.find(c => c.id.toString() === contenidoId);
       if (selectedContenido) {
@@ -890,33 +1003,48 @@ export class ActnivlecComponent implements OnInit {
           id_tipo_dato: selectedContenido.id_tipo_dato,
           fuente_contenido: selectedContenido.fuente_contenido
         });
+        this.updateCharCountContenido();
       }
     }
   }
 
+  /*
+    Este método busca el nombre del tipo de dato basado en el ID proporcionado.
+  */
   getTipoDatoNombre(id: string): string {
     const tipoDato = this.listarTipoDatoContenido.find(t => t.id === +id);
     return tipoDato ? tipoDato.fuente_contenido : '';
   }
 
-
-
-  ///////////////////////////////////////////////////////////////////////////////
-
+  /*
+    Este método se llama cuando cambia el tipo de dato. 
+  */
   onTipoDatoChange(): void {
     this.resetFuenteField();
     this.actividadForm.get('fuente').setValidators([Validators.required]); // Siempre requerir fuente
     this.actividadForm.get('fuente').updateValueAndValidity();
   }
 
+  
+  /*
+    Este método se llama cuando hay una entrada de texto en el campo 'fuente'.
+  */
   onTextInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.actividadForm.patchValue({ fuente: value });
   }
 
+  /*
+    Este método simula un clic en el campo de entrada de archivo.
+  */
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
+
+  /*
+     Este método maneja la selección de archivos desde un input de tipo archivo. 
+     Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+  */
   onFileSelecteds(event: any) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -937,19 +1065,27 @@ export class ActnivlecComponent implements OnInit {
       this.resetFileField('fuente');
     }
   }
+
+  /*
+    Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+    eliminando cualquier valor previamente asignado.
+  */
   resetFileField(field: string) {
     this.actividadForm.patchValue({ fuente: null });
     this.selectedfuente = null;
     this.fuentePreview = null;
   }
+
+
   resetFuenteField(): void {
     this.actividadForm.patchValue({ fuente: '' });
     this.selectedfuente = null;
     this.fuentePreview = null;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////
-
+  /*
+    Este método gestiona los cambios en el campo 'id_tipo_dato' del formulario de contenido de lección.
+  */
   onTipoDatoChangeContenido(): void {
     const tipoDatoIdContenido = this.contenidoLeccionForm.get('id_tipo_dato').value;
     this.resetFuenteFieldContenido();
@@ -971,15 +1107,24 @@ export class ActnivlecComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
+/*
+  Este método gestiona la entrada de texto en el campo 'fuente_contenido' del formulario de contenido de lección.
+*/
   onTextInputContenido(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.contenidoLeccionForm.patchValue({ fuente_contenido: value });
   }
 
+  /*
+  Este método simula un clic en el elemento de entrada de archivos para permitir que el usuario seleccione un archivo.
+  */
   triggerFileInputContenido() {
     this.fileInputs.nativeElement.click();
   }
 
+  /*
+  Maneja la selección de archivos en el formulario de contenido de lección y valida su tamaño.
+  */
   onFileSelectedsContenido(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
@@ -1012,6 +1157,9 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
+/*
+  Este método maneja la selección de archivos en un campo de formulario específico. 
+*/
   resetFileFieldContenido(field: string) {
     if (field === 'fuente_contenido') {
       this.contenidoLeccionForm.patchValue({ fuente_contenido: null });
@@ -1019,7 +1167,10 @@ export class ActnivlecComponent implements OnInit {
       this.fuentePreviewContenido = null;
     }
   }
-
+  
+/*
+  Este método maneja la selección de archivos en un campo de formulario específico. 
+*/
   resetFuenteFieldContenido(): void {
     this.contenidoLeccionForm.patchValue({ fuente_contenido: '' });
     this.selectedfuenteContenido = null;

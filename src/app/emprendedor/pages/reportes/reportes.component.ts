@@ -38,16 +38,22 @@ export class ReportesComponent implements AfterViewInit {
     })
   }
 
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.obtenerEmpresasPorEmprendedor();
   }
 
+/*
+  Inicializa el gráfico después de que la vista se ha inicializado.
+  Se llama a la función para configurar el gráfico.
+*/
   ngAfterViewInit() {
     this.initChart('echarts-formulario', this.getPuntajesForm);
 
   }
 
+  /* Valida el token del login */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -66,7 +72,10 @@ export class ReportesComponent implements AfterViewInit {
       this.router.navigate(['home']);
     }
   }
-
+/*
+  Obtiene la lista de empresas asociadas al emprendedor.
+  Se utiliza el documento del emprendedor para realizar la solicitud al servicio.
+*/
   obtenerEmpresasPorEmprendedor(): void {
     const doc_emprendedor = this.user.emprendedor.documento;
     this.empresaService.obtenerEmpresasPorEmprendedor(this.token, doc_emprendedor).subscribe(
@@ -79,7 +88,10 @@ export class ReportesComponent implements AfterViewInit {
     );
   }
 
-
+/*
+  Muestra los datos del reporte basado en el tipo de reporte y la empresa seleccionados.
+  Se obtiene el documento del emprendedor y se llama al servicio para obtener los datos.
+*/
   mostrarDatosReporte(): void {
     const { tipo_reporte, empresa } = this.reporteForm.value;
     const doc_emprendedor = this.user.emprendedor.documento;
@@ -98,7 +110,10 @@ export class ReportesComponent implements AfterViewInit {
     }
   }
 
-
+/*
+  Descarga el reporte del formulario como un archivo Excel.
+  Utiliza el documento del emprendedor y la empresa seleccionada para obtener el reporte.
+*/
   getReporteFormulario() {
     const id_emprendedor = this.user.emprendedor.documento;
     const { empresa } = this.reporteForm.value;
@@ -117,15 +132,19 @@ export class ReportesComponent implements AfterViewInit {
       }
     );
   }
-
+/*
+  Inicializa un gráfico ECharts en el contenedor especificado.
+*/
   initChart(chartId: string, chartOptions: any): void {
     const chartDom = document.getElementById(chartId);
-    this.chart = echarts.init(chartDom); // Inicializa el gráfico y lo almacena en this.chart
+    this.chart = echarts.init(chartDom);
     this.chart.setOption(chartOptions);
   }
 
+  /*
+  Configura e inicializa un gráfico de radar vacío con puntajes predeterminados en cero.
+  */
   initGraficaVacia(): void {
-    // Configuración de la gráfica vacía
     this.getPuntajesForm = {
       title: {
         text: 'Puntajes por Formulario (Sin datos)',
@@ -146,19 +165,20 @@ export class ReportesComponent implements AfterViewInit {
           type: 'radar',
           data: [
             {
-              value: [0, 0, 0, 0, 0], // Valores vacíos
+              value: [0, 0, 0, 0, 0],
               name: 'Sin Empresa Seleccionada'
             }
           ]
         }
       ]
     };
-
-    // Renderiza la gráfica vacía al cargar la página
     this.initChart('echarts-formulario', this.getPuntajesForm);
   }
 
-
+/*
+  Genera y muestra un gráfico de radar con los puntajes del formulario de una empresa.
+  Obtiene los datos desde el servicio 'dashboardService' y actualiza el gráfico.
+*/
   graficaPuntajesFormulario(tipo: number, documentoEmpresa: string): void {
     this.dashboardService.graficaFormulario(this.token, documentoEmpresa, tipo).subscribe(
       data => {
@@ -195,10 +215,8 @@ export class ReportesComponent implements AfterViewInit {
             }
           ]
         };
-
-        // Actualiza la gráfica con los nuevos datos
         if (this.chart) {
-          this.chart.dispose(); // Destruye el gráfico anterior
+          this.chart.dispose();
         }
         this.initChart('echarts-formulario', this.getPuntajesForm);
       },

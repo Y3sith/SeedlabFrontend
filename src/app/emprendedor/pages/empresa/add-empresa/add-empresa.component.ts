@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators, AbstractControl,  } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators, AbstractControl, } from '@angular/forms';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
 import { EmpresaService } from '../../../../servicios/empresa.service';
@@ -41,14 +41,13 @@ export class AddEmpresaComponent {
   addEmpresaForm: FormGroup;
   addApoyoEmpresaForm: FormGroup;
   listaApoyo: ApoyoEmpresa[] = [];
-  isLoading: boolean = true; // Variable para gestionar el estado de carga
+  isLoading: boolean = true;
   selectedApoyoDocumento: string = '';
   mostrarBotonEditar: boolean = true;
   mostrarBotonesNuevos: boolean = false;
   tiempoEspera = 1800;
   nombre_apoyo: string;
   apellido_apoyo: string;
-  ////
   showFirstSection = true;
   showSecondSection = false;
   showThirdSection = false;
@@ -64,13 +63,13 @@ export class AddEmpresaComponent {
     private departamentoService: DepartamentoService,
     private municipioService: MunicipioService,
     private alertService: AlertService,
-    private authService:AuthService,
-    private route: ActivatedRoute, 
+    private authService: AuthService,
+    private route: ActivatedRoute,
     private location: Location
 
   ) {
     this.id_documentoEmpresa = this.route.snapshot.paramMap.get('documento');
-    this.id_emprendedor = this.route.snapshot.paramMap.get('id_emprendedor'); 
+    this.id_emprendedor = this.route.snapshot.paramMap.get('id_emprendedor');
 
     this.addEmpresaForm = this.fb.group({
       nombre: ['', [Validators.required]],
@@ -81,7 +80,7 @@ export class AddEmpresaComponent {
       id_departamento: ['', Validators.required],
       id_municipio: ['', Validators.required],
       telefono: ['', [Validators.maxLength(10), this.noLettersValidator]],
-      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
+      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
       url_pagina: [''],
       direccion: ['', Validators.required],
       profesion: ['', [Validators.required, this.noNumbersValidator]],
@@ -89,20 +88,21 @@ export class AddEmpresaComponent {
       experiencia: ['', Validators.required],
       funciones: ['', Validators.required],
     });
-  
+
     this.addApoyoEmpresaForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
       nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       cargo: ['', Validators.required],
       telefono: [''],
-      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
+      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
       email: ['', [Validators.required, Validators.email]],
       id_tipo_documento: ['', Validators.required],
     });
   }
 
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.cargarDepartamentos();
@@ -136,6 +136,10 @@ export class AddEmpresaComponent {
     }
   }
 
+/*
+  Navega a la página anterior en el historial del navegador.
+  Utiliza el servicio Location para manejar la navegación de vuelta.
+*/
   goBack(): void {
     this.location.back();
   }
@@ -153,17 +157,21 @@ export class AddEmpresaComponent {
     );
   }
 
+/*
+  Maneja el evento de selección de un departamento en el formulario.
+  Guarda el departamento seleccionado en localStorage y carga los municipios correspondientes.
+*/
   onDepartamentoSeleccionado(event: Event): void {
-    const target = event.target as HTMLSelectElement; // Cast a HTMLSelectElement
+    const target = event.target as HTMLSelectElement;
     const selectedDepartamento = target.value;
-
-    // Guarda el departamento seleccionado en el localStorage
     localStorage.setItem('departamento', selectedDepartamento);
-
-    // Llama a cargarMunicipios si es necesario
     this.cargarMunicipios(selectedDepartamento);
   }
 
+/*
+  Carga los municipios correspondientes al departamento seleccionado
+  utilizando el servicio MunicipioService y actualiza la lista de municipios.
+*/
   cargarMunicipios(idDepartamento: string): void {
     this.municipioService.getMunicipios(idDepartamento).subscribe(
       (data) => {
@@ -174,20 +182,21 @@ export class AddEmpresaComponent {
       }
     );
   }
-  
 
-  tipodato():void{
-      this.authService.tipoDocumento().subscribe(
-        data => {
-          this.listTipoDocumento = data;
-        },
-        error => {
-          console.log(error);
-        }
-      )
+/*
+  Obtiene el tipo de documento desde AuthService y actualiza la lista de tipos
+  de documento disponibles.
+*/
+  tipodato(): void {
+    this.authService.tipoDocumento().subscribe(
+      data => {
+        this.listTipoDocumento = data;
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
-
-  
 
   get f() {
     return this.addEmpresaForm.controls;
@@ -196,12 +205,17 @@ export class AddEmpresaComponent {
     return this.addApoyoEmpresaForm.controls;
   }
 
+/*
+  Establece los valores del formulario utilizando los datos de la empresa.
+  Muestra un error en la consola si la empresa no ha sido cargada.
+
+*/
   setFormValues(): void {
     if (!this.empresa) {
       console.error('No se ha cargado la empresa, no se puede establecer los valores del formulario.');
-      return; // Salir de la función si empresa es undefined
+      return;
     }
-  
+
     // Establece los valores para el formulario de empresa
     this.addEmpresaForm.patchValue({
       nombre: this.empresa.nombre || '',
@@ -220,7 +234,7 @@ export class AddEmpresaComponent {
       experiencia: this.empresa.experiencia || '',
       funciones: this.empresa.funciones || ''
     });
-  
+
     // Establece los valores para el formulario de apoyo si existe
     if (this.apoyo) {
       this.addApoyoEmpresaForm.patchValue({
@@ -235,7 +249,10 @@ export class AddEmpresaComponent {
       });
     }
   }
-
+/*
+  Carga los datos de la empresa utilizando el servicio EmpresaService, 
+  y actualiza los valores en el formulario.
+*/
   cargarDatosEmpresa(): void {
     this.isLoading = true;
     this.EmpresaService.traerEmpresasola(this.token, this.id_emprendedor, this.id_documentoEmpresa).subscribe(
@@ -247,14 +264,9 @@ export class AddEmpresaComponent {
         this.cargarDepartamentos();
 
         setTimeout(() => {
-          // Establecer el departamento seleccionado
           this.addEmpresaForm.patchValue({ id_municipio: data.id_departamentos });
-
-          // Cargar los municipios de ese departamento
           this.cargarMunicipios(data.id_departamento);
-
           setTimeout(() => {
-            // Establecer el municipio seleccionado
             this.addEmpresaForm.patchValue({ id_municipio: data.id_municipio });
           }, 500);
         }, 500);
@@ -275,8 +287,18 @@ export class AddEmpresaComponent {
       return;
     }
 
-    
+    const camposObligatorios = ['nombre', 'correo', 'documento', 'razonSocial', 'direccion', 'telefono', 'celular', 'url_pagina', 'profesion', 'cargo', 'experiencia', 'funciones'];
+    for (const key of camposObligatorios) {
+      const control = this.addEmpresaForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        return;
+      }
+    }
 
+/*
+  Crea un objeto de tipo empresa con los valores actuales del formulario 'addEmpresaForm'.
+*/
     const empresa: any = {
       documento: this.addEmpresaForm.get('documento')?.value,
       nombre: this.addEmpresaForm.get('nombre')?.value,
@@ -296,6 +318,23 @@ export class AddEmpresaComponent {
       id_emprendedor: this.user?.emprendedor.documento,
     };
 
+/*
+  Valida que los campos obligatorios en el formulario 'addApoyoEmpresaForm' no contengan solo espacios en blanco. 
+  Si un campo obligatorio está vacío o tiene solo espacios, muestra un mensaje de error.
+*/
+    const camposObligatoriosApoyo = ['nombre', 'apellido', 'documento', 'cargo', 'email', 'celular', 'telefono'];
+    for (const key of camposObligatoriosApoyo) {
+      const control = this.addApoyoEmpresaForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        return;
+      }
+    }
+
+/*
+  Crea un objeto 'apoyos' con los valores del formulario 'addApoyoEmpresaForm' si es válido. 
+  Los datos incluyen información personal y de contacto, además de la relación con la empresa.
+*/
     const apoyos = this.addApoyoEmpresaForm.valid ? {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,
       nombre: this.addApoyoEmpresaForm.get('nombre')?.value,
@@ -309,12 +348,14 @@ export class AddEmpresaComponent {
     } : null;
 
     const apoyosList: Array<any> = [];
-    
+
+/*
+  Si el objeto 'apoyos' no es nulo, se agrega a la lista de 'apoyosList'. 
+  Posteriormente, se crea un objeto 'payload' que incluye los datos de la empresa y la lista de apoyos.
+*/
     if (apoyos) {
       apoyosList.push(apoyos);
     }
-
-
     const payload = {
       empresa: empresa,
       apoyos: apoyosList
@@ -332,16 +373,16 @@ export class AddEmpresaComponent {
     );
   }
 
-  editEmpresa():void {
+/*
+  Método para editar una empresa. Valida el formulario; si es inválido, muestra un error. 
+*/
+  editEmpresa(): void {
     this.submitted = true;
-  
-    // Verifica si el formulario es inválido
     if (this.addEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos de la empresa');
       return;
     }
     const empresaData = this.addEmpresaForm.value;
-
     this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
       response => {
         setTimeout(function () {
@@ -356,6 +397,11 @@ export class AddEmpresaComponent {
     );
   }
 
+  /*
+  Método para mostrar u ocultar contenido basado en el estado de un checkbox. 
+  Si el checkbox está marcado, muestra el div de contenido y oculta el botón de guardar; 
+  de lo contrario, oculta el contenido y muestra el botón.
+*/
   mostrarOcultarContenido() {
     const checkbox = document.getElementById("mostrarContenido") as HTMLInputElement;
     const contenidoDiv = document.getElementById("contenido");
@@ -366,8 +412,12 @@ export class AddEmpresaComponent {
     }
   }
 
-
-
+/*
+  Método para avanzar a la siguiente sección. 
+  Muestra la segunda sección si está en la primera, 
+  y muestra la tercera sección si está en la segunda, 
+  actualizando el índice actual en cada caso.
+*/
 
   next() {
     if (this.currentIndex === 0) {
@@ -382,7 +432,12 @@ export class AddEmpresaComponent {
       this.currentIndex = 2;
     }
   }
-
+/*
+  Método para retroceder a la sección anterior. 
+  Muestra la primera sección si está en la segunda, 
+  y muestra la segunda sección si está en la tercera, 
+  actualizando el índice actual en cada caso.
+*/
   previous() {
     if (this.currentIndex === 1) {
       this.showFirstSection = true;
@@ -396,6 +451,9 @@ export class AddEmpresaComponent {
       this.currentIndex = 1;
     }
   }
+/*
+  Método para obtener los errores de validación de un formulario. 
+*/
 
   getFormValidationErrors(form: FormGroup) {
     const result: any = {};
@@ -408,17 +466,20 @@ export class AddEmpresaComponent {
     return result;
   }
 
+/*
+  Carga apoyos de la empresa y actualiza el estado de edición. 
+*/
   cargarApoyos(): void {
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
         if (this.listaApoyo && this.listaApoyo.length > 0 && this.listaApoyo[0].documento !== '') {
           this.ocultarSinApoyo = false;
-          this.isEditing = true; // Estamos en modo edición si hay apoyos
+          this.isEditing = true;
           this.mostrarBotonesNuevos = false;
         } else {
           this.ocultarSinApoyo = true;
-          this.isEditing = false; // No estamos en modo edición si no hay apoyos
+          this.isEditing = false;
           this.mostrarBotonesNuevos = false;
         }
       },
@@ -428,6 +489,11 @@ export class AddEmpresaComponent {
     );
   }
 
+  /*
+  Maneja la selección de un apoyo. 
+  Busca el apoyo seleccionado, activa la edición y 
+  actualiza el formulario con los datos del apoyo.
+*/
   onApoyoSelect(documento: string) {
     const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
     this.isEditing = true;
@@ -447,7 +513,10 @@ export class AddEmpresaComponent {
     }
   }
 
-  editarApoyo():void {
+/*
+  Método para editar un apoyo. 
+*/
+  editarApoyo(): void {
     const apoyos = this.addApoyoEmpresaForm.value;
     this.submitted = true;
 
@@ -469,26 +538,26 @@ export class AddEmpresaComponent {
     )
   }
 
+  /*
+  Restablece el formulario y ajusta la visibilidad de los botones. 
+  Oculta el botón de editar y muestra los botones nuevos.
+*/
   limpiarYCambiarBotones() {
-    // Limpiar los inputs (asumiendo que tienes un formulario)
     this.addApoyoEmpresaForm.reset();
-
-    // Ocultar el botón de editar
     this.mostrarBotonEditar = false;
-
-    // Mostrar los nuevos botones
     this.mostrarBotonesNuevos = true;
-
   }
 
-  crearApoyo():void {
+/*
+  Método para crear un nuevo apoyo. 
+*/
+
+  crearApoyo(): void {
     this.submitted = true;
-  
     if (this.addApoyoEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
       return;
     }
-
     const apoyos = this.addApoyoEmpresaForm.valid ? {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,
       nombre: this.addApoyoEmpresaForm.get('nombre')?.value,
@@ -500,8 +569,6 @@ export class AddEmpresaComponent {
       id_tipo_documento: this.addApoyoEmpresaForm.get('id_tipo_documento')?.value,
       id_empresa: this.id_documentoEmpresa,
     } : null;
-
-    
     this.EmpresaService.crearApoyo(this.token, apoyos).subscribe(
       data => {
         setTimeout(function () {
@@ -516,21 +583,22 @@ export class AddEmpresaComponent {
     )
   }
 
-  cancel():void{
+/*
+  Método para cancelar la acción actual. 
+*/
+  cancel(): void {
     this.cargarDatosEmpresa();
-
-        // mostrar el botón de editar
-        this.mostrarBotonEditar = true;
-
-        // Ocultar los nuevos botones
-        this.mostrarBotonesNuevos = false;
-
+    this.mostrarBotonEditar = true;
+    this.mostrarBotonesNuevos = false;
   }
+
+  /*
+  Validador para comprobar que un campo no contenga números. 
+*/
 
   noNumbersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasNumbers = /\d/.test(value);
-
     if (hasNumbers) {
       return { hasNumbers: 'El campo no debe contener números *' };
     } else {
@@ -538,6 +606,10 @@ export class AddEmpresaComponent {
     }
   }
 
+/*
+  Validador para verificar la longitud de un número de documento. 
+  Retorna un error si la longitud no está entre 5 y 13 dígitos; 
+*/
   documentoValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value ? control.value.toString() : '';
     if (value.length < 5 || value.length > 13) {
@@ -545,11 +617,14 @@ export class AddEmpresaComponent {
     }
     return null;
   }
-
+/*
+  Validador para comprobar que un campo no contenga letras. 
+  Retorna un error si se encuentran letras; de lo contrario, retorna null.
+*/
   noLettersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasLetters = /[a-zA-Z]/.test(value);
-  
+
     if (hasLetters) {
       return { hasLetters: 'El campo no debe contener letras *' };
     } else {

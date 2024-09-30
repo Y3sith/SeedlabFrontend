@@ -11,6 +11,7 @@ import { Actividad } from '../../../Modelos/actividad.model';
 import { ActividadService } from '../../../servicios/actividad.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddBannerComponent } from '../add-banner/add-banner.component';
+import { environment } from '../../../../environment/env';
 
 
 @Component({
@@ -23,13 +24,12 @@ export class PerfilAliadoComponent implements OnInit {
   logoPreview: string | ArrayBuffer | null = null;
   bannerPreview: string | ArrayBuffer | null = null;
   rutaPreview: string | ArrayBuffer | null = null;
-  listBanners: Banner[] =[];
+  listBanners: Banner[] = [];
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   blockedInputs = true;
   falupa = faCircleQuestion;
   isLoading: boolean = false;
-
   activeField: string = '';
   token: string;
   user: User | null = null;
@@ -57,6 +57,8 @@ export class PerfilAliadoComponent implements OnInit {
   mostrarRutaMulti: boolean = true;
   private videoUrl: string = '';
   private imageUrl: string = '';
+  charCount: number = 0;
+  urlparaperfil: any;
 
   constructor(
     private router: Router,
@@ -75,18 +77,19 @@ export class PerfilAliadoComponent implements OnInit {
       urlpagina: ['', Validators.required],
       id_tipo_dato: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(8)]], 
+      password: ['', [Validators.minLength(8)]],
       estado: [true]
-      
+
     });
 
     this.bannerForm = this.formBuilder.group({
       urlImagen: [Validators.required],
       estadobanner: [1],
     });
-    }
+  }
 
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
@@ -102,6 +105,10 @@ export class PerfilAliadoComponent implements OnInit {
     });
   }
 
+  /*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -122,8 +129,12 @@ export class PerfilAliadoComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
-  
-  openModal(id:number | null): void{
+  /*
+  Este método abre un modal para asignar un asesor a una 
+  asesoría específica. Utiliza el componente 
+  `AsignarAsesorModalComponent` para la interacción.
+*/
+  openModal(id: number | null): void {
     let dialogRef: MatDialogRef<AddBannerComponent>;
 
     dialogRef = this.dialog.open(AddBannerComponent, {
@@ -135,6 +146,10 @@ export class PerfilAliadoComponent implements OnInit {
     });
   }
 
+  /*
+    Este método maneja la lógica para eliminar un banner de un aliado 
+    y notificar al usuario sobre la acción.
+  */
   eliminarBanner(id_aliado: number): void {
     this.alertService.alertaActivarDesactivar('¿Estas seguro de eliminar el banner?, no se mostrara en la pagina principal', 'question').then((result) => {
       if (result.isConfirmed) {
@@ -155,11 +170,19 @@ export class PerfilAliadoComponent implements OnInit {
     });
   }
 
+/*
+  Este método cancela la operación actual y recarga la página.
+*/
   onCancel(): void {
     location.reload();
   }
 
   get f() { return this.aliadoForm.controls; }
+
+  /*
+    Este método obtiene los tipos de datos desde el servicio `actividadService` 
+    y filtra aquellos con `id` diferente de 3.
+  */
 
   tipoDato(): void {
     if (this.token) {
@@ -174,7 +197,10 @@ export class PerfilAliadoComponent implements OnInit {
       )
     }
   }
-
+  /*
+    Este método obtiene los datos de un aliado específico desde la base de datos 
+    y actualiza el campo `id_tipo_dato` en el formulario `aliadoForm` si los datos son válidos.
+  */
   obtenerValorBaseDatos(): void {
     if (this.idAliado) {
       this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
@@ -192,10 +218,15 @@ export class PerfilAliadoComponent implements OnInit {
   }
   private previousImageUrl: string = '';
 
+
+  /*
+  Este método maneja los cambios en el campo `id_tipo_dato` del formulario `aliadoForm` y ajusta los validadores 
+  y la visibilidad de los campos de acuerdo al tipo de dato seleccionado.
+*/
   onTipoDatoChange(): void {
     const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
     let currentRutaMulti = this.aliadoForm.get('ruta_multi').value;
-    
+
     this.aliadoForm.get('ruta_multi').clearValidators();
     this.aliadoForm.get('Video')?.clearValidators();
     this.aliadoForm.get('Imagen')?.clearValidators();
@@ -203,54 +234,56 @@ export class PerfilAliadoComponent implements OnInit {
     this.aliadoForm.get('Texto')?.clearValidators();
 
     const tipoDatoIdNumber = Number(tipoDatoId);
-  
-    // Establecer el validador y mostrar el campo correspondiente según la selección
     switch (tipoDatoIdNumber) {
-      case 1: // Video
+      case 1:
         this.showVideo = true;
         this.showImagen = false;
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
-        this.aliadoForm.patchValue({ruta_multi: this.videoUrl});
-      console.log('Mostrando Video');
+        this.aliadoForm.patchValue({ ruta_multi: this.videoUrl });
+        console.log('Mostrando Video');
         break;
-      case 2: // Imagen
+      case 2:
         this.showImagen = true;
         this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
-        this.aliadoForm.patchValue({ruta_multi: this.imageUrl});
-        //this.previousImageUrl = currentRutaMulti;
+        this.aliadoForm.patchValue({ ruta_multi: this.imageUrl });
         console.log('Mostrando Imagen');
         break;
       default:
         break;
     }
-    // Actualizar la validez del campo ruta_multi
     this.aliadoForm.get('ruta_multi').updateValueAndValidity();
-    // Forzar la detección de cambios
     this.cdRef.detectChanges();
   }
 
+  /*
+  Este método maneja los cambios en el campo `ruta_multi` del formulario `aliadoForm` cuando el usuario actualiza su valor.
+*/
   onRutaMultiChange(event: any): void {
     const tipoDatoId = Number(this.aliadoForm.get('id_tipo_dato').value);
     const newValue = event.target.value;
 
-    if (tipoDatoId === 1) { // Video
+    if (tipoDatoId === 1) {
       this.videoUrl = this.limpiarPrefijo(newValue);
-    } else if (tipoDatoId === 2) { // Imagen
+    } else if (tipoDatoId === 2) {
       this.imageUrl = newValue;
     }
 
-    this.aliadoForm.patchValue({ruta_multi: newValue}, {emitEvent: false});
+    this.aliadoForm.patchValue({ ruta_multi: newValue }, { emitEvent: false });
   }
 
+
+  /*
+    Este método se encarga de cargar y mostrar la información de un asesor en un formulario para su edición. 
+  */
   verEditar(): void {
-    this.isLoading= true;
+    this.isLoading = true;
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
         let rutaMulti = data.ruta_multi;
-        if (data.id_tipo_dato === 1) { // Video
+        if (data.id_tipo_dato === 1) {
           this.videoUrl = this.limpiarPrefijo(rutaMulti);
           rutaMulti = this.videoUrl;
-        } else if (data.id_tipo_dato === 2) { // Imagen
+        } else if (data.id_tipo_dato === 2) {
           this.imageUrl = rutaMulti;
         }
         this.aliadoForm.patchValue({
@@ -264,25 +297,44 @@ export class PerfilAliadoComponent implements OnInit {
           password: '',
           estado: data.estado === 'Activo' || data.estado === true || data.estado === 1
         });
+        this.updateCharCount();
         this.previousImageUrl = data.id_tipo_dato === 2 ? data.ruta_multi : '';
-        // Establecer una variable para controlar la visibilidad de ruta_multi
-        //this.mostrarRutaMulti = data.id_tipo_dato !== 2;
         this.cdRef.detectChanges();
         this.onTipoDatoChange();
-        this.isLoading= false;
+        this.isLoading = false;
       },
       error => {
         console.log(error);
-        this.isLoading= false;
+        this.isLoading = false;
       }
     );
   }
 
-  limpiarPrefijo(url: string): string {
-    const prefijo = 'http://127.0.0.1:8000/storage/';
-    return url.startsWith(prefijo) ? url.substring(prefijo.length) : url;
+  limpiarPrefijoEnviroment() {
+    const apiUrl = environment.apiUrl;
+    this.urlparaperfil = apiUrl.replace(/^\/api\//, '');
+    return this.urlparaperfil;
   }
 
+  /*
+  Este método `limpiarPrefijo` elimina un prefijo específico de una URL si está presente.
+*/
+limpiarPrefijo(url: string): string {
+  const apiUrl = environment.apiUrl.replace(/\/$/, '');
+  this.urlparaperfil = apiUrl.replace(/\/api\/?$/, '');
+  const prefijo = `${this.urlparaperfil}/storage/`;
+
+  if (url.startsWith(prefijo)) {
+    return url.substring(prefijo.length);
+  } else if (url.startsWith(`${apiUrl}/storage/`)) {
+    return url.substring(`${apiUrl}/storage/`.length);
+  }
+  return url;
+}
+
+  /*
+  Este método inicializa el estado del formulario `aliadoForm` deshabilitando ciertos campos.
+*/
   initializeFormState(): void {
     const fieldsToDisable = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato', 'urlpagina'];
     fieldsToDisable.forEach(field => {
@@ -293,11 +345,13 @@ export class PerfilAliadoComponent implements OnInit {
     });
   }
 
-  /* Bloqueo de inputs */
+  /*
+    Este método alterna el estado de bloqueo de los campos del formulario `aliadoForm`.
+  */
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
     const fieldsToToggle = ['nombre', 'descripcion', 'logo', 'ruta_multi', 'id_tipo_dato', 'urlpagina'];
-    
+
     fieldsToToggle.forEach(field => {
       const control = this.aliadoForm.get(field);
       if (control) {
@@ -310,18 +364,22 @@ export class PerfilAliadoComponent implements OnInit {
         console.warn(`Control for field ${field} not found in form`);
       }
     });
-  
-    // Force change detection
     this.cdRef.detectChanges();
   }
 
+  /*
+    Este método habilita los campos del formulario `aliadoForm` para su edición.
+  */
   onEdit() {
     this.blockedInputs = false;
     this.showEditButton = true;
     this.toggleInputsLock();
   }
 
-  verEditarBanners():void {
+  /*
+    Este método obtiene los banners asociados a un aliado utilizando el servicio `aliadoService`.
+  */
+  verEditarBanners(): void {
     this.aliadoService.getBannerxAliado(this.token, this.idAliado).subscribe(
       data => {
         this.listBanners = data;
@@ -332,30 +390,33 @@ export class PerfilAliadoComponent implements OnInit {
     )
   }
 
+  updateCharCount(): void {
+    const descripcionValue = this.aliadoForm.get('descripcion')?.value || '';
+    this.charCount = descripcionValue.length;
+  }
+
+  
+
+  /*
+    Este método se encarga de actualizar la información del aliado y sus banners.
+  */
   upadateAliado(): void {
     if (this.aliadoForm.invalid || this.bannerForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar los campos requeridos.');
       this.formSubmitted = true;
-      return; // Detener si el formulario es inválido
+      return;
     }
-  
     const formData = new FormData();
     let estadoValue: string;
-  
     if (this.idAliado == null) {
-      // Es un nuevo aliado, forzar el estado a 'true'
       estadoValue = 'true';
     } else {
-      // Es una edición, usar el valor del formulario
       estadoValue = this.aliadoForm.get('estado')?.value ? 'true' : 'false';
     }
-  
-    // Manejar los campos especiales y evitar duplicaciones
     Object.keys(this.aliadoForm.controls).forEach((key) => {
       const control = this.aliadoForm.get(key);
       if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
         if (key === 'password') {
-          // Solo incluir la contraseña si no está vacía
           if (control.value.trim() !== '') {
             formData.append(key, control.value);
           }
@@ -366,7 +427,15 @@ export class PerfilAliadoComponent implements OnInit {
         }
       }
     });
-  
+    const nombreDescripcion = this.aliadoForm.get('descripcion')?.value;
+    if (nombreDescripcion && nombreDescripcion.length > 312) {
+      this.alertService.errorAlert('Error', 'La descripción no puede tener más de 312 caracteres.');
+      return;
+    }
+    if (nombreDescripcion && nombreDescripcion.length < 210) {
+      this.alertService.errorAlert('Error', 'La descripción no puede tener menos de 210 caracteres.');
+      return;
+    }
     // Agregar campos específicos que se deben asegurar que estén en el FormData
     const specificFields = ['nombre', 'descripcion', 'email', 'id_tipo_dato'];
     specificFields.forEach(field => {
@@ -375,11 +444,9 @@ export class PerfilAliadoComponent implements OnInit {
         formData.append(field, value);
       }
     });
-  
     if (this.selectedLogo) {
       formData.append('logo', this.selectedLogo, this.selectedLogo.name);
     }
-  
     if (this.selectedruta) {
       formData.append('ruta_multi', this.selectedruta, this.selectedruta.name);
     } else {
@@ -388,8 +455,6 @@ export class PerfilAliadoComponent implements OnInit {
         formData.append('ruta_multi', rutaMultiValue);
       }
     }
-  
-    // Mostrar alerta de confirmación antes de proceder con la actualización
     this.alertService.alertaActivarDesactivar('¿Estás seguro de guardar los cambios?', 'question').then((result) => {
       if (result.isConfirmed) {
         this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
@@ -407,6 +472,10 @@ export class PerfilAliadoComponent implements OnInit {
       }
     });
   }
+
+  /*
+    Este método simula un clic en el campo de entrada de archivos para abrir el selector de archivos.
+  */
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
@@ -422,36 +491,34 @@ export class PerfilAliadoComponent implements OnInit {
     return result;
   }
 
+  /*
+     Este método maneja la selección de archivos desde un input de tipo archivo. 
+     Verifica si hay archivos seleccionados y, si es así, comprueba su tamaño.
+   */
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-  
       let maxSize = 0;
-  
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
-        maxSize = 5 * 1024 * 1024; // 5MB para imágenes
+        maxSize = 5 * 1024 * 1024;
       } else if (field === 'ruta_documento') {
-        maxSize = 18 * 1024 * 1024; // 18MB para documentos
+        maxSize = 18 * 1024 * 1024;
       }
-  
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-  
-        // Limpia el archivo seleccionado y resetea la previsualización
-        event.target.value = ''; // Borra la selección del input
+
+        event.target.value = '';
         return;
       }
-  
-      // Nueva validación para las dimensiones del logo
       if (field === 'logo') {
         const img = new Image();
         img.onload = () => {
           if (img.width > 1751 || img.height > 1751) {
             this.alertService.errorAlert('Error', 'La imagen del logo debe tener como máximo 1751 x 1751 píxeles.');
             this.resetFileField(field);
-            event.target.value = ''; // Borra la selección del input
+            event.target.value = '';
             return;
           } else {
             this.processFile(file, field);
@@ -463,13 +530,16 @@ export class PerfilAliadoComponent implements OnInit {
       }
     }
   }
-  
+
+  /*
+    Este método procesa un archivo seleccionado y actualiza el formulario correspondiente con la información del archivo.
+  */
   private processFile(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
       const previewUrl = e.target.result;
       if (field === 'urlImagen') {
-        this.bannerForm.patchValue({ urlImagen: previewUrl });  
+        this.bannerForm.patchValue({ urlImagen: previewUrl });
         this.bannerPreview = previewUrl;
       } else if (field === 'logo') {
         this.aliadoForm.patchValue({ logo: previewUrl });
@@ -480,10 +550,9 @@ export class PerfilAliadoComponent implements OnInit {
       }
     };
     reader.readAsDataURL(file);
-  
-    // Genera la previsualización solo si el archivo es de tamaño permitido
+
     this.generateImagePreview(file, field);
-  
+
     if (field === 'urlImagen') {
       this.selectedBanner = file;
       this.bannerForm.patchValue({ urlImagen: file });
@@ -498,12 +567,19 @@ export class PerfilAliadoComponent implements OnInit {
       this.aliadoForm.patchValue({ ruta_multi: file });
     }
   }
-  
+
+  /*
+  Este método maneja la entrada de texto en el campo `ruta_multi` del formulario `aliadoForm`.
+*/
   onTextInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.aliadoForm.patchValue({ ruta_multi: value });
   }
-  
+
+  /*
+    Este método se encarga de restablecer el campo de archivo a su estado inicial, 
+    eliminando cualquier valor previamente asignado.
+  */
   resetFileField(field: string) {
     if (field === 'urlImagen') {
       this.bannerForm.patchValue({ urlImagen: null });
@@ -519,7 +595,10 @@ export class PerfilAliadoComponent implements OnInit {
       this.rutaPreview = null;
     }
   }
-
+  /*
+     Este método utiliza `FileReader` para crear una vista previa de la imagen 
+     seleccionada, actualizando la propiedad correspondiente en el componente.
+   */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {

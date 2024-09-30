@@ -24,20 +24,20 @@ export class ModalActividadComponent implements OnInit {
     private router: Router,
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     if (this.actividad && this.actividad.fuente) {
-      // Remover '/api' si está presente en environment.apiUrl
       const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
-
-      // Asegurarse de que la fuente no comience con '/'
       const fuenteAjustada = this.actividad.fuente.startsWith('/')
         ? this.actividad.fuente.slice(1)
         : this.actividad.fuente;
-
       this.imagenUrl = `${baseUrl}/${fuenteAjustada}`;
     }
   }
 
+  /*
+    Devuelve un color basado en el índice proporcionado, seleccionando de una lista predefinida.
+  */
   getItemColor(index: number): string {
     const colors = [
       '#F4384B', // Rojo
@@ -53,11 +53,19 @@ export class ModalActividadComponent implements OnInit {
     return colors[index % colors.length];
   }
 
+  /*
+    Devuelve un color basado en el índice de color de la actividad, o un color por defecto si no está definido.
+  */
   getColor(): string {
     return this.actividad.colorIndex !== undefined
       ? this.getItemColor(this.actividad.colorIndex)
-      : '#FA7D00'; // Color por defecto si no hay índice
+      : '#FA7D00';
   }
+
+  /*
+    Calcula el color de texto (blanco o negro) según el brillo del color de fondo.
+    Devuelve 'black' si el fondo es claro y 'white' si es oscuro.
+  */
 
   getTextColor(): string {
     const color = this.getColor();
@@ -68,14 +76,23 @@ export class ModalActividadComponent implements OnInit {
     return brightness > 128 ? 'black' : 'white';
   }
 
+  /*
+    Cierra el modal emitiendo un evento de cierre.
+  */
   cerrarModal() {
     this.close.emit();
   }
 
+  /*
+    Emite el evento para navegar al módulo correspondiente.
+  */
   irAModulo() {
     this.irAModuloClicked.emit(this.actividad);
   }
 
+  /*
+    Maneja el error al cargar una imagen y establece una bandera de error.
+  */
   manejarErrorImagen() {
     this.imagenError = true;
     console.error('Error al cargar la imagen');

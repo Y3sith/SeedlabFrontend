@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { ReporteService } from '../../../servicios/reporte.service';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
@@ -23,6 +23,8 @@ export class ReportesComponent implements OnInit {
   public totalItems: number = 0;
   public paginatedReportes: string[] = [];
   tipoReporteSeleccionado: string = '';
+  falupa = faCircleQuestion;
+
 
 
   constructor(
@@ -39,10 +41,15 @@ export class ReportesComponent implements OnInit {
   }
 
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
   }
 
+  /*
+      Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+      formulario o cualquier otra parte de la aplicación.
+    */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -61,7 +68,9 @@ export class ReportesComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
-
+  /*
+    Este método muestra los reportes generados basados en los criterios establecidos en el formulario `reporteForm`.
+  */
   mostrarReportes() {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
@@ -94,7 +103,9 @@ export class ReportesComponent implements OnInit {
   }
 
 
-  //Función para descargar los reportes
+  /*
+    Este método se encarga de exportar un reporte en el formato especificado.
+  */
   getReportes(formato: string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
@@ -129,6 +140,9 @@ export class ReportesComponent implements OnInit {
     }
   }
 
+  /*
+    Este método permite la exportación de reportes basados en los datos ingresados en el formulario `reporteForm`.
+  */
   getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
@@ -146,18 +160,28 @@ export class ReportesComponent implements OnInit {
     )
   }
 
+  /*
+    Este método maneja los cambios en el campo de selección `tipoReporte` del formulario.
+  */
   onTipoReporteChange(event: any) {
     this.tipoReporteSeleccionado = event.target.value;
   }
 
+
+  /*
+    Este método actualiza la lista de reportes paginados.
+  */
   updatePaginated(): void {
     const start = (this.page - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
-
     this.paginatedReportes = this.reportes.slice(start, end);
-
   }
 
+  /*
+    Este método permite cambiar la página actual 
+    en el sistema de paginación. Acepta un argumento que 
+    determina la nueva página a la que se debe navegar.
+  */
   changePage(page: number | string): void {
     if (page === 'previous') {
       if (this.canGoPrevious()) {
@@ -175,18 +199,31 @@ export class ReportesComponent implements OnInit {
     }
   }
 
+  /*
+    Este método verifica si es posible retroceder a 
+     la página anterior en el sistema de paginación.
+  */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+  /*
+      Este método verifica si es posible avanzar a 
+      la siguiente página en el sistema de paginación.
+  */
   canGoNext(): boolean {
     return this.page < Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
+  /*
+      Este método genera un array de números que 
+      representan las páginas disponibles en el sistema de 
+      paginación, basado en la cantidad total de elementos 
+      y la cantidad de elementos por página.
+  */
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
-
 
 }

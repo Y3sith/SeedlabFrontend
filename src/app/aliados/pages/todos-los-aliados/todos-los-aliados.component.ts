@@ -38,12 +38,17 @@ export class TodosLosAliadosComponent {
     private location: Location
   ) { }
 
+
+    /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isAuthenticated();
     this.getPersonalizacion();
     this.mostrarAliados();
   }
 
+/*
+  Este método recupera la lista de aliados desde el servicio de aliados y actualiza la vista.
+*/
   mostrarAliados(): void {
     this.aliadoService.getaliados().subscribe(
       data => {
@@ -55,18 +60,20 @@ export class TodosLosAliadosComponent {
       }
     );
   }
-  
+
+/*
+  Este método abre un modal para mostrar información de un aliado específico.
+*/
   openModal(idAliado: number): void {
     let dialogRef: MatDialogRef<ModalAliadosComponent>;
     dialogRef = this.dialog.open(ModalAliadosComponent, {
       data: { idAliado: idAliado }
     });
-    // dialogRef.afterClosed().subscribe(() => {
-    //   this.cargarSuperAdmin();
-    // });
   }
 
-
+/*
+  Este método obtiene la personalización de la aplicación usando el servicio de personalizaciones.
+*/
   getPersonalizacion() {
     this.personalizacionesService.getPersonalizacion(this.id).subscribe(
       data => {
@@ -83,7 +90,10 @@ export class TodosLosAliadosComponent {
       }
     );
   }
-
+  
+/*
+  Este método navega a la página anterior en el historial de navegación.
+*/
   goBack(){
     this.location.back();
   }

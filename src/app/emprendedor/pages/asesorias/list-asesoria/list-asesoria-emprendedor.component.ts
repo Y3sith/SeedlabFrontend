@@ -17,8 +17,8 @@ import { Asesoria } from '../../../../Modelos/asesoria.model';
 export class ListAsesoriaEmprendedorComponent implements OnInit {
   asesoriasTrue: Asesoria[] = [];
   asesoriasFalse: Asesoria[] = [];
-  showTrue: boolean = false; // Set to false by default to show "Sin Asignar"
-  showFalse: boolean = true; // Set to true by default to show "Sin Asignar"
+  showTrue: boolean = false;
+  showFalse: boolean = true;
   token: string;
   documento: string | null = null;
   user: any = null;
@@ -26,16 +26,14 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
   sinAsignarCount: number = 0;
   asignadasCount: number = 0;
   busqueda: string = '';
-  asesorias: any[] = []; // Tus datos
-  resultadosBusqueda: any[] = []; //
-
+  asesorias: any[] = [];
+  resultadosBusqueda: any[] = [];
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
   isLoading: boolean = false;
-  
-  page: number = 1; // Inicializa la página actual
-  totalAsesorias: number = 0; // variable para almacenar el total de asesorias
-  itemsPerPage: number = 8; // Número de asesorias por página
+  page: number = 1;
+  totalAsesorias: number = 0;
+  itemsPerPage: number = 8;
 
   constructor(
     private asesoriaService: AsesoriaService,
@@ -72,10 +70,12 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
     }
   }
 
-
+/*
+  Lista las asesorías asignadas y sin asignar del usuario, utilizando su documento y token.
+*/
   listarAsesorias(): void {
     if (this.documento && this.token) {
-      this.isLoading = true; // Empieza a cargar
+      this.isLoading = true;
   
       const bodyTrue = {
         documento: this.documento,
@@ -87,12 +87,11 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
         asignacion: false
       };
   
-      // Solicitud para asesorías asignadas
       this.asesoriaService.getMisAsesorias(this.token, bodyTrue).subscribe(
         response => {
           this.asesoriasTrue = response;
-          this.asignadasCount = this.asesoriasTrue.length; // Actualiza el contador
-          this.totalAsesorias = this.asesoriasTrue.length + (this.asesoriasFalse?.length || 0); // Actualiza el total de asesorías
+          this.asignadasCount = this.asesoriasTrue.length;
+          this.totalAsesorias = this.asesoriasTrue.length + (this.asesoriasFalse?.length || 0);
           this.checkLoadingComplete();
         },
         error => {
@@ -101,12 +100,11 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
         }
       );
   
-      // Solicitud para asesorías sin asignar
       this.asesoriaService.getMisAsesorias(this.token, bodyFalse).subscribe(
         response => {
           this.asesoriasFalse = response;
-          this.sinAsignarCount = this.asesoriasFalse.length; // Actualiza el contador
-          this.totalAsesorias = this.asesoriasTrue?.length + this.asesoriasFalse.length; // Actualiza el total de asesorías
+          this.sinAsignarCount = this.asesoriasFalse.length;
+          this.totalAsesorias = this.asesoriasTrue?.length + this.asesoriasFalse.length;
           this.checkLoadingComplete();
         },
         error => {
@@ -122,7 +120,7 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
   // Método para comprobar si ambos datos están cargados
   checkLoadingComplete(): void {
     if (this.asesoriasTrue !== undefined && this.asesoriasFalse !== undefined) {
-      this.isLoading = false; // Termina la carga cuando ambos datos están disponibles
+      this.isLoading = false; 
     }
   }
   
@@ -132,19 +130,22 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
     if (pageNumber === 'previous') {
       if (this.page > 1) {
         this.page--;
-        this.listarAsesorias(); // Carga las asesorias de la página anterior
+        this.listarAsesorias();
       }
     } else if (pageNumber === 'next') {
       if (this.page < this.getTotalPages()) {
         this.page++;
-        this.listarAsesorias(); // Carga las asesorias de la página siguiente
+        this.listarAsesorias();
       }
     } else {
       this.page = pageNumber as number;
-      this.listarAsesorias(); // Carga las asesorias de la página seleccionada
+      this.listarAsesorias();
     }
   }
 
+/*
+  Calcula el número total de páginas según la cantidad de asesorías y el valor de showFalse.
+*/
   getTotalPages(): number {
     if(this.asesoriasFalse.length >= 2 && this.showFalse == true){
       return Math.ceil(this.asesoriasFalse.length / this.itemsPerPage);
@@ -153,19 +154,31 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
     }
   }
 
+/*
+  Genera un arreglo con el número de páginas basado en el total calculado.
+*/
   getPages(): number[] {
     const totalPages = this.getTotalPages();
     return Array(totalPages).fill(0).map((x, i) => i + 1);
   }
 
+/*
+  Verifica si es posible retroceder de página.
+*/
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+/*
+  Verifica si es posible avanzar de página.
+*/
   canGoNext(): boolean {
     return this.page < this.getTotalPages();
   }
 
+  /*
+  Abre un modal para crear una nueva asesoría y lista las asesorías tras cerrarlo.
+*/
   openCrearAsesoriaModal() {
     const dialogRef = this.dialog.open(CrearAsesoriaModalComponent, {
       width: '400px',
@@ -179,6 +192,9 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
     });
   }
 
+/*
+  Muestra asesorías sin asignar y reinicia la paginación.
+*/
   showSinAsignar() {
     this.showTrue = false;
     this.showFalse = true;
@@ -186,16 +202,21 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
     this.listarAsesorias();
   }
 
+/*
+  Muestra asesorías asignadas y reinicia la paginación.
+*/
   showAsignadas() {
     this.showTrue = true;
     this.showFalse = false;
     this.page = 1;
     this.listarAsesorias();
   }
+
+/*
+  Maneja cambios en la búsqueda y filtra asesorías.
+*/
   manejarCambio(event: Event) {
     this.busqueda = (event.target as HTMLInputElement).value;
-
-    // Lógica de búsqueda
     if (this.busqueda) {
       this.resultadosBusqueda = this.asesorias.filter(asesoria =>
         asesoria.Nombre_sol.toLowerCase().includes(this.busqueda.toLowerCase())
@@ -204,5 +225,4 @@ export class ListAsesoriaEmprendedorComponent implements OnInit {
       this.resultadosBusqueda = this.asesorias;
     }
   }
-
 }

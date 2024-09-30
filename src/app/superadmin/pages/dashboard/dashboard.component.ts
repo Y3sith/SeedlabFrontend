@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit {
     private empresaService: EmpresaService,
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     const currentYear = new Date().getFullYear();
@@ -55,6 +56,10 @@ export class DashboardComponent implements OnInit {
     this.initGraficaVacia();
   }
 
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -75,12 +80,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
+   /*Función que maneja el cambio de año en la interfaz*/
   onYearChange(year: number): void {
     this.selectedYear = year;
     this.getDatosDashboard(this.selectedYear);
   }
-
+  /*Función que maneja el cambio de tipo en un select (desplegable)*/
   onSelectChange(event: any): void {
     this.selectedTipo = event.target.value;
 
@@ -89,6 +94,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  /*Función que obtiene todas las empresas disponibles*/
   getEmpresas() {
     this.empresaService.getAllEmpresa(this.token).subscribe(
       data => {
@@ -102,6 +108,7 @@ export class DashboardComponent implements OnInit {
     )
   }
 
+  /*Función para inicializar un gráfico utilizando ECharts*/
   initChart(chartId: string, options: any): void {
     setTimeout(() => {
       const chartDom = document.getElementById(chartId);
@@ -114,7 +121,7 @@ export class DashboardComponent implements OnInit {
     }, 100); // Retraso de 100ms para asegurarse de que el DOM esté listo
   }
 
-
+  /*Función que maneja el cambio de empresa seleccionada*/
   onEmpresaChange(selectedId: string): void {
     this.selectedEmpresa = selectedId;
     this.graficaPuntajesFormulario(+this.selectedTipo);
@@ -540,7 +547,8 @@ export class DashboardComponent implements OnInit {
     return monthNames[monthNumber - 1];
   }
 
-
+  /*Configura una gráfica de radar vacía que se muestra cuando no hay datos disponibles.
+  Muestra los puntajes de diferentes criterios como "General", "Técnica", "TRL", "Mercado" y "Financiera", pero con valores cero*/
   initGraficaVacia(): void {
     // Configuración de la gráfica vacía
     this.getPuntajesForm = {
@@ -572,7 +580,9 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-
+  /*Muestra una gráfica de radar que visualiza los puntajes de una empresa seleccionada en diferentes categorías (general, técnica, TRL, mercado, financiera).
+  Dependiendo del tipo (primera o segunda evaluación), ajusta el título de la gráfica y actualiza los valores con los datos obtenidos del servicio.
+  Si no hay empresa o tipo seleccionado, muestra una gráfica vacía.*/
   graficaPuntajesFormulario(tipo: number): void {
     if (!this.selectedEmpresa || !tipo) {
       this.initGraficaVacia();
@@ -630,7 +640,8 @@ export class DashboardComponent implements OnInit {
 
 
 
-
+  /*Normaliza los nombres de los departamentos eliminando tildes, espacios adicionales y convirtiendo todo a mayúsculas.
+  Esto se usa para garantizar que los nombres coincidan con el formato esperado en el archivo GeoJSON*/
   normalizeName(name: string): string {
     return name.toUpperCase()
       .replace(/Á/g, 'A')

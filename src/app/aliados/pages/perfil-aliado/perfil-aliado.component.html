@@ -107,14 +107,17 @@
                         <div class="flex items-center">
                             <label for="descripcion" class="block mb-2 mt-4">Descripcion fanpage</label>
                             <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1" mat-raised-button
-                                matTooltip="La descripción debe tener al menos 300 caracteres y máximo 470 caracteres"
+                                matTooltip="La descripción debe tener al menos 210 caracteres y máximo 312 caracteres"
                                 matTooltipPosition="right" style="color: #adb7c7;">
                             </fa-icon>
                         </div>
                         <div class="relative mb-2">
                             <textarea id="descripcion" formControlName="descripcion" [readonly]="blockedInputs"
-                                class="p-2 h-36 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200">
+                                class="p-2 h-36 w-full border rounded-md bg-white appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" maxlength="312" (input)="updateCharCount()">
                             </textarea>
+                            <div class="text-sm text-gray-500 mt-1">
+                                {{ charCount }} /312
+                            </div>
                         </div>
                         <div *ngIf="(formSubmitted || f['descripcion'].touched) && f['descripcion'].invalid"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">

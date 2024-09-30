@@ -13,7 +13,6 @@ import { Ruta } from '../Modelos/ruta.modelo';
 export class RutaService {
 
   url = environment.apiUrl + 'ruta';
- // url2 = environment.apiUrl + 'nivel';
 
   constructor(private http:HttpClient) { }
 
@@ -37,7 +36,6 @@ export class RutaService {
   }
 
   descargarArchivo(contenidoId: number): Observable<HttpResponse<Blob>> {
-    //const url = `${environment.apiUrl}aliado/${estado}`;
     return this.http.get(`${environment.apiUrl}descargar-archivo/${contenidoId}`, {
       observe: 'response',
       responseType: 'blob',
@@ -77,7 +75,6 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado)
     };
-    // return this.http.get(this.url+'/actnivleccontXruta/'+idRuta,options)
     return this.http.get<{id: number, actividades: any[]}>(this.url + '/actnivleccontXruta/' + idRuta, options);
 
   }
@@ -86,7 +83,6 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token),
       params: new HttpParams().set('estado', estado)
     };
-    //return this.http.get(this.url+'/actnividadxAliado/'+idRuta+'/'+idAliado,options)
     return this.http.get<{id: number, actividades: any[]}>(this.url + '/actnividadxAliado/'+idRuta+'/'+idAliado, options);
   }
 
@@ -107,16 +103,10 @@ export class RutaService {
     return this.http.get(this.url+'/rutas',options)
   }
   
-  //////  editar
   updateRutas(access_token:any, ruta:Ruta,id:number):Observable<any>{
     const options= { headers: this.CreacionHeaderss(access_token)};
     return this.http.put(this.url+'/ruta/'+id,ruta,options);
   }
-
-  // updateActividad(access_token:any,actividad:any):Observable<any>{
-  //   const options = { headers: this.CreacionHeaders(access_token)};
-  //   return this.http.put(this.url+'/editarActividad',actividad,options)
-  // }
 
   updateNivel(access_token:any,id:number,nivel:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
@@ -137,10 +127,5 @@ export class RutaService {
     const options = { headers: this.CreacionHeaders(access_token)};
     return this.http.get(this.url+'/idRespuestasHeidy',options)
   }
-
-
-
-
-  
 
 }

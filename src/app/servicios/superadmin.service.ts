@@ -1,13 +1,7 @@
-
-
-
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import { Observable, of, shareReplay, tap } from 'rxjs';
-
 import { environment } from '../../environment/env';
-
 import { Superadmin } from '../Modelos/superadmin.model';
 import { Personalizaciones } from '../Modelos/personalizaciones.model';
 import { Actividad } from '../Modelos/actividad.model';
@@ -25,7 +19,7 @@ export class SuperadminService {
 
   constructor(private http: HttpClient) { }
 
-
+  /* Crea y devuelve un objeto HttpHeaders con el token de acceso y el tipo de contenido */
   private CreacionHeaders(access_token: any): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
@@ -33,27 +27,32 @@ export class SuperadminService {
     });
   }
 
+  /* Crea y devuelve un objeto HttpHeaders solo con el token de acceso */
   private CreacionHeaderss(access_token: any): HttpHeaders {
     return new HttpHeaders({
       'Authorization': 'Bearer ' + access_token
     });
   }
 
+  /* Crea un nuevo superadmin */
   createSuperadmin(access_token: any, formData: FormData,): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
     return this.http.post(this.url + "crearSuperAdmin", formData, options);
   }
 
+  /* Actualiza la información de un admin */
   updateAdmin(access_token: any, idSuperadmin: number, formData: FormData): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
     return this.http.post(this.url + "editarAdmin/" + idSuperadmin, formData, options);
   }
 
+  /* Obtiene la información de un admin específico */
   getInfoAdmin(access_token: any, id: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get<any>(this.url + "userProfileAdmin/" + id, options);
   }
 
+  /* Obtiene una lista de admins filtrada por estado */
   getAdmins(access_token: any, estado: boolean): Observable<any> {
     const options = {
       headers: this.CreacionHeaders(access_token),
@@ -62,72 +61,78 @@ export class SuperadminService {
     return this.http.get<any>(this.url + "mostrarSuperAdmins", options);
   }
 
+  /* Obtiene información de un superadmin específico */
   getsuperadmin(access_token: any, adminId: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get<any>(this.url + "userProfileAdmin/" + adminId, options);
   }
 
+  /* Obtiene información de asesores con sus aliados asociados */
   asesorConAliado(access_token: any): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(this.url + "asesor-aliado", options)
   }
 
+  /* Obtiene una lista de aliados */
   listarAliado(access_token: any): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.get(this.url + "listAliado", options)
   }
 
+  /* Crea una nueva actividad como superadmin */
   crearActividadSuperAdmin(access_token: any, formData: FormData): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
     return this.http.post(environment.apiUrl + "actividad/crearActividad", formData, options)
   }
+
+  /* Crea un nuevo nivel como superadmin */
   crearNivelSuperAdmin(access_token: any, nivel: Nivel): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(environment.apiUrl + "nivel/crearNivel", nivel, options)
-    //return this.http.post(this.url+"nivel",nivel,options) 
   }
 
+  /* Crea una nueva lección como superadmin */
   crearLeccionSuperAdmin(access_token: any, leccion: Leccion): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(environment.apiUrl + "leccion/crearLeccion", leccion, options)
   }
 
+  /* Crea contenido para una lección como superadmin */
   crearContenicoLeccionSuperAdmin(access_token: string, formData: FormData): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
     return this.http.post(environment.apiUrl + "contenido_por_leccion/crearContenidoPorLeccion", formData, options)
   }
 
-
+  /* Crea una nueva personalización */
   createPersonalizacion(access_token: any, formData: FormData, id): Observable<any> {
     const options = { headers: this.CreacionHeaderss(access_token) };
     return this.http.post(this.url + "personalizacion/" + id, formData, options);
   }
 
-
+  /* Restaura una personalización */
   restorePersonalization(access_token: any, id): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
     return this.http.post(this.url + "restaurarPersonalizacion/" + id, {}, options);
   }
 
-  // Método para guardar la personalización en localStorage
+  /* Guarda la personalización en el almacenamiento local */
   savePersonalizationToLocalStorage(data: any): void {
     const personalization = {
       ...data,
-      savedAt: new Date().getTime(), // se guarda el tiempo en que se guardó la personalización
+      savedAt: new Date().getTime(), 
     };
     localStorage.setItem('personalization', JSON.stringify(personalization));
   }
 
-   // Método unificado para obtener la personalización, ya sea del caché o de la API
+  /* Obtiene la personalización, primero del almacenamiento local y si no está disponible o ha expirado, del servidor */
   getPersonalizacion(id: number): Observable<any> {
     const cachedData = localStorage.getItem('personalization');
 
     if (cachedData) {
       const parsedData = JSON.parse(cachedData);
       const currentTime = new Date().getTime();
-      const cacheDuration = 24 * 60 * 60 * 1000; // Duración del caché: 1 día
+      const cacheDuration = 24 * 60 * 60 * 1000; // 24 horas en milisegundos
 
-      // Si los datos en caché aún son válidos, los devolvemos
       if (currentTime - parsedData.savedAt < cacheDuration) {
         return new Observable(observer => {
           observer.next(parsedData);
@@ -136,18 +141,10 @@ export class SuperadminService {
       }
     }
 
-    // Si el caché no es válido o no existe, hacemos la solicitud a la API
     return this.http.get(environment.apiUrl + "traerPersonalizacion/" + id).pipe(
       tap(data => {
-        // Guardamos la nueva personalización en el localStorage
         this.savePersonalizationToLocalStorage(data);
       })
     );
   }
-
-
-
-
-
-
 }

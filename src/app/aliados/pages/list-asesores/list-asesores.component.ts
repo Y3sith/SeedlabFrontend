@@ -29,9 +29,7 @@ export class ListAsesoresComponent implements OnInit {
   listaAsesores: Asesor[] = [];
   selectedAsesorId: number | null = null;
   isLoading: boolean = false;
-//////
   idAsesor: number = null;
-//////
   userFilter: any = { nombre: '', estado: 'Activo' };
 
   constructor(
@@ -40,11 +38,16 @@ export class ListAsesoresComponent implements OnInit {
     private aliadoService: AliadoService
   ) { }
 
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.cargarAsesores();
   }
-
+  
+/*
+    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+    formulario o cualquier otra parte de la aplicación.
+*/
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -65,6 +68,10 @@ export class ListAsesoresComponent implements OnInit {
     }
   }
 
+/*
+  Este método se encarga de cargar la lista de asesores 
+  asociados al usuario actual, utilizando un token de autenticación.
+*/
   cargarAsesores() {
     if (this.token) {
       this.isLoading = true;
@@ -80,16 +87,30 @@ export class ListAsesoresComponent implements OnInit {
       );
     }
   }
-
+/*
+  Este método se ejecuta cuando hay un cambio en el estado 
+  del filtro de asesores. Su principal función es recargar 
+  la lista de asesores para reflejar los cambios realizados 
+  en el filtro.
+*/
   onEstadoChange(): void {
     this.cargarAsesores();
   }
 
+/*
+  Este método se encarga de restablecer los filtros aplicados 
+  para la búsqueda de asesores. Específicamente, reinicia 
+  los valores de los filtros a sus configuraciones por defecto.
+*/
   limpiarFiltro(): void {
     this.userFilter = { nombre: '', estado: 'Activo' };
     this.cargarAsesores();
   }
 
+/*
+  Este método maneja la apertura de un modal para agregar o 
+  editar información sobre un asesor. 
+*/
   openModal(asesorId: number | null): void {
     let dialogRef: MatDialogRef<ModalAddAsesoresComponent>;
 
@@ -102,6 +123,12 @@ export class ListAsesoresComponent implements OnInit {
     });
   }
 
+ /*
+    Este método genera un array de números que 
+    representan las páginas disponibles en el sistema de 
+    paginación, basado en la cantidad total de elementos 
+    y la cantidad de elementos por página.
+  */
   getPages(): number[] {
     const totalItems = this.listaAsesores.length;
     const itemsPerPage = 5;
@@ -109,10 +136,17 @@ export class ListAsesoresComponent implements OnInit {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
+  /*
+    Este método verifica si es posible retroceder a 
+    la página anterior en el sistema de paginación.
+  */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
-
+/*
+    Este método verifica si es posible avanzar a 
+    la siguiente página en el sistema de paginación.
+  */
   canGoNext(): boolean {
     const totalItems = this.listaAsesores.length;
     const itemsPerPage = 5;
@@ -120,6 +154,11 @@ export class ListAsesoresComponent implements OnInit {
     return this.page < totalPages;
   }
 
+    /*
+    Este método permite cambiar la página actual 
+    en el sistema de paginación. Acepta un argumento que 
+    determina la nueva página a la que se debe navegar.
+  */
   changePage(page: number | 'previous' | 'next'): void {
     if (page === 'previous' && this.canGoPrevious()) {
       this.page--;

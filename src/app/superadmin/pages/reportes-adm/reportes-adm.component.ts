@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReporteService } from '../../../servicios/reporte.service';
 import { AlertService } from '../../../servicios/alert.service';
+import { faCircleQuestion, } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-reportes-adm',
@@ -24,6 +26,8 @@ export class ReportesAdmComponent {
   tipoReporteSeleccionado: string = '';
   isReporteDisponible: boolean = false;
   isDataReady: boolean = false;
+  falupa = faCircleQuestion;
+
 
 
   constructor(
@@ -39,11 +43,14 @@ export class ReportesAdmComponent {
     })
   }
 
-
+/* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
-
   }
 
+  /*
+  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+  formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -63,7 +70,12 @@ export class ReportesAdmComponent {
     }
   }
 
-  //Función para mostrar los reportes en la tabla
+  /*
+  Valida que el formulario sea correcto y, si lo es, llama al servicio para obtener datos de un reporte en 
+  función de los filtros seleccionados (tipo de reporte, fecha de inicio y fecha fin).
+  Luego, actualiza la lista de reportes y su paginación. 
+  Si no hay datos, muestra una alerta de que no hay resultados.
+  */
   mostrarReportes() {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
@@ -88,8 +100,12 @@ export class ReportesAdmComponent {
     }
   }
 
-  //Función para descargar los reportes
-  getReportes(formato: string) {
+/*
+ Valida el formulario y, si es correcto, descarga un archivo (PDF o Excel) con los datos del reporte
+  basado en el tipo de reporte y el rango de fechas seleccionado. Crea un enlace temporal para 
+  descargar el archivo y luego lo elimina.
+*/
+  getReportes(formato:string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
 
@@ -123,8 +139,9 @@ export class ReportesAdmComponent {
     }
   }
 
-
-  //Función para descargar reporte de formulario emprendedor
+  /*
+  Descarga un archivo Excel con un reporte específico de un emprendedor usando su ID. Crea un enlace temporal para descargar el archivo y luego lo elimina.
+  */
   getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
@@ -149,10 +166,16 @@ export class ReportesAdmComponent {
     );
   }
 
+  /*
+  Captura el cambio de selección en el tipo de reporte y, si el tipo seleccionado es "emprendedor", automáticamente llama la función getReportes('excel') para generar un reporte en formato Excel.
+  */
   onTipoReporteChange(event: any) {
     this.tipoReporteSeleccionado = event.target.value;
   }
 
+  /*
+  Actualiza la lista paginada de reportes, calculando qué elementos mostrar según la página actual y el número de elementos por página.
+  */
   updatePaginated(): void {
     const start = (this.page - 1) * this.itemsPerPage;
     const end = start + this.itemsPerPage;
@@ -161,6 +184,9 @@ export class ReportesAdmComponent {
 
   }
 
+  /*
+  Cambia de página dentro de la lista de reportes paginados. Puede ir a la página anterior, siguiente, o a una página específica, actualizando la lista visible en consecuencia.
+  */
   changePage(page: number | string): void {
     if (page === 'previous') {
       if (this.canGoPrevious()) {
@@ -178,14 +204,24 @@ export class ReportesAdmComponent {
     }
   }
 
+  /*
+  Verifica si es posible retroceder a una página anterior en la lista de reportes paginados.
+  */
   canGoPrevious(): boolean {
     return this.page > 1;
   }
 
+  /*
+  Verifica si es posible avanzar a una página siguiente en la lista de reportes paginados.
+  */
   canGoNext(): boolean {
     return this.page < Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
+  /*
+  Calcula el número total de páginas basado en la cantidad total de elementos y el número de elementos por página,
+  devolviendo una lista de números de página para mostrar en la interfaz.
+  */
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);
