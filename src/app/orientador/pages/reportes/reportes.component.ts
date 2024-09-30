@@ -34,7 +34,7 @@ export class ReportesComponent {
     private fb: FormBuilder,
     private router: Router,
     private reporteService: ReporteService,
-    private alertService:AlertService
+    private alertService: AlertService
   ) {
     this.reporteForm = this.fb.group({
       tipo_reporte: ['', Validators.required],
@@ -68,6 +68,7 @@ export class ReportesComponent {
     }
   }
 
+//Función para mostrar los reportes en la tabla
   mostrarReportes() {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
@@ -80,45 +81,54 @@ export class ReportesComponent {
           this.page = 1;
           this.updatePaginated();
           this.columnas = Object.keys(data[0] || {}); // Establece las columnas basadas en los datos
-          if(data.length === 0){
-            this.alertService.successAlert('Info','No hay datos para mostrar');
+          if (data.length === 0) {
+            this.alertService.successAlert('Info', 'No hay datos para mostrar');
           }
         },
         (error) => console.error('Error al obtener datos del reporte', error)
       );
     } else {
       console.error('Formulario inválido');
-      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
     }
   }
 
-
-  getReportes(formato:string) {
+  //Función para descargar los reportes
+  getReportes(formato: string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
 
-      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe(
-        (data: Blob) => {
-
-          const url = window.URL.createObjectURL(data);
-
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `Reporte_${tipo_reporte}.${formato === 'pdf' ? 'pdf' : 'xlsx'}`;
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
+      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe({
+        next: (data) => {
+          if (data) { // Verifica si data no es null
+            if (data.size > 0) { // Verifica si el tamaño es mayor a 0
+              const url = window.URL.createObjectURL(data);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `Reporte_${tipo_reporte}.${formato === 'pdf' ? 'pdf' : 'xlsx'}`;
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+            } else {
+              this.alertService.errorAlert('Error', 'No hay datos disponibles para el reporte especificado.');
+            }
+          } else {
+            // Se maneja el caso donde data es null
+            this.alertService.errorAlert('Info', 'No se recibió ningún archivo para descargar.');
+          }
         },
-        error => {
+        error: (error) => {
           console.error('Error al descargar el reporte', error);
+          this.alertService.errorAlert('Error', 'Error al procesar la solicitud de reporte.');
         }
-      )
+      });
     } else {
-      console.error('Formulario inválido');
-      this.alertService.errorAlert('Error','Debe seleccionar todos los filtros');
+      console.error('Formulario inválido:', this.reporteForm.value);
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
     }
   }
 
+  //Función para descargar reporte de formulario emprendedor
   getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
@@ -138,11 +148,6 @@ export class ReportesComponent {
 
   onTipoReporteChange(event: any) {
     this.tipoReporteSeleccionado = event.target.value;
-
-    if (this.tipoReporteSeleccionado === 'emprendedor') {
-      // Lógica adicional cuando se selecciona "Emprendedores"
-      this.getReportes('excel'); // Llamada para cargar los reportes
-    }
   }
 
   updatePaginated(): void {

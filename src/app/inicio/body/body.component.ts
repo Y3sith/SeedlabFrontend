@@ -45,9 +45,9 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isAuthenticated();
+    this.mostrarBanners();
     this.getPersonalizacion();
     this.mostrarAliados();
-    this.mostrarBanners();
   }
 
   ngAfterViewInit() {

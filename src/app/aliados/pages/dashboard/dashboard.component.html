@@ -78,7 +78,9 @@
         <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorias</h2>
         <!-- Chart placeholder -->
         <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
-          <div id="echarts-bar" style="width: 100%; height:100%;"></div>
+          <div id="echarts-bar" style="width: 100%; height:100%;">
+            <app-echart [options]="topAliadosChartOption" ></app-echart>
+          </div>
         </div>
       </div>
 
@@ -87,7 +89,9 @@
         <h2 class="text-lg font-semibold mb-4">Asesorias</h2>
         <!-- Chart placeholder -->
         <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
-          <div id="echarts-pie" style="width: 100%; height: 100%;"></div>
+          <div id="echarts-pie" style="width: 100%; height: 100%;">
+            <app-echart [options]="asesoriasCharOption" ></app-echart>
+          </div>
         </div>
       </div>
 
@@ -96,7 +100,9 @@
         <h2 class="text-lg font-semibold mb-4">Generos Emprendedores</h2>
         <!-- Chart placeholder -->
         <div class="h-48 sm:h-56 md:h-64 lg:h-72 w-full">
-          <div id="echarts-doughnut" style="width: 100%; height: 100%;"></div>
+          <div id="echarts-doughnut" style="width: 100%; height: 100%;">
+            <app-echart [options]="doughnutChartOption" ></app-echart>
+          </div>
         </div>
       </div>
     </div>

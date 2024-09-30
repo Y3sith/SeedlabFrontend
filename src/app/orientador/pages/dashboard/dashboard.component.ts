@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
@@ -11,7 +11,7 @@ import { EmpresaService } from '../../../servicios/empresa.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements OnInit {
   token: string | null = null;
   user: User = null;
   id: number;
@@ -47,23 +47,16 @@ export class DashboardComponent implements AfterViewInit {
 
   ngOnInit() {
     this.validateToken();
-    this.getDatosDashboard();
-    this.getEmpresas();
-    this.initGraficaVacia();
-    this.getDatosGenerosGrafica();
-    this.getRegistrosMensuales();
-  }
-
-  ngAfterViewInit() {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
     this.selectedYear = this.years[0];
     this.selectedYear = currentYear;
-    this.getDatosGenerosGrafica();
-    this.getRegistrosMensuales();
-    this.promedioAsesoriasMesAnio(this.selectedYear);
-
+    this.getDatosDashboard(this.selectedYear);
+    this.getEmpresas();
+    this.initGraficaVacia();
   }
+
+ 
 
   validateToken(): void {
     if (!this.token) {
@@ -88,7 +81,7 @@ export class DashboardComponent implements AfterViewInit {
 
   onYearChange(year: number): void {
     this.selectedYear = year;
-    this.promedioAsesoriasMesAnio(this.selectedYear);
+    this.getDatosDashboard(this.selectedYear);
   }
 
   getEmpresas() {
@@ -110,9 +103,87 @@ export class DashboardComponent implements AfterViewInit {
   }
 
 
-  promedioAsesoriasMesAnio(year: number): void {
-    this.dashboardService.dashboardAdmin(this.token, this.selectedYear).subscribe(
+  getDatosDashboard(year: number): void {
+    this.isLoading = true;
+    this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
+        // Asignar los datos devueltos a las variables correspondientes
+        this.totalUsuarios = data;
+        this.totalSuperAdmin = data.usuarios.superadmin;
+        this.totalOrientador = data.usuarios.orientador;
+        this.totalAliados = data.usuarios.aliado;
+        this.totalAsesores = data.usuarios.asesor;
+        this.totalEmprendedores = data.usuarios.emprendedor;
+        this.topAliados = data.topAliados.original;
+
+
+        // Configuración para la gráfica de pastel (Asesorías)
+        this.topAliadosEchartsOptions = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow' // Mostrar puntero de tipo sombra para mejor visualización
+            }
+          },
+          legend: {
+            orient: 'horizontal', // Cambiar a horizontal para una mejor distribución
+            left: 'left',
+            data: ['Top Aliados'],
+          },
+          toolbox: {
+            show: true,
+            feature: {
+              dataView: { show: true, readOnly: false },
+              magicType: { show: true, type: ['line', 'bar'] },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
+          xAxis: {
+            type: 'category',
+            data: this.topAliados.map(aliado => aliado.nombre),
+            axisLabel: {
+              interval: 0, 
+              rotate: 30, // Rota las etiquetas para mejor legibilidad
+              formatter: (value: string) => {
+                return value.length > 10 ? value.substring(0, 10) + '...' : value;
+              }
+            }
+          },
+          yAxis: {
+            type: 'value',
+            name: 'Asesorías',
+            min: 0, // Valor mínimo en el eje Y
+            axisLabel: {
+              formatter: '{value}' // Muestra el valor en el eje Y
+            }
+          },
+          series: [
+            {
+              name: 'Top Aliados',
+              type: 'bar', // Cambiar a 'bar' si quieres barras
+              data: this.topAliados.map((aliado, index) => ({
+                value: aliado.asesoria,
+                itemStyle: {
+                  color: this.getColorForIndex(index) // Asignar colores
+                }
+              })),
+              label: {
+                show: true,
+                position: 'top',
+                color: '#000',
+                formatter: '{c}', // Muestra el valor de la barra
+                fontSize: 12
+              },
+              markLine: {
+                data: [{ type: 'average', name: 'Avg' }]
+              },
+              barGap: '10%', // Ajusta el espacio entre las barras
+            }
+          ]
+        };
+
+        //data y grafica promedio asesorias
         const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(item.mes));
         const promedios = data.averageAsesorias.original.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
         const promedioAnual = data.averageAsesorias.original.promedio_anual;
@@ -154,215 +225,64 @@ export class DashboardComponent implements AfterViewInit {
             }
           ],
         };
-        this.initEchartsPromedioAsesorias();
-      },
-      error => {
-        console.error('Error al obtener promedio de asesorías:', error);
-      }
-    );
-  }
 
-  initEchartsPromedioAsesorias() {
-    const chartDom = document.getElementById('promedio-asesorias');
-    if (chartDom) {
-      const myChart = echarts.init(chartDom);
-      myChart.setOption(this.promedioAsesoriasEchartsOptions);
-    } else {
-      console.error('No se pudo encontrar el elemento con id "promedio-asesorias"');
-    }
-  }
+        //Data y grafica Generos
+        const response = data.generosEmprendedores.original;
+        console.log('Datos originales:', response); // Verificar los datos originales
 
+        // Verificar si la respuesta contiene datos
+        if (response && response.length > 0) {
+          // Mapear los datos formateados
+          const formattedData = response.map(item => ({
+            value: Number(item.total), // Asegúrate de que total se convierte correctamente a número
+            name: item.genero // Usar el nombre del género
+          }));
 
-  getDatosDashboard(): void {
-    this.isLoading = true;
-    this.dashboardService.dashboardAdmin(this.token).subscribe(
-      data => {
-        // Asignar los datos devueltos a las variables correspondientes
-        this.totalUsuarios = data;
-        this.totalSuperAdmin = data.usuarios.superadmin;
-        this.totalOrientador = data.usuarios.orientador;
-        this.totalAliados = data.usuarios.aliado;
-        this.totalAsesores = data.usuarios.asesor;
-        this.totalEmprendedores = data.usuarios.emprendedor;
-        this.topAliados = data.topAliados.original;
+          console.log('Datos formateados para la gráfica:', formattedData); // Verificar datos formateados
 
-
-        // Configuración para la gráfica de pastel (Asesorías)
-        this.topAliadosEchartsOptions = {
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: {
-              type: 'shadow' // Mostrar puntero de tipo sombra para mejor visualización
-            }
-          },
-          legend: {
-            orient: 'horizontal', // Cambiar a horizontal para una mejor distribución
-            left: 'left',
-            data: ['Top Aliados'],
-          },
-          toolbox: {
-            show: true,
-            feature: {
-              dataView: { show: true, readOnly: false },
-              magicType: { show: true, type: ['line', 'bar'] },
-              restore: { show: true },
-              saveAsImage: { show: true }
-            }
-          },
-          xAxis: {
-            type: 'category',
-            data: this.topAliados.map(aliado => aliado.nombre),
-            axisLabel: {
-              interval: 0, // Muestra todas las etiquetas
-              rotate: 30, // Rota las etiquetas para mejor legibilidad
-              formatter: (value: string) => {
-                return value.length > 10 ? value.substring(0, 10) + '...' : value;
-              }
-            }
-          },
-          yAxis: {
-            type: 'value',
-            name: 'Asesorías',
-            min: 0, // Valor mínimo en el eje Y
-            axisLabel: {
-              formatter: '{value}' // Muestra el valor en el eje Y
-            }
-          },
-          series: [
-            {
-              name: 'Top Aliados',
-              type: 'bar', // Cambiar a 'bar' si quieres barras
-              data: this.topAliados.map((aliado, index) => ({
-                value: aliado.asesoria,
-                itemStyle: {
-                  color: this.getColorForIndex(index) // Asignar colores
-                }
-              })),
-              label: {
-                show: true,
-                position: 'top',
-                color: '#000',
-                formatter: '{c}', // Muestra el valor de la barra
-                fontSize: 12
+          if (formattedData.length > 0) {
+            // Configuración de la gráfica Doughnut
+            this.doughnutChartOption = {
+              tooltip: {
+                trigger: 'item'
               },
-              markLine: {
-                data: [{ type: 'average', name: 'Avg' }]
+              legend: {
+                top: '5%',
+                left: 'center'
               },
-              barGap: '10%', // Ajusta el espacio entre las barras
-            }
-          ]
-        };
-      },
-      error => {
-        console.log(error);
-      },
-      () => {
-        this.isLoading = false;
-      }
-    );
-  }
-
-  getColorForIndex(index: number): string {
-    // Lista de colores que se asignarán a las barras
-    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8A2BE2', '#00FA9A', '#FFD700', '#DC143C'];
-    return colors[index % colors.length]; // Asigna un color a cada barra, y repite si hay más barras que colores
-  }
-
-  initEChartToAliados(): void {
-    const chartDom = document.getElementById('topAliadosChar');
-    if (chartDom) {
-      const myChart = echarts.init(chartDom);
-      myChart.setOption(this.topAliadosEchartsOptions);
-    } else {
-      console.error('No se pudo encontrar el elemento con id "echarts-doughnut".');
-    }
-  }
-
-
-
-  getDatosGenerosGrafica(): void {
-    this.dashboardService.dashboardAdmin(this.token).subscribe(
-      response => {
-
-        const data = response.generosEmprendedores.original;
-
-        const formattedData = data.map(item => ({
-          value: Number(item.total), // Convertir total a número
-          name: item.genero
-        }));
-
-        if (data && data.length > 0) {
-          const dataGenero = data.map(item => item.total);
-
-          this.doughnutChartOption = {
-            tooltip: {
-              trigger: 'item'
-            },
-            legend: {
-              top: '5%',
-              left: 'center'
-            },
-            series: [
-              {
-                name: 'Géneros',
-                type: 'pie',
-                radius: ['40%', '70%'],
-                avoidLabelOverlap: false,
-                itemStyle: {
-                  borderRadius: 10
-                },
-                label: {
-                  show: false,
-                  position: 'outside'
-                },
-                emphasis: {
+              series: [
+                {
+                  name: 'Géneros',
+                  type: 'pie',
+                  radius: ['40%', '70%'],
+                  avoidLabelOverlap: false,
+                  itemStyle: {
+                    borderRadius: 10
+                  },
                   label: {
                     show: false,
-                  }
-                },
-                labelLine: {
-                  show: false
-                },
-                data: formattedData
-              }
-            ]
-          };
-
-          this.initEChartsDoughnut();
+                    position: 'outside'
+                  },
+                  emphasis: {
+                    label: {
+                      show: false,
+                    }
+                  },
+                  labelLine: {
+                    show: false
+                  },
+                  data: formattedData
+                }
+              ]
+            };
+          } else {
+            console.error('Datos formateados vacíos para el gráfico de géneros.');
+          }
         } else {
           console.error('No se recibieron datos válidos para el gráfico de géneros.');
         }
-      },
-      error => {
-        console.error('Error al obtener los datos de géneros:', error);
-      }
-    );
-  }
 
-  initEChartsDoughnut(): void {
-    const chartDom = document.getElementById('echarts-doughnut');
-    if (chartDom) {
-      const myChart = echarts.init(chartDom);
-      myChart.setOption(this.doughnutChartOption);
-    } else {
-      console.error('No se pudo encontrar el elemento con id "echarts-doughnut".');
-    }
-  }
-
-  initEchartsRegistrosMenusales(): void {
-    const chartDom = document.getElementById('echarts-registros');
-    if (chartDom) {
-      const myChart = echarts.init(chartDom);
-      myChart.setOption(this.registrosEchartsOptions);
-    } else {
-      console.error('No se pudo encontrar el elemento con id "echarts-doughnut"');
-    }
-  }
-
-
-  getRegistrosMensuales(): void {
-    this.dashboardService.dashboardAdmin(this.token).subscribe(
-      data => {
+        //Data y grafica de registros mensuales
         const conteoRegistros = data.conteoRegistros.original.promedios; // Accedemos correctamente a los "promedios"
 
         if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
@@ -434,19 +354,24 @@ export class DashboardComponent implements AfterViewInit {
               }
             ]
           };
-
-          // Inicializamos el gráfico
-          this.initChart('echarts-registros', this.registrosEchartsOptions);
         } else {
           console.error('Los datos recibidos no tienen la estructura esperada o están vacíos', data);
         }
       },
       error => {
-        console.error('Error al obtener los registros mensuales', error);
+        console.log(error);
+      },
+      () => {
+        this.isLoading = false;
       }
     );
   }
 
+  getColorForIndex(index: number): string {
+    // Lista de colores que se asignarán a las barras
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8A2BE2', '#00FA9A', '#FFD700', '#DC143C'];
+    return colors[index % colors.length]; // Asigna un color a cada barra, y repite si hay más barras que colores
+  }
 
   getMonthName(monthNumber: number): string {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
