@@ -66,7 +66,7 @@ export class EmpresaService {
   }
 
   /* Obtiene todas las empresas asociadas a un emprendedor específico */
-  obtenerEmpresasPorEmprendedor(access_token: string, docEmprendedor: number): Observable<any[]> {
+  obtenerEmpresasPorEmprendedor(access_token: string, docEmprendedor: string): Observable<any[]> {
     const headers = this.CreacionHeaders(access_token);
     let params = new HttpParams().set('doc_emprendedor', docEmprendedor);
     const options = { headers, params };

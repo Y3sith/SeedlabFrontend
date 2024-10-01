@@ -2,7 +2,7 @@ import { Empresa } from "./empresa.model";
 
 export class ApoyoEmpresa {
 
-    documento? : number;
+    documento? : string;
     nombre: string | null;
     apellido? : string | null;
     cargo : string | null| undefined;
@@ -13,7 +13,7 @@ export class ApoyoEmpresa {
     id_empresa: string;
 
     constructor(
-        documento: number, 
+        documento: string, 
         nombre: string, 
         apellido: string, 
         cargo: string| undefined, 

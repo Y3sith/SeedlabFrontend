@@ -31,7 +31,7 @@ export class PerfilEmprendedorComponent implements OnInit {
   token = '';
   blockedInputs = true;
   bloqueado = true;
-  documento: number;
+  documento: string;
   user: User | null = null;
   currentRolId: number;
   emprendedorId: any;
