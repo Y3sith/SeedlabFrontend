@@ -46,7 +46,7 @@ export class ReporteService {
   }
 
   /* Obtiene el reporte de formulario para un emprendedor o empresa específica */
-  getReporteFormulario(idEmprendedor: number, documentoEmpresa?: string): Observable<Blob> {
+  getReporteFormulario(idEmprendedor: string, documentoEmpresa?: string): Observable<Blob> {
     let url = `${this.url}exportar-formExcel/${idEmprendedor}`;
     if (documentoEmpresa) {
       url += `/${documentoEmpresa}`;
@@ -74,7 +74,7 @@ export class ReporteService {
   }
 
   /* Obtiene los datos del formulario de un emprendedor específico */
-  obtenerDatosFormEmp(tipo_reporte: string, doc_emprendedor: number, empresa: number): Observable<any> {
+  obtenerDatosFormEmp(tipo_reporte: string, doc_emprendedor: string, empresa: number): Observable<any> {
     let params = new HttpParams()
       .set('tipo_reporte', tipo_reporte)
       .set('doc_emprendedor', doc_emprendedor)

@@ -142,7 +142,7 @@ export class ReportesAdmComponent {
   /*
   Descarga un archivo Excel con un reporte específico de un emprendedor usando su ID. Crea un enlace temporal para descargar el archivo y luego lo elimina.
   */
-  getReporteFormulario(id_emprendedor: number) {
+  getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
         if (data.size > 0) {

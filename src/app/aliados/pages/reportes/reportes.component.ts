@@ -143,7 +143,7 @@ export class ReportesComponent implements OnInit {
   /*
     Este método permite la exportación de reportes basados en los datos ingresados en el formulario `reporteForm`.
   */
-  getReporteFormulario(id_emprendedor: number) {
+  getReporteFormulario(id_emprendedor: string) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
         const url = window.URL.createObjectURL(data);

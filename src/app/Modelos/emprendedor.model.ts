@@ -1,5 +1,5 @@
 export class Emprendedor {
-    documento: number | null;
+    documento: string | null;
     nombre: string | null;
     apellido: string | null;
     //imagen_perfil:File | null;
@@ -15,7 +15,7 @@ export class Emprendedor {
     id_departamento: number | null;
 
     constructor(
-        documento: number | null,
+        documento: string | null,
         id_tipo_documento: number | null,
         nombre: string | null,
         apellido: string | null,
