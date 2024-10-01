@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
     user: User | null = null;
     currentRolId: string | null = null;
     isSubmitting = false;
+    isLoaded = false;
 
     loginForm = this.fb.group({
         email: '',
@@ -36,6 +37,9 @@ export class LoginComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        setTimeout(() => {
+            this.isLoaded = true; // Cambiar el estado a cargado
+          }, 1000);
         this.validateToken();
     }
 

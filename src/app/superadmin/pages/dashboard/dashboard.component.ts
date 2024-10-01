@@ -54,6 +54,7 @@ export class DashboardComponent implements OnInit {
     this.selectedYear = currentYear;
     this.getDatosDashboard(this.selectedYear);
     this.initGraficaVacia();
+    this.getEmpresas();
   }
 
   /*

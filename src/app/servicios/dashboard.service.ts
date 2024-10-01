@@ -87,7 +87,6 @@ export class DashboardsService {
     return this.http.get<any>(`${this.url}graficaFormulario/${id_empresa}/${tipo}`, options).pipe(
       map(response => {
         this.saveToLocalStorage(`graficaFormulario_${id_empresa}_${tipo}`, response);
-        console.log('Respuesta original del servidor:', response);
         return response.items && response.items.length > 0 ? response.items[0] : response;
       })
     );

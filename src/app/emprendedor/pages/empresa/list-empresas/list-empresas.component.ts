@@ -176,8 +176,13 @@ export class ListEmpresasComponent implements OnInit {
             });
         },
         (error) => {
-          console.log('Error al verificar el estado del formulario', error);
-          this.alertService.errorAlert("Error", "No se pudo verificar el estado del formulario.");
+          if (error.status === 403) {
+            this.alertService.errorAlert('Error', 'El formulario ya fue llenado dos veces');
+            this.router.navigate(['/list-empresa']);
+          }else{
+            console.log('Error al verificar el estado del formulario', error);
+            this.alertService.errorAlert("Error", "No se pudo verificar el estado del formulario.");
+          }
         }
       );
   }

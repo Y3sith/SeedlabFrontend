@@ -78,7 +78,7 @@ export class PersonalizacionesComponent implements OnInit {
     })
   }
 
-/* Inicializa con esas funciones al cargar la pagina */
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
   }
@@ -131,9 +131,9 @@ export class PersonalizacionesComponent implements OnInit {
     this.personalizacionForm.get('color_secundario')?.setValue(color, { emitEvent: false });
   }
 
-/*
-Maneja la selección de un archivo (como una imagen) desde un input tipo file, asigna el archivo seleccionado y genera una vista previa de la imagen.
-*/
+  /*
+  Maneja la selección de un archivo (como una imagen) desde un input tipo file, asigna el archivo seleccionado y genera una vista previa de la imagen.
+  */
   onFileSelecteds(event: any, type: string) {
     const file = event.target.files[0];
     if (file) {
@@ -148,9 +148,9 @@ Maneja la selección de un archivo (como una imagen) desde un input tipo file, a
     }
   }
 
-/*
-Genera una vista previa de una imagen seleccionada (archivo) y la muestra en el campo adecuado, como el logo o imagen de personalización.
-*/
+  /*
+  Genera una vista previa de una imagen seleccionada (archivo) y la muestra en el campo adecuado, como el logo o imagen de personalización.
+  */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -173,9 +173,9 @@ Genera una vista previa de una imagen seleccionada (archivo) y la muestra en el 
     }
   }
 
-/*
-Procesa el cambio del logo en el pie de página (footer), genera una vista previa del logo y guarda la imagen en el formulario en formato base64.
-*/
+  /*
+  Procesa el cambio del logo en el pie de página (footer), genera una vista previa del logo y guarda la imagen en el formulario en formato base64.
+  */
   onFooterChangeLogo(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
@@ -246,16 +246,27 @@ Procesa el cambio del logo en el pie de página (footer), genera una vista previ
           return;
         }
 
-      if (!this.validateMaxLength('nombre_sistema', 50, 'El nombre del sistema no puede tener más de 50 caracteres') ||
-      !this.validateMaxLength('direccion', 50, 'La dirección del sistema no puede tener más de 50 caracteres') ||
-      !this.validateMaxLength('paginaWeb', 50, 'La página web no puede tener más de 50 caracteres') ||
-      !this.validateMaxLength('ubicacion', 50, 'La ubicación no puede tener más de 50 caracteres') ||
-      !this.validateMaxLength('telefono', 13, 'El telefono no puede tener más de 13 caracteres') ||
-      !this.validateMaxLength('email', 50, 'El email no puede tener más de 50 caracteres') ||
-      !this.validateMaxLength('descripcion_footer', 600, 'La descripción no puede tener más de 600 caracteres')) {
-    return; // Si alguna validación falla, se detiene el envío
-  }
-        const id_temp = JSON.parse(itemslocal).id;  
+        if (!this.validateMaxLength('nombre_sistema', 50, 'El nombre del sistema no puede tener más de 50 caracteres') ||
+          !this.validateMaxLength('direccion', 50, 'La dirección del sistema no puede tener más de 50 caracteres') ||
+          !this.validateMaxLength('paginaWeb', 50, 'La página web no puede tener más de 50 caracteres') ||
+          !this.validateMaxLength('ubicacion', 50, 'La ubicación no puede tener más de 50 caracteres') ||
+          !this.validateMaxLength('telefono', 13, 'El telefono no puede tener más de 13 caracteres') ||
+          !this.validateMaxLength('email', 50, 'El email no puede tener más de 50 caracteres') ||
+          !this.validateMaxLength('descripcion_footer', 600, 'La descripción no puede tener más de 600 caracteres')) {
+          return; // Si alguna validación falla, se detiene el envío
+        }
+
+        const camposObligatorios = ['nombre_sistema','descripcion_footer', 'paginaWeb', 'direccion','ubicacion'];
+    for (const key of camposObligatorios) {
+        const control = this.personalizacionForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
+
+        const id_temp = JSON.parse(itemslocal).id;
         const formData = new FormData();
         formData.append('nombre_sistema', this.personalizacionForm.get('nombre_sistema')?.value);
         formData.append('color_principal', this.personalizacionForm.get('color_principal')?.value);
@@ -283,7 +294,7 @@ Procesa el cambio del logo en el pie de página (footer), genera una vista previ
             // Recargar la página o hacer alguna otra acción después
             setTimeout(() => {
               location.reload();
-          }, 2000);
+            }, 2000);
           },
           error => {
             console.error("No se pudo crear la personalización", error);
@@ -298,9 +309,9 @@ Procesa el cambio del logo en el pie de página (footer), genera una vista previ
     }
   }
 
-/*
-Restaura una personalización previamente guardada, eliminando la anterior y recargando la página.
-*/
+  /*
+  Restaura una personalización previamente guardada, eliminando la anterior y recargando la página.
+  */
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
@@ -310,7 +321,7 @@ Restaura una personalización previamente guardada, eliminando la anterior y rec
         localStorage.removeItem(`personalization`);
         setTimeout(() => {
           location.reload();
-      }, 2000);
+        }, 2000);
       },
       error => {
         console.error("No funciona", error);
@@ -378,9 +389,9 @@ Restaura una personalización previamente guardada, eliminando la anterior y rec
     this.clearErrorMessage();
   }
 
-/*
-Muestra un mensaje de error en la interfaz y en la consola.
-*/
+  /*
+  Muestra un mensaje de error en la interfaz y en la consola.
+  */
   private showErrorMessage(message: string) {
     console.error(message);
     this.alertService.errorAlert('Error', message);
