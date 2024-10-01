@@ -196,7 +196,7 @@ export class PerfilOrientadorComponent {
       return
     }
 
-    const camposObligatorios = ['nombre','apellido'];
+    const camposObligatorios = ['nombre','apellido','password'];
     for (const key of camposObligatorios) {
         const control = this.perfilorientadorForm.get(key);
         if (control && control.value && control.value.trim() === '') {

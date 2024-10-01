@@ -406,6 +406,16 @@ limpiarPrefijo(url: string): string {
       this.formSubmitted = true;
       return;
     }
+
+    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina ','email', 'password'];
+    for (const key of camposObligatorios) {
+        const control = this.aliadoForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
     const formData = new FormData();
     let estadoValue: string;
     if (this.idAliado == null) {
