@@ -255,7 +255,7 @@ export class PerfilEmprendedorComponent implements OnInit {
       this.submitted = true;
       return;
     }
-    const camposObligatoriosApoyo = ['nombre', 'apellido', 'celular', 'direccion'];  ///falta la direccion cuando no esta en perfil
+    const camposObligatoriosApoyo = ['nombre', 'apellido', 'password','celular', 'direccion'];  ///falta la direccion cuando no esta en perfil
     for (const key of camposObligatoriosApoyo) {
       const control = this.emprendedorForm.get(key);
       if (control && control.value && control.value.trim() === '') {
