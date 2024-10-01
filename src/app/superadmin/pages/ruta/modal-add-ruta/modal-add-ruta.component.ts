@@ -120,6 +120,15 @@ Funcion para traer los datos de la ruta
     if (this.rutaForm.invalid) {
       return;
     }
+
+    const camposObligatorios = ['nombre'];
+    for (const key of camposObligatorios) {
+        const control = this.rutaForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
     const ruta: Ruta = {
       nombre: this.rutaForm.get('nombre')?.value,
       fecha_creacion: this.rutaForm.get('fecha_creacion')?.value,

@@ -394,9 +394,27 @@ export class ActnivlecComponent implements OnInit {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 5 caracteres');
       return;
     }
+
+    const descripcionActividad = this.actividadForm.get('descripcion')?.value;
+    if (descripcionActividad && descripcionActividad.length > 470) {
+      this.alertServices.errorAlert('Error', 'La descripcion de la actividad no puede tener más de 470 caracteres');
+      return;
+    } else if (descripcionActividad && descripcionActividad.length  < 300) {
+      this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 300 caracteres');
+      return;
+    }
     if (this.actividadForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
       return;
+    }
+
+    const camposObligatorios = ['nombre', 'descripcion'];
+    for (const key of camposObligatorios) {
+        const control = this.actividadForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
     }
 
     if (this.idactividad == null) {
@@ -589,6 +607,14 @@ export class ActnivlecComponent implements OnInit {
       this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
       return;
     }
+    const camposObligatorios = ['nombre'];
+    for (const key of camposObligatorios) {
+        const control = this.nivelForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
     const nivel: any = {
       nombre: nombreNivel,
       id_actividad: this.nivelForm.value.id_actividad
@@ -670,8 +696,17 @@ export class ActnivlecComponent implements OnInit {
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
       return;
-
     }
+
+    const camposObligatorios = ['nombre'];
+    for (const key of camposObligatorios) {
+        const control = this.leccionForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
     const leccion: any = {
       nombre: nombreLeccion,
       id_nivel: this.leccionForm.value.id_nivel
@@ -912,8 +947,17 @@ export class ActnivlecComponent implements OnInit {
     }
 
     if (this.contenidoLeccionForm.invalid) {
-      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
       return;
+    }
+
+    const camposObligatorios = ['titulo','descripcion'];
+    for (const key of camposObligatorios) {
+        const control = this.contenidoLeccionForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
     }
 
 
