@@ -400,7 +400,7 @@ export class ActnivlecComponent implements OnInit {
       this.alertServices.errorAlert('Error', 'La descripcion de la actividad no puede tener más de 470 caracteres');
       return;
     } else if (descripcionActividad && descripcionActividad.length  < 300) {
-      this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 300 caracteres');
+      this.alertServices.errorAlert('Error', 'La descripcion de la actividad debe tener más de 300 caracteres');
       return;
     }
     if (this.actividadForm.invalid) {

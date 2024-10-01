@@ -120,6 +120,13 @@ Funcion para traer los datos de la ruta
     if (this.rutaForm.invalid) {
       return;
     }
+    const nombreActividad = this.rutaForm.get('nombre')?.value;
+    if (nombreActividad && nombreActividad.length < 5) {
+      this.alertService.errorAlert('Error', 'El nombre de la ruta no puede tener menos de 5 caracteres');
+      return;
+    } else if (nombreActividad && nombreActividad.length < 50) {
+      this.alertService.errorAlert('Error', 'El nombre de la ruta no puede tener más de 50 caracteres');
+    }
 
     const camposObligatorios = ['nombre'];
     for (const key of camposObligatorios) {
