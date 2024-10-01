@@ -154,6 +154,17 @@ export class PerfilAsesorComponent implements OnInit {
   editAsesor(): void {
     const formData = new FormData();
     let estadoValue: string;
+
+    const camposObligatorios = ['nombre','apellido'];
+    for (const key of camposObligatorios) {
+        const control = this.asesorForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
+
     Object.keys(this.asesorForm.controls).forEach((key) => {
       const control = this.asesorForm.get(key);
       if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
