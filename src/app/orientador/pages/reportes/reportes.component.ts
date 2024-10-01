@@ -147,7 +147,7 @@ export class ReportesComponent {
   Descarga el reporte del formulario correspondiente al emprendedor 
   especificado.
 */
-  getReporteFormulario(id_emprendedor: string) {
+  getReporteFormulario(id_emprendedor: number) {
     this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
       (data: Blob) => {
         if(data.size > 0){
