@@ -46,11 +46,15 @@ export class ReporteService {
   }
 
   /* Obtiene el reporte de formulario para un emprendedor o empresa específica */
-  getReporteFormulario(idEmprendedor: number, documentoEmpresa?: string): Observable<Blob> {
+  getReporteFormulario(idEmprendedor: number, documentoEmpresa?: string, tipo_reporte?: string): Observable<Blob> {
     let url = `${this.url}exportar-formExcel/${idEmprendedor}`;
     if (documentoEmpresa) {
       url += `/${documentoEmpresa}`;
     }
+    if (tipo_reporte) {
+      url += `/${tipo_reporte}`;
+    }
+
 
     return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
   }

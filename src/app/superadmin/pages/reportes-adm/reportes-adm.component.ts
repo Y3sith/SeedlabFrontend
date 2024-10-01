@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReporteService } from '../../../servicios/reporte.service';
 import { AlertService } from '../../../servicios/alert.service';
 import { faCircleQuestion, } from '@fortawesome/free-solid-svg-icons';
+import { RespuestasService } from '../../../servicios/respuestas.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class ReportesAdmComponent {
 
 
   constructor(
+    private respuestaService: RespuestasService,
     private fb: FormBuilder,
     private router: Router,
     private reporteService: ReporteService,
@@ -45,6 +47,7 @@ export class ReportesAdmComponent {
 
 /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
+
   }
 
   /*
@@ -142,29 +145,42 @@ export class ReportesAdmComponent {
   /*
   Descarga un archivo Excel con un reporte específico de un emprendedor usando su ID. Crea un enlace temporal para descargar el archivo y luego lo elimina.
   */
-  getReporteFormulario(id_emprendedor: number) {
-    this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
-      (data: Blob) => {
-        if (data.size > 0) {
-          this.isReporteDisponible = true; // Si hay datos, mostrar el botón
-          const url = window.URL.createObjectURL(data);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'Reporte_Formulario.xlsx';
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-        } else {
-          this.isReporteDisponible = false; // Si no hay datos, ocultar el botón
-          this.alertService.errorAlert('Error', 'No ha realizado el formulario.');
+  getReporteFormulario(id_emprendedor: number, empresa: string,tipo_reporte: string) {
+    console.log(this.paginatedReportes)
+    if (this.reporteForm.valid) {
+
+      this.reporteService.getReporteFormulario(id_emprendedor, empresa,tipo_reporte).subscribe({
+        next: (data: Blob) => {
+          if (data) { // Verifica si data no es null
+            if (data.size > 0) { // Verifica si el tamaño es mayor a 0
+              const url = window.URL.createObjectURL(data);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'Reporte_Formulario.xlsx';
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+            } else {
+              // Mostrar alerta si el archivo está vacío
+              this.alertService.errorAlert('Error', 'No hay datos disponibles para el reporte especificado.');
+            }
+          } else {
+            // Se maneja el caso donde data es null
+            this.alertService.errorAlert('Info', 'No se recibió ningún archivo para descargar.');
+          }
+        },
+        error: (error) => {
+          console.error('Error al descargar el reporte del formulario', error);
+          this.alertService.errorAlert('Error', 'Error al procesar la solicitud de reporte.');
         }
-      },
-      error => {
-        console.error('Error al descargar el reporte del formulario', error);
-        this.isReporteDisponible = false; // En caso de error, ocultar el botón
-      }
-    );
+      });
+    } else {
+      console.error('Formulario inválido:', this.reporteForm.value);
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
+    }
   }
+
+  
 
   /*
   Captura el cambio de selección en el tipo de reporte y, si el tipo seleccionado es "emprendedor", automáticamente llama la función getReportes('excel') para generar un reporte en formato Excel.
