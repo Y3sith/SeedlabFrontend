@@ -186,8 +186,10 @@
                       <div
                         *ngIf="f['telefono'].invalid && (submitted || f['telefono'].dirty || f['telefono'].touched)"
                         class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                        <div *ngIf="f.telefono.errors.maxlength">El número de telefono no debe tener más de 10 dígitos*</div>
-                        <div *ngIf="f.telefono.errors.hasLetters">El número de telefono no puede contener letras*</div>
+                        <div *ngIf="f.telefono.errors.required">Este campo es requerido *</div>
+                      <div *ngIf="f.telefono.errors.maxlength">El número de telefono no debe tener más de 10 dígitos*
+                      </div>
+                      <div *ngIf="f.telefono.errors.hasLetters">El número de telefono no puede contener letras*</div>
                       </div>
                     </div>
                   </div>
@@ -429,7 +431,7 @@
 
                   <div class="relative w-full text-base">
                     <label for="correo" class="text-lg font-normal">Correo:</label>
-                    <input formControlName="email"
+                    <input formControlName="email" type="email"
                       class="w-full h-10 p-2 mb-2 transition duration-200 ease-in bg-gray-200 border-blue-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100"
                       [ngClass]="{'border-red-500': g['email'].invalid && (g['email'].dirty || g['email'].touched)}">
                     <div *ngIf="g['email'].invalid && (submitted || g['email'].dirty || g['email'].touched)"
