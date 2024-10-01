@@ -80,9 +80,9 @@ export class AddEmpresaComponent {
       razonSocial: ['', Validators.required],
       id_departamento: ['', Validators.required],
       id_municipio: ['', Validators.required],
-      telefono: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
+      telefono: ['', [Validators.maxLength(10), this.noLettersValidator]],
       celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
-      url_pagina: ['', Validators.required],
+      url_pagina: [''],
       direccion: ['', Validators.required],
       profesion: ['', [Validators.required, this.noNumbersValidator]],
       cargo: ['', [Validators.required, this.noNumbersValidator]],
@@ -95,7 +95,7 @@ export class AddEmpresaComponent {
       nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       cargo: ['', Validators.required],
-      telefono: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
+      telefono: ['', [Validators.maxLength(10), this.noLettersValidator]],
       celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
       email: ['', [Validators.required, Validators.email]],
       id_tipo_documento: ['', Validators.required],
@@ -284,7 +284,6 @@ export class AddEmpresaComponent {
   crearEmpresa(): void {
     debugger
     this.submitted = true;
-    console.log('datos form', this.addEmpresaForm);
     if (this.addEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del formulario');
       return;
@@ -320,8 +319,6 @@ export class AddEmpresaComponent {
       id_municipio: this.addEmpresaForm.get('id_municipio')?.value,
       id_emprendedor: this.user?.emprendedor.documento,
     };
-    console.log(empresa);
-
 
     /*
       Valida que los campos obligatorios en el formulario 'addApoyoEmpresaForm' no contengan solo espacios en blanco. 
@@ -351,7 +348,6 @@ export class AddEmpresaComponent {
       id_tipo_documento: this.addApoyoEmpresaForm.get('id_tipo_documento')?.value,
       id_empresa: empresa.documento,
     } : null;
-    console.log(apoyos);
 
     const apoyosList: Array<any> = [];
 
@@ -368,13 +364,10 @@ export class AddEmpresaComponent {
       apoyos: apoyosList
     };
 
-    console.log('payload', payload);
-
     this.EmpresaService.addEmpresa(this.token, payload).subscribe(
       data => {
         this.alertService.successAlert('Éxito', 'Registro exitoso');
-        //this.router.navigate(['list-empresa']);
-        console.log('datos enviados: ', data);
+        this.router.navigate(['list-empresa']);
       },
       error => {
         this.alertService.errorAlert('Error', error.message);
@@ -480,7 +473,6 @@ export class AddEmpresaComponent {
     Carga apoyos de la empresa y actualiza el estado de edición. 
   */
   cargarApoyos(): void {
-    // debugger
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
@@ -570,10 +562,9 @@ export class AddEmpresaComponent {
     this.submitted = true;
     if (this.addApoyoEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
-      console.log()
       return;
     }
-    const apoyos = this.addApoyoEmpresaForm.valid ? {
+    const apoyos : any = {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,
       nombre: this.addApoyoEmpresaForm.get('nombre')?.value,
       apellido: this.addApoyoEmpresaForm.get('apellido')?.value,
@@ -583,9 +574,8 @@ export class AddEmpresaComponent {
       email: this.addApoyoEmpresaForm.get('email')?.value,
       id_tipo_documento: this.addApoyoEmpresaForm.get('id_tipo_documento')?.value,
       id_empresa: this.id_documentoEmpresa,
-    } : null;
+    };
 
-    //console.log(apoyos)
     this.EmpresaService.crearApoyo(this.token, apoyos).subscribe(
       data => {
         setTimeout(function () {
