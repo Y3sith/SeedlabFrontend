@@ -48,19 +48,20 @@ export class MenuComponent {
   
 /* Determina el rol del usuario basado en su id_rol */
   getRolUser(): void {
-    if (this.user.id_rol === 1) {
+    
+    if (this.token && this.user.id_rol === 1) {
       this.rolUser = 'Super Admin';
     }
-    else if (this.user.id_rol === 2) {
+    else if (this.token && this.user.id_rol === 2) {
       this.rolUser = 'Orientador';
     }
-    else if (this.user.id_rol === 3) {
+    else if (this.token && this.user.id_rol === 3) {
       this.rolUser = 'Aliado';
     }
-    else if (this.user.id_rol === 4) {
+    else if (this.token && this.user.id_rol === 4) {
       this.rolUser = 'Asesor';
     }
-    else if (this.user.id_rol === 5) {
+    else if (this.token && this.user.id_rol === 5) {
       this.rolUser = 'Emprendedor';
     }
   }

@@ -31,6 +31,7 @@ export class AsesoriasComponent implements OnInit {
   itemsPerPage: number = 8;
   userFilter: any = { Nombre_sol: '' };
   Nombre_sol: string | null = null;
+  mensaje: string | null = null;
 
 
 
@@ -90,7 +91,18 @@ export class AsesoriasComponent implements OnInit {
           this.sinHorarioCount = this.asesoriasSinHorario.length;
           this.conHorarioCount = this.asesoriasConHorario.length;
           this.totalAsesorias = this.asesoriasSinHorario.length + this.asesoriasConHorario.length;
-          this.isLoading = false;
+          this.isLoading = false;8
+          if (this.asesoriasSinHorario.length === 0) {
+            this.mensaje = "No tienes asesorias pendientes por asignar.";
+          } else {
+            this.mensaje = null;
+          }
+
+          if (this.asesoriasConHorario.length === 0) {
+              this.mensaje = "No tienes asesorias asignadas."
+            } else {
+              this.mensaje = null;
+            }
         },
         error => {
           console.error('Error al cargar asesorías:', error);

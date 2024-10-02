@@ -129,9 +129,10 @@ export class ReportesComponent implements AfterViewInit {
   getReporteFormulario() {
     if (this.reporteForm.valid) {
       const id_emprendedor = this.user.emprendedor.documento;
-      const { empresa } = this.reporteForm.value;
+      const { empresa,tipo_reporte } = this.reporteForm.value;
 
-      this.reporteService.getReporteFormulario(id_emprendedor, empresa).subscribe({
+
+      this.reporteService.getReporteFormulario(id_emprendedor, empresa,tipo_reporte).subscribe({
         next: (data: Blob) => {
           if (data) { // Verifica si data no es null
             if (data.size > 0) { // Verifica si el tamaño es mayor a 0

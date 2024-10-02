@@ -13,13 +13,14 @@ export class ReporteService {
   url = environment.apiUrl;
 
   /* Obtiene el reporte de roles para un período específico */
-  getReporteRole(tipo_reporte: string, fecha_inicio: string, fecha_fin: string): Observable<any> {
-    const body = { tipo_reporte, fecha_inicio, fecha_fin };
-
-    return this.http.post<Blob>(`${this.url}reporte_roles`, body, {
-      responseType: 'blob' as 'json'
+  getReporteAliado(id_aliado: number, tipo_reporte: string, fecha_inicio: string, fecha_fin: string, formato: string): Observable<any> {
+    const body = { id_aliado, tipo_reporte, fecha_inicio, fecha_fin, formato };  // Incluye todos los parámetros
+  
+    return this.http.post<Blob>(`${this.url}exportar_reporte_aliado`, body, {
+      responseType: 'blob' as 'json'  // Asegúrate de que el tipo de respuesta sea 'blob'
     });
   }
+  
 
   /* Exporta un reporte en el formato especificado */
   exportarReporte(tipo_reporte: string, fecha_inicio: string, fecha_fin: string, formato: string): Observable<Blob> {
@@ -46,11 +47,15 @@ export class ReporteService {
   }
 
   /* Obtiene el reporte de formulario para un emprendedor o empresa específica */
-  getReporteFormulario(idEmprendedor: string, documentoEmpresa?: string): Observable<Blob> {
+  getReporteFormulario(idEmprendedor: string, documentoEmpresa?: string, tipo_reporte?: string): Observable<Blob> {
     let url = `${this.url}exportar-formExcel/${idEmprendedor}`;
     if (documentoEmpresa) {
       url += `/${documentoEmpresa}`;
     }
+    if (tipo_reporte) {
+      url += `/${tipo_reporte}`;
+    }
+
 
     return this.http.get<Blob>(url, { responseType: 'blob' as 'json' });
   }
