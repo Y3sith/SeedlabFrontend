@@ -20,6 +20,7 @@ export class AsignarAsesorModalComponent implements OnInit {
   currentRolId: string | null = null;
   submitted = false;
   @Output() asesoriaAsignada = new EventEmitter<void>();
+  @Output() RechazarAsesoria = new EventEmitter<number>();
 
   constructor(
     public dialogRef: MatDialogRef<AsignarAsesorModalComponent>,
@@ -88,6 +89,37 @@ export class AsignarAsesorModalComponent implements OnInit {
   */
   onCancel(): void {
     this.dialogRef.close();
+  }
+
+  /*
+    Este método se encarga de manejar la acción de rechazar la
+    asesoría asignada por el emprendedor o el orientador, si no tiene relación
+    con el aliado, entonces la envía al orientador para que la asigne correctamente.
+  */
+  onReject() {
+    const id_asesoria = this.data.asesoria.id_asesoria;
+    const accion = 'rechazar';
+
+    // Verifica si el ID de la asesoría es válido
+    if (!id_asesoria) {
+      // Si no es válido, muestra un mensaje de error en la consola
+      console.error('ID de asesoría no válido');
+      return; // Sale del método si el ID no es válido
+    }
+
+    // Llama al servicio para rechazar la asesoría, pasando el token y el ID
+    this.asesoriaService.rechazarAsesoria(this.token, id_asesoria, accion).subscribe({
+      next: (response) => {
+        this.alertService.successAlert('Exito', response.message);
+        this.dialogRef.close(true);
+        this.RechazarAsesoria.emit(id_asesoria);
+        location.reload();
+      },
+      // Maneja los errores que puedan ocurrir durante la solicitud
+      error: (error) => {
+        console.error('Error al rechazar asesoría:', error.error);
+      }
+    });
   }
 
   /*
