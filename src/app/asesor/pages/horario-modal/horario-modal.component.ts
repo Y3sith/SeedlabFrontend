@@ -16,6 +16,7 @@ export class HorarioModalComponent implements OnInit {
   token: string | null = null;
   user: any = null;
   currentRolId: string | null = null;
+  isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
@@ -54,12 +55,14 @@ export class HorarioModalComponent implements OnInit {
 */
   onGuardar(): void {
     if (this.asignarForm.valid) {
+      this.isSubmitting = true;
       const { fecha, observaciones } = this.asignarForm.value;
       const idAsesoria = this.data.asesoria.id;
 
       this.asesoriaService.agregarHorarioAsesoria(this.token, observaciones, idAsesoria, fecha).subscribe(
         response => {
-          this.dialogRef.close(response);
+          this.alertService.successAlert('Exito',response.message);
+          this.dialogRef.close(true);
         },
         error => {
           console.error('Error al asignar el horario', error);
@@ -69,6 +72,10 @@ export class HorarioModalComponent implements OnInit {
     } else {
       this.alertService.errorAlert('Error', 'Formulario inválido, debes asignar un horario correcto');
     }
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.dialogRef.close(this.asignarForm.value);
+    }, 2000);
   }
 
   /* Cerrar el modal */
