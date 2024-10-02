@@ -35,6 +35,7 @@ export class RegistroComponent implements OnInit {
   submitted = false;
   errorMessage: string | null = null;
   email: string;
+  isSubmitting: boolean = false;
 
 
   currentIndex = 0;
@@ -245,6 +246,10 @@ export class RegistroComponent implements OnInit {
       return;
     }
 
+    this.alertService.successAlert2('Registro exitoso', 'Espere mientras se procesa su registro...');
+
+    this.isSubmitting = true;
+    
     const emprendedor = new Emprendedor(
       this.f.documento.value,
       this.f.id_tipo_documento.value,
@@ -264,7 +269,7 @@ export class RegistroComponent implements OnInit {
     );
     this.registroService.registrar(emprendedor).subscribe(
       (response: any) => {
-        this.alertService.successAlert('Registro exitoso', response.message);
+        // this.alertService.successAlert('Registro exitoso', response.message);
         this.email = response.email;
         this.router.navigate(['/verification'], { queryParams: { email: this.email } });
       },

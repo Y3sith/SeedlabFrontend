@@ -289,7 +289,7 @@
                         <div class="flex justify-center space-x-2">
                             <button (click)="prev()"
                                 class="px-4 py-2 mt-4 text-white bg-gray-500 rounded-full hover:bg-gray-600">Anterior</button>
-                            <button type="submit"
+                            <button type="submit"  [disabled]="isSubmitting"
                                 class="mt-4 bg-[#fcb404] hover:bg-[#fcb404] text-white py-2 px-4 rounded-full">Registrar</button>
                         </div>
                     </div>
