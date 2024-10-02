@@ -76,6 +76,7 @@ export class ReportesComponent implements OnInit {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
 
       const id_aliado = this.user.id ? this.user.id : null;
+      console.log(id_aliado);
 
       if (!id_aliado) {
         console.error('El ID del aliado no está disponible.');
@@ -109,8 +110,9 @@ export class ReportesComponent implements OnInit {
   getReportes(formato: string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
+      const id_aliado = this.user.id ? this.user.id : null;
 
-      this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe({
+      this.reporteService.getReporteAliado(id_aliado, tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe({
         next: (data) => {
           if (data) { // Verifica si data no es null
             if (data.size > 0) { // Verifica si el tamaño es mayor a 0
