@@ -70,7 +70,7 @@ export class ActnivlecComponent implements OnInit {
   niveles: any[] = [];
   leccioon: any[] = [];
   isEditing: any;
-  isLoading: boolean = false;
+  isLoading: boolean = true;
   contenidoLeccion: any[] = [];
   selectedFromInput: any;
 
@@ -317,10 +317,6 @@ export class ActnivlecComponent implements OnInit {
               // console.log('Actividad: ', data);
               this.isLoading=false;
             },
-            error => {
-              console.log('Error al cargar los asesores:', error);
-              this.isLoading=false;
-            }
           );
         },
         error => {
@@ -335,7 +331,7 @@ export class ActnivlecComponent implements OnInit {
     Este método inicializa el formulario de niveles y, si hay contenido de lección disponible, lo carga en el formulario correspondiente.
   */
   initializeNivelForm(): void {
-    this.isLoading=true;
+    // this.isLoading=true;
     if (this.niveles && this.niveles.length > 0) {
       // Si hay niveles, seleccionar el primero
       const primerNivel = this.niveles[0];
@@ -368,7 +364,7 @@ export class ActnivlecComponent implements OnInit {
         fuente_contenido: primerContenido.fuente_contenido
       })
     }
-    this.isLoading=false;
+    // this.isLoading=false;
   }
 
   /*
@@ -582,7 +578,7 @@ export class ActnivlecComponent implements OnInit {
             // Llamar a onNivelChange para actualizar las lecciones
             this.onNivelChange(primerNivel.id.toString());
           }
-          this.isLoading=false;
+          // this.isLoading=false;
         },
         error => {
           console.log(error);
