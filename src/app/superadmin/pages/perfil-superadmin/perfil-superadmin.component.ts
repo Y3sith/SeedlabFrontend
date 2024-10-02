@@ -159,6 +159,16 @@ export class PerfilSuperadminComponent {
       return;
     }
 
+    const camposObligatorios = ['nombre','apellido'];
+    for (const key of camposObligatorios) {
+        const control = this.perfiladminForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            return;
+        }
+    }
+
+
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfiladminForm.controls).forEach((key) => {
       const control = this.perfiladminForm.get(key);

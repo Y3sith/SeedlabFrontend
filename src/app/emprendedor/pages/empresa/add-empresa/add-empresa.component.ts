@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators, AbstractControl, } from '@angular/forms';
 import { AlertService } from '../../../../servicios/alert.service';
 import { DepartamentoService } from '../../../../servicios/departamento.service';
@@ -27,7 +27,7 @@ export class AddEmpresaComponent {
   submitted = false;
   token = '';
   id_documentoEmpresa: any;
-  documento: number;
+  documento: string;
   id_emprendedor: any;
   user: User | null = null;
   currentRolId: number;
@@ -42,7 +42,7 @@ export class AddEmpresaComponent {
   addApoyoEmpresaForm: FormGroup;
   listaApoyo: ApoyoEmpresa[] = [];
   isLoading: boolean = true;
-  selectedApoyoDocumento: number;
+  selectedApoyoDocumento: string;
   mostrarBotonEditar: boolean = true;
   mostrarBotonesNuevos: boolean = false;
   tiempoEspera = 1800;
@@ -65,7 +65,8 @@ export class AddEmpresaComponent {
     private alertService: AlertService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private cd: ChangeDetectorRef
 
   ) {
     this.id_documentoEmpresa = this.route.snapshot.paramMap.get('documento');
@@ -94,7 +95,7 @@ export class AddEmpresaComponent {
       nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
       cargo: ['', Validators.required],
-      telefono: [''],
+      telefono: ['', [Validators.maxLength(10), this.noLettersValidator]],
       celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
       email: ['', [Validators.required, Validators.email]],
       id_tipo_documento: ['', Validators.required],
@@ -254,6 +255,7 @@ export class AddEmpresaComponent {
     y actualiza los valores en el formulario.
   */
   cargarDatosEmpresa(): void {
+    //debugger
     this.isLoading = true;
     this.EmpresaService.traerEmpresasola(this.token, this.id_emprendedor, this.id_documentoEmpresa).subscribe(
       data => {
@@ -262,7 +264,7 @@ export class AddEmpresaComponent {
 
         this.setFormValues();
         this.cargarDepartamentos();
-
+        this.cargarApoyos();
         setTimeout(() => {
           this.addEmpresaForm.patchValue({ id_municipio: data.id_departamentos });
           this.cargarMunicipios(data.id_departamento);
@@ -282,20 +284,19 @@ export class AddEmpresaComponent {
   crearEmpresa(): void {
     debugger
     this.submitted = true;
-    console.log('datos form', this.addEmpresaForm);
     if (this.addEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del formulario');
       return;
     }
 
-    // const camposObligatorios = ['nombre', 'correo', 'documento', 'razonSocial', 'direccion', 'telefono', 'celular', 'url_pagina', 'profesion', 'cargo', 'experiencia', 'funciones'];
-    // for (const key of camposObligatorios) {
-    //   const control = this.addEmpresaForm.get(key);
-    //   if (control && control.value && control.value.trim() === '') {
-    //     this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-    //     return;
-    //   }
-    // }
+    const camposObligatorios = ['nombre', 'correo', 'documento', 'razonSocial', 'direccion', 'telefono', 'celular', 'url_pagina', 'profesion', 'cargo', 'experiencia', 'funciones'];
+    for (const key of camposObligatorios) {
+      const control = this.addEmpresaForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        return;
+      }
+    }
 
     /*
       Crea un objeto de tipo empresa con los valores actuales del formulario 'addEmpresaForm'.
@@ -318,21 +319,19 @@ export class AddEmpresaComponent {
       id_municipio: this.addEmpresaForm.get('id_municipio')?.value,
       id_emprendedor: this.user?.emprendedor.documento,
     };
-    console.log(empresa);
-
 
     /*
       Valida que los campos obligatorios en el formulario 'addApoyoEmpresaForm' no contengan solo espacios en blanco. 
       Si un campo obligatorio está vacío o tiene solo espacios, muestra un mensaje de error.
     */
-    // const camposObligatoriosApoyo = ['nombre', 'apellido', 'documento', 'cargo', 'email', 'celular', 'telefono'];
-    // for (const key of camposObligatoriosApoyo) {
-    //   const control = this.addApoyoEmpresaForm.get(key);
-    //   if (control && control.value && control.value.trim() === '') {
-    //     this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-    //     return;
-    //   }
-    // }
+    const camposObligatoriosApoyo = ['nombre', 'apellido', 'documento', 'cargo', 'email', 'celular', 'telefono'];
+    for (const key of camposObligatoriosApoyo) {
+      const control = this.addApoyoEmpresaForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        return;
+      }
+    }
 
     /*
       Crea un objeto 'apoyos' con los valores del formulario 'addApoyoEmpresaForm' si es válido. 
@@ -349,16 +348,6 @@ export class AddEmpresaComponent {
       id_tipo_documento: this.addApoyoEmpresaForm.get('id_tipo_documento')?.value,
       id_empresa: empresa.documento,
     } : null;
-    console.log(apoyos);
-
-console.log('Errores en documento:', this.addApoyoEmpresaForm.get('documento')?.errors);
-console.log('Errores en nombre:', this.addApoyoEmpresaForm.get('nombre')?.errors);
-console.log('Errores en apellido:', this.addApoyoEmpresaForm.get('apellido')?.errors);
-console.log('Errores en cargo:', this.addApoyoEmpresaForm.get('cargo')?.errors);
-console.log('Errores en teléfono:', this.addApoyoEmpresaForm.get('telefono')?.errors);
-console.log('Errores en celular:', this.addApoyoEmpresaForm.get('celular')?.errors);
-console.log('Errores en email:', this.addApoyoEmpresaForm.get('email')?.errors);
-console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_tipo_documento')?.errors);
 
     const apoyosList: Array<any> = [];
 
@@ -375,17 +364,14 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
       apoyos: apoyosList
     };
 
-    console.log('payload', payload);
-
     this.EmpresaService.addEmpresa(this.token, payload).subscribe(
       data => {
         this.alertService.successAlert('Éxito', 'Registro exitoso');
-        //this.router.navigate(['list-empresa']);
-        console.log('datos enviados: ', data);
+        this.router.navigate(['list-empresa']);
       },
       error => {
-        this.alertService.errorAlert('Error', 'Ha ocurrido un error inesperado');
-        console.log('ERROR:', error);
+        this.alertService.errorAlert('Error', error.message);
+        console.log('ERROR:', error.message);
       }
     );
   }
@@ -393,26 +379,26 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
   /*
     Método para editar una empresa. Valida el formulario; si es inválido, muestra un error. 
   */
-  // editEmpresa(): void {
-  //   this.submitted = true;
-  //   if (this.addEmpresaForm.invalid) {
-  //     this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos de la empresa');
-  //     return;
-  //   }
-  //   const empresaData = this.addEmpresaForm.value;
-  //   this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
-  //     response => {
-  //       setTimeout(function () {
-  //       }, this.tiempoEspera);
-  //       this.alertService.successAlert('Exito', 'Empresa editado con exito');
-  //       this.router.navigate(['list-empresa']);
-  //     },
-  //     error => {
-  //       console.error('Error al actualizar:', error);
-  //       alert('Error al actualizar la empresa: ' + error.message);
-  //     }
-  //   );
-  // }
+  editEmpresa(): void {
+    this.submitted = true;
+    if (this.addEmpresaForm.invalid) {
+      this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos de la empresa');
+      return;
+    }
+    const empresaData = this.addEmpresaForm.value;
+    this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
+      response => {
+        setTimeout(function () {
+        }, this.tiempoEspera);
+        this.alertService.successAlert('Exito', 'Empresa editado con exito');
+        this.router.navigate(['list-empresa']);
+      },
+      error => {
+        console.error('Error al actualizar:', error);
+        alert('Error al actualizar la empresa: ' + error.message);
+      }
+    );
+  }
 
   /*
   Método para mostrar u ocultar contenido basado en el estado de un checkbox. 
@@ -490,7 +476,7 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
-        if (this.listaApoyo && this.listaApoyo.length > 0 && this.listaApoyo[0].documento !== 0) {
+        if (this.listaApoyo && this.listaApoyo.length > 0 ) {
           this.ocultarSinApoyo = false;
           this.isEditing = true;
           this.mostrarBotonesNuevos = false;
@@ -499,6 +485,7 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
           this.isEditing = false;
           this.mostrarBotonesNuevos = false;
         }
+        this.cd.detectChanges();
       },
       error => {
         console.error(error);
@@ -511,7 +498,7 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
   Busca el apoyo seleccionado, activa la edición y 
   actualiza el formulario con los datos del apoyo.
 */
-  onApoyoSelect(documento: number) {
+  onApoyoSelect(documento: string) {
     const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
     this.isEditing = true;
     if (selectedApoyo) {
@@ -560,6 +547,7 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
   Oculta el botón de editar y muestra los botones nuevos.
 */
   limpiarYCambiarBotones() {
+    debugger
     this.addApoyoEmpresaForm.reset();
     this.mostrarBotonEditar = false;
     this.mostrarBotonesNuevos = true;
@@ -570,12 +558,13 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
   */
 
   crearApoyo(): void {
+     debugger
     this.submitted = true;
     if (this.addApoyoEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
       return;
     }
-    const apoyos = this.addApoyoEmpresaForm.valid ? {
+    const apoyos : any = {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,
       nombre: this.addApoyoEmpresaForm.get('nombre')?.value,
       apellido: this.addApoyoEmpresaForm.get('apellido')?.value,
@@ -585,7 +574,8 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
       email: this.addApoyoEmpresaForm.get('email')?.value,
       id_tipo_documento: this.addApoyoEmpresaForm.get('id_tipo_documento')?.value,
       id_empresa: this.id_documentoEmpresa,
-    } : null;
+    };
+
     this.EmpresaService.crearApoyo(this.token, apoyos).subscribe(
       data => {
         setTimeout(function () {
@@ -616,7 +606,6 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
   noNumbersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasNumbers = /\d/.test(value);
-    console.log('noNumbersValidator:', value, hasNumbers);  // Depuración
     if (hasNumbers) {
       return { hasNumbers: 'El campo no debe contener números *' };
     } else {
@@ -630,7 +619,6 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
   */
   documentoValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value ? control.value.toString() : '';
-    console.log('documentoValidator:', value);  // Depuración
     if (value.length < 5 || value.length > 13) {
       return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
     }
@@ -643,7 +631,6 @@ console.log('Errores en id_tipo_documento:', this.addApoyoEmpresaForm.get('id_ti
   noLettersValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     const hasLetters = /[a-zA-Z]/.test(value);
-    console.log('noLettersValidator:', value, hasLetters);  // Depuración
     if (hasLetters) {
       return { hasLetters: 'El campo no debe contener letras *' };
     } else {

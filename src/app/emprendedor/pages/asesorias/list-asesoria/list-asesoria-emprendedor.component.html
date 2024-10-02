@@ -17,45 +17,48 @@
 
   <div class="flex flex-col px-4 mt-8 mb-4 sm:px-14 font-poppins">
 
-    <!-- Contenedor principal -->
-    <div class="flex flex-wrap gap-4 w-full md:w-auto ml-[10px] md:ml-[55px] items-center font-poppins">
-      <h5 class="mt-2 font-bold">FILTROS</h5>
+<!-- Contenedor principal -->
+<div class="flex flex-wrap gap-4 w-full md:w-auto ml-[10px] md:ml-[55px] items-center font-poppins md:justify-between justify-end h-auto mb-3">
+  <div class="flex items-center max-md:mr-5">
+    <h5 class="mt-2 font-bold mr-2">FILTROS</h5>
 
-      <!-- Botones de filtro -->
-      <div class="flex flex-wrap items-center p-2 space-x-2 bg-gray-100 rounded-lg">
+    <!-- Botones de filtro -->
+    <div class="flex flex-wrap items-center p-2 space-x-2 bg-gray-100 rounded-lg">
 
-        <!-- Botón de 'Sin asignar' -->
-        <button id="sinAsignar"
-          class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out md:px-4 listado-aseorias"
-          (click)="showSinAsignar()">
-          <span
-            class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg">
-            {{ sinAsignarCount }}
-          </span>
-          <span>Sin asignar</span>
-        </button>
+      <!-- Botón de 'Sin asignar' -->
+      <button id="sinAsignar"
+        class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out md:px-4 listado-aseorias"
+        (click)="showSinAsignar()">
+        <span
+          class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg">
+          {{ sinAsignarCount }}
+        </span>
+        <span>Sin asignar</span>
+      </button>
 
-        <!-- Botón de 'Asignadas' -->
-        <button id="Asignadas"
-          class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out btn-color md:px-4 listado-aseorias"
-          (click)="showAsignadas()">
-          <span
-            class="flex items-center justify-center w-6 h-6 mr-2 text-green-500 bg-white border border-green-500 rounded-lg">
-            {{ asignadasCount }}
-          </span>
-          <span>Asignadas</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Botón de Agregar -->
-    <div class="flex items-center justify-end mb-4 mt-9">
-      <span class="mr-3 text-amber-500 text-[25px] italic mb-1 font-poppins" style="font-weight: 900;">Agregar</span>
-      <button (click)="openCrearAsesoriaModal()"
-        class="flex items-center justify-center w-16 h-8 text-white rounded-lg bg-amber-500">
-        <span class="text-3xl font-semibold leading-none">+</span>
+      <!-- Botón de 'Asignadas' -->
+      <button id="Asignadas"
+        class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out btn-color md:px-4 listado-aseorias"
+        (click)="showAsignadas()">
+        <span
+          class="flex items-center justify-center w-6 h-6 mr-2 text-green-500 bg-white border border-green-500 rounded-lg">
+          {{ asignadasCount }}
+        </span>
+        <span>Asignadas</span>
       </button>
     </div>
+  </div>
+  <!-- Botón de Agregar -->
+  <div class="flex items-center h-full max-md:mr-5"> <!-- Changed from h-auto to h-full and removed mb-4 mt-9 -->
+    <span class="mr-3 text-amber-500 text-[25px] italic font-poppins" style="font-weight: 900;">Agregar</span>
+    <button (click)="openCrearAsesoriaModal()"
+      class="flex items-center justify-center w-16 h-8 text-white rounded-lg bg-amber-500">
+      <span class="text-3xl font-semibold leading-none">+</span>
+    </button>
+  </div>
+</div>
+
+
 
     <!-- Spinner -->
     <div class="flex justify-center" *ngIf="isLoading">

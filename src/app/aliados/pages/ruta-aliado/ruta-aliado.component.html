@@ -103,12 +103,12 @@
                                   <div *ngIf="a.id_aliado.errors.required">Este campo es requerido *</div>
                               </div>
                           </div>
-                          <div class="flex justify-center h-10 mt-4">
-                              <!--toca cambiarlo-->
-                              <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()"
-                                  class="bg-orange-500 text-white px-20 py-2 rounded-full text-lg font-semibold italic text-[30px] font-poppins">Guardar
-                              </button>
-                          </div>
+                          <div class="flex justify-center w-full px-4 mt-4">
+                            <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()"
+                                class="w-auto max-w-md bg-orange-500 text-white py-1 px-10 rounded-full text-lg sm:text-xl md:text-xl font-semibold italic font-poppins transition-all duration-300 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300">
+                                Guardar
+                            </button>
+                        </div>
                       </form>
                   </div>
                   <!-- Nivel -->

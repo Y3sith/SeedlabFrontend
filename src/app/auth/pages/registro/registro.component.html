@@ -92,8 +92,8 @@
                                 <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{ tipo.nombre }}
                                 </option>
                             </select>
-                            <div *ngIf="submitted && f.nombretipodoc.errors" class="max-w-[19rem] overflow-hidden mt-1">
-                                <div *ngIf="f.nombretipodoc.errors.required"
+                            <div *ngIf="submitted && f.id_tipo_documento.errors" class="max-w-[19rem] overflow-hidden mt-1">
+                                <div *ngIf="f.id_tipo_documento.errors.required"
                                     class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
                             </div>
                             <fa-icon [icon]="faIdCard" class="absolute right-3 top-[38.5px] text-md"
@@ -231,6 +231,9 @@
                             <div *ngIf="submitted && f.celular.errors" class="max-w-[19rem] overflow-hidden mt-1">
                                 <div *ngIf="f.celular.errors.required"
                                     class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
+                                    <div *ngIf="f.celular.errors.lengthError"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">{{ f.celular.errors.lengthError
+                                    }}</div>
                                 <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10
                                     dígitos</div>
                             </div>
@@ -248,6 +251,10 @@
                                     {{nameDepartamento.name}}</option>
                             </select>
                             <fa-icon [icon]="faLandmarkFlag" class="absolute right-4 top-[38.5px]"></fa-icon>
+                            <div *ngIf="submitted && f.id_departamento.errors" class="max-w-[19rem] overflow-hidden mt-1">
+                                <div *ngIf="f.id_departamento.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
+                            </div>
                         </div>
                         <!-- pregunta 11 -->
                         <div class="relative">
@@ -261,6 +268,10 @@
                                 </option>
                             </select>
                             <fa-icon [icon]="faMountainCity" class="absolute right-4 top-[39.5px]"></fa-icon>
+                            <div *ngIf="submitted && f.id_municipio.errors" class="max-w-[19rem] overflow-hidden mt-1">
+                                <div *ngIf="f.id_municipio.errors.required"
+                                    class="inline-block pl-2 text-red-700 rounded-lg">Este campo es requerido *</div>
+                            </div>
                         </div>
 
                         <!-- pregunta 12 -->

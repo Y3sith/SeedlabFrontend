@@ -79,7 +79,7 @@ export class ReporteService {
   }
 
   /* Obtiene los datos del formulario de un emprendedor específico */
-  obtenerDatosFormEmp(tipo_reporte: string, doc_emprendedor: number, empresa: number): Observable<any> {
+  obtenerDatosFormEmp(tipo_reporte: string, doc_emprendedor: string, empresa: number): Observable<any> {
     let params = new HttpParams()
       .set('tipo_reporte', tipo_reporte)
       .set('doc_emprendedor', doc_emprendedor)

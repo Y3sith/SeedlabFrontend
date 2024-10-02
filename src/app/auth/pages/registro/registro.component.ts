@@ -62,18 +62,18 @@ export class RegistroComponent implements OnInit {
     this.tipoDocumento();
     this.registerForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator]],
-      id_tipo_documento: [Validators.required],
+      id_tipo_documento: ['',[Validators.required]],
       nombre: ['', [Validators.required, this.noNumbersValidator]],
       apellido: ['', [Validators.required, this.noNumbersValidator]],
-      celular: ['', [Validators.required, Validators.maxLength(10)]],
+      celular: ['', [Validators.required, this.celularValidator]],
       genero: ['', Validators.required],
       fecha_nacimiento: ['', [Validators.required, this.dateRangeValidator]],
-      id_municipio: [Validators.required],
+      id_municipio: ['', [Validators.required]],
       direccion: ['', Validators.required],
       email: ['', [Validators.required, Validators.email, this.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(8), this.passwordValidator]],
       estado: '1',
-      id_departamento: [Validators.required] // Añadir el campo departamento al formulario
+      id_departamento: ['',[Validators.required]] // Añadir el campo departamento al formulario
     });
   }
 
@@ -81,6 +81,14 @@ export class RegistroComponent implements OnInit {
     const value = control.value ? control.value.toString() : '';
     if (value.length < 5 || value.length > 13) {
       return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
+    }
+    return null;
+  }
+
+  celularValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 12) {
+      return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
     }
     return null;
   }
@@ -101,6 +109,7 @@ export class RegistroComponent implements OnInit {
   prev() {
     if (this.currentIndex > 0) {
       this.currentIndex--;
+      this.submitted = false;
       this.updateProgress();
     }
   }
@@ -119,6 +128,7 @@ export class RegistroComponent implements OnInit {
       }
 
       this.currentIndex++;
+      this.submitted = false;
       this.updateProgress();
     }
   }

@@ -13,6 +13,7 @@ import { Banner } from '../../../../Modelos/banner.model';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AddBannerModalComponent } from '../add-banner-modal/add-banner-modal.component';
 import { Location } from '@angular/common';
+import { environment } from '../../../../../environment/env';
 
 @Component({
   selector: 'app-add-aliados',
@@ -77,6 +78,10 @@ export class AddAliadosComponent {
   isEditing: boolean = false;
   isLoading: boolean = false;
   charCount: number = 0;
+  private videoUrl: string = '';
+  private imageUrl: string = '';
+  urlparaperfil: any;
+  Number = Number;
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -125,6 +130,12 @@ export class AddAliadosComponent {
     });
     this.isActive = true;
     this.idAliado = this.aRoute.snapshot.paramMap.get('id');
+
+    this.aliadoForm.get('id_tipo_dato')?.valueChanges.subscribe(() => {
+      if (this.aliadoForm.get('id_tipo_dato')?.value) {
+        this.onTipoDatoChange();
+      }
+    });
   }
 
   /*
@@ -141,6 +152,7 @@ export class AddAliadosComponent {
     this.validateToken();
     this.tipoDato();
     this.verEditar();
+    this.obtenerValorBaseDatos();
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
@@ -170,6 +182,45 @@ export class AddAliadosComponent {
       this.router.navigate(['home']);
     }
   }
+
+  limpiarPrefijoEnviroment() {
+    const apiUrl = environment.apiUrl;
+    this.urlparaperfil = apiUrl.replace(/^\/api\//, '');
+    return this.urlparaperfil;
+  }
+
+    /*
+  Este método maneja los cambios en el campo `ruta_multi` del formulario `aliadoForm` cuando el usuario actualiza su valor.
+*/
+onRutaMultiChange(event: any): void {
+  const tipoDatoId = Number(this.aliadoForm.get('id_tipo_dato').value);
+  const newValue = event.target.value;
+
+  if (tipoDatoId === 1) {
+    this.videoUrl = this.limpiarPrefijo(newValue);
+  } else if (tipoDatoId === 2) {
+    this.imageUrl = newValue;
+  }
+
+  this.aliadoForm.patchValue({ ruta_multi: newValue }, { emitEvent: false });
+}
+
+
+  /*
+  Este método `limpiarPrefijo` elimina un prefijo específico de una URL si está presente.
+*/
+limpiarPrefijo(url: string): string {
+  const apiUrl = environment.apiUrl.replace(/\/$/, '');
+  this.urlparaperfil = apiUrl.replace(/\/api\/?$/, '');
+  const prefijo = `${this.urlparaperfil}/storage/`;
+
+  if (url.startsWith(prefijo)) {
+    return url.substring(prefijo.length);
+  } else if (url.startsWith(`${apiUrl}/storage/`)) {
+    return url.substring(`${apiUrl}/storage/`.length);
+  }
+  return url;
+}
 
   /* 
   Este metodo lo que hace es abrir un modal para poder editar un banner del aliado
@@ -273,6 +324,13 @@ export class AddAliadosComponent {
     this.isLoading = true;
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
+        let rutaMulti = data.ruta_multi;
+        if (data.id_tipo_dato === 1) {
+          this.videoUrl = this.limpiarPrefijo(rutaMulti);
+          rutaMulti = this.videoUrl;
+        } else if (data.id_tipo_dato === 2) {
+          this.imageUrl = rutaMulti;
+        }
         this.aliadoForm.patchValue({
           nombre: data.nombre,
           descripcion: data.descripcion,
@@ -286,6 +344,9 @@ export class AddAliadosComponent {
         this.updateCharCount();
         this.isActive = data.estado === 'Activo' || data.estado === true || data.estado === 1;
         this.aliadoForm.patchValue({ estado: this.isActive });
+        this.previousImageUrl = data.id_tipo_dato === 2 ? data.ruta_multi : '';
+        this.cdRef.detectChanges();
+        this.onTipoDatoChange();
         this.isEditing = true;
         this.isLoading = false;
       },
@@ -442,6 +503,7 @@ if (nombreAliado){
         data => {
           // Filtrar los datos para excluir el tipo de dato con ID 3
           this.tipoDeDato = data.filter(item => item.id !== 3);
+          this.obtenerValorBaseDatos();
         },
         error => {
           console.log(error);
@@ -450,27 +512,58 @@ if (nombreAliado){
     }
   }
 
+  private previousImageUrl: string = '';
+
   /*
     El método se encarga de dependiendo del dato multimedia seleccioando aparezca en el selec con el input dispuesto completar
   */
-  onTipoDatoChange(): void {
-    const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
-    this.aliadoForm.get('ruta_multi').clearValidators();
-
-    switch (tipoDatoId) {
-      case '1': // Video
-        this.aliadoForm.get('Video').setValidators([Validators.required]);
-        break;
-      case '2': // Imagen
-        this.aliadoForm.get('Imagen').setValidators([Validators.required,]);
-        break;
-      default:
-        this.aliadoForm.get('fuente').clearValidators();
-        break;
+    onTipoDatoChange(): void {
+      const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
+      let currentRutaMulti = this.aliadoForm.get('ruta_multi').value;
+  
+      this.aliadoForm.get('ruta_multi').clearValidators();
+      this.aliadoForm.get('Video')?.clearValidators();
+      this.aliadoForm.get('Imagen')?.clearValidators();
+      this.aliadoForm.get('PDF')?.clearValidators();
+      this.aliadoForm.get('Texto')?.clearValidators();
+  
+      const tipoDatoIdNumber = Number(tipoDatoId);
+      switch (tipoDatoIdNumber) {
+        case 1:
+          this.showVideo = true;
+          this.showImagen = false;
+          this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+          this.aliadoForm.patchValue({ ruta_multi: this.videoUrl });
+          console.log('Mostrando Video');
+          break;
+        case 2:
+          this.showImagen = true;
+          this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+          this.aliadoForm.patchValue({ ruta_multi: this.imageUrl });
+          console.log('Mostrando Imagen');
+          break;
+        default:
+          break;
+      }
+      this.aliadoForm.get('ruta_multi').updateValueAndValidity();
+      this.cdRef.detectChanges();
     }
 
-    this.aliadoForm.get('fuente').updateValueAndValidity();
-  }
+    obtenerValorBaseDatos(): void {
+      if (this.idAliado) {
+        this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
+          data => {
+            if (data && data.id_tipo_dato) {
+              this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
+              this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
+            }
+          },
+          error => {
+            console.log('Error al obtener el valor de la base de datos:', error);
+          }
+        );
+      }
+    }
 
   /*
     Este método maneja la selección de archivos desde un input de tipo archivo. 
