@@ -45,7 +45,7 @@ export class ReportesAdmComponent {
     })
   }
 
-/* Inicializa con esas funciones al cargar la pagina */
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
 
   }
@@ -103,19 +103,21 @@ export class ReportesAdmComponent {
     }
   }
 
-/*
- Valida el formulario y, si es correcto, descarga un archivo (PDF o Excel) con los datos del reporte
-  basado en el tipo de reporte y el rango de fechas seleccionado. Crea un enlace temporal para 
-  descargar el archivo y luego lo elimina.
-*/
-  getReportes(formato:string) {
+  /*
+   Valida el formulario y, si es correcto, descarga un archivo (PDF o Excel) con los datos del reporte
+    basado en el tipo de reporte y el rango de fechas seleccionado. Crea un enlace temporal para 
+    descargar el archivo y luego lo elimina.
+  */
+  getReportes(formato: string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
 
       this.reporteService.exportarReporte(tipo_reporte, fecha_inicio, fecha_fin, formato).subscribe({
         next: (data) => {
-          if (data) { // Verifica si data no es null
-            if (data.size > 0) { // Verifica si el tamaño es mayor a 0
+          // Verifica si se recibió un archivo
+          if (data) {
+            // Verifica si el tamaño de los datos es mayor a 0
+            if (data.size > 0) {
               const url = window.URL.createObjectURL(data);
               const a = document.createElement('a');
               a.href = url;
@@ -124,7 +126,8 @@ export class ReportesAdmComponent {
               a.click();
               window.URL.revokeObjectURL(url);
             } else {
-              this.alertService.errorAlert('Error', 'No hay datos disponibles para el reporte especificado.');
+              // Si el tamaño es 0, muestra un mensaje de alerta
+              this.alertService.errorAlert('Info', 'No hay datos disponibles para el reporte especificado.');
             }
           } else {
             // Se maneja el caso donde data es null
@@ -142,14 +145,14 @@ export class ReportesAdmComponent {
     }
   }
 
+
   /*
   Descarga un archivo Excel con un reporte específico de un emprendedor usando su ID. Crea un enlace temporal para descargar el archivo y luego lo elimina.
   */
-  getReporteFormulario(id_emprendedor: number, empresa: string,tipo_reporte: string) {
-    console.log(this.paginatedReportes)
+  getReporteFormulario(id_emprendedor: number, empresa: string, tipo_reporte: string) {
+    console.log(this.paginatedReportes);
     if (this.reporteForm.valid) {
-
-      this.reporteService.getReporteFormulario(id_emprendedor, empresa,tipo_reporte).subscribe({
+      this.reporteService.getReporteFormulario(id_emprendedor, empresa, tipo_reporte).subscribe({
         next: (data: Blob) => {
           if (data) { // Verifica si data no es null
             if (data.size > 0) { // Verifica si el tamaño es mayor a 0
@@ -162,7 +165,7 @@ export class ReportesAdmComponent {
               window.URL.revokeObjectURL(url);
             } else {
               // Mostrar alerta si el archivo está vacío
-              this.alertService.errorAlert('Error', 'No hay datos disponibles para el reporte especificado.');
+              this.alertService.errorAlert('Info', 'No hay datos disponibles para el reporte especificado.');
             }
           } else {
             // Se maneja el caso donde data es null
@@ -170,8 +173,14 @@ export class ReportesAdmComponent {
           }
         },
         error: (error) => {
-          console.error('Error al descargar el reporte del formulario', error);
-          this.alertService.errorAlert('Error', 'Error al procesar la solicitud de reporte.');
+          //console.error('Error al descargar el reporte del formulario', error);
+
+          // Manejo del error específico para el código de estado 404
+          if (error.status === 404) {
+            this.alertService.errorAlert('Info', error.error.message || 'No se ha realizado la encuesta.');
+          } else {
+            this.alertService.errorAlert('Error', 'Error al procesar la solicitud de reporte.'); // Mensaje genérico de error
+          }
         }
       });
     } else {
@@ -180,7 +189,8 @@ export class ReportesAdmComponent {
     }
   }
 
-  
+
+
 
   /*
   Captura el cambio de selección en el tipo de reporte y, si el tipo seleccionado es "emprendedor", automáticamente llama la función getReportes('excel') para generar un reporte en formato Excel.

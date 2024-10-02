@@ -86,25 +86,28 @@
         </thead>
         <tbody class="divide-y divide-gray-200">
           <ng-container *ngIf="paginatedReportes.length > 0; else noData">
-            <tr *ngFor="let reporte of paginatedReportes" class="transition-colors duration-200 hover:bg-gray-50">
+            <tr *ngFor="let reporte of paginatedReportes" class="transition-colors duration-200 hover:bg-gray-50"
+              >
               <td *ngFor="let columna of columnas" class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">
                 {{ reporte[columna] }}
               </td>
               <td *ngIf="tipoReporteSeleccionado === 'empresa'"
                 class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">
-                <!-- Botón de Excel -->
+                <!-- Botones para descargar reportes -->
                 <div>
-                  <button (click)="getReporteFormulario(reporte.id_emprendedor, reporte.documento, 1)" class="text-green-600 hover:text-green-800">
-                    1 <!-- Texto para la primera descarga -->
+                  <button (click)="getReporteFormulario(reporte.id_emprendedor, reporte.documento,1)"
+                    class="text-green-600 hover:text-green-800">
+                    1 <!-- Botón para la primera descarga -->
                   </button>
-                  <button (click)="getReporteFormulario(reporte.id_emprendedor, reporte.documento, 2)" class="text-green-600 hover:text-green-800">
-                    2 <!-- Texto para la segunda descarga -->
+                  <button (click)="getReporteFormulario(reporte.id_emprendedor, reporte.documento,2)"
+                    class="text-green-600 hover:text-green-800">
+                    2 <!-- Botón para la segunda descarga -->
                   </button>
                 </div>
-          
-                
               </td>
             </tr>
+
+
           </ng-container>
           <ng-template #noData>
             <tr>
