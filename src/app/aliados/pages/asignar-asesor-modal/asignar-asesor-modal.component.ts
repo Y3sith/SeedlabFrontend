@@ -19,6 +19,7 @@ export class AsignarAsesorModalComponent implements OnInit {
   user: any = null;
   currentRolId: string | null = null;
   submitted = false;
+  isSubmitting = false;
   @Output() asesoriaAsignada = new EventEmitter<void>();
   @Output() RechazarAsesoria = new EventEmitter<number>();
 
@@ -67,6 +68,7 @@ export class AsignarAsesorModalComponent implements OnInit {
   onGuardar(): void {
     this.submitted = true;
     if (this.asignarForm.valid) {
+      this.isSubmitting = true;
       const idAsesor = this.asignarForm.get('nom_asesor')?.value;
       const idAsesoria = this.data.asesoria.id_asesoria;
 
