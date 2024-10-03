@@ -19,6 +19,7 @@ export class AsignarAsesorModalComponent implements OnInit {
   user: any = null;
   currentRolId: string | null = null;
   submitted = false;
+  isSubmitting = false;
   @Output() asesoriaAsignada = new EventEmitter<void>();
   @Output() RechazarAsesoria = new EventEmitter<number>();
 
@@ -67,21 +68,25 @@ export class AsignarAsesorModalComponent implements OnInit {
   onGuardar(): void {
     this.submitted = true;
     if (this.asignarForm.valid) {
+      this.isSubmitting = true;
       const idAsesor = this.asignarForm.get('nom_asesor')?.value;
       const idAsesoria = this.data.asesoria.id_asesoria;
 
       this.asesoriaService.asignarAsesoria(this.token, idAsesoria, idAsesor).subscribe(
         data => {
-          this.asesoriaAsignada.emit(); // Emit the event
+          this.asesoriaAsignada.emit();
           this.dialogRef.close(true);
           this.alertService.successAlert('Exito', data.message);
         },
         error => {
           console.error('Error al asignar asesoría:', error);
-          //this.alertService.errorAlert('Error', error.error.message);
         }
       );
     }
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.dialogRef.close(this.asignarForm.value);
+    }, 1500);
   }
   /*
     Este método se utiliza para manejar la acción de cancelar 

@@ -44,7 +44,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
   errorMessage: string = '';
   isLoading: boolean = false;
 
-
 /*
   Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
   de campos relacionados con los datos de un super Admin. Se aplican validaciones específicas para garantizar que la entrada 
@@ -56,7 +55,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   superadminForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
-    documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
+    documento: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^[0-9]*$/)]],
     imagen_perfil: [null],
     celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
@@ -66,13 +65,13 @@ export class ModalCrearSuperadminComponent implements OnInit {
     id_municipio: ['', Validators.required],
     fecha_nac: ['',this.dateRangeValidator],
     email: ['', [Validators.required,Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: ['', [Validators.minLength(8)]],
     estado: true,
   });
 
   sectionFields: string[][] = [
     ['nombre', 'apellido', 'documento', 'id_tipo_documento','fecha_nac', 'genero'], // Sección 1
-    ['celular', 'email','id_departamento', 'id_municipio', 'direccion', 'password'], // Sección 2
+    ['celular', 'email','id_departamento', 'id_municipio', 'direccion'], // Sección 2
   ];
 
   constructor(
@@ -114,7 +113,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
       this.isEditing = true;
       this.superadminForm.get('password')?.setValidators([Validators.minLength(8)]);
     } else {
-      this.superadminForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
+      this.superadminForm.get('password')?.setValidators([ Validators.minLength(8)]);
     }
 
     this.superadminForm.get('password')?.updateValueAndValidity();
@@ -218,6 +217,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   */
   verEditar(): void {
     this.isLoading = true;
+    this.isEditing = true;
     if (this.idSuperAdmin != null) {
       this.superadminService.getsuperadmin(this.token,this.idSuperAdmin).subscribe(
         data => {
@@ -277,7 +277,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
       control.markAsTouched();
     });
   
-    const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'direccion', 'email', 'password'];
+    const camposObligatorios = ['nombre', 'apellido', 'documento', 'celular', 'direccion', 'email'];
     for (const key of camposObligatorios) {
         const control = this.superadminForm.get(key);
         if (control && control.value && control.value.trim() === '') {
@@ -287,14 +287,14 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
 
     // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
-    if (this.superadminForm.get('nombre').invalid || 
-        this.superadminForm.get('apellido').invalid || 
-        this.superadminForm.get('documento').invalid || 
-        this.superadminForm.get('celular').invalid ||
-        (this.superadminForm.get('password').invalid && (!this.idSuperAdmin || this.superadminForm.get('password').value))) {
-      this.alertService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
-      return;
-    }
+    // if (this.superadminForm.get('nombre').invalid || 
+    //     this.superadminForm.get('apellido').invalid || 
+    //     this.superadminForm.get('documento').invalid || 
+    //     this.superadminForm.get('celular').invalid ||
+    //     (this.superadminForm.get('password').invalid && (!this.idSuperAdmin || this.superadminForm.get('password').value))) {
+    //   this.alertService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+    //   return;
+    // }
   
     // Validaciones opcionales
     const fechaNacControl = this.superadminForm.get('fecha_nac');

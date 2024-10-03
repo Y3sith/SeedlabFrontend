@@ -264,7 +264,7 @@
                             </div>
 
                             <!-- Contraseña -->
-                            <div>
+                            <div *ngIf="isEditing">
                                 <label for="password" class="block text-xs sm:text-sm font-medium text-gray-700">Contraseña</label>
                                 <div class="relative">
                                     <input [type]="hide ? 'password' : 'text'" id="password" formControlName="password"

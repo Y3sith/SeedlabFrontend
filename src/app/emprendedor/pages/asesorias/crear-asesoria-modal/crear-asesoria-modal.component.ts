@@ -24,6 +24,7 @@ export class CrearAsesoriaModalComponent {
   currentRolId: string | null = null;
   docEmprendedor: string | null = null; 
   isorientador = new FormControl(false);
+  isSubmitting = false;
 
 
   constructor(
@@ -103,6 +104,7 @@ export class CrearAsesoriaModalComponent {
 */
   onSubmit() {
     if (this.asesoriaForm.valid) {
+      this.isSubmitting = true;
       const formData = this.asesoriaForm.value;
       const fechaActual = new Date();
       const fechaFormateada = `${fechaActual.getFullYear()}-${(fechaActual.getMonth() + 1)
@@ -131,6 +133,10 @@ export class CrearAsesoriaModalComponent {
           this.alertService.errorAlert('Error', 'Los campos de la asesoría estan vacios')
         }
       );
+      setTimeout(() => {
+        this.isSubmitting = false;
+        this.dialogRef.close(this.asesoriaForm.value);
+      }, 1500);
     }
   }
 

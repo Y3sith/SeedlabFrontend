@@ -16,153 +16,159 @@
     </div>
 
     <div *ngIf="!isLoading">
-    <!-- transicion basada en el estado -->
-    <div class="w-full flex items-center justify-center px-4">
-        <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
-            <div *ngFor="let contenedor of [1, 2]; let i = index" class="contenedor mb-2 sm:mb-0"
-                [class.active]="i === currentIndex">
-                <div class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto font-bold text-base md:text-xl"
-                    [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
-                    {{ i + 1 }}
+        <!-- transicion basada en el estado -->
+        <div class="w-full flex items-center justify-center px-4">
+            <div class="flex-1 flex flex-col sm:flex-row justify-around text-center mx-2 sm:mx-4">
+                <div *ngFor="let contenedor of [1, 2]; let i = index" class="contenedor mb-2 sm:mb-0"
+                    [class.active]="i === currentIndex">
+                    <div class="step-number flex items-center justify-center w-12 h-12 border rounded-full mx-auto font-bold text-base md:text-xl"
+                        [ngClass]="{'text-yellow-500 border-blue-500': i === currentIndex, 'text-gray-400 border-gray-400': i !== currentIndex}">
+                        {{ i + 1 }}
+                    </div>
+                    <ng-container *ngIf="i === 0">
+                        <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
+                            class=" text-base md:text-xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate font-poppins">
+                            Información Personal
+                        </h2>
+                    </ng-container>
+                    <ng-container *ngIf="i === 1">
+                        <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
+                            class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate font-poppins">
+                            Ubicación y Datos de Ingreso
+                        </h2>
+                    </ng-container>
                 </div>
-                <ng-container *ngIf="i === 0">
-                    <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                        class=" text-base md:text-xl  whitespace-nowrap  overflow-hidden font-bold mt-2 truncate font-poppins">
-                        Información Personal
-                    </h2>
-                </ng-container>
-                <ng-container *ngIf="i === 1">
-                    <h2 [ngClass]="{'text-yellow-500': i === currentIndex, 'text-gray-400': i !== currentIndex}"
-                        class="text-base md:text-xl whitespace-nowrap overflow-hidden font-bold mt-2 truncate font-poppins">
-                        Ubicación y Datos de Ingreso
-                    </h2>
-                </ng-container>
             </div>
         </div>
-    </div>
 
-    <ng-container *ngIf="currentIndex === 0">
-        <div *ngIf="currentSubSectionIndex === 0">
-            <div class="space-y-8 max-w-full md:px-8">
-                <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-                    <form [formGroup]="superadminForm" (ngSubmit)="addSuperadmin()">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <ng-container *ngIf="currentIndex === 0">
+            <div *ngIf="currentSubSectionIndex === 0">
+                <div class="space-y-8 max-w-full md:px-8">
+                    <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+                        <form [formGroup]="superadminForm" (ngSubmit)="addSuperadmin()">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-                            <!-- Imagen -->
-                            <div class="sm:col-span-2 flex flex-col items-center mb-4 sm:mb-6">
-                                <label for="profilePicture" class="cursor-pointer text-center">
-                                    <div
-                                        class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
-                                        <ng-container
-                                            *ngIf="imagenPerlil_Preview || superadminForm.get('imagen_perfil')?.value; else noImage">
-                                            <img [src]="imagenPerlil_Preview || superadminForm.get('imagen_perfil')?.value"
-                                                class="object-cover w-full h-full">
-                                        </ng-container>
-                                        <ng-template #noImage>
-                                            <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                            </svg>
-                                        </ng-template>
+                                <!-- Imagen -->
+                                <div class="sm:col-span-2 flex flex-col items-center mb-4 sm:mb-6">
+                                    <label for="profilePicture" class="cursor-pointer text-center">
+                                        <div
+                                            class="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition duration-300 overflow-hidden mb-2">
+                                            <ng-container
+                                                *ngIf="imagenPerlil_Preview || superadminForm.get('imagen_perfil')?.value; else noImage">
+                                                <img [src]="imagenPerlil_Preview || superadminForm.get('imagen_perfil')?.value"
+                                                    class="object-cover w-full h-full">
+                                            </ng-container>
+                                            <ng-template #noImage>
+                                                <svg class="h-12 w-12 sm:h-16 sm:w-16 text-gray-400" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                </svg>
+                                            </ng-template>
+                                        </div>
+                                        <span class="text-xs sm:text-sm text-gray-600">
+                                            Imagen de perfil
+                                            <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                                matTooltip="La imagen no puede pesar mas de 5MB."
+                                                matTooltipPosition="right" style="color: #adb7c7;">
+                                            </fa-icon>
+                                        </span>
+                                        <input type="file" id="profilePicture" name="profilePicture" class="hidden"
+                                            (change)="onFileSelecteds($event, 'imagen_perfil')" accept="image/*">
+                                    </label>
+                                </div>
+
+                                <!-- Nombre -->
+                                <div>
+                                    <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+                                    <input type="text" id="nombre" formControlName="nombre" name="nombre"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)}">
+                                    <div *ngIf="f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['nombre'].errors?.['required']">Este campo es requerido *</span>
+                                        <span *ngIf="f['nombre'].errors?.['pattern']">Solo se permiten letras y
+                                            espacios</span>
                                     </div>
-                                    <span class="text-xs sm:text-sm text-gray-600">
-                                        Imagen de perfil
-                                        <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
-                                            matTooltip="La imagen no puede pesar mas de 5MB." matTooltipPosition="right"
-                                            style="color: #adb7c7;">
-                                        </fa-icon>
-                                    </span>
-                                    <input type="file" id="profilePicture" name="profilePicture" class="hidden"
-                                        (change)="onFileSelecteds($event, 'imagen_perfil')" accept="image/*">
-                                </label>
-                            </div>
-
-                            <!-- Nombre -->
-                            <div>
-                                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-                                <input type="text" id="nombre" formControlName="nombre" name="nombre"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)}">
-                                <div *ngIf="f['nombre'].invalid && (f['nombre'].dirty || f['nombre'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['nombre'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['nombre'].errors?.['pattern']">Solo se permiten letras y
-                                        espacios</span>
                                 </div>
-                            </div>
 
-                            <!-- Apellido -->
-                            <div>
-                                <label for="apellido" class="block text-sm font-medium text-gray-700">Apellido</label>
-                                <input type="text" id="apellido" formControlName="apellido" name="apellido"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)}">
-                                <div *ngIf="f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['apellido'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['apellido'].errors?.['pattern']">Solo se permiten letras y
-                                        espacios</span>
+                                <!-- Apellido -->
+                                <div>
+                                    <label for="apellido"
+                                        class="block text-sm font-medium text-gray-700">Apellido</label>
+                                    <input type="text" id="apellido" formControlName="apellido" name="apellido"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)}">
+                                    <div *ngIf="f['apellido'].invalid && (f['apellido'].dirty || f['apellido'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['apellido'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                        <span *ngIf="f['apellido'].errors?.['pattern']">Solo se permiten letras y
+                                            espacios</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Tipo documento -->
-                            <div>
-                                <label for="id_tipo_documento" class="block text-sm font-medium text-gray-700">Tipo de
-                                    Documento</label>
-                                <select id="id_tipo_documento" formControlName="id_tipo_documento"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['id_tipo_documento'].invalid && (f['id_tipo_documento'].dirty || f['id_tipo_documento'].touched)}">
-                                    <option value="" disabled selected>Selecciona el tipo de documento...</option>
-                                    <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{tipo.nombre}}
-                                    </option>
-                                </select>
-                                <div *ngIf="f['id_tipo_documento'].invalid && (f['id_tipo_documento'].dirty || f['id_tipo_documento'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es requerido
-                                        *</span>
+                                <!-- Tipo documento -->
+                                <div>
+                                    <label for="id_tipo_documento" class="block text-sm font-medium text-gray-700">Tipo
+                                        de
+                                        Documento</label>
+                                    <select id="id_tipo_documento" formControlName="id_tipo_documento"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['id_tipo_documento'].invalid && (f['id_tipo_documento'].dirty || f['id_tipo_documento'].touched)}">
+                                        <option value="" disabled selected>Selecciona el tipo de documento...</option>
+                                        <option *ngFor="let tipo of listTipoDocumento" [value]="tipo.id">{{tipo.nombre}}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="f['id_tipo_documento'].invalid && (f['id_tipo_documento'].dirty || f['id_tipo_documento'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['id_tipo_documento'].errors?.['required']">Este campo es
+                                            requerido
+                                            *</span>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Documento -->
-                            <div>
-                                <label for="documento" class="block text-sm font-medium text-gray-700">Documento</label>
-                                <input type="text" id="documento" formControlName="documento" name="documento"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}">
+                                <!-- Documento -->
+                                <div>
+                                    <label for="documento" class="block text-sm font-medium text-gray-700">Documento</label>
+                                    <input type="text" id="documento" formControlName="documento" name="documento"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}">
 
-                                <!-- Contenedor de errores -->
-                                <div *ngIf="f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)"
-                                    class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg"
-                                    role="alert">
-                                    <span *ngIf="f['documento'].errors?.['required']" class="block mt-1">Este campo es
-                                        requerido *</span>
-                                    <span *ngIf="f['documento'].errors?.['minlength']" class="block mt-1">El documento
-                                        debe tener al menos 5 caracteres</span>
-                                    <span *ngIf="f['documento'].errors?.['pattern']" class="block mt-1">El documento
-                                        solo debe contener números</span>
+                                    <!-- Contenedor de errores -->
+                                    <div *ngIf="f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)"
+                                        class="inline-block mt-2 text-sm text-red-500 bg-red-50 p-2 rounded-lg"
+                                        role="alert">
+                                        <span *ngIf="f['documento'].errors?.['required']" class="block mt-1">Este campo
+                                            es
+                                            requerido *</span>
+                                        <span *ngIf="f['documento'].errors?.['minlength']" class="block mt-1">El
+                                            documento
+                                            debe tener al menos 8 caracteres</span>
+                                        <span *ngIf="f['documento'].errors?.['pattern']" class="block mt-1">El documento
+                                            solo debe contener números</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- Genero -->
-                            <div>
-                                <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
-                                <select id="genero" formControlName="genero"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['genero'].invalid && (f['genero'].dirty || f['genero'].touched)}">
-                                    <option value="" disabled selected>Seleccionar Género...</option>
-                                    <option value="Masculino">Masculino</option>
-                                    <option value="Femenino">Femenino</option>
-                                    <option value="Otro">Otro</option>
-                                </select>
-                                <div *ngIf="f['genero'].invalid && (f['genero'].dirty || f['genero'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['genero'].errors?.['required']">Este campo es requerido *</span>
+                                <!-- Genero -->
+                                <div>
+                                    <label for="genero" class="block text-sm font-medium text-gray-700">Género</label>
+                                    <select id="genero" formControlName="genero"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['genero'].invalid && (f['genero'].dirty || f['genero'].touched)}">
+                                        <option value="" disabled selected>Seleccionar Género...</option>
+                                        <option value="Masculino">Masculino</option>
+                                        <option value="Femenino">Femenino</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                    <div *ngIf="f['genero'].invalid && (f['genero'].dirty || f['genero'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['genero'].errors?.['required']">Este campo es requerido *</span>
+                                    </div>
                                 </div>
-                            </div>
 
                             <!-- Fecha nacimiento -->
                             <div>
@@ -197,157 +203,179 @@
         </div>
     </ng-container>
 
-    <!-- Parte 2 -->
-    <ng-container *ngIf="currentIndex === 1">
-        <div *ngIf="currentSubSectionIndex === 0">
-            <div class="space-y-8 max-w-full md:px-8">
-                <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
-                    <form [formGroup]="superadminForm" (ngSubmit)="addSuperadmin()">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                            <!-- Departamento -->
-                            <div>
-                                <label for="departamento"
-                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
-                                <select id="departamento" formControlName="id_departamento"
-                                    (change)="onDepartamentoSeleccionado($event)"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['id_departamento'].invalid && (f['id_departamento'].dirty || f['id_departamento'].touched)}">
-                                    <option value="" disabled>Seleccionar Departamento...</option>
-                                    <option *ngFor="let departamento of listDepartamentos" [value]="departamento.id">
-                                        {{ departamento.name }}
-                                    </option>
-                                </select>
-                                <div *ngIf="f['id_departamento'].invalid && (f['id_departamento'].dirty || f['id_departamento'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['id_departamento'].errors?.['required']">Este campo es requerido
-                                        *</span>
-                                </div>
-                            </div>
-
-                            <!-- Municipio -->
-                            <div>
-                                <label for="municipio" class="block text-sm font-medium text-gray-700">Municipio</label>
-                                <select id="municipio" formControlName="id_municipio"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)}">
-                                    <option value="" disabled selected>Seleccionar Municipio...</option>
-                                    <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">{{
-                                        municipio.nombre }}</option>
-                                </select>
-                                <div *ngIf="f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
-                                        *</span>
-                                </div>
-                            </div>
-
-                            <!-- Direccion -->
-                            <div class="">
-                                <label for="direccion" class="block text-sm font-medium text-gray-700">Dirección</label>
-                                <input type="text" id="direccion" formControlName="direccion" name="direccion" required
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
-                                <div *ngIf="submitted && f['direccion'].invalid"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                </div>
-                            </div>
-
-                            <!-- Numero celular -->
-                            <div>
-                                <label for="celular" class="block text-sm font-medium text-gray-700">Celular</label>
-                                <input type="text" id="celular" formControlName="celular" name="celular"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    [ngClass]="{'border-red-500': f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)}">
-                                <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['celular'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['celular'].errors?.['pattern']">El celular solo debe contener
-                                        números</span>
-                                </div>
-                            </div>
-
-                            <!-- Correo -->
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Correo</label>
-                                <input type="email" id="email" name="email" formControlName="email"
-                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                    placeholder="user@gmail.com"
-                                    [ngClass]="{'border-red-500': f['email'].invalid && (f['email'].dirty || f['email'].touched)}">
-                                <div *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['email'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['email'].errors?.['email']">Correo no válido *</span>
-                                </div>
-                            </div>
-
-                            <!-- Contraseña -->
-                            <div>
-                                <label for="password"
-                                    class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-                                <div class="relative">
-                                    <input [type]="hide ? 'password' : 'text'" id="password" formControlName="password"
+        <!-- Parte 2 -->
+        <ng-container *ngIf="currentIndex === 1">
+            <div *ngIf="currentSubSectionIndex === 0">
+                <div class="space-y-8 max-w-full md:px-8">
+                    <div class="bg-gray-50 rounded-lg shadow-md p-4 md:p-8 md:my-6">
+                        <form [formGroup]="superadminForm" (ngSubmit)="addSuperadmin()">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <!-- Departamento -->
+                                <div>
+                                    <label for="departamento"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
+                                    <select id="departamento" formControlName="id_departamento"
+                                        (change)="onDepartamentoSeleccionado($event)"
                                         class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                        [ngClass]="{'border-red-500': f['password'].invalid && (f['password'].dirty || f['password'].touched) && (!idSuperAdmin || f['password'].value)}">
-                                    <button type="button"
-                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 w-10"
-                                        (click)="hide = !hide">
-                                        <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500 w-10"></i>
-                                        <i *ngIf="!hide" class="fa fa-eye text-cyan-500 w-10"></i>
-                                    </button>
-                                </div>
-                                <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched) && (!idSuperAdmin || f['password'].value)"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['password'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8 caracteres
-                                        *</span>
-                                </div>
-                                <div *ngIf="idSuperAdmin" class="mt-1 text-xs text-gray-500">
-                                    Deja este campo en blanco si no deseas cambiar la contraseña.
-                                </div>
-                            </div>
-                            <!-- Toggle Field -->
-                            <div *ngIf="isEditing">
-                                <div class="mt-1 block text-sm font-medium text-gray-700 ">Activar/Desactivar Usuario
-                                    <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1"
-                                        mat-raised-button
-                                        matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
-                                        matTooltipPosition="right" style="color: #adb7c7;">
-                                    </fa-icon>
-
-                                </div>
-                                <label class="inline-flex items-center cursor-pointer md:mt-2">
-                                    <input type="checkbox" class="sr-only peer" [checked]="isActive"
-                                        (change)="toggleActive()" formControlName="estado">
-                                    <div
-                                        class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                        [ngClass]="{'border-red-500': f['id_departamento'].invalid && (f['id_departamento'].dirty || f['id_departamento'].touched)}">
+                                        <option value="" disabled>Seleccionar Departamento...</option>
+                                        <option *ngFor="let departamento of listDepartamentos"
+                                            [value]="departamento.id">
+                                            {{ departamento.name }}
+                                        </option>
+                                    </select>
+                                    <div *ngIf="f['id_departamento'].invalid && (f['id_departamento'].dirty || f['id_departamento'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['id_departamento'].errors?.['required']">Este campo es requerido
+                                            *</span>
                                     </div>
-                                    <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{ isActive
-                                        ? 'Activo' :
-                                        'Inactivo' }}</span>
-                                </label>
-                            </div>
+                                </div>
 
-                        </div>
-                    </form>
+                                <!-- Municipio -->
+                                <div>
+                                    <label for="municipio"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Municipio</label>
+                                    <select id="municipio" formControlName="id_municipio"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)}">
+                                        <option value="" disabled selected>Seleccionar Municipio...</option>
+                                        <option *ngFor="let municipio of listMunicipios" [value]="municipio.id">{{
+                                            municipio.nombre }}</option>
+                                    </select>
+                                    <div *ngIf="f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['id_municipio'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                    </div>
+                                </div>
+
+                                <!-- Direccion -->
+                                <div class="">
+                                    <label for="direccion"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                                    <input type="text" id="direccion" formControlName="direccion" name="direccion"
+                                        required
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm">
+                                    <div *ngIf="submitted && f['direccion'].invalid"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                    </div>
+                                </div>
+
+                                <!-- Numero celular -->
+                                <div>
+                                    <label for="celular"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Celular</label>
+                                    <input type="text" id="celular" formControlName="celular" name="celular"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        [ngClass]="{'border-red-500': f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)}">
+                                    <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['celular'].errors?.['required']">Este campo es requerido *</span>
+                                        <span *ngIf="f['celular'].errors?.['pattern']">El celular solo debe contener
+                                            números</span>
+                                    </div>
+                                </div>
+
+                                <!-- Correo -->
+                                <div>
+                                    <label for="email"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Correo</label>
+                                    <input type="email" id="email" name="email" formControlName="email"
+                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                        placeholder="user@gmail.com"
+                                        [ngClass]="{'border-red-500': f['email'].invalid && (f['email'].dirty || f['email'].touched)}">
+                                    <div *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['email'].errors?.['required']">Este campo es requerido *</span>
+                                        <span *ngIf="f['email'].errors?.['email']">Correo no válido *</span>
+                                    </div>
+                                </div>
+
+                                <!-- Contraseña -->
+                                <div *ngIf="isEditing">
+                                    <label for="password"
+                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                                    <div class="relative">
+                                        <input [type]="hide ? 'password' : 'text'" id="password"
+                                            formControlName="password"
+                                            class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                            [ngClass]="{'border-red-500': f['password'].invalid && (f['password'].dirty || f['password'].touched) && (!idSuperAdmin || f['password'].value)}">
+                                        <button type="button"
+                                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500 w-10"
+                                            (click)="hide = !hide">
+                                            <i *ngIf="hide" class="fa fa-eye-slash text-cyan-500 w-10"></i>
+                                            <i *ngIf="!hide" class="fa fa-eye text-cyan-500 w-10"></i>
+                                        </button>
+                                    </div>
+                                    <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched) && (!idSuperAdmin || f['password'].value)"
+                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                        role="alert">
+                                        <span *ngIf="f['password'].errors?.['required']">Este campo es requerido
+                                            *</span>
+                                        <span *ngIf="f['password'].errors?.['minlength']">Debe tener al menos 8
+                                            caracteres
+                                            *</span>
+                                    </div>
+                                    <div *ngIf="idSuperAdmin" class="mt-1 text-xs text-gray-500">
+                                        Deja este campo en blanco si no deseas cambiar la contraseña.
+                                    </div>
+                                </div>
+                                <!-- Toggle Field -->
+                                <div *ngIf="isEditing">
+                                    <div class="mt-1 block text-sm font-medium text-gray-700 ">Activar/Desactivar
+                                        Usuario
+                                        <fa-icon [icon]="falupa" class="text-sm right-2 transform mt-2 ml-1"
+                                            mat-raised-button
+                                            matTooltip="Esta funcion sirve para Activar/Desactivar el usuario.Si lo desactivas no podra acceder a sus funciones y tendras que activarlo "
+                                            matTooltipPosition="right" style="color: #adb7c7;">
+                                        </fa-icon>
+
+                                    </div>
+                                    <label class="inline-flex items-center cursor-pointer md:mt-2">
+                                        <input type="checkbox" class="sr-only peer" [checked]="isActive"
+                                            (change)="toggleActive()" formControlName="estado">
+                                        <div
+                                            class="relative w-11 h-6 bg-gray-500 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                                        </div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">{{
+                                            isActive
+                                            ? 'Activo' :
+                                            'Inactivo' }}</span>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div
+                    class="mt-2 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 h-auto">
+                    <button
+                        class="w-3/4 md:w-auto py-2 px-8 md:px-16 bg-[#373435] text-lg md:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
+                        (click)="previous()">
+                        Anterior
+                    </button>
+                    <button (click)="addSuperadmin()" [disabled]="isSubmitting"
+                        class="w-3/4 md:w-auto py-2 px-8 md:px-16 bg-[#FA7D00] text-lg md:text-xl text-white font-bold rounded-full transition duration-300">
+                        <span *ngIf="!isSubmitting">Guardar</span>
+                        <span *ngIf="isSubmitting" class="flex items-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            Guardando...
+                        </span>
+                    </button>
                 </div>
             </div>
-            <div
-                class="mt-2 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-4 h-auto">
-                <button
-                    class="w-3/4 md:w-auto py-2 px-8 md:px-16 bg-[#373435] text-lg md:text-xl text-white font-bold rounded-full hover:bg-gray-400 transition duration-300"
-                    (click)="previous()">
-                    Anterior
-                </button>
-                <button (click)="addSuperadmin()"
-                    class="w-3/4 md:w-auto py-2 px-8 md:px-16 bg-[#FA7D00] text-lg md:text-xl text-white font-bold rounded-full transition duration-300">
-                    Guardar
-                </button>
-            </div>
-        </div>
-    </ng-container>
-</div>
+        </ng-container>
+    </div>
