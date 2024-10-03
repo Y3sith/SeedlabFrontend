@@ -223,14 +223,17 @@ export class ActnivlecComponent implements OnInit {
   */
   tipoDato(): void {
     if (this.token) {
+      this.isLoading=true;
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
 
           this.listarTipoDato = data.filter((tipo: any) => tipo.nombre === 'Imagen'); //solo me muestra imagen en el select tipo dato
           // console.log('tipo de dato:', this.listarTipoDato);
+          // this.isLoading=false;
         },
         error => {
           console.log(error);
+          // this.isLoading=false;
         }
       )
     }
@@ -276,9 +279,11 @@ export class ActnivlecComponent implements OnInit {
         data => {
           this.listarAliadoo = data;
           // console.log('Aliado: ', data)
+          this.isLoading=false;
         },
         error => {
           console.log(error);
+          this.isLoading=false;
         }
       )
     }
@@ -317,10 +322,6 @@ export class ActnivlecComponent implements OnInit {
               // console.log('Actividad: ', data);
               this.isLoading=false;
             },
-            error => {
-              console.log('Error al cargar los asesores:', error);
-              this.isLoading=false;
-            }
           );
         },
         error => {
@@ -335,7 +336,6 @@ export class ActnivlecComponent implements OnInit {
     Este método inicializa el formulario de niveles y, si hay contenido de lección disponible, lo carga en el formulario correspondiente.
   */
   initializeNivelForm(): void {
-    this.isLoading=true;
     if (this.niveles && this.niveles.length > 0) {
       // Si hay niveles, seleccionar el primero
       const primerNivel = this.niveles[0];
@@ -368,7 +368,6 @@ export class ActnivlecComponent implements OnInit {
         fuente_contenido: primerContenido.fuente_contenido
       })
     }
-    this.isLoading=false;
   }
 
   /*
@@ -567,7 +566,6 @@ export class ActnivlecComponent implements OnInit {
   */
   verNivel(): void {
     if (this.token) {
-      //this.isLoading=true;
       this.nivelService.mostrarNivelXidActividad(this.token, parseInt(this.nivelForm.value.id_actividad)).subscribe(
         data => {
           this.listarNiveles = data;
@@ -582,11 +580,9 @@ export class ActnivlecComponent implements OnInit {
             // Llamar a onNivelChange para actualizar las lecciones
             this.onNivelChange(primerNivel.id.toString());
           }
-          this.isLoading=false;
         },
         error => {
           console.log(error);
-          //this.isLoading=false;
         }
       )
     }
@@ -857,7 +853,6 @@ export class ActnivlecComponent implements OnInit {
     Realiza una llamada al servicio para obtener el contenido según el ID de la lección.
   */
   cargarContenidoLeccion(id_leccion: number): void {
-    //this.isLoading=true;
     this.contenidoLeccionService.contenidoXleccion(this.token, id_leccion).subscribe(
       data => {
         this.contenidoLeccion = data;
@@ -880,7 +875,6 @@ export class ActnivlecComponent implements OnInit {
           });
         }
         this.onTipoDatoChangeContenido();
-        //this.isLoading=false;
       },
       error => {
         console.error('Error al cargar el contenido de la lección:', error);
