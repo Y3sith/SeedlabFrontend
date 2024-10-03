@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/env';
 import { Emprendedor } from '../Modelos/emprendedor.model';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,7 @@ export class AuthService {
 
   url = environment.apiUrl + 'auth/';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router:Router) { }
 
   /* Realiza el proceso de inicio de sesión */
   login(email: any, password: any) {
@@ -49,5 +51,14 @@ export class AuthService {
   /* Obtiene los tipos de documento disponibles */
   tipoDocumento(): Observable<any> {
     return this.http.get(environment.apiUrl + "tipo_documento");
+  }
+
+  // Método clearSession para eliminar el token y redirigir
+  clearSession() {
+    // Elimina el token del localStorage
+    localStorage.removeItem('token');
+    
+    // Redirige al usuario a la página de login
+    this.router.navigate(['/login']);
   }
 }
