@@ -61,9 +61,7 @@ export class AuthService {
   // Método clearSession para eliminar el token y redirigir
   clearSession() {
     // Elimina el token del localStorage
-    localStorage.removeItem('token');
-    
-    // Redirige al usuario a la página de login
-    location.reload();    
+    localStorage.removeItem('token');  
+    this.router.navigate(['home']); 
   }
 }
