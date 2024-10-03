@@ -50,4 +50,9 @@ export class AuthService {
   tipoDocumento(): Observable<any> {
     return this.http.get(environment.apiUrl + "tipo_documento");
   }
+
+  // Método para obtener el token almacenado en localStorage
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
 }
