@@ -82,6 +82,7 @@ export class AddAliadosComponent {
   private imageUrl: string = '';
   urlparaperfil: any;
   Number = Number;
+  isSubmitting = false;
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -374,16 +375,17 @@ limpiarPrefijo(url: string): string {
     Si se trata de una creación de aliado, se realiza la llamada al servicio correspondiente, mostrando alertas de éxito o error según sea necesario.
   */
   addAliado(): void {
+    this.isSubmitting = true;
     if (this.idAliado == null) {
       if (this.aliadoForm.invalid || this.bannerForm.invalid) {
         // Mostrar alert si algún formulario es inválido
         this.alertService.errorAlert('Error', 'Por favor, completa todos los campos requeridos.');
-
+        this.isSubmitting = false;
         this.formSubmitted = true;
-
         if (this.aliadoForm.invalid) {
           this.formSubmitted = true;
-          return; // Detiene la ejecución si el formulario es inválido
+          this.isSubmitting = false;
+          return; 
         }
         return;
       }
@@ -394,6 +396,7 @@ limpiarPrefijo(url: string): string {
         const control = this.aliadoForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
             return;
         }
     }
@@ -412,6 +415,7 @@ const nombreAliado = this.aliadoForm.get('nombre')?.value;
 if (nombreAliado){
   if (/^\d+$/.test(nombreAliado)) {
     this.alertService.errorAlert('Error', 'El nombre no puede estar compuesto solamente de numeros');
+    this.isSubmitting = false;
     return;
   }
 }
@@ -419,10 +423,12 @@ if (nombreAliado){
     const nombreDescripcion = this.aliadoForm.get('descripcion')?.value;
     if (nombreDescripcion && nombreDescripcion.length > 312) {
       this.alertService.errorAlert('Error', 'La descripción no puede tener más de 312 caracteres.');
+      this.isSubmitting = false;
       return;
     }
     if (nombreDescripcion && nombreDescripcion.length < 210) {
       this.alertService.errorAlert('Error', 'La descripción no puede tener menos de 210 caracteres.');
+      this.isSubmitting = false;
       return;
     }
 
@@ -478,6 +484,7 @@ if (nombreAliado){
         error => {
           if (error.status === 400) {
             this.alertService.errorAlert('Error', error.error.message);
+            this.isSubmitting = false;
           }
         });
     }
