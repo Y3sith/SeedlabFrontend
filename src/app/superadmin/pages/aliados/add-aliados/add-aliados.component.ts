@@ -111,7 +111,7 @@ export class AddAliadosComponent {
       urlpagina: ['', Validators.required],
       id_tipo_dato: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.minLength(8)]],
       estado: [true]
 
     });
@@ -322,6 +322,7 @@ limpiarPrefijo(url: string): string {
   */
   verEditar(): void {
     this.isLoading = true;
+    this.isEditing =true;
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
         let rutaMulti = data.ruta_multi;
@@ -388,7 +389,7 @@ limpiarPrefijo(url: string): string {
       }
     }
 
-    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina', 'celular','password','email' ];
+    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina', 'celular','email' ];
     for (const key of camposObligatorios) {
         const control = this.aliadoForm.get(key);
         if (control && control.value && control.value.trim() === '') {
