@@ -3,37 +3,26 @@ import { Injectable } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { AuthService } from './servicios/auth.service';  // Ruta correcta al servicio de autenticación
-
+import { AuthService } from './servicios/auth.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService) {}
 
-  
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Verificar si es un error 401 o 403
         if (error.status === 401 || error.status === 403) {
-          const token = this.authService.getToken();  // Obtén el token del almacenamiento
+          // Si el token ha expirado o es inválido, realiza el logout
+          const token = localStorage.getItem('token');
           
           if (token) {
-            // Llama a logout() y realiza el cierre de sesión en el backend
             this.authService.logout(token).subscribe(
-              () => {
-                // Limpia el token y redirige al login
-                location.reload();
-                localStorage.removeItem('token');
-                this.router.navigate(['/login']);
-              },
-              () => {
-                // Incluso si la llamada al logout falla, se debe limpiar el token y redirigir al login
-                localStorage.removeItem('token');
-                this.router.navigate(['/login']);
-              }
+              () => this.authService.clearSession(),  // Llama a clearSession cuando se detecta un error
+              () => this.authService.clearSession()
             );
+          } else {
+            this.authService.clearSession();  // Si no hay token, también cierra sesión
           }
         }
         return throwError(error);

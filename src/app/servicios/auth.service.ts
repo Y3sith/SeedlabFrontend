@@ -64,6 +64,6 @@ export class AuthService {
     localStorage.removeItem('token');
     
     // Redirige al usuario a la página de login
-    this.router.navigate(['/login']);
+    location.reload();    
   }
 }
