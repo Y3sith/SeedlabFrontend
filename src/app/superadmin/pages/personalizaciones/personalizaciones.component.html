@@ -117,7 +117,7 @@
                       style="color: #adb7c7;">
                     </fa-icon>
                   </label>
-                  <input type="number" id="telefono" name="telefono" formControlName="telefono"
+                  <input type="text" id="telefono" name="telefono" formControlName="telefono"
                     class="p-2 w-full h-10 mb-2 border-blue-300 rounded-lg bg-gray-200 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200 transition duration-200 ease-in hover:bg-blue-100 focus:bg-blue-100">
                   <div
                     *ngIf="personalizacionForm.get('telefono').invalid && (personalizacionForm.get('telefono').dirty || personalizacionForm.get('telefono').touched)"
@@ -206,7 +206,7 @@
                   <div class="bg-white p-4 rounded-lg shadow-lg h-full">
                     <label class="relative cursor-pointer flex flex-row items-center">
                       <input id="imagen_logo" formControlName="imagen_logo" type="file" name="logo" class="hidden"
-                        (change)="onFileSelecteds($event, 'imagen')" />
+                        (change)="onFileSelecteds($event, 'imagen')" accept="image/webp" />
                       <span
                         class="text-black px-4 py-2 border-2 border-blue-300 rounded-full inline-flex items-center bg-white justify-center hover:bg-blue-100">
                         Subir Imagen
@@ -215,14 +215,15 @@
                     </label>
                     <div class="mt-4">
                       <div class="container-imagen flex justify-center">
-                        <img [src]="previewUrl" alt="Logo preview" *ngIf="previewUrl"
+                        <img id="currentLogo" [src]="currentLogoUrl" alt="Logo actual" *ngIf="currentLogoUrl && !previewUrl"
+                          class="imagen w-full rounded-lg bg-zinc-200 mb-2" />
+                        <img [src]="previewUrl" alt="Vista previa del logo" *ngIf="previewUrl"
                           class="imagen w-full rounded-lg bg-zinc-200" />
                       </div>
                       <div
                         *ngIf="personalizacionForm.get('imagen_logo').invalid && (personalizacionForm.get('imagen_logo').dirty || personalizacionForm.get('imagen_logo').touched)"
                         class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
-                        <span *ngIf="personalizacionForm.get('imagen_logo').errors?.['required']">Este campo es
-                          requerido *</span>
+                        <span *ngIf="personalizacionForm.get('imagen_logo').errors?.['required']">Este campo es requerido *</span>
                       </div>
                     </div>
                   </div>

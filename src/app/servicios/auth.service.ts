@@ -53,12 +53,15 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "tipo_documento");
   }
 
+  // Método para obtener el token almacenado en localStorage
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   // Método clearSession para eliminar el token y redirigir
   clearSession() {
     // Elimina el token del localStorage
-    localStorage.removeItem('token');
-    
-    // Redirige al usuario a la página de login
-    this.router.navigate(['/login']);
+    localStorage.removeItem('token');  
+    this.router.navigate(['home']); 
   }
 }

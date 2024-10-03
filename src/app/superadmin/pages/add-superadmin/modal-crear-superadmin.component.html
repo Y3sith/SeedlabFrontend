@@ -170,37 +170,38 @@
                                     </div>
                                 </div>
 
-                                <!-- Fecha nacimiento -->
-                                <div>
-                                    <label for="fecha_nac" class="block truncate text-sm font-medium text-gray-700">
-                                        Fecha de Nacimiento:
-                                        <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
-                                            matTooltip="Debes ser mayor de edad." matTooltipPosition="right"
-                                            style="color: #adb7c7;">
-                                        </fa-icon>
-                                    </label>
-                                    <input type="date" id="fecha_nac" formControlName="fecha_nac"
-                                        class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
-                                        [ngClass]="{'border-red-500': f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)}">
-                                    <div *ngIf="f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)"
-                                        class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                        role="alert">
-                                        <span *ngIf="f.fecha_nac.errors.tooRecent">Debes ser mayor de edad</span>
-                                    </div>
+                            <!-- Fecha nacimiento -->
+                            <div>
+                                <label for="fecha_nac" class="block truncate text-sm font-medium text-gray-700">
+                                    Fecha de Nacimiento:
+                                    <fa-icon [icon]="falupa" class="text-sm inline-block ml-1" mat-raised-button
+                                        matTooltip="Debes ser mayor de edad." matTooltipPosition="right"
+                                        style="color: #adb7c7;">
+                                    </fa-icon>
+                                </label>
+                                <input type="date" id="fecha_nac" formControlName="fecha_nac"
+                                    class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
+                                    [ngClass]="{'border-red-500': f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)}">
+                                <div *ngIf="f['fecha_nac'].invalid && (f['fecha_nac'].dirty || f['fecha_nac'].touched)"
+                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
+                                    role="alert">
+                                    <span *ngIf="f.fecha_nac.errors.tooRecent">Debes ser mayor de edad</span>
+                                    <span *ngIf="f.fecha_nac.errors.futureDate">La fecha no es válida*</span>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="flex justify-center h-10 space-x-4">
-                        <button type="button" (click)="next()"
-                            class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
-                            <span class="px-2">Siguiente</span>
-                            <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
-                        </button>
-                    </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="flex justify-center h-10 space-x-4">
+                    <button type="button" (click)="next()"
+                        class="inline-block py-0 px-16 bg-[#FA7D00] text-xl text-white font-bold rounded-full transition duration-300">
+                        <span class="px-2">Siguiente</span>
+                        <fa-icon [icon]="faArrowRight" class="text-white"></fa-icon>
+                    </button>
                 </div>
             </div>
-        </ng-container>
+        </div>
+    </ng-container>
 
         <!-- Parte 2 -->
         <ng-container *ngIf="currentIndex === 1">

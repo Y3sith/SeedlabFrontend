@@ -621,26 +621,27 @@ export class ModalAddAsesoresComponent implements OnInit {
     restricciones de edad.
   */
 
-  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value) {
-      return null;
+    dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      if (!value) {
+        return null; // Si no hay valor, no se valida
+      }
+  
+      const selectedDate = new Date(value);
+      const today = new Date();
+      const hundredYearsAgo = new Date();
+      hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+  
+      if (selectedDate > today) {
+        return { futureDate: 'La fecha no es válida *' };
+      } else if (selectedDate < hundredYearsAgo) {
+        return { tooOld: 'La fecha no es válida *' };
+      } else if (selectedDate > eighteenYearsAgo) {
+        return { tooRecent: 'Debe tener al menos 18 años *' };
+      } else {
+        return null;
+      }
     }
-    const selectedDate = new Date(value);
-    const today = new Date();
-    const hundredYearsAgo = new Date();
-    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
-    const eighteenYearsAgo = new Date();
-    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
-
-    if (selectedDate > today) {
-      return { futureDate: 'La fecha no es válida *' };
-    } else if (selectedDate < hundredYearsAgo) {
-      return { tooOld: 'La fecha no es válida *' };
-    } else if (selectedDate > eighteenYearsAgo) {
-      return { tooRecent: 'Debe tener al menos 18 años *' };
-    } else {
-      return null;
-    }
-  }
 }

@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AsesoriaService } from '../../../servicios/asesoria.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-horario-modal',
@@ -17,6 +18,9 @@ export class HorarioModalComponent implements OnInit {
   user: any = null;
   currentRolId: string | null = null;
   isSubmitting = false;
+  fecha: any;
+  minFecha: string = '';
+  ahora: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -26,15 +30,27 @@ export class HorarioModalComponent implements OnInit {
     private router: Router,
     private alertService: AlertService
   ) {
-    this.asignarForm = this.fb.group({
-      fecha: ['', [this.dateRangeValidator, Validators.required]],
-      observaciones: ['']
-    });
+    
+
   }
 
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
+    this.asignarForm = this.fb.group({
+      fecha: ['',Validators.required],
+      observaciones: ['']
+    });
+    // const datePite = new DatePipe('en-Us');
+    // const currentDateTime = new Date();
+    // this.ahora = datePite.transform(currentDateTime, 'yyyy-MM-ddTHH:mm');
+    // this.currentTime = datePite.transform(currentDateTime, 'HH:mm');
+    this.setMinFecha();
+
+  // Escuchamos los cambios en la fecha seleccionada
+    this.asignarForm.get('fecha')?.valueChanges.subscribe(selectedDateTime => {
+    this.checkMinHora(selectedDateTime);
+    });
   }
 
   /*
@@ -49,6 +65,33 @@ export class HorarioModalComponent implements OnInit {
       this.router.navigate(['home']);
     }
   }
+
+  // Configurar la fecha y hora mínima
+setMinFecha() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = ('0' + (now.getMonth() + 1)).slice(-2);
+  const day = ('0' + now.getDate()).slice(-2);
+  const hours = ('0' + now.getHours()).slice(-2);
+  const minutes = ('0' + now.getMinutes()).slice(-2);
+
+  // Formato para el input datetime-local
+  this.minFecha = `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
+// Verificar si la hora seleccionada es válida
+checkMinHora(selectedDateTime: string) {
+  const now = new Date();
+  const selectedDate = new Date(selectedDateTime);
+
+  // Si la fecha seleccionada es hoy, verificar la hora
+  if (now.toDateString() === selectedDate.toDateString()) {
+    if (selectedDate < now) {
+      // Si la fecha seleccionada es menor a la actual, reiniciar el campo de fecha
+      this.asignarForm.get('fecha')?.setValue(this.minFecha);
+    }
+  }
+}
 
   /*
   Esta función se encarga de guardar la asignación del horario para una asesoría específica.
