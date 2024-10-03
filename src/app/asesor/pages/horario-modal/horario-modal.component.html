@@ -32,7 +32,9 @@
       <div mat-dialog-actions class="flex justify-center mt-6 space-x-2 font-poppins">
         <button (click)="cancelarCrerAsesoria()"
           class="px-4 py-2 text-white bg-gray-500 rounded text-sm">Cancelar</button>
-        <button *ngIf="!data.asesoria.fecha_asignacion" mat-button
+        
+        
+          <button *ngIf="!data.asesoria.fecha_asignacion" mat-button
           class="px-4 py-2 text-white rounded bg-[#FA7D00] text-sm" type="submit"
           (click)="onGuardar()" [disabled]="isSubmitting || asignarForm.invalid">
           <span *ngIf="!isSubmitting">Guardar</span>
