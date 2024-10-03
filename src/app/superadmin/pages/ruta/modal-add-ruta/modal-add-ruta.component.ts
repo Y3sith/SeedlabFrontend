@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { RutaService } from '../../../../servicios/rutas.service';
 import { Ruta } from '../../../../Modelos/ruta.modelo';
 import { User } from '../../../../Modelos/user.model';
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../../servicios/alert.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {  SafeUrl } from '@angular/platform-browser';
+import { SafeUrl } from '@angular/platform-browser';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { Actividad } from '../../../../Modelos/actividad.model';
 import { Superadmin } from '../../../../Modelos/superadmin.model';
@@ -49,7 +49,7 @@ export class ModalAddRutaComponent implements OnInit {
   showActividadForm: boolean = false;
 
   rutaForm = this.fb.group({
-    nombre: [''],
+    nombre: ['', [Validators.required]],
     fecha_creacion: [this.now],
     estado: [true],
   });
@@ -62,7 +62,7 @@ export class ModalAddRutaComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private alertService: AlertService,
-   
+
   ) {
 
     this.rutaId = data.rutaId;
@@ -87,9 +87,9 @@ export class ModalAddRutaComponent implements OnInit {
     }
   }
 
-/*
-Funcion para traer los datos de la ruta
-*/
+  /*
+  Funcion para traer los datos de la ruta
+  */
   verEditar(): void {
     if (this.rutaId != null) {
       this.rutaService.rutaXid(this.token, this.rutaId).subscribe(
@@ -112,30 +112,65 @@ Funcion para traer los datos de la ruta
     }
   }
 
+  /*getter que facilita el acceso a los controles del formulario reactivo*/
+  get f() { return this.rutaForm.controls; }
+
   /*
   Funcion para agregar o editar la ruta
   */
   addRuta(): void {
     this.submitted = true;
     if (this.rutaForm.invalid) {
+      this.alertService.errorAlert('Error', 'Debes completar los campos.')
       return;
     }
-    const nombreActividad = this.rutaForm.get('nombre')?.value;
-    if (nombreActividad && nombreActividad.length < 5) {
-      this.alertService.errorAlert('Error', 'El nombre de la ruta no puede tener menos de 5 caracteres');
+    const nombreActividad = this.rutaForm.get('nombre')?.value?.trim(); // Trima espacios en blanco
+
+    if (!nombreActividad) {
+      this.alertService.errorAlert('Error', 'El campo nombre es obligatorio y no puede contener solo espacios en blanco.');
       return;
-    } else if (nombreActividad && nombreActividad.length < 50) {
-      this.alertService.errorAlert('Error', 'El nombre de la ruta no puede tener más de 50 caracteres');
     }
 
+    // Validación de longitud
+    if (nombreActividad.length < 5) {
+      this.alertService.errorAlert('Error', 'El nombre de la ruta debe tener al menos 5 caracteres.');
+      return;
+    }
+
+    if (nombreActividad.length > 50) {
+      this.alertService.errorAlert('Error', 'El nombre de la ruta no puede tener más de 50 caracteres.');
+      return;
+    }
+
+    // Validación para otros campos obligatorios
     const camposObligatorios = ['nombre'];
     for (const key of camposObligatorios) {
-        const control = this.rutaForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            return;
-        }
+      const control = this.rutaForm.get(key);
+      if (control && (!control.value || control.value.trim() === '')) {
+        this.alertService.errorAlert('Error', `El campo ${key} es obligatorio y no puede estar vacío o contener solo espacios en blanco.`);
+        return;
+      }
     }
+
+    // const nombreActividad = this.rutaForm.get('nombre')?.value;
+    // if (nombreActividad && nombreActividad.length < 5) {
+    //   this.alertService.errorAlert('Error', 'El nombre de la ruta no puede tener menos de 5 caracteres');
+    //   return;
+    // } 
+
+    // if (nombreActividad.length < 50) {
+    //   this.alertService.errorAlert('Error', 'El nombre de la ruta no puede tener más de 50 caracteres');
+    // }
+
+    // const camposObligatorios = ['nombre'];
+    // for (const key of camposObligatorios) {
+    //     const control = this.rutaForm.get(key);
+    //     if (control && control.value && control.value.trim() === '') {
+    //         this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+    //         return;
+    //     }
+    // }
+
     const ruta: Ruta = {
       nombre: this.rutaForm.get('nombre')?.value,
       fecha_creacion: this.rutaForm.get('fecha_creacion')?.value,
@@ -175,9 +210,9 @@ Funcion para traer los datos de la ruta
     }
   }
 
-/*
-Funcion para activar o desactivar el estado de la ruta por medio de un toggle
- */
+  /*
+  Funcion para activar o desactivar el estado de la ruta por medio de un toggle
+   */
   toggleActive() {
     this.isActive = !this.isActive;
     this.rutaForm.patchValue({ estado: this.isActive ? true : false });
@@ -191,9 +226,9 @@ Funcion para activar o desactivar el estado de la ruta por medio de un toggle
     this.boton = true;
   }
 
-/*
-Funcion para cerrar el modal
-*/
+  /*
+  Funcion para cerrar el modal
+  */
   closeModal() {
     this.dialogRef.close();
   }
