@@ -47,6 +47,7 @@ export class ModalAddAsesoresComponent implements OnInit {
   idAsesor: number = null;
   errorMessage: string = '';
   isLoading: boolean = false;
+  isSubmitting = false;
 
 /*
   Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
@@ -293,6 +294,7 @@ export class ModalAddAsesoresComponent implements OnInit {
   */
 
   addAsesor(): void {
+    this.isSubmitting = true;
     Object.values(this.asesorForm.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -301,6 +303,7 @@ export class ModalAddAsesoresComponent implements OnInit {
         const control = this.asesorForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
             return;
         }
     }
@@ -310,6 +313,7 @@ export class ModalAddAsesoresComponent implements OnInit {
       this.asesorForm.get('celular').invalid ||
       (this.asesorForm.get('password').invalid && (!this.idAsesor || this.asesorForm.get('password').value))) {
       this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+      this.isSubmitting = false;
       return;
     }
     const fechaNacControl = this.asesorForm.get('fecha_nac');
@@ -323,12 +327,14 @@ export class ModalAddAsesoresComponent implements OnInit {
       }
       if (edad < 18 || edad > 100) {
         this.alerService.errorAlert('Error', 'Debes ser mayor de edad');
+        this.isSubmitting = false;
         return;
       }
     }
     const emailControl = this.asesorForm.get('email');
     if (emailControl.value && !emailControl.valid) {
       this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      this.isSubmitting = false;
       return;
     }
     const formData = new FormData();
@@ -395,6 +401,7 @@ export class ModalAddAsesoresComponent implements OnInit {
             (error) => {
               this.alerService.errorAlert('Error', error.error.message);
               console.error('Error', error.error.message);
+              this.isSubmitting = false;
             }
           );
         }

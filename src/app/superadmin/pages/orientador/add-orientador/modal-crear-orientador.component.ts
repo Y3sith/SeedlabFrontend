@@ -29,7 +29,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   orientadorId: any;
   hide = true;
   errorMessage: string = '';
-
+  isSubmitting = false;
 
   //////
   listTipoDocumento: [] = [];
@@ -234,6 +234,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   /*Valida el formulario, construye los datos para crear o actualizar un orientador, y luego envía estos datos al servicio correspondiente.
   Realiza validaciones adicionales, como la edad y la fuerza de la contraseña.*/
   addOrientador(): void {
+    this.isSubmitting = true;
     Object.values(this.orientadorForm.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -243,6 +244,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
         const control = this.orientadorForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
             return;
         }
     }
@@ -254,6 +256,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
         this.orientadorForm.get('celular').invalid || 
         (this.orientadorForm.get('password').invalid && (!this.idOrientador || this.orientadorForm.get('password').value))) {
           this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+          this.isSubmitting = false;
       return;
     }
   
@@ -269,6 +272,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       }
       if (edad < 18 || edad > 100) {
         this.alerService.errorAlert('Error', 'Debes ser mayor de edad');
+        this.isSubmitting = false;
         return;
       }
     }
@@ -276,6 +280,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     const emailControl = this.orientadorForm.get('email');
     if (emailControl.value && !emailControl.valid) {
       this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      this.isSubmitting = false;
       return;
     }
   
@@ -353,6 +358,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
             error => {
               console.error(error);
               if (error.status === 400) {
+                this.isSubmitting = false;
                 this.alertService.errorAlert('Error', error.error.message)
               }
             }
