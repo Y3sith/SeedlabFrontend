@@ -11,11 +11,11 @@
         <app-header [title] [subtitle]="'Editar Actividad'"></app-header>
     </header>
     
-    <div class="flex justify-center">
-        <div class="spinner " *ngIf="isLoading"></div>
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner " ></div>
     </div>
 
-    <div class="flex items-center justify-center font-poppins" *ngIf="!isLoading">
+    <div class="flex items-center justify-center font-poppins">
         <div class="w-full">
             <div class="max-w-full md:max-w-7xl mx-auto bg-gray-50 rounded-xl p-4 sm:p-8 md:p-16">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -74,7 +74,7 @@
                                     class="text-sm font-normal relative cursor-pointer flex flex-row items-center flex-none justify-center"
                                     for="nombre">
                                     <input type="file" id="fuente" class="hidden" accept="image/*" #fileInput
-                                        (change)="onFileSelecteds($event, 'fuente')">
+                                        (change)="onFileSelecteds($event, 'fuente')" [disabled]="actividadForm.get('fuente').disabled">
                                     <span (click)="triggerFileInput()"
                                         class="w-full text-black px-4 py-2 border-2 border-blue-300 rounded-lg inline-flex items-center bg-white justify-center hover:bg-blue-100">
                                         Subir Imagen
@@ -108,7 +108,7 @@
 
 
                             <div class="flex justify-center w-full px-4 mt-4">
-                                <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()"
+                                <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()" [disabled]="actividadForm.invalid || actividadForm.disabled" 
                                     class="w-auto max-w-md bg-orange-500 text-white py-1 px-10 rounded-full text-lg sm:text-xl md:text-xl font-semibold italic font-poppins transition-all duration-300 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300">
                                     Guardar
                                 </button>

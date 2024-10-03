@@ -1,7 +1,7 @@
 import { AngularMaterialModule } from '../angular-material.module';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -25,6 +25,7 @@ import { SuperadminModule } from './superadmin/superadmin.module';
 
 import { OrientadorModule } from './orientador/orientador.module';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { AuthInterceptor } from './auth.interceptor';
 
 
 
@@ -33,7 +34,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     AppComponent,
     BodyComponent,
     MenuComponent,
-    
+
   ],
   imports: [
     AngularMaterialModule,
@@ -55,16 +56,19 @@ import { NgxEchartsModule } from 'ngx-echarts';
     EmprendedorModule,
     SuperadminModule,
     OrientadorModule,
-    
+
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     })
-    
-  
+
+
   ],
   providers: [
     provideClientHydration(),
     provideAnimationsAsync(),
+    {provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true,},
 
   ],
   bootstrap: [AppComponent],

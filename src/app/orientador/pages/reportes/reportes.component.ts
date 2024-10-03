@@ -53,10 +53,10 @@ export class ReportesComponent {
     this.validateToken();
   }
 
-/*
-        Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
-       formulario o cualquier otra parte de la aplicación.
-  */
+  /*
+          Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+         formulario o cualquier otra parte de la aplicación.
+    */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -77,9 +77,9 @@ export class ReportesComponent {
     }
   }
 
-/*
-  Muestra los reportes según los filtros seleccionados en el formulario.
-*/
+  /*
+    Muestra los reportes según los filtros seleccionados en el formulario.
+  */
   mostrarReportes() {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
@@ -105,11 +105,11 @@ export class ReportesComponent {
     }
   }
 
-/*
-  Descarga el reporte en el formato especificado (PDF o Excel) 
-  si el formulario es válido.
-*/
-  getReportes(formato:string) {
+  /*
+    Descarga el reporte en el formato especificado (PDF o Excel) 
+    si el formulario es válido.
+  */
+  getReportes(formato: string) {
     if (this.reporteForm.valid) {
       const { tipo_reporte, fecha_inicio, fecha_fin } = this.reporteForm.value;
 
@@ -147,27 +147,44 @@ export class ReportesComponent {
   Descarga el reporte del formulario correspondiente al emprendedor 
   especificado.
 */
-  getReporteFormulario(id_emprendedor: string) {
-    this.reporteService.getReporteFormulario(id_emprendedor).subscribe(
-      (data: Blob) => {
-        if(data.size > 0){
-          const url = window.URL.createObjectURL(data);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'Reporte_Formulario.xlsx';
-          document.body.appendChild(a);
-          a.click();
-          window.URL.revokeObjectURL(url);
-        }else {
-          this.isReporteDisponible = false; // Si no hay datos, ocultar el botón
-          this.alertService.errorAlert('Error', 'No ha realizado el formulario.');
+  getReporteFormulario(id_emprendedor: string, empresa: string, tipo_reporte: string) {
+
+    if (this.reporteForm.valid) {
+      this.reporteService.getReporteFormulario(id_emprendedor, empresa, tipo_reporte).subscribe({
+        next: (data: Blob) => {
+          if (data) { // Verifica si data no es null
+            if (data.size > 0) { // Verifica si el tamaño es mayor a 0
+              const url = window.URL.createObjectURL(data);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = 'Reporte_Formulario.xlsx';
+              document.body.appendChild(a);
+              a.click();
+              window.URL.revokeObjectURL(url);
+            } else {
+              // Mostrar alerta si el archivo está vacío
+              this.alertService.errorAlert('Info', 'No hay datos disponibles para el reporte especificado.');
+            }
+          } else {
+            // Se maneja el caso donde data es null
+            this.alertService.errorAlert('Info', 'No se recibió ningún archivo para descargar.');
+          }
+        },
+        error: (error) => {
+          //console.error('Error al descargar el reporte del formulario', error);
+
+          // Manejo del error específico para el código de estado 404
+          if (error.status === 404) {
+            this.alertService.errorAlert('Info', error.error.message || 'No se ha realizado la encuesta.');
+          } else {
+            this.alertService.errorAlert('Error', 'Error al procesar la solicitud de reporte.'); // Mensaje genérico de error
+          }
         }
-      },
-      error => {
-        console.error('Error al descargar el reporte del formulario', error);
-        this.isReporteDisponible = false;
-      }
-    )
+      });
+    } else {
+      console.error('Formulario inválido:', this.reporteForm.value);
+      this.alertService.errorAlert('Error', 'Debe seleccionar todos los filtros');
+    }
   }
 
   /*
@@ -190,9 +207,9 @@ export class ReportesComponent {
 
   }
 
-/*
-  Cambia la página actual de los reportes.
-*/
+  /*
+    Cambia la página actual de los reportes.
+  */
 
   changePage(page: number | string): void {
     if (page === 'previous') {
@@ -218,15 +235,15 @@ export class ReportesComponent {
     return this.page > 1;
   }
 
-/*
-  Verifica si se puede navegar a la siguiente página.
-*/
+  /*
+    Verifica si se puede navegar a la siguiente página.
+  */
   canGoNext(): boolean {
     return this.page < Math.ceil(this.totalItems / this.itemsPerPage);
   }
-/*
-  Obtiene un arreglo de números que representan las páginas disponibles.
-*/
+  /*
+    Obtiene un arreglo de números que representan las páginas disponibles.
+  */
   getPages(): number[] {
     const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
     return Array.from({ length: totalPages }, (_, i) => i + 1);

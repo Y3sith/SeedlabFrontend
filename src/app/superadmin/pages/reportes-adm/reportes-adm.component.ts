@@ -150,7 +150,7 @@ export class ReportesAdmComponent {
   Descarga un archivo Excel con un reporte específico de un emprendedor usando su ID. Crea un enlace temporal para descargar el archivo y luego lo elimina.
   */
   getReporteFormulario(id_emprendedor: string, empresa: string, tipo_reporte: string) {
-    console.log(this.paginatedReportes);
+    
     if (this.reporteForm.valid) {
       this.reporteService.getReporteFormulario(id_emprendedor, empresa, tipo_reporte).subscribe({
         next: (data: Blob) => {

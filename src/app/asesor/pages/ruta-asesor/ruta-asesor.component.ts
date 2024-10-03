@@ -86,10 +86,10 @@ export class RutaAsesorComponent {
   */
   actividadForm = this.fb.group({
     id: [],
-    nombre: ['', Validators.required],
-    descripcion: ['', Validators.required],
-    fuente: ['', Validators.required],
-    id_tipo_dato: ['', Validators.required],
+    nombre: [{ value: '', disabled: true }, Validators.required],
+    descripcion: [{ value: '', disabled: true }, Validators.required],
+    fuente: [{ value: '', disabled: true }, Validators.required],
+    id_tipo_dato: [{ value: '', disabled: true }, Validators.required],
     id_ruta: ['', Validators.required],
     id_aliado: ['']
   })
@@ -145,7 +145,7 @@ export class RutaAsesorComponent {
 /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
-
+    this.desactivarcamposActividad();
     this.route.queryParams.subscribe(params => {
       if (params['id_ruta']) {
         this.rutaId = +params['id_ruta'];
@@ -327,6 +327,20 @@ export class RutaAsesorComponent {
       }
     } else {
       console.error('No se encontró el aliado seleccionado');
+    }
+  }
+
+  desactivarcamposActividad(): void {
+    this.actividadForm.disable();
+    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+    if (guardarBtn) {
+      guardarBtn.disabled = true;
+      guardarBtn.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
+    }
+    const fuente = document.getElementById('fuente') as HTMLButtonElement;
+    if (fuente) {
+      fuente.disabled = true;
+      fuente.classList.add('disabled-btn');
     }
   }
 

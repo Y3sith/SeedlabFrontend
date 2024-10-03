@@ -20,7 +20,6 @@ export class AsignarAsesorModalComponent implements OnInit {
   currentRolId: string | null = null;
   submitted = false;
   isSubmitting = false;
-
   @Output() asesoriaAsignada = new EventEmitter<void>();
   @Output() RechazarAsesoria = new EventEmitter<number>();
 

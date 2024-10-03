@@ -27,7 +27,6 @@ export class CrearAsesoriaModalComponent {
   isSubmitting = false;
 
 
-
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CrearAsesoriaModalComponent>,
@@ -104,8 +103,8 @@ export class CrearAsesoriaModalComponent {
   Envía los datos del formulario de asesoría si es válido.
 */
   onSubmit() {
-    if (this.asesoriaForm.valid)
-      this.isSubmitting = true;{
+    if (this.asesoriaForm.valid) {
+      this.isSubmitting = true;
       const formData = this.asesoriaForm.value;
       const fechaActual = new Date();
       const fechaFormateada = `${fechaActual.getFullYear()}-${(fechaActual.getMonth() + 1)

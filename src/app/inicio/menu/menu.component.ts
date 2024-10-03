@@ -89,6 +89,7 @@ export class MenuComponent {
   ngOnInit() {
     this.validateToken();
     this.isAuthenticated = this.authservices.isAuthenticated();
+    console.log(this.isAuthenticated);
     this.logueado = this.token !== null;
     this.getRolUser();
 
