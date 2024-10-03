@@ -85,6 +85,7 @@ export class ActnivlecComponent implements OnInit {
   selectedLeccion: any | null = null;
   charCount: number = 0;
   charCountContenido: number = 0;
+  isSubmitting = false;
 
   /*
     Este objeto representa el formulario `actividadForm` utilizado para gestionar la información de una actividad.
@@ -383,27 +384,33 @@ export class ActnivlecComponent implements OnInit {
 */
   addActividadSuperAdmin(): void {
     this.submitted = true;
+    this.isSubmitting = true;
     const formData = new FormData();
     let estadoValue: string;
     const nombreActividad = this.actividadForm.get('nombre')?.value;
     if (nombreActividad && nombreActividad.length > 39) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
+      this.isSubmitting = false;
       return;
     } else if (nombreActividad && nombreActividad.length  < 5) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 5 caracteres');
+      this.isSubmitting = false;
       return;
     }
 
     const descripcionActividad = this.actividadForm.get('descripcion')?.value;
     if (descripcionActividad && descripcionActividad.length > 470) {
       this.alertServices.errorAlert('Error', 'La descripcion de la actividad no puede tener más de 470 caracteres');
+      this.isSubmitting = false;
       return;
     } else if (descripcionActividad && descripcionActividad.length  < 300) {
       this.alertServices.errorAlert('Error', 'La descripcion de la actividad debe tener más de 300 caracteres');
+      this.isSubmitting = false;
       return;
     }
     if (this.actividadForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la actividad');
+      this.isSubmitting = false;
       return;
     }
 
@@ -412,6 +419,7 @@ export class ActnivlecComponent implements OnInit {
         const control = this.actividadForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
             return;
         }
     }
@@ -446,6 +454,7 @@ export class ActnivlecComponent implements OnInit {
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
               //console.log('ID de la actividad creada y asignada:', actividadCreada.id);
               this.alertServices.successAlert('Exito', data.message);
+              this.isSubmitting = true;
               this.desactivarcamposActividad();
               // console.log('datos enviados: ', data)
               this.activarformularios();
@@ -453,9 +462,12 @@ export class ActnivlecComponent implements OnInit {
             },
             error => {
               console.log(error);
+              this.isSubmitting = false;
               this.alertServices.errorAlert('Error', error.error.message);
             }
           );
+        }else{
+          this.isSubmitting = false;
         }
       })
     } else {
@@ -471,6 +483,8 @@ export class ActnivlecComponent implements OnInit {
               this.alertServices.errorAlert('Error', error.error.message);
             }
           )
+        }else{
+          this.isSubmitting = false;
         }
       })
     }
