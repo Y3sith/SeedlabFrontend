@@ -168,6 +168,7 @@
                                     class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
                                     role="alert">
                                     <span *ngIf="f.fecha_nac.errors.tooRecent">Debes ser mayor de edad</span>
+                                    <span *ngIf="f.fecha_nac.errors.futureDate">La fecha no es válida*</span>
                                 </div>
                             </div>
                         </div>
