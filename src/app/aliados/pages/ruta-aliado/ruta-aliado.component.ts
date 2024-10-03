@@ -216,13 +216,16 @@ export class RutaAliadoComponent {
   */
   tipoDato(): void {
     if (this.token) {
+      this.isLoading=true;
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
 
           this.listarTipoDato = data.filter((tipo: any) => tipo.nombre === 'Imagen');
+          this.isLoading=false;
         },
         error => {
           console.log(error);
+          this.isLoading=false;
         }
       )
     }
@@ -389,7 +392,6 @@ export class RutaAliadoComponent {
     Este método inicializa el formulario de niveles y, si hay contenido de lección disponible, lo carga en el formulario correspondiente.
   */
   initializeNivelForm(): void {
-    this.isLoading = true;
     if (this.niveles && this.niveles.length > 0) {
       const primerNivel = this.niveles[0];
       this.nivelForm.patchValue({
@@ -415,7 +417,6 @@ export class RutaAliadoComponent {
         fuente_contenido: primerContenido.fuente_contenido
       })
     }
-    this.isLoading = false;
   }
 
 /*

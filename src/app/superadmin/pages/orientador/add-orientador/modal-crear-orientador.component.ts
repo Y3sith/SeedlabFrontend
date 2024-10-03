@@ -61,13 +61,13 @@ export class ModalCrearOrientadorComponent implements OnInit {
     id_municipio: ['', Validators.required],
     fecha_nac: ['', this.dateRangeValidator],
     email: ['', [Validators.required,Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    password: ['', [Validators.minLength(8)]],
     estado: true,
   });
   
   sectionFields: string[][] = [
     ['nombre', 'apellido', 'documento', 'id_tipo_documento','fecha_nac', 'genero'], // Sección 1
-    ['celular', 'email','id_departamento', 'id_municipio', 'direccion', 'password'], // Sección 2
+    ['celular', 'email','id_departamento', 'id_municipio', 'direccion'], // Sección 2
   ];
 
   constructor(
@@ -102,7 +102,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       this.isEditing = true;
       this.orientadorForm.get('password')?.setValidators([Validators.minLength(8)]);
     } else {
-      this.orientadorForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
+      this.orientadorForm.get('password')?.setValidators([Validators.minLength(8)]);
     }
     this.orientadorForm.get('password')?.updateValueAndValidity();
     this.tipoDocumento();

@@ -69,7 +69,7 @@
           <!-- Campo Correo Electrónico -->
           <div class="mt-3 text-md font-normal">
             <label class="text-sm font-normal" for="email">Correo Electrónico</label>
-            <input type="text" formControlName="email"
+            <input type="email" formControlName="email"
               class="block w-full px-2 py-1 mt-1 transition duration-200 ease-in bg-gray-200 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100">
             <div *ngIf="formSubmitted && aliadoForm.get('email')?.invalid"
               class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50">
@@ -77,7 +77,7 @@
             </div>
           </div>
           <!-- Campo Contraseña -->
-          <div class="items-center justify-between h-full md:flex">
+          <div class="items-center justify-between h-full md:flex" *ngIf="isEditing">
             <div class="md:w-1/2">
               <div class="relative mt-3 text-sm font-normal">
                 <label class="text-sm font-normal" for="password">Contraseña</label>

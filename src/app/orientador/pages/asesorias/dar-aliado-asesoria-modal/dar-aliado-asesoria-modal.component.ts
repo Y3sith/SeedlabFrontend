@@ -20,6 +20,7 @@ export class DarAliadoAsesoriaModalComponent {
   docEmprendedor: string | null = null;
 
   user: any;
+  isSubmitting = false;
 
   constructor(
     public dialogRef: MatDialogRef<DarAliadoAsesoriaModalComponent>,
@@ -45,7 +46,7 @@ export class DarAliadoAsesoriaModalComponent {
   /*
     Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
     formulario o cualquier otra parte de la aplicación.
-  */ 
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -55,15 +56,16 @@ export class DarAliadoAsesoriaModalComponent {
     }
   }
 
-/*
-  Maneja la acción de guardar la asignación de un aliado en el formulario.
-*/
+  /*
+    Maneja la acción de guardar la asignación de un aliado en el formulario.
+  */
   onGuardar(): void {
     if (this.asignarForm.valid) {
+      this.isSubmitting = true;
       const nombreAliado = this.asignarForm.get('nom_aliado')?.value;
       this.asesoriaService.asignarAliado(this.token, this.data.id, nombreAliado).subscribe(
         response => {
-          this.alertService.successAlert('Exito',response.message);
+          this.alertService.successAlert('Exito', response.message);
           this.dialogRef.close(true);
         },
         error => {
