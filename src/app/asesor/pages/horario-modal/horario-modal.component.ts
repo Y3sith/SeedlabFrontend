@@ -41,10 +41,6 @@ export class HorarioModalComponent implements OnInit {
       fecha: ['',Validators.required],
       observaciones: ['']
     });
-    // const datePite = new DatePipe('en-Us');
-    // const currentDateTime = new Date();
-    // this.ahora = datePite.transform(currentDateTime, 'yyyy-MM-ddTHH:mm');
-    // this.currentTime = datePite.transform(currentDateTime, 'HH:mm');
     this.setMinFecha();
 
   // Escuchamos los cambios en la fecha seleccionada
