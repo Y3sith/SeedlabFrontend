@@ -434,7 +434,6 @@ export class ActnivlecComponent implements OnInit {
     formData.append('id_ruta', this.rutaId.toString());
     formData.append('id_aliado', this.actividadForm.get('id_aliado')?.value);
     formData.append('estado', estadoValue);
-    // console.log('datos: ', this.actividadForm.value);
     if (this.selectedfuente) {
       formData.append('fuente', this.selectedfuente, this.selectedfuente.name);
     } else {
@@ -442,7 +441,6 @@ export class ActnivlecComponent implements OnInit {
       if (rutaMultiValue) {
         formData.append('fuente', rutaMultiValue);
       }
-      // console.log('datos enviados: ', formData)
     }
     if (this.actividadId == null) {
       this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
@@ -452,17 +450,16 @@ export class ActnivlecComponent implements OnInit {
             (data: any) => {
               const actividadCreada = data[0];
               this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-              //console.log('ID de la actividad creada y asignada:', actividadCreada.id);
               this.alertServices.successAlert('Exito', data.message);
-              this.isSubmitting = true;
+              this.isSubmitting = false;
               this.desactivarcamposActividad();
-              // console.log('datos enviados: ', data)
               this.activarformularios();
               this.habilitarBotones();
+              this.isSubmitting = false;
             },
             error => {
               console.log(error);
-              this.isSubmitting = false;
+              this.isSubmitting = false
               this.alertServices.errorAlert('Error', error.error.message);
             }
           );
@@ -476,6 +473,7 @@ export class ActnivlecComponent implements OnInit {
           this.actividadService.updateActividad(this.token, this.actividadId, formData).subscribe(
             data => {
               this.alertServices.successAlert('Exito', data.message);
+              this.isSubmitting = false;
             },
             error => {
               console.log(error);
@@ -499,12 +497,14 @@ export class ActnivlecComponent implements OnInit {
     if (guardarBtn) {
       guardarBtn.disabled = true;
       guardarBtn.style.cursor = 'not-allowed'; // Cambia el cursor para indicar que está deshabilitado
+      guardarBtn.style.pointerEvents = 'none';
     }
     const fuente = document.getElementById('fuente') as HTMLButtonElement;
     if (fuente) {
       fuente.disabled = true;
       fuente.classList.add('disabled-btn');
     }
+    this.isSubmitting = false;
   }
 
   /*
@@ -609,6 +609,10 @@ export class ActnivlecComponent implements OnInit {
   */
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
+    if (this.nivelForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+      return;
+    }
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
