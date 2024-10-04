@@ -124,8 +124,7 @@ export class CursoRutaEmprendedorComponent {
 
       if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
-      } else {
-      }
+      } 
     }
     if (!this.token) {
       this.router.navigate(['home']);
@@ -298,6 +297,55 @@ export class CursoRutaEmprendedorComponent {
 /*
   Avanza al siguiente contenido en la lección actual.
 */
+  // goToNextContent() {
+  //   if (this.showActivityDescription) {
+  //     this.showActivityDescription = false;
+  //     this.currentNivelIndex = 0;
+  //     this.currentLeccionIndex = 0;
+  //     this.currentContenidoIndex = 0;
+  //   } else {
+  //     const currentNivel = this.niveles[this.currentNivelIndex];
+  //     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+  //     const nextContenidoIndex = this.currentContenidoIndex + 1;
+
+  //     if (nextContenidoIndex < currentLeccion.contenido_lecciones.length) {
+  //       this.currentContenidoIndex = nextContenidoIndex;
+  //     } else {
+  //       const lastContentId = currentLeccion.contenido_lecciones[currentLeccion.contenido_lecciones.length - 1].id;
+  //       if (lastContentId === this.ultimoContenidoId) {
+  //         if (this.currentRolId != 1 && this.currentRolId != 2) {
+  //           this.alertService.alertainformativa('¡Felicitaciones por haber completado la ruta! Ahora es momento de volver a llenar la encuesta de maduración. Esta te permitirá evaluar cuánto has avanzado con tu emprendimiento y cómo han influido los conocimientos que has adquirido en este tiempo. Es una gran oportunidad para reflexionar sobre tu progreso y seguir mejorando. ¡Sigue adelante!', 'success').then((result) => {
+  //             if (result.isConfirmed) {
+  //               this.router.navigate(['list-empresa']);
+  //             }
+  //           });
+  //         } else {
+  //           this.router.navigate(['ruta']);
+  //         }
+  //         return;
+  //       }
+
+  //       this.currentLeccionIndex++;
+  //       if (this.currentLeccionIndex >= currentNivel.lecciones.length) {
+  //         this.currentLeccionIndex = 0;
+  //         this.currentNivelIndex++;
+  //         if (this.currentNivelIndex >= this.niveles.length) {
+  //           this.botonAsesoria = true;
+  //           this.router.navigate(['ruta']);
+  //           return;
+  //         }
+  //       }
+  //       this.currentContenidoIndex = 0;
+  //     }
+  //   }
+  //   const newCurrentNivel = this.niveles[this.currentNivelIndex];
+  //   const newCurrentLeccion = newCurrentNivel.lecciones[this.currentLeccionIndex];
+  //   const newCurrentContenido = newCurrentLeccion.contenido_lecciones[this.currentContenidoIndex];
+  //   this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
+  //   this.selectedContenido = newCurrentContenido;
+  //   this.updateSelectedContent();
+  // }
+
   goToNextContent() {
     if (this.showActivityDescription) {
       this.showActivityDescription = false;
@@ -331,7 +379,7 @@ export class CursoRutaEmprendedorComponent {
           this.currentLeccionIndex = 0;
           this.currentNivelIndex++;
           if (this.currentNivelIndex >= this.niveles.length) {
-            this.botonAsesoria = true;
+            this.updateBotonAsesoria(); // Llamamos a la nueva función aquí
             this.router.navigate(['ruta']);
             return;
           }
@@ -345,11 +393,31 @@ export class CursoRutaEmprendedorComponent {
     this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
     this.selectedContenido = newCurrentContenido;
     this.updateSelectedContent();
+    this.updateBotonAsesoria(); // Llamamos a la nueva función aquí también
   }
 
   /*
   Regresa a la vista anterior en el historial de navegación.
-*/
+  */
+  updateBotonAsesoria() {
+    if (this.currentRolId === 1 || this.currentRolId === 2) {
+      this.botonAsesoria = false;
+      return;
+    }
+
+    const currentNivel = this.niveles[this.currentNivelIndex];
+    const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+    
+    this.botonAsesoria = (
+      this.currentNivelIndex === this.niveles.length - 1 &&
+      this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
+      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1
+    );
+  }
+
+  /*
+  Regresa a la vista anterior en el historial de navegación.
+  */
   goBack(): void {
     this.location.back();
   }
@@ -363,7 +431,7 @@ export class CursoRutaEmprendedorComponent {
     if (
       this.currentNivelIndex === this.niveles.length - 1 &&
       this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
-      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1
+      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1 
     ) {
       this.botonAsesoria = true;
     }

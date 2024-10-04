@@ -79,6 +79,7 @@ export class RutaAliadoComponent {
   selectedLeccion: any | null = null;
   charCount: number = 0;
   charCountContenido: number = 0;
+  isSubmitting = false;
 
 
   /*
@@ -641,6 +642,7 @@ export class RutaAliadoComponent {
     utilizando los servicios apropiados.
   */
   addNivelSuperAdmin(): void {
+    this.isSubmitting = true;
     this.submittedNivel = true;
     if (this.nivelForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
@@ -649,9 +651,11 @@ export class RutaAliadoComponent {
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+      this.isSubmitting = false;
       return;
     } else if (nombreNivel && nombreNivel.length < 5) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
+      this.isSubmitting = false;
       return;
     }
 
@@ -660,6 +664,7 @@ export class RutaAliadoComponent {
         const control = this.nivelForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
             return;
         }
     }
@@ -677,6 +682,7 @@ export class RutaAliadoComponent {
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', 'Nivel actualizado correctamente');
+          this.isSubmitting = false;
           this.verNivel();
           this.niveles.push({
             id: data.id,
@@ -691,6 +697,7 @@ export class RutaAliadoComponent {
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
+          this.isSubmitting = false;
           console.log(error);
         }
       );
@@ -699,6 +706,7 @@ export class RutaAliadoComponent {
       this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
+          this.isSubmitting = false;
           this.niveles.push({
             id: data.id,
             nombre: data.nombre,
@@ -721,6 +729,7 @@ export class RutaAliadoComponent {
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
+          this.isSubmitting = false;
           console.log(error);
         }
       )
