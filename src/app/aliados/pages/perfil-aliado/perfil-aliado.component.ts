@@ -547,17 +547,64 @@ limpiarPrefijo(url: string): string {
   private processFile(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      const previewUrl = e.target.result;
-      if (field === 'urlImagen') {
-        this.bannerForm.patchValue({ urlImagen: previewUrl });
-        this.bannerPreview = previewUrl;
-      } else if (field === 'logo') {
-        this.aliadoForm.patchValue({ logo: previewUrl });
-        this.logoPreview = previewUrl;
-      } else if (field === 'ruta_multi') {
-        this.aliadoForm.patchValue({ ruta_multi: previewUrl });
-        this.rutaPreview = previewUrl;
-      }
+      const img = new Image();
+      img.onload = () => {
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        if (field === 'logo') {
+          // Configurar el canvas para 1751x1751
+          canvas.width = 1751;
+          canvas.height = 1751;
+          
+          // Calcular las dimensiones para el recorte
+          let size = Math.min(img.width, img.height);
+          let startX = (img.width - size) / 2;
+          let startY = (img.height - size) / 2;
+          
+          // Dibujar la imagen recortada en el canvas
+          ctx.drawImage(img, startX, startY, size, size, 0, 0, 1751, 1751);
+        } else {
+          // Para otros campos, mantener las dimensiones originales
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+        }
+        
+        // Convertir el canvas a una URL de datos
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        
+        // Actualizar el formulario y la previsualización
+        if (field === 'urlImagen') {
+          this.bannerForm.patchValue({ urlImagen: dataUrl });  
+          this.bannerPreview = dataUrl;
+        } else if (field === 'logo') {
+          this.aliadoForm.patchValue({ logo: dataUrl });
+          this.logoPreview = dataUrl;
+        } else if (field === 'ruta_multi') {
+          this.aliadoForm.patchValue({ ruta_multi: dataUrl });
+          this.rutaPreview = dataUrl;
+        }
+        
+        // Convertir la URL de datos de vuelta a un archivo
+        fetch(dataUrl)
+          .then(res => res.blob())
+          .then(blob => {
+            const newFile = new File([blob], file.name, { type: 'image/jpeg' });
+            
+            if (field === 'urlImagen') {
+              this.selectedBanner = newFile;
+              this.bannerForm.patchValue({ urlImagen: newFile });
+            } else if (field === 'logo') {
+              this.selectedLogo = newFile;
+              this.aliadoForm.patchValue({ logo: newFile });
+            } else if (field === 'ruta_multi') {
+              this.selectedruta = newFile;
+              this.aliadoForm.patchValue({ ruta_multi: newFile });
+            }
+          });
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
 
