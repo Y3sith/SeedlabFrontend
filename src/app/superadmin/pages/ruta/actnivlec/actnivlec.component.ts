@@ -595,6 +595,10 @@ export class ActnivlecComponent implements OnInit {
   */
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
+    if (this.nivelForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+      return;
+    }
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');

@@ -642,6 +642,10 @@ export class RutaAliadoComponent {
   */
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
+    if (this.nivelForm.invalid) {
+      this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+      return;
+    }
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
@@ -666,6 +670,10 @@ export class RutaAliadoComponent {
     };
     if (this.nivelForm.value.id_nivel && this.nivelForm.value.id_nivel !== '0') {
       const nivelId = this.nivelForm.get('id_nivel')?.value;
+      if (this.nivelForm.invalid) {
+        this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+        return;
+      }
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', 'Nivel actualizado correctamente');
@@ -687,10 +695,7 @@ export class RutaAliadoComponent {
         }
       );
     } else {
-      if (this.nivelForm.invalid) {
-        this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
-        return;
-      }
+      
       this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
