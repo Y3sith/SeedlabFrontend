@@ -280,7 +280,7 @@ export class DashboardComponent implements OnInit {
         // Inicializar el gráfico
         this.initChart('echarts-doughnut', this.doughnutChartOption);
 
-        //Dato y grafica registros 
+        //Data y grafica registros 
 
         const conteoRegistros = data.conteoRegistros.original.promedios; // Accedemos correctamente a los "promedios"
 
@@ -312,7 +312,7 @@ export class DashboardComponent implements OnInit {
             },
             legend: {
               data: ['Emprendedor', 'Aliados'],
-              left: 'center',
+              left: 'left',
               top: 10,
               itemGap: 20
             },

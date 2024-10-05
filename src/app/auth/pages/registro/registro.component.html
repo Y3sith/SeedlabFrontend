@@ -225,7 +225,7 @@
                         <div>
                             <label for="celular" class="block truncate">Celular:</label>
                             <div class="mt-2">
-                                <input type="number" id="celular" formControlName="celular" (input)="updateProgress()"
+                                <input id="celular" formControlName="celular" (input)="updateProgress()"
                                     class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                             </div>
                             <div *ngIf="submitted && f.celular.errors" class="max-w-[19rem] overflow-hidden mt-1">
