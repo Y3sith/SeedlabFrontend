@@ -8,7 +8,7 @@ import { environment } from '../../environment/env';
 })
 export class DepartamentoService {
   /* URL para obtener todos los departamentos */
-  url = environment.apiUrl + 'deps/all/';
+  url = environment.apiUrl + 'deps/all';
 
   constructor(private http: HttpClient) { }
 
