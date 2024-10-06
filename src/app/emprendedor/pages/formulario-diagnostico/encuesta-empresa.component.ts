@@ -694,7 +694,7 @@ export class EncuestaEmpresaComponent {
     }
 
     for (let i = 15; i < 28; i++) {
-      //debugger
+      
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
@@ -826,7 +826,6 @@ export class EncuestaEmpresaComponent {
       if (!isValidForm) {
         return false;
       }
-      console.log(this.listaRespuestas2);
     }
     this.next();
     this.saveSection(2, this.listaRespuestas2);
