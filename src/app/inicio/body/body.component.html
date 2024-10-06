@@ -24,13 +24,22 @@
     <div class="relative w-full banner-swiper-container overflow-hidde ">
       <div class="swiper-wrapper">
         <ng-container *ngFor="let banner of listBanner">
-          <div *ngIf="banner.urlImagen"
-            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
-            style="width: 100% !important;">
-            <img [src]="banner.urlImagen" [alt]="banner.descripcion || 'Banner image'">
+          <div *ngIf="banner.urlImagen" class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide" style="width: 100% !important;">
+            <picture>
+              <source srcset="{{ banner.urlImagen }} 800w, {{ banner.urlImagen }} 1600w"
+              sizes="(max-width: 800px) 100vw, 800px" 
+              type="image/webp" > <!-- Usa la misma URL aquí -->
+              <img [src]="banner.urlImagen" 
+                   [alt]="banner.descripcion || 'Banner image'" 
+                   [width]="800" 
+                   [height]="400" 
+                  >
+            </picture>
           </div>
         </ng-container>
       </div>
+      
+
       <div
         class="text-lg -translate-y-1/2 cursor-pointer lg:text-2xl z-absolute text-cyan-500 hover:text-cyan-500/50 top-1/2 left-5 swiper-button-prev">
       </div>
@@ -67,6 +76,8 @@
               </div>
             </div>
           </div>
+
+
         </div>
         <!-- Pagination and Button container -->
         <div class="relative flex flex-col items-center space-x-2 lg:-mt-8 lg: max-sm:mb-7">

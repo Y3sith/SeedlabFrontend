@@ -9,6 +9,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { AuthService } from '../../servicios/auth.service';
 import { SuperadminService } from '../../servicios/superadmin.service';
 import { Personalizaciones } from '../../Modelos/personalizaciones.model';
+import { catchError, forkJoin, Observable, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-body',
@@ -46,13 +47,31 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   /* Inicializa con esas funciones al cargar la página */
   ngOnInit(): void {
+    this.isLoggedIn = this.authService.isAuthenticated();
     setTimeout(() => {
       this.isLoaded = true; // Cambiar el estado a cargado
     }, 1000);
-    this.isLoggedIn = this.authService.isAuthenticated();
-    this.mostrarBanners();
-    this.getPersonalizacion();
-    this.mostrarAliados();
+    forkJoin({
+      banners: this.aliadoService.getbanner(),   // Cambia esto si tu método se llama diferente
+      personalizacion: this.getPersonalizacion(),  // Asegúrate de que devuelva un observable
+      aliados: this.aliadoService.getaliados()                // Cambia esto si tu método se llama diferente
+    }).subscribe({
+      next: (results) => {
+        // Maneja los resultados de cada observable
+        this.listBanner = results.banners;
+        this.listAliados = results.aliados;
+        this.initSwipers();
+        this.isLoaded = true; // Cambia el estado a cargado
+        // Puedes manejar los resultados de personalizacion y aliados aquí si es necesario
+      },
+      error: (err) => {
+        console.error('Error al cargar datos:', err);
+      }
+    });
+    // this.mostrarBanners();
+    // this.getPersonalizacion();
+    // this.mostrarAliados();
+    
   }
 
     /*
@@ -72,26 +91,25 @@ export class BodyComponent implements OnInit, AfterViewInit {
   }
 
 /* Obtiene la lista de aliados y la procesa para mostrar en la interfaz */
-  mostrarAliados(): void {
-    this.aliadoService.getaliados().subscribe(
-      data => {
-        this.listAliados = data.map(aliado => ({
-          ...aliado,
-          descripcion: this.splitDescription(aliado.descripcion, 50)
-        }));
+mostrarAliados(): void {
+  const expirationTime = 3600; 
+  const currentTime = Math.floor(Date.now() / 1000); 
+  const storedAliados = JSON.parse(localStorage.getItem(`aliados`));
 
-        this.preloadLogos(this.listAliados);
+  if (storedAliados && (currentTime - storedAliados.timestamp < expirationTime)) {
+    // Si los datos están en el localStorage y no han expirado, los usamos
+    this.listAliados = storedAliados.data.map(aliado => ({
+      ...aliado,
+      descripcion: this.splitDescription(aliado.descripcion, 50)
+    }));
+    this.preloadLogos(this.listAliados);
+    this.cdr.detectChanges();
+    if (isPlatformBrowser(this.platformId)) {
+      this.initSwipers();
+    }
+  } 
+}
 
-        this.cdr.detectChanges();
-        if (isPlatformBrowser(this.platformId)) {
-          this.initSwipers();
-        }
-      },
-      error => {
-        console.log(error);
-      }
-    );
-  }
 
   /* Precarga los logos de los aliados para optimizar el rendimiento de la carga de imágenes */
   preloadLogos(aliados: any[]): void {
@@ -116,22 +134,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
     if (storedBanners && (currentTime - storedBanners.timestamp < expirationTime)) {
       this.listBanner = storedBanners.data;
       this.precargarImagenes(this.listBanner);
-    } else {
-      this.aliadoService.getbanner().subscribe(
-        data => {
-          this.listBanner = data;
-          localStorage.setItem(`banners:${status}`, JSON.stringify({
-            data: this.listBanner,
-            timestamp: currentTime 
-          }));
-
-          this.precargarImagenes(this.listBanner);
-        },
-        error => {
-          console.log(error);
-        }
-      );
-    }
+    } 
   }
 
   // Método para precargar imágenes
@@ -160,12 +163,16 @@ export class BodyComponent implements OnInit, AfterViewInit {
   }
 
   /* Obtiene la personalización del usuario desde el almacenamiento local o mediante una llamada al servicio */
-  getPersonalizacion() {
+  getPersonalizacion(): Observable<any> {
     const expirationTime = 3600; 
     const currentTime = Math.floor(Date.now() / 1000); 
-    const storedData = JSON.parse(localStorage.getItem(`personalization`));
+    const storedData = JSON.parse(localStorage.getItem(`personalization:${this.id}`));
+  
     if (storedData && (currentTime - storedData.timestamp < expirationTime)) {
+      // Retorna un observable que emite el valor almacenado
       const data = storedData.data;
+  
+      // Asigna los valores directamente
       this.logoUrl = data.imagen_logo;
       this.sidebarColor = data.color_principal;
       this.botonesColor = data.color_secundario;
@@ -175,13 +182,19 @@ export class BodyComponent implements OnInit, AfterViewInit {
       this.telefono = data.telefono;
       this.direccion = data.direccion;
       this.ubicacion = data.ubicacion;
+  
+      // Retorna un observable usando of()
+      return of(data); // Retornar el observable que emite los datos
     } else {
-      this.personalizacionesService.getPersonalizacion(this.id).subscribe(
-        data => {
+      return this.personalizacionesService.getPersonalizacion(this.id).pipe(
+        tap(data => {
+          // Guardar en localStorage
           localStorage.setItem(`personalization:${this.id}`, JSON.stringify({
             data: data,
             timestamp: currentTime
           }));
+  
+          // Asignar los valores de la respuesta
           this.logoUrl = data.imagen_logo;
           this.sidebarColor = data.color_principal;
           this.botonesColor = data.color_secundario;
@@ -191,10 +204,12 @@ export class BodyComponent implements OnInit, AfterViewInit {
           this.telefono = data.telefono;
           this.direccion = data.direccion;
           this.ubicacion = data.ubicacion;
-        },
-        error => {
+        }),
+        // Manejo de errores
+        catchError(error => {
           console.error("Error al obtener la personalización", error);
-        }
+          return of(null); // Retorna un observable vacío en caso de error
+        })
       );
     }
   }
