@@ -7,7 +7,7 @@
         class="flex flex-col items-center max-md:m-10 justify-between w-full px-4 py-2 bg-white app-header lg:flex-row md:flex-row md:items-center lg:py-20 md:py-20 lg:px-8 md:px-8">
         <!-- Imagen -->
         <img [src]="logoUrl" alt="Logo"
-          class="w-64 h-auto mb-4 lg:mb-0 md:mb-0 lg:ml-60 md:ml-4 max-sm:w-36 max-sm:ml-4 max-sm:mb-0">
+          class="w-64 h-auto mb-4 lg:mb-0 md:mb-0 lg:ml-60 md:ml-4 max-sm:w-36 max-sm:ml-4 max-sm:mb-4 ">
         <!-- Contenedor de los botones -->
         <div *ngIf="!isLoggedIn"
           class="flex flex-col items-center mt-4 space-y-4 lg:flex-row md:flex-col lg:items-center lg:space-x-8 md:space-x-4 lg:space-y-0 md:space-y-3 lg:mt-0 md:mt-0 lg:mr-60 md:mr-24 max-sm:ml-28 max-sm:space-y-3 max-sm:space-x-0">
@@ -15,7 +15,7 @@
             class="lg:text-base  max-sm:text-[12px] bg-[#373435] md:text-lg text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[24px] md:px-[26px] max-sm:text-sm max-sm:py-1 max-sm:px-[10px] max-sm:-mt-28">Iniciar
             sesión</a>
           <a routerLink="/auth/registro" mat-button routerLinkActive="active"
-            class="lg:text-base md:text-lg max-sm:text-[12px] bg-[#00B3ED] text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[28px] md:px-[30px]  max-sm:text-sm max-sm:py-1 max-sm:px-[10px]">Registrarse</a>
+            class="lg:text-base md:text-lg max-sm:text-[12px] bg-[#00B3ED] text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[28px] md:px-[30px]  max-sm:text-sm max-sm:py-1 max-sm:px-[16px]">Registrarse</a>
         </div>
       </mat-toolbar>
     </div>
