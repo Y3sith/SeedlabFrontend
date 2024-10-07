@@ -131,6 +131,8 @@ export class LoginComponent implements OnInit {
                     this.alertService.errorAlert('Error', err.error.message);
                 } else if (err.status === 403) {
                     this.alertService.errorAlert('Error', err.error.message);
+                } else if (err.status === 410) {
+                    this.alertService.errorAlert('Error', err.error.message);
                 }
                 if (err.status === 409) {
                     this.router.navigate(['/verification'], { queryParams: { email: email } });
