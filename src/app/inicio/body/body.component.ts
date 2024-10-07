@@ -68,10 +68,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
         console.error('Error al cargar datos:', err);
       }
     });
-    // this.mostrarBanners();
-    // this.getPersonalizacion();
-    // this.mostrarAliados();
-    
   }
 
     /*
