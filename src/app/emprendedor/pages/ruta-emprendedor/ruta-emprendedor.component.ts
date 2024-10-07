@@ -49,31 +49,32 @@ export class RutaEmprendedorComponent implements OnInit {
 
 /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
-    this.validateToken();
-    this.idRespuesta();
+    this.validateTokenAndLoadData();
   }
 
   /*
-    Valida el token y el rol del usuario; redirige si el usuario no tiene permisos.
+    Valida el token y el rol del usuario; redirige si el usuario no tiene permisos y carga la funcon idRespuesta.
   */
-  validateToken(): void {
-    this.token = localStorage.getItem("token");
-    let identityJSON = localStorage.getItem('identity');
-
-    if (identityJSON) {
-      let identity = JSON.parse(identityJSON);
+    private validateTokenAndLoadData(): void {
+      this.token = localStorage.getItem("token");
+      const identityJSON = localStorage.getItem('identity');
+  
+      if (!this.token || !identityJSON) {
+        this.router.navigate(['home']);
+        return;
+      }
+  
+      const identity = JSON.parse(identityJSON);
       this.user = identity;
       this.currentRolId = this.user.id_rol;
-
-      if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
+  
+      if (this.currentRolId !== 5 && this.currentRolId !== 1 && this.currentRolId !== 2) {
         this.router.navigate(['home']);
+        return;
       }
+  
+      this.idRespuesta();
     }
-    if (!this.token) {
-      this.router.navigate(['home']);
-    }
-    this.idRespuesta();
-  }
 
   /*
     Obtiene el ID de respuesta del usuario y muestra la ruta si hay respuestas activas.
@@ -108,7 +109,7 @@ export class RutaEmprendedorComponent implements OnInit {
   */
   listarRutaActiva(): void {
     if (this.token) {
-      this.rutaService.ruta(this.token).subscribe(
+      this.rutaService.rutasmejorado(this.token).subscribe(
         data => {
           this.rutaList = data;
           if (this.rutaList.length > 0) {
