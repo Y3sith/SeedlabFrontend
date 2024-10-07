@@ -128,9 +128,9 @@ export class RutaService {
     return this.http.put(this.url+'contenido_por_leccion',options)
   }
 
-  idRespuestas(access_token:any):Observable<any>{
+  idRespuestas(access_token:any, id_emprendedor:string):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token)};
-    return this.http.get(this.url+'/idRespuestasHeidy',options)
+    return this.http.get(this.url+'/idRespuestasHeidy/'+id_emprendedor,options)
   }
 
 }

@@ -67,6 +67,10 @@ export class RutaEmprendedorComponent implements OnInit {
       const identity = JSON.parse(identityJSON);
       this.user = identity;
       this.currentRolId = this.user.id_rol;
+
+      if (this.currentRolId !== 1 && this.currentRolId !== 2){
+        this.documento = this.user.emprendedor.documento;
+      }
   
       if (this.currentRolId !== 5 && this.currentRolId !== 1 && this.currentRolId !== 2) {
         this.router.navigate(['home']);
@@ -81,27 +85,33 @@ export class RutaEmprendedorComponent implements OnInit {
   */
   idRespuesta(): void {
     this.isLoading = true;
-    this.rutaService.idRespuestas(this.token).subscribe(
-      data => {
-        this.listRespuestaId = data;
-        if (this.currentRolId != 1 && this.currentRolId != 2) {
-          if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
+    if (this.currentRolId !== 1 && this.currentRolId !== 2){
+      this.rutaService.idRespuestas(this.token, this.documento).subscribe(
+        data => {
+          this.isLoading = false;
+          // Esperamos 1 o 0 desde el backend
+          if (this.currentRolId !== 1 && this.currentRolId !== 2) {
+            if (data === 1) {  // Si hay respuestas (backend devuelve 1)
+              this.ishidden = false;
+              this.listarRutaActiva();  // Mostrar rutas activas
+            } else {  // Si no hay respuestas (backend devuelve 0)
+              this.laruta = true;  // Mostrar mensaje de encuesta de maduración
+            }
+          } else {
             this.ishidden = false;
             this.listarRutaActiva();
-          } else {
-            this.isLoading = false;
-            this.laruta = true;
           }
-        } else {
-          this.ishidden = false;
-          this.listarRutaActiva();
+        },
+        error => {
+          this.isLoading = false;
+          console.error('Error al obtener el ID de respuestas:', error);
         }
-      },
-      error => {
-        this.isLoading = false;
-        console.error('Error al obtener el ID de respuestas:', error);
-      }
-    );
+      );
+    }else{
+      this.ishidden = false;
+      this.isLoading = false;
+      this.listarRutaActiva();
+    }
   }
 
   /*
@@ -109,6 +119,7 @@ export class RutaEmprendedorComponent implements OnInit {
   */
   listarRutaActiva(): void {
     if (this.token) {
+      this.isLoading = true;
       this.rutaService.rutasmejorado(this.token).subscribe(
         data => {
           this.rutaList = data;
@@ -118,6 +129,7 @@ export class RutaEmprendedorComponent implements OnInit {
             this.listarRutas();
           } else {
             this.isLoading = false;
+            this.laruta = true;
           }
         },
         err => {
@@ -131,12 +143,14 @@ export class RutaEmprendedorComponent implements OnInit {
     Lista las actividades completadas por ruta.
   */
   listarRutas(): void {
+    this.isLoading = true;
     this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
       data => {
         this.rutaLista = data;
         this.isLoading = false;
         if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
           this.alertadeactividad = true;
+          this.isLoading = false;
         }
       },
       err => {
