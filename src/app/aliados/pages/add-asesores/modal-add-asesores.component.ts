@@ -418,6 +418,7 @@ export class ModalAddAsesoresComponent implements OnInit {
         (error) => {
           console.error('Error al crear el asesor:', error);
           this.alerService.errorAlert('Error', error.error.message);
+          this.isSubmitting = false;
         }
       );
     }

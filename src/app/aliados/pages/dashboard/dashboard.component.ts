@@ -42,8 +42,8 @@ export class DashboardComponent implements OnInit {
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
-    this.getDatosDashboard();
     this.loadAsesoriasData();
+    this.getDatosDashboard();
   };
 
   /*

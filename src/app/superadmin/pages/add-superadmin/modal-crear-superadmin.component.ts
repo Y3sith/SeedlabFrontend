@@ -392,6 +392,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
             error => {
               console.error(error);
               if (error.status === 400) {
+                this.isSubmitting = false;
                 this.alertService.errorAlert('Error', error.error.message)
               }
             }
@@ -412,6 +413,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
           if (error.status === 400) {
             this.isSubmitting = false;
             this.alertService.errorAlert('Error', error.error.message)
+          }
+          else{
+            this.isSubmitting = false;
+            this.alertService.errorAlert('Error', 'Ocurrió un error al crear el superadmin');
           }
         }
       );
