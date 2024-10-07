@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<nav class="flex flex-col p-1 m-0 shadow-xl sidebar font-poppins" [ngClass]="{ 'expand': isExpanded }"
+<nav class="flex flex-col p-1 m-0 shadow-xl sidebar font-poppins " [ngClass]="{ 'expand': isExpanded }"
     *ngIf="isAuthenticated" [style.backgroundColor]="(!isMobile || isExpanded) ? colorPrincipal : 'white'">
     <header class="relative">
         <div class="toggle absolute top-[20px] lg:left-[calc(100%-50px)] left-[calc(100%-40px)] transform -translate-y-1/2 h-[40px] w-[40px] flex items-center justify-center rounded-r-xl text-white text-xl transition-all duration-300"
@@ -24,9 +24,9 @@
         </ng-template>
 
     </header>
-    <div class="flex flex-col flex-grow overflow-hidden">
-        <div class="flex-grow overflow-y-auto menu">
-            <div class="relative xl:mt-24 mt-28">
+    <div class="flex flex-col flex-grow overflow-hidden overflow-y-auto">
+        <div class="flex-grow menu">
+            <div [ngClass]="marginprincipal" class="relative ">
                 <ul class="p-0 space-y-2">
                     <!-- Inicio -->
                     <li *ngIf="!isAuthenticated" class="flex items-center h-12 group">
@@ -53,30 +53,31 @@
                     </li>
                 </ul>
             </div>
+            <!-- Botón de Cerrar sesión -->
+            <div [ngClass]="logoutMargin" class="containerLogout">
+                <div *ngIf="isExpanded" class="pl-6 mt-4 text-white">
+                    <div class="text-lg font-bold">
+                        {{ rolUser }}
+                    </div>
+                </div>
+                <div [style.backgroundColor]="colorSecundario"
+                    [ngClass]="{ 'expand-line': isExpanded, 'collapse-line': !isExpanded }"
+                    class="transition-all duration-300"></div>
+                <li class="flex items-center mt-2 h-14" *ngIf="logueado">
+                    <a *ngIf="token != null" (click)="logout()"
+                        class="appearance-none no-underline flex justify-center items-center w-full h-full p-2 rounded-md transition-all duration-400 text-white group-hover:bg-[#ffb000]">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: white;"
+                            class="text-center group-hover:text-white text-xl min-w-[60px] transition duration-200"
+                            fill="currentColor" viewBox="0 0 512 512">
+                            <path
+                                d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9C362.9 96 371.5 99.5 377.9 105.9zM32 64c0-17.7 14.3-32 32-32h160c17.7 0 32 14.3 32 32S241.7 96 224 96H96V416h128c17.7 0 32 14.3 32 32s-14.3 32-32 32H64c-17.7 0-32-14.3-32-32V64z" />
+                        </svg>
+                        <span class="mr-16 text-base text nav-text">Cerrar Sesión</span>
+                    </a>
+                </li>
+            </div>
         </div>
 
-        <!-- Botón de Cerrar sesión -->
-        <div class="mt-auto containerLogout">
-            <div *ngIf="isExpanded" class="pl-6 mt-4 text-white">
-                <div class="text-lg font-bold">
-                    {{ rolUser }}
-                </div>
-            </div>
-            <div [style.backgroundColor]="colorSecundario"
-                [ngClass]="{ 'expand-line': isExpanded, 'collapse-line': !isExpanded }"
-                class="transition-all duration-300"></div>
-            <li class="flex items-center mt-2 h-14" *ngIf="logueado">
-                <a *ngIf="token != null" (click)="logout()"
-                    class="appearance-none no-underline flex justify-center items-center w-full h-full p-2 rounded-md transition-all duration-400 text-white group-hover:bg-[#ffb000]">
-                    <svg xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px; color: white;"
-                        class="text-center group-hover:text-white text-xl min-w-[60px] transition duration-200"
-                        fill="currentColor" viewBox="0 0 512 512">
-                        <path
-                            d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9C362.9 96 371.5 99.5 377.9 105.9zM32 64c0-17.7 14.3-32 32-32h160c17.7 0 32 14.3 32 32S241.7 96 224 96H96V416h128c17.7 0 32 14.3 32 32s-14.3 32-32 32H64c-17.7 0-32-14.3-32-32V64z" />
-                    </svg>
-                    <span class="mr-16 text-base text nav-text">Cerrar Sesión</span>
-                </a>
-            </li>
-        </div>
+        
     </div>
 </nav>
