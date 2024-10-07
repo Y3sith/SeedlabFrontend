@@ -176,7 +176,7 @@
                         <div class="relative">
                             <label for="password" class="block truncate">Contraseña:</label>
                             <div class="mt-2">
-                                <input [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"
+                                <input placeholder="Ejemplo: MiContraseña@123" [type]="hide ? 'password' : 'text'" id="contrasena" formControlName="password"     
                                     (input)="updateProgress()"
                                     class="block w-full rounded-md border-0 p-2 text-[#000] shadow-sm ring-1 ring-inset focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#00B3ED] sm:text-sm sm:leading-6" />
                                 <button type="button" class="absolute right-3 top-[38.5px]" (click)="hide = !hide">

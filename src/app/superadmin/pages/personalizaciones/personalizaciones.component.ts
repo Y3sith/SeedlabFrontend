@@ -269,14 +269,14 @@ export class PersonalizacionesComponent implements OnInit {
           return; // Si alguna validación falla, se detiene el envío
         }
 
-        const camposObligatorios = ['nombre_sistema','descripcion_footer', 'paginaWeb', 'direccion','ubicacion'];
-    for (const key of camposObligatorios) {
-        const control = this.personalizacionForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
+        const camposObligatorios = ['nombre_sistema', 'descripcion_footer', 'paginaWeb', 'direccion', 'ubicacion'];
+        for (const key of camposObligatorios) {
+          const control = this.personalizacionForm.get(key);
+          if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
             return;
+          }
         }
-    }
 
 
         const id_temp = JSON.parse(itemslocal).id;
@@ -454,7 +454,7 @@ export class PersonalizacionesComponent implements OnInit {
             direccion: data.direccion,
             ubicacion: data.ubicacion
           });
-          
+
           if (data.imagen_logo) {
             this.currentLogoUrl = data.imagen_logo;
             this.previewUrl = null;
