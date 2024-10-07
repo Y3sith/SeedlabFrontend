@@ -466,18 +466,20 @@ if (nombreAliado){
     if (this.idAliado != null) {
       this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
         data => {
+          this.isSubmitting = true;
           this.alertService.successAlert('Exito', data.message);
           this.router.navigate(['list-aliados']);
         },
         error => {
           this.alertService.successAlert('Error', error.error.message);
-
+          this.isSubmitting = false;
         }
       )
 
     } else {
       this.aliadoService.crearAliado(this.token, formData).subscribe(
         data => {
+          this.isSubmitting = true;
           this.alertService.successAlert('Exito', data.message);
           this.router.navigate(['list-aliados']);
         },
