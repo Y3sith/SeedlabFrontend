@@ -659,7 +659,7 @@ export class CursoRutaEmprendedorComponent {
     if (contenido.id_tipo_dato === 1) return 'video';
     if (fuente.includes('youtube.com') || fuente.includes('youtu.be')) return 'video';
     if (fuente.endsWith('.pdf')) return 'pdf';
-    if (/\.(jpg|jpeg|png|gif)$/i.test(fuente)) return 'image';
+    if (/\.(webp)$/i.test(fuente)) return 'image';
     return 'text';
   }
 

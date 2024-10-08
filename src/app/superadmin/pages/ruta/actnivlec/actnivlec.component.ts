@@ -476,6 +476,7 @@ export class ActnivlecComponent implements OnInit {
               this.isSubmitting = false;
             },
             error => {
+              this.isSubmitting = false;
               console.log(error);
               const errorMessage = error.error?.error || 'Ocurrió un error inesperado';
               this.alertServices.errorAlert('Error', error.error.message);

@@ -502,6 +502,7 @@ export class RutaAliadoComponent {
               this.habilitarBotones();
             },
             error => {
+              this.isSubmitting = false;
               console.log(error);
               this.alertServices.errorAlert('Error', error.error.message);
             }
@@ -516,6 +517,7 @@ export class RutaAliadoComponent {
               this.alertServices.successAlert('Exito', data.message);
             },
             error => {
+              this.isSubmitting = false;
               console.log(error);
               const errorMessage = error.error?.error || 'Ocurrió un error inesperado';
               this.alertServices.errorAlert('Error', error.error.message);
