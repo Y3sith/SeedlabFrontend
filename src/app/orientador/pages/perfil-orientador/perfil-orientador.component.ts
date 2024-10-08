@@ -66,7 +66,6 @@ export class PerfilOrientadorComponent {
     apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
     celular: ['', [Validators.required, this.celularValidator]],
     imagen_perfil: [Validators.required],
-    // email: ['', [Validators.required, Validators.email, this.emailValidator]],
     email: [{ value: '', disabled: true }],
     password: ['', [Validators.minLength(8)]],
     genero: ['', Validators.required],
@@ -196,19 +195,19 @@ export class PerfilOrientadorComponent {
     Actualiza la información del orientador utilizando un FormData. 
   */
   updateOrientador(): void {
-    const formData = new FormData();
-    let estadoValue: string;
-    this.isSubmitting = true;
-    this.buttonMessage = "Guardando...";
-
     if (this.perfilorientadorForm.invalid) {
-      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
+      this.alertService.errorAlert('Error', 'Hay errores en el formulario Revisa los campos.')
       this.submitted = true;
       this.isSubmitting = false;
       this.buttonMessage = "Guardar cambios";
       return
     }
 
+    const formData = new FormData();
+    let estadoValue: string;
+    this.isSubmitting = true;
+    this.buttonMessage = "Guardando...";
+    
     const camposObligatorios = ['nombre', 'apellido', 'password'];
     for (const key of camposObligatorios) {
       const control = this.perfilorientadorForm.get(key);
@@ -558,20 +557,6 @@ export class PerfilOrientadorComponent {
       return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
     }
     return null;
-  }
-
-  /*
-  Valida el formato del correo electrónico ingresado.
-*/
-  emailValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    const hasAtSymbol = /@/.test(value);
-
-    if (!hasAtSymbol) {
-      return { emailInvalid: 'El correo debe ser válido *' };
-    } else {
-      return null;
-    }
   }
 
   celularValidator(control: AbstractControl): ValidationErrors | null {

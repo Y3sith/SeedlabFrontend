@@ -28,6 +28,7 @@ export class PerfilAliadoComponent implements OnInit {
   bannerForm: FormGroup;
   aliadoForm: FormGroup;
   blockedInputs = true;
+  blockedInputsCORREO = true;
   falupa = faCircleQuestion;
   isLoading: boolean = false;
   activeField: string = '';
@@ -44,7 +45,6 @@ export class PerfilAliadoComponent implements OnInit {
   selectdVideo: string | null = null;
   hide = true;
   tipoDeDato: Actividad[] = [];
-  bloqueado = true;
   @ViewChild('fileInput') fileInput: ElementRef;
   faImages = faImage;
   showVideo: boolean = false;
@@ -77,7 +77,6 @@ export class PerfilAliadoComponent implements OnInit {
       ruta_multi: [null, Validators.required],
       urlpagina: ['', Validators.required],
       id_tipo_dato: ['', Validators.required],
-      // email: ['', [Validators.required, Validators.email]],
       email: [{ value: '', disabled: true }],
       password: ['', [Validators.minLength(8)]],
       estado: [true]
@@ -95,6 +94,7 @@ export class PerfilAliadoComponent implements OnInit {
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
+    this.bloquearcorreo();
     this.verEditarBanners();
     this.tipoDato();
     this.obtenerValorBaseDatos();
@@ -318,6 +318,10 @@ export class PerfilAliadoComponent implements OnInit {
         this.isLoading = false;
       }
     );
+  }
+
+  bloquearcorreo():void{
+    this.blockedInputsCORREO = true;
   }
 
   limpiarPrefijoEnviroment() {

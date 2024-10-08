@@ -22,6 +22,7 @@ export class PerfilSuperadminComponent {
   faUser = faUser;
   token = '';
   blockedInputs = true;
+  blockedInputsCORREO = true;
   user: User | null = null;
   currentRolId: number;
   adminid: number;
@@ -63,7 +64,7 @@ export class PerfilSuperadminComponent {
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
-    email: ['', [Validators.required, Validators.email, this.emailValidator]],
+    email: [{ value: '', disabled: true }],
     password: ['', [Validators.minLength(10), this.passwordValidator]],
     estado: true,
   });
@@ -82,6 +83,7 @@ export class PerfilSuperadminComponent {
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
+    this.bloquearcorreo();
     this.verEditar();
     this.cargarDepartamentos();
     this.initializeFormState();
@@ -148,9 +150,18 @@ export class PerfilSuperadminComponent {
       )
     }
   }
+  bloquearcorreo():void{
+    this.blockedInputsCORREO = true;
+  }
 
   /* Actualiza los datos del super admin */
   updateAdministrador(): void {
+    if (this.perfiladminForm.invalid) {
+      this.alertService.errorAlert('Error', 'Hay errores en el formulario Revisa los campos.');
+      this.isSubmitting = false;
+      this.buttonMessage = "Guardar cambios";
+      return;
+  }
     const formData = new FormData();
     let estadoValue: string;
     this.isSubmitting = true;
@@ -164,7 +175,7 @@ export class PerfilSuperadminComponent {
       return;
     }
 
-    const camposObligatorios = ['nombre','apellido','email'];
+    const camposObligatorios = ['nombre','apellido','email','password'];
     for (const key of camposObligatorios) {
         const control = this.perfiladminForm.get(key);
         if (control && control.value && control.value.trim() === '') {
@@ -174,8 +185,6 @@ export class PerfilSuperadminComponent {
             return;
         }
     }
-
-
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfiladminForm.controls).forEach((key) => {
       const control = this.perfiladminForm.get(key);
@@ -561,19 +570,6 @@ Los datos recibidos se almacenan en la propiedad listTipoDocumento.
       return null;
     }
   }
-   /*
-  Valida el formato del correo electrónico ingresado.
-*/
-emailValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value;
-  const hasAtSymbol = /@/.test(value);
-
-  if (!hasAtSymbol) {
-    return { emailInvalid: 'El correo debe ser válido *' };
-  } else {
-    return null;
-  }
-}
 celularValidator(control: AbstractControl): ValidationErrors | null {
   const value = control.value ? control.value.toString() : '';
   if (value.length < 5 || value.length > 10) {

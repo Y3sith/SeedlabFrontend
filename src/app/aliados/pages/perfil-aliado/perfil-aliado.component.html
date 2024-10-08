@@ -82,15 +82,9 @@
                                     La contraseña debe tener al menos 8 caracteres
                                 </div>
                                 <label for="correo" class="block mt-4 mb-2">Correo Electrónico</label>
-                                <input type="text" id="correo" formControlName="email" [readonly]="blockedInputs"
+                                <input type="text" id="correo" formControlName="email" [readonly]="blockedInputsCORREO" [ngStyle]="{'cursor': blockedInputsCORREO ? 'not-allowed' : 'auto'}"
+                                    [matTooltip]="'No puedes editar el corrreo.'"
                                     class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                                <div *ngIf="(formSubmitted || f['email'].touched) && f['email'].invalid"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['email'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['email'].errors?.['email']">Ingrese un correo electrónico
-                                        válido</span>
-                                </div>
                                 <div class="min-[860px]:flex md:h-2">
                                     <label for="tipodocumento" class="block mb-4 md:w-64"></label>
                                 </div>
