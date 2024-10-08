@@ -24,17 +24,17 @@
     <div class="relative w-full banner-swiper-container overflow-hidde ">
       <div class="swiper-wrapper">
         <ng-container *ngFor="let banner of listBanner; trackBy: trackByBanner">
-          <div *ngIf="banner.urlImagen"
-            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
-            style="width: 100% !important;">
+          <div class="swiper-slide banner-swiper-slide" style="width: 100%;">
             <picture>
-              <source srcset="{{ banner.urlImagen }} 800w, {{ banner.urlImagen }} 1600w"
-                sizes="(max-width: 800px) 100vw, 800px" type="image/webp"> <!-- Usa la misma URL aquí -->
-              <img [src]="banner.urlImagen" [alt]="banner.descripcion || 'Banner image'" [width]="800" [height]="400">
+              <source [srcset]="banner.urlImagen + ' 800w, ' + banner.urlImagen + ' 1600w'"
+                sizes="(max-width: 800px) 100vw, 800px" type="image/webp" />
+              <img [src]="banner.urlImagen" [alt]="banner.descripcion || 'Banner image'" width="800" height="400"
+                loading="eager" />
             </picture>
           </div>
         </ng-container>
       </div>
+
 
 
       <div
