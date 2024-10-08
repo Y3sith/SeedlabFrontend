@@ -1,192 +1,71 @@
 <div class="container mx-auto p-0 pt-2 font-poppins">
   <!-- Encabezado -->
   <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
-    <app-header [title] [subtitle]="'Dashboard Orientador'"></app-header>
+    <app-header [title]="'Dashboard Orientador'" [subtitle]="''"></app-header>
   </header>
 
   <!-- Spinner -->
   <div class="flex flex-col justify-center items-center" *ngIf="isLoading">
     <div class="spinner"></div>
-      <h2 class="font-poppins text-amber-500">Cargando</h2>
+    <h2 class="font-poppins text-amber-500">Cargando</h2>
   </div>
 
   <!-- Contenido -->
-  <div class=" p-4 sm:p-6 md:p-6 lg:p-12 xl:p-20" *ngIf="!isLoading">
+  <div class="p-4 sm:p-6 md:p-6 lg:p-12 xl:p-20" *ngIf="!isLoading">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
-      <!-- Super Admins -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-        <div class="absolute -top-5 left-4">
-          <div class="bg-orange-500 rounded-lg p-3 shadow-md">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-              </path>
-            </svg>
-          </div>
-        </div>
-        <div class="pt-8 pb-0">
-          <p class="text-xl text-gray-500">Super Admins</p>
-        </div>
-        <div class="border-t border-gray-200 pt-1">
-          <div class="flex justify-between text-center">
-            <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
-              <p class="text-lg font-bold text-green-600">{{ totalSuperAdmin['activos'] }}</p>
-            </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
-            <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
-              <p class="text-lg font-bold text-red-600">{{totalSuperAdmin['inactivos']}}</p>
+      <!-- Tarjetas de estadísticas -->
+      <ng-container *ngFor="let item of estadisticas; trackBy: trackById">
+        <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
+          <div class="absolute -top-5 left-4">
+            <div class="rounded-lg p-3 shadow-md" [ngClass]="item.bgColor">
+              <!-- Icono -->
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <!-- Icono SVG -->
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
+              </svg>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Orientadores -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-        <div class="absolute -top-5 left-4">
-          <div class="bg-green-500 rounded-lg p-3 shadow-md">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-              </path>
-            </svg>
+          <div class="pt-8 pb-0">
+            <p class="text-xl text-gray-500">{{ item.titulo }}</p>
           </div>
-        </div>
-
-        <div class="pt-8 pb-0">
-          <p class="text-xl text-gray-500">Orientadores</p>
-        </div>
-
-        <div class="border-t border-gray-200 pt-1">
-          <div class="flex justify-between text-center">
-            <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
-              <p class="text-lg font-bold text-green-600">{{ totalOrientador['activos'] }}</p>
-            </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
-            <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
-              <p class="text-lg font-bold text-red-600">{{totalOrientador['inactivos']}}</p>
+          <div class="border-t border-gray-200 pt-1">
+            <div class="flex justify-between text-center">
+              <div class="w-1/2 pr-1">
+                <p class="text-md font-semibold">Activos</p>
+                <p class="text-lg font-bold text-green-600">{{ item.activos }}</p>
+              </div>
+              <div class="w-px bg-gray-200 self-stretch"></div>
+              <div class="w-1/2 pl-1">
+                <p class="text-md font-semibold">Inactivos</p>
+                <p class="text-lg font-bold text-red-600">{{ item.inactivos }}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Aliados -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-        <div class="absolute -top-5 left-4">
-          <div class="bg-red-500 rounded-lg p-3 shadow-md">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-              </path>
-            </svg>
-          </div>
-        </div>
-        <div class="pt-8 pb-0">
-          <p class="text-xl text-gray-500">Aliados</p>
-        </div>
-        <div class="border-t border-gray-200 pt-1">
-          <div class="flex justify-between text-center">
-            <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
-              <p class="text-lg font-bold text-green-600">{{totalAliados['activos']}}</p>
-            </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
-            <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
-              <p class="text-lg font-bold text-red-600">{{totalAliados['inactivos']}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Asesores -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-        <div class="absolute -top-5 left-4">
-          <div class="bg-blue-500 rounded-lg p-3 shadow-md">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-              </path>
-            </svg>
-          </div>
-        </div>
-        <div class="pt-8 pb-0">
-          <p class="text-xl text-gray-500">Asesores</p>
-        </div>
-        <div class="border-t border-gray-200 pt-1">
-          <div class="flex justify-between text-center">
-            <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
-              <p class="text-lg font-bold text-green-600">{{totalAsesores['activos']}}</p>
-            </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
-            <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
-              <p class="text-lg font-bold text-red-600">{{totalAsesores['inactivos']}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Emprendedores -->
-      <div class="bg-white rounded-lg shadow-lg p-3 relative h-40 w-full">
-        <div class="absolute -top-5 left-4">
-          <div class="bg-purple-500 rounded-lg p-3 shadow-md">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-              </path>
-            </svg>
-          </div>
-        </div>
-        <div class="pt-8 pb-0">
-          <p class="text-xl text-gray-500">Emprendedores</p>
-        </div>
-        <div class="border-t border-gray-200 pt-1">
-          <div class="flex justify-between text-center">
-            <div class="w-1/2 pr-1">
-              <p class="text-md font-semibold">Activos</p>
-              <p class="text-lg font-bold text-green-600">{{totalEmprendedores['activos']}}</p>
-            </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
-            <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
-              <p class="text-lg font-bold text-red-600">{{totalEmprendedores['inactivos']}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      </ng-container>
     </div>
 
-
-
-    <!-- Top Aliados -->
+    <!-- Gráficas principales -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 mt-14">
+      <!-- Top Aliados -->
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg h-full">
-        <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorias</h2>
+        <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorías</h2>
         <div class="w-full h-48 sm:h-56 md:h-64 lg:h-72">
-          <div id="topAliadosChar-bar" style="width: 100%; height:100%;">
-            <app-echart [options]="topAliadosEchartsOptions" ></app-echart>
-          </div>
+          <app-echart [options]="topAliadosEchartsOptions"></app-echart>
         </div>
       </div>
 
-      <!-- Card de la gráfica telaraña -->
+      <!-- Gráfica de Radar de Puntajes por Formulario -->
       <div class="overflow-hidden bg-white rounded-lg shadow-lg h-full">
         <div class="p-6 h-[450px] flex flex-col">
           <div class="flex mb-4 space-x-4">
             <select id="empresa-select" class="w-1/2 p-2 border rounded-md"
               (change)="onEmpresaChange($event.target.value)">
               <option value="" disabled selected>Seleccione una empresa</option>
-              <option *ngFor="let empresa of listEmpresas" [value]="empresa.documento">{{empresa.documento}}</option>
+              <option *ngFor="let empresa of listEmpresas; trackBy: trackById" [value]="empresa.documento">{{ empresa.nombre }}</option>
             </select>
             <select id="opcion-select" class="w-1/2 p-2 border rounded-md" (change)="onSelectChange($event)">
               <option value="" disabled selected>Seleccione una opción</option>
@@ -195,47 +74,46 @@
             </select>
           </div>
           <div class="flex-grow mt-6 h-full w-full">
-            <div id="echarts-formulario" style="width: 100%; height:100%;">
-              <app-echart [options]="getPuntajesFormOrientador"></app-echart>
-            </div>
+            <app-echart [options]="getPuntajesFormOrientador"></app-echart>
           </div>
         </div>
       </div>
-
-
     </div>
 
+    <!-- Gráficas adicionales -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mt-14">
+      <!-- Géneros Emprendedores -->
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4 max-w-sm sm:max-w-md md:max-w-lg h-[450px]">
-        <h2 class="text-lg font-semibold mb-4">Generos Emprendedores</h2>
-        <div class="flex justify-center items-center h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] w-full">
-          <div id="echarts-doughnut" style="width: 100%; height: 100%;">
-            <app-echart [options]="doughnutChartOption"></app-echart>
-          </div>
+        <h2 class="text-lg font-semibold mb-4">Géneros Emprendedores</h2>
+        <div class="h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] w-full h-full">
+          <app-echart [options]="doughnutChartOption"></app-echart>
         </div>
       </div>
 
+      <!-- Registros Mensuales -->
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4">
         <h2 class="text-lg font-semibold mb-4">Registros Mensuales</h2>
-        <div class="flex justify-center items-center h-80 sm:h-56 md:h-64 lg:h-72 w-full">
-          <div id="echarts-registros" style="width: 100%; height: 100%;">
-            <app-echart [options]="registrosEchartsOptions" ></app-echart>
-          </div>
+        <div class="h-80 sm:h-56 md:h-64 lg:h-72 w-full">
+          <app-echart [options]="registrosEchartsOptions"></app-echart>
         </div>
       </div>
 
+      <!-- Promedio de Asesorías -->
       <div class="bg-white rounded-lg shadow p-4 sm:p-3 md:p-4">
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">Promedio de Asesorias</h2>
-        <label for="yearSelect" class="mr-2 text-sm text-gray-600">Año:</label>
-        <select name="year" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)"
-          class="text-sm py-1 px-2 w-20 border rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
-        </select>
-        <div class="flex justify-center items-center h-80 sm:h-56 md:h-64 lg:h-72 w-full">
-          <div id="promedio-asesorias" style="width: 100%; height: 100%;">
-            <app-echart [options]="promedioAsesoriasEchartsOptions" ></app-echart>
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-lg font-semibold text-gray-700">Promedio de Asesorías</h2>
+          <div>
+            <label for="yearSelect" class="mr-2 text-sm text-gray-600">Año:</label>
+            <select name="year" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)"
+              class="text-sm py-1 px-2 w-20 border rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option *ngFor="let year of years; trackBy: trackById" [value]="year">{{ year }}</option>
+            </select>
           </div>
+        </div>
+        <div class="h-80 sm:h-56 md:h-64 lg:h-72 w-full">
+          <app-echart [options]="promedioAsesoriasEchartsOptions"></app-echart>
         </div>
       </div>
     </div>
   </div>
+</div>

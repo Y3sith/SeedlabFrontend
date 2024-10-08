@@ -1,5 +1,5 @@
-
-body, html {
+body,
+html {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
@@ -8,7 +8,8 @@ body, html {
 
 .banner-swiper-container {
   width: 100%;
-  height: 684px; /* Altura fija */
+  height: 684px;
+  /* Altura fija */
   position: relative;
   overflow: hidden;
   display: flex;
@@ -42,28 +43,32 @@ body, html {
 
 .swiper-button-prev,
 .swiper-button-next {
-  color: #00B3ED; /* Color cyan como en tu código original */
+  color: #00B3ED;
+  /* Color cyan como en tu código original */
 }
 
 .swiper-button-prev:hover,
 .swiper-button-next:hover {
-  color: rgba(0, 179, 237, 0.5); /* Color cyan con opacidad al pasar el mouse */
+  color: rgba(0, 179, 237, 0.5);
+  /* Color cyan con opacidad al pasar el mouse */
 }
 
 @media (max-width: 1840px) {
   .banner-swiper-container {
-    height: 37.17vw; /* 684/1840 * 100 */
+    height: 37.17vw;
+    /* 684/1840 * 100 */
   }
 }
 
 @media (max-width: 768px) {
   .banner-swiper-container {
-    height: 50vw; /* Ajusta este valor según tus necesidades para dispositivos móviles */
+    height: 50vw;
+    /* Ajusta este valor según tus necesidades para dispositivos móviles */
   }
 }
 
 
-.allies-swiper-container{
+.allies-swiper-container {
   overflow: hidden;
   display: flex;
   margin-right: 210px;
@@ -84,13 +89,16 @@ body, html {
 }
 
 .swiper-slide .relative {
-  margin-top: -10rem; 
+  margin-top: -10rem;
 }
 
 .logo-img {
-  width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
-  max-width: 450px; /* Opcional: puedes establecer un ancho máximo */
-  object-fit: cover; /* Ajusta la imagen para cubrir el contenedor sin distorsión */
+  width: 100%;
+  /* Asegura que la imagen ocupe todo el ancho del contenedor */
+  max-width: 450px;
+  /* Opcional: puedes establecer un ancho máximo */
+  object-fit: cover;
+  /* Ajusta la imagen para cubrir el contenedor sin distorsión */
   object-position: center;
 }
 
@@ -152,15 +160,18 @@ body, html {
 .swiper-slide .relative {
   margin-top: 0.5rem;
 }
+
 :host ::ng-deep .custom-swiper-pagination {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   width: 100% !important;
   position: absolute;
-  bottom: 90%; /* Coloca los bullets encima del botón */
+  bottom: 90%;
+  /* Coloca los bullets encima del botón */
   left: 0;
-  margin-bottom: 10px; /* Espacio entre bullets y botón */
+  margin-bottom: 10px;
+  /* Espacio entre bullets y botón */
 }
 
 :host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet {
@@ -178,6 +189,7 @@ body, html {
 :host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet-active {
   background-color: #FA7D00 !important;
 }
+
 :host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet {
   cursor: pointer !important;
 }
@@ -185,52 +197,66 @@ body, html {
 :host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet:active {
   cursor: pointer !important;
 }
+
 :host ::ng-deep .custom-swiper-pagination {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
 }
+
 :host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet:active {
   transform: none !important;
 }
+
 /* CSS global */
 @media (max-width: 640px) {
   .app-header img {
-    margin-left: 0 !important; /* Elimina el margen izquierdo para pantallas pequeñas */
+    margin-left: 0 !important;
+    /* Elimina el margen izquierdo para pantallas pequeñas */
     display: block;
-    margin: 0 auto; /* Centra el logo */
+    margin: 0 auto;
+    /* Centra el logo */
   }
 
   .nav-tool-items {
     margin-right: 0 !important;
-    flex-direction: column; /* Cambia la dirección de los elementos a columna en vista móvil */
+    flex-direction: column;
+    /* Cambia la dirección de los elementos a columna en vista móvil */
   }
-  
+
 }
 
 @media (min-width: 641px) and (max-width: 768px) {
   .app-header img {
-    margin-left: 0 !important; /* Elimina el margen izquierdo para pantallas de tamaño medio */
+    margin-left: 0 !important;
+    /* Elimina el margen izquierdo para pantallas de tamaño medio */
     display: block;
-    margin: 0 auto; /* Centra el logo */
+    margin: 0 auto;
+    /* Centra el logo */
   }
 
   .nav-tool-items {
     margin-right: 0 !important;
-    flex-direction: column; /* Cambia la dirección de los elementos a columna en vista de tamaño medio */
+    flex-direction: column;
+    /* Cambia la dirección de los elementos a columna en vista de tamaño medio */
   }
 }
+
 .custom-text {
-  margin-top: 40px; /* Ajusta el valor según lo que necesites */
-  margin-bottom: 10px; /* Ajusta el valor según lo que necesites */
+  margin-top: 40px;
+  /* Ajusta el valor según lo que necesites */
+  margin-bottom: 10px;
+  /* Ajusta el valor según lo que necesites */
   line-height: 1.1;
-  font-size: 28px;  
+  font-size: 28px;
 }
+
 .swiper-pagination {
-  
+
   margin-top: 56px !important;
 }
+
 @media (max-width: 768px) {
   .aliados-container {
     width: 100%;
