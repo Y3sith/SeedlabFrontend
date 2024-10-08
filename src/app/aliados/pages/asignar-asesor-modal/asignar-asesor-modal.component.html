@@ -2,7 +2,7 @@
   <div class="w-full max-w-md p-4 sm:p-6 bg-white rounded-xl font-poppins overflow-y-auto max-h-[90vh]"
     [formGroup]="asignarForm">
     <h2 class="text-[#FA7D00] font-poppins font-semibold text-lg sm:text-xl mb-4">Detalles de la Asesoría</h2>
-   
+
     <div class="space-y-3 mb-4">
       <div>
         <p class="text-blue-400 font-bold">Nombre:</p>
@@ -24,14 +24,21 @@
         {{ data.asesoria.Asesor ? 'Asesor asignado:' : '¿Cuál de los asesores hará la asesoría?' }}
       </label>
       <ng-container *ngIf="!data.asesoria.Asesor; else asesorAsignado">
-        <select formControlName="nom_asesor"
-          class="w-full px-3 py-2 text-gray-700 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200">
-          <option value="" disabled selected hidden>Seleccione</option>
-          <option *ngFor="let asesor of asesores" [value]="asesor.id_asesor">{{ asesor.nombre_completo }}</option>
-        </select>
+        <ng-container *ngIf="asesores.length > 0; else noAsesores">
+          <select formControlName="nom_asesor"
+            class="w-full px-3 py-2 text-gray-700 border rounded-md bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200">
+            <option value="" disabled selected hidden>Seleccione</option>
+            <option *ngFor="let asesor of asesores" [value]="asesor.id_asesor">{{ asesor.nombre_completo }}</option>
+          </select>
+        </ng-container>
       </ng-container>
       <ng-template #asesorAsignado>
         <p class="w-full px-3 py-2 bg-gray-100 rounded-md">{{ data.asesoria.Asesor }}</p>
+      </ng-template>
+      <ng-template #noAsesores>
+        <p
+          class="w-full px-3 py-2 bg-gray-200 text-gray-700 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200">
+          No tienes asesores registrados.</p>
       </ng-template>
       <div *ngIf="f['nom_asesor'].invalid && (f['nom_asesor'].dirty || f['nom_asesor'].touched) && submitted"
         class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
