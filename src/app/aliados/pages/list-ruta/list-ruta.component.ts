@@ -9,7 +9,7 @@ import { RutaService } from '../../../servicios/rutas.service';
 import { Ruta } from '../../../Modelos/ruta.modelo';
 import { User } from '../../../Modelos/user.model';
 import { SwitchService } from '../../../servicios/switch.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog} from '@angular/material/dialog';
 import { ModalAddRutaComponent } from '../../../superadmin/pages/ruta/modal-add-ruta/modal-add-ruta.component';
 import { AlertService } from '../../../servicios/alert.service';
 
