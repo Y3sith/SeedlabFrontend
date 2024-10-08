@@ -1,7 +1,7 @@
 <div class="container mx-auto p-0 pt-2 font-poppins ">
   <!-- Encabezado -->
   <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:pl-4 mt-2">
-    <app-header [title] [subtitle]="'Dashboard'"></app-header>
+    <app-header [title]="'Dashboard'" [subtitle]="''"></app-header>
   </header>
 
   <!-- Spinner -->
@@ -10,98 +10,65 @@
     <h2 class="font-poppins text-amber-500">Cargando</h2>
   </div>
 
-  <div class=" p-2 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">
+  <div class="p-2 sm:p-6 md:p-8 lg:p-12 xl:p-20" *ngIf="!isLoading">
     <div class="grid grid-cols-2 gap-4 mb-6 sm:grid-cols-3 lg:grid-cols-2">
-      <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
-        <div class="absolute -top-5 left-4">
-          <div class="p-3 bg-orange-500 rounded-lg shadow-md">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-              </path>
-            </svg>
-          </div>
-        </div>
-        <div class="pt-8 pb-0">
-          <p class="text-xl text-gray-500">Asesores</p>
-        </div>
-        <div class="pt-1 border-t border-gray-200">
-          <div class="flex justify-between text-center">
-            <div class="w-1/2 pr-1">
-              <p class="text-md font-bold">Activos</p>
-              <p class="text-lg font-bold text-green-600">{{ totalAsesoresActivos }}</p>
+      <!-- Tarjetas de estadísticas -->
+      <ng-container *ngFor="let item of estadisticas; trackBy: trackById">
+        <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
+          <div class="absolute -top-5 left-4">
+            <div class="p-3 rounded-lg shadow-md" [ngClass]="item.bgColor">
+              <!-- Icono -->
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <!-- Icono SVG -->
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                </path>
+              </svg>
             </div>
-            <div class="w-px bg-gray-200 self-stretch"></div>
-            <div class="w-1/2 pl-1">
-              <p class="text-md font-semibold">Inactivos</p>
-              <p class="text-lg font-bold text-red-600">{{ totalAsesoresInactivos }}</p>
-            </div>
-
           </div>
-        </div>
-      </div>
-
-      <div class="relative w-full h-40 p-3 bg-white rounded-lg shadow-lg">
-        <div class="absolute -top-5 left-4">
-          <div class="p-3 bg-purple-500 rounded-lg shadow-md">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-              </path>
-            </svg>
+          <div class="pt-8 pb-0">
+            <p class="text-xl text-gray-500">{{ item.titulo }}</p>
           </div>
-        </div>
-        <div class="pt-8 pb-0">
-          <p class="text-xl text-gray-500">Emprendedores</p>
-        </div>
-        <div class="pt-1 border-t border-gray-200">
-          <div class="flex justify-between text-center">
-            <div class="w-1/2 pr-1">
-              <p class="font-semibold text-md">Activos</p>
-              <p class="text-lg font-bold text-green-600">{{totalEmprendedores['activos']}}</p>
-            </div>
-            <div class="self-stretch w-px bg-gray-200"></div>
-            <div class="w-1/2 pl-1">
-              <p class="font-semibold text-md">Inactivos</p>
-              <p class="text-lg font-bold text-red-600">{{totalEmprendedores['inactivos']}}</p>
+          <div class="pt-1 border-t border-gray-200">
+            <div class="flex justify-between text-center">
+              <div class="w-1/2 pr-1">
+                <p class="font-semibold text-md">Activos</p>
+                <p class="text-lg font-bold text-green-600">{{ item.activos }}</p>
+              </div>
+              <div class="self-stretch w-px bg-gray-200"></div>
+              <div class="w-1/2 pl-1">
+                <p class="font-semibold text-md">Inactivos</p>
+                <p class="text-lg font-bold text-red-600">{{ item.inactivos }}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
-
-
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mt-14">
       <!-- Top Aliados -->
-      <div class="bg-white rounded-lg shadow p-4 sm:p-6 md:p-8 w-full max-w-full md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
-        <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorias</h2>
-        <div class="w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-square lg:aspect-[4/3]">
-          <div id="echarts-bar" class="w-full h-full">
-            <app-echart [options]="topAliadosChartOption"></app-echart>
-          </div>
+      <div class="bg-white rounded-lg shadow p-4 sm:p-6 md:p-8 w-full max-w-full mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Top Aliados - Asesorías</h2>
+        <div class="w-full h-64">
+          <app-echart [options]="topAliadosChartOption"></app-echart>
         </div>
       </div>
-    
-      <!-- Asesorias asignas y sin asignar -->
-      <div class="bg-white rounded-lg shadow p-4 sm:p-6 md:p-8 w-full max-w-full md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
-        <h2 class="text-lg font-semibold mb-4">Asesorias</h2>
-        <div class="w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-square lg:aspect-[4/3]">
-          <div id="echarts-pie" class="w-full h-full">
-            <app-echart [options]="asesoriasCharOption"></app-echart>
-          </div>
+
+      <!-- Asesorías -->
+      <div class="bg-white rounded-lg shadow p-4 sm:p-6 md:p-8 w-full max-w-full mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Asesorías</h2>
+        <div class="w-full h-64">
+          <app-echart [options]="asesoriasChartOption"></app-echart>
         </div>
       </div>
-    
-      <!-- Generos Emprendedores -->
-      <div class="bg-white rounded-lg shadow p-4 sm:p-6 md:p-8 w-full max-w-full md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto">
-        <h2 class="text-lg font-semibold mb-4">Generos Emprendedores</h2>
-        <div class="w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-square lg:aspect-[4/3]">
-          <div id="echarts-doughnut" class="w-full h-full">
-            <app-echart [options]="doughnutChartOption"></app-echart>
-          </div>
+
+      <!-- Géneros Emprendedores -->
+      <div class="bg-white rounded-lg shadow p-4 sm:p-6 md:p-8 w-full max-w-full mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Géneros Emprendedores</h2>
+        <div class="w-full h-64">
+          <app-echart [options]="doughnutChartOption"></app-echart>
         </div>
       </div>
     </div>
