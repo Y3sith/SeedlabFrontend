@@ -1,4 +1,3 @@
-/* Estilos globales */
 body,
 html {
   font-family: 'Poppins', sans-serif;
@@ -7,148 +6,290 @@ html {
   height: 100%;
 }
 
-/* Swiper de Banners */
 .banner-swiper-container {
   width: 100%;
+  height: 684px;
+  /* Altura fija */
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-swiper-container .swiper-slide {
+  width: 100%;
+  height: 100%;
+}
+
+.banner-swiper-container .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .banner-swiper-slide {
-  width: 100%;
-  height: auto;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .banner-swiper-slide img {
   width: 100%;
-  height: auto;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
-/* Controles de navegación y paginación */
 .swiper-button-prev,
 .swiper-button-next {
-  color: #00b3ed;
+  color: #00B3ED;
+  /* Color cyan como en tu código original */
 }
 
 .swiper-button-prev:hover,
 .swiper-button-next:hover {
   color: rgba(0, 179, 237, 0.5);
+  /* Color cyan con opacidad al pasar el mouse */
 }
 
-.swiper-pagination-bullet {
-  background-color: #ccc;
+@media (max-width: 1840px) {
+  .banner-swiper-container {
+    height: 37.17vw;
+    /* 684/1840 * 100 */
+  }
 }
 
-.swiper-pagination-bullet-active {
-  background-color: #fa7d00;
-}
-
-/* Swiper de Aliados */
-.allies-swiper-container {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.allies-swiper-slide {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.allies-swiper-slide .image-container {
-  width: 100%;
-  max-width: 400px;
-  position: relative;
-  padding-top: 75%; /* Relación de aspecto 4:3 */
-}
-
-.allies-swiper-slide .image-container img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.allies-swiper-slide .description-container {
-  padding: 1rem;
-}
-
-.description-line {
-  font-size: 1rem;
-  text-align: center;
-  line-height: 1.5;
-}
-
-/* Estilos responsivos */
 @media (max-width: 768px) {
-  .app-header img {
-    margin-left: 0 !important;
-    display: block;
-    margin: 0 auto;
-  }
-
-  .nav-tool-items {
-    margin-right: 0 !important;
-    flex-direction: column;
-  }
-
-  .custom-text {
-    font-size: 1.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    line-height: 1.3;
-  }
-
-  .description-line {
-    font-size: 0.9rem;
-  }
-
-  .allies-swiper-slide .description-container {
-    padding: 0.5rem;
+  .banner-swiper-container {
+    height: 50vw;
+    /* Ajusta este valor según tus necesidades para dispositivos móviles */
   }
 }
 
-/* Estilos adicionales */
-.custom-swiper-pagination {
+
+.allies-swiper-container {
+  overflow: hidden;
+  display: flex;
+  margin-right: 210px;
+}
+
+.swiper-wrapper {
+  display: flex;
+  height: 100%;
+  margin-block-end: 20px;
+}
+
+
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.swiper-slide .relative {
+  margin-top: -10rem;
+}
+
+.logo-img {
+  width: 100%;
+  /* Asegura que la imagen ocupe todo el ancho del contenedor */
+  max-width: 450px;
+  /* Opcional: puedes establecer un ancho máximo */
+  object-fit: cover;
+  /* Ajusta la imagen para cubrir el contenedor sin distorsión */
+  object-position: center;
+}
+
+.absolute {
+  bottom: 10%;
+  right: 5%;
+  text-align: right;
+  color: white;
+  max-width: 600px;
+  margin-top: -100%;
+}
+
+.absolute h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.absolute p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.absolute button {
+  background-color: #f97316;
+  color: white;
+  border-radius: 9999px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.absolute button:hover {
+  background-color: #ea580c;
+}
+
+.w-\[28\%\] {
+  margin-right: 3cm;
+}
+
+.relative.top-\[-100px\] {
+  margin-left: 3cm;
+}
+
+.mt-4.text-right button {
+  margin-right: calc(40% + 3cm);
+}
+
+/* Ajusta la descripción */
+.description-line {
+  margin-bottom: 0.5rem;
+  padding: 0;
+  font-size: 22px;
+  letter-spacing: normal;
+  text-align: left;
+  line-height: 1.2;
+}
+
+/* Espacio entre la imagen y la descripción */
+.swiper-slide .relative {
+  margin-top: 0.5rem;
+}
+
+:host ::ng-deep .custom-swiper-pagination {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   width: 100% !important;
   position: absolute;
-  bottom: 10px;
+  bottom: 90%;
+  /* Coloca los bullets encima del botón */
   left: 0;
+  margin-bottom: 10px;
+  /* Espacio entre bullets y botón */
 }
 
-.custom-swiper-pagination .swiper-pagination-bullet {
+:host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet {
   width: 10px !important;
   height: 10px !important;
   background-color: #ccc !important;
   opacity: 1 !important;
   margin: 0 5px !important;
+}
+
+:host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet-active {
+  background-color: #FA7D00 !important;
+}
+
+:host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet-active {
+  background-color: #FA7D00 !important;
+}
+
+:host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet {
   cursor: pointer !important;
 }
 
-.custom-swiper-pagination .swiper-pagination-bullet-active {
-  background-color: #fa7d00 !important;
+:host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet:active {
+  cursor: pointer !important;
 }
 
-.custom-swiper-pagination {
+:host ::ng-deep .custom-swiper-pagination {
   user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
-/* Transiciones y opacidades */
-.transition-opacity {
-  transition: opacity 1s ease-in-out;
+:host ::ng-deep .custom-swiper-pagination .swiper-pagination-bullet:active {
+  transform: none !important;
 }
 
-.opacity-0 {
-  opacity: 0;
+/* CSS global */
+@media (max-width: 640px) {
+  .app-header img {
+    margin-left: 0 !important;
+    /* Elimina el margen izquierdo para pantallas pequeñas */
+    display: block;
+    margin: 0 auto;
+    /* Centra el logo */
+  }
+
+  .nav-tool-items {
+    margin-right: 0 !important;
+    flex-direction: column;
+    /* Cambia la dirección de los elementos a columna en vista móvil */
+  }
+
 }
 
-.opacity-100 {
-  opacity: 1;
+@media (min-width: 641px) and (max-width: 768px) {
+  .app-header img {
+    margin-left: 0 !important;
+    /* Elimina el margen izquierdo para pantallas de tamaño medio */
+    display: block;
+    margin: 0 auto;
+    /* Centra el logo */
+  }
+
+  .nav-tool-items {
+    margin-right: 0 !important;
+    flex-direction: column;
+    /* Cambia la dirección de los elementos a columna en vista de tamaño medio */
+  }
+}
+
+.custom-text {
+  margin-top: 40px;
+  /* Ajusta el valor según lo que necesites */
+  margin-bottom: 10px;
+  /* Ajusta el valor según lo que necesites */
+  line-height: 1.1;
+  font-size: 28px;
+}
+
+.swiper-pagination {
+
+  margin-top: 56px !important;
+}
+
+@media (max-width: 768px) {
+  .aliados-container {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .texto-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .texto-container p {
+    font-size: 1rem;
+  }
+
+  .logo-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .logo {
+    max-width: 80%;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .descripcion-container p {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .boton-container {
+    font-size: 1rem;
+    padding: 0.75rem;
+    margin-top: 1rem;
+  }
 }
