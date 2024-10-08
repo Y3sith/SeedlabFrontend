@@ -136,7 +136,7 @@
                                 <!-- Documento -->
                                 <div>
                                     <label for="documento"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Documento</label>
+                                        class="block text-sm font-medium text-gray-700 mb-1">Documento</label>
                                     <input type="text" id="documento" formControlName="documento"
                                         class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                         [ngClass]="{'border-red-500': f['documento'].invalid && (f['documento'].dirty || f['documento'].touched)}">
@@ -159,7 +159,7 @@
                                 <!-- Genero -->
                                 <div>
                                     <label for="genero"
-                                        class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Género</label>
+                                        class="block text-sm font-medium text-gray-700 mb-1">Género</label>
                                     <select id="genero" formControlName="genero"
                                         class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                         [ngClass]="{'border-red-500': f['genero'].invalid && (f['genero'].dirty || f['genero'].touched)}">
@@ -220,7 +220,7 @@
                                     <!-- Departamento -->
                                     <div>
                                         <label for="departamento"
-                                            class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Departamento</label>
+                                            class="block text-sm font-medium text-gray-700 mb-1">Departamento</label>
                                         <select id="departamento" formControlName="id_departamento"
                                             (change)="onDepartamentoSeleccionado($event)"
                                             class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
@@ -243,7 +243,7 @@
                                     <!-- Municipio -->
                                     <div>
                                         <label for="municipio"
-                                            class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Municipio</label>
+                                            class="block text-sm font-medium text-gray-700 mb-1">Municipio</label>
                                         <select id="municipio" formControlName="id_municipio"
                                             class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                             [ngClass]="{'border-red-500': f['id_municipio'].invalid && (f['id_municipio'].dirty || f['id_municipio'].touched)}">
@@ -276,7 +276,7 @@
                                     <!-- Numero celular -->
                                     <div>
                                         <label for="celular"
-                                            class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Celular</label>
+                                            class="block text-sm font-medium text-gray-700 mb-1">Celular</label>
                                         <input type="text" id="celular" formControlName="celular"
                                             class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                             [ngClass]="{'border-red-500': f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)}">
@@ -296,7 +296,7 @@
                                     <!-- Correo -->
                                     <div>
                                         <label for="email"
-                                            class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Correo</label>
+                                            class="block text-sm font-medium text-gray-700 mb-1">Correo</label>
                                         <input type="email" id="email" formControlName="email"
                                             class="w-full p-2 rounded-md bg-gray-100 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in text-sm"
                                             placeholder="user@gmail.com"
@@ -312,7 +312,7 @@
                                     <!-- Contraseña -->
                                     <div *ngIf="isEditing">
                                         <label for="password"
-                                            class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+                                            class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
                                         <div class="relative">
                                             <input [type]="hide ? 'password' : 'text'" id="password"
                                                 formControlName="password"
