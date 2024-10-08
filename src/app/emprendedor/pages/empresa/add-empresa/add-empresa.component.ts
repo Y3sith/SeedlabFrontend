@@ -282,7 +282,7 @@ export class AddEmpresaComponent {
   }
 
   crearEmpresa(): void {
-    debugger
+    // debugger
     this.submitted = true;
     if (this.addEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del formulario');
@@ -370,7 +370,7 @@ export class AddEmpresaComponent {
         this.router.navigate(['list-empresa']);
       },
       error => {
-        this.alertService.errorAlert('Error', error.message);
+        this.alertService.errorAlert('Error', error.error.message);
         console.log('ERROR:', error.message);
       }
     );
