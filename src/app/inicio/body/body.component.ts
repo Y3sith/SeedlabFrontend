@@ -99,7 +99,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
       banners.forEach(banner => {
         const img = new Image();
         img.src = banner.urlImagen as string;
-        console.log("preload", img.src);
       });
     }
   }
