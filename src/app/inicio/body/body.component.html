@@ -23,22 +23,19 @@
 
     <div class="relative w-full banner-swiper-container overflow-hidde ">
       <div class="swiper-wrapper">
-        <ng-container *ngFor="let banner of listBanner">
-          <div *ngIf="banner.urlImagen" class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide" style="width: 100% !important;">
+        <ng-container *ngFor="let banner of listBanner; trackBy: trackByBanner">
+          <div *ngIf="banner.urlImagen"
+            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
+            style="width: 100% !important;">
             <picture>
               <source srcset="{{ banner.urlImagen }} 800w, {{ banner.urlImagen }} 1600w"
-              sizes="(max-width: 800px) 100vw, 800px" 
-              type="image/webp" > <!-- Usa la misma URL aquí -->
-              <img [src]="banner.urlImagen" 
-                   [alt]="banner.descripcion || 'Banner image'" 
-                   [width]="800" 
-                   [height]="400" 
-                  >
+                sizes="(max-width: 800px) 100vw, 800px" type="image/webp"> <!-- Usa la misma URL aquí -->
+              <img [src]="banner.urlImagen" [alt]="banner.descripcion || 'Banner image'" [width]="800" [height]="400">
             </picture>
           </div>
         </ng-container>
       </div>
-      
+
 
       <div
         class="text-lg -translate-y-1/2 cursor-pointer lg:text-2xl z-absolute text-cyan-500 hover:text-cyan-500/50 top-1/2 left-5 swiper-button-prev">
@@ -68,8 +65,9 @@
           <div class="swiper-wrapper">
             <div
               class="p-2 swiper-slide mt-36 max-sm:mt-44 lg:flex lg:flex-row lg:items-center max-lg:flex max-lg:flex-col max-lg:items-center"
-              *ngFor="let aliado of listAliados">
-              <img [src]="aliado.logo" [alt]="aliado.nombre" width="400" height="300" class="logo-img max-lg:mb-4 md:mt-16">
+              *ngFor="let aliado of listAliados; trackBy: trackByAliado">
+              <img [src]="aliado.logo" [alt]="aliado.nombre" width="400" height="300"
+                class="logo-img max-lg:mb-4 md:mt-16">
               <div class="relative w-full -mb-24 lg:-ml-1 lg:pl-1 lg:p-1 max-lg:p-4 max-lg:text-center max-sm:-mt-20">
                 <p class="text-justify ml-4 description-line mb-1 max-sm:text-[14px] max-lg:text-center">{{
                   aliado.descripcion }}</p>

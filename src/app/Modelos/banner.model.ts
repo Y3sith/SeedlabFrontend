@@ -1,10 +1,10 @@
 export class Banner {
     id?: number;
-    urlImagen:File;
+    urlImagen:string;
     estadobanner: boolean ;
     id_aliado: number;
 
-    constructor(id: number, urlImagen:File, estadobanner:boolean, id_aliado: number){
+    constructor(id: number, urlImagen:string, estadobanner:boolean, id_aliado: number){
         this.id = id;
         this.urlImagen = urlImagen;
         this.estadobanner = estadobanner;
