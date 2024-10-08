@@ -43,6 +43,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   idSuperAdmin: number = null;
   errorMessage: string = '';
   isLoading: boolean = false;
+  isSubmitting = false;
 
 /*
   Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
@@ -55,7 +56,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
   superadminForm = this.fb.group({
     nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
     apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)]],
-    documento: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^[0-9]*$/)]],
+    documento: ['', [Validators.required, Validators.minLength(5), Validators.pattern(/^[0-9]*$/)]],
     imagen_perfil: [null],
     celular: ['', [Validators.required, Validators.pattern(/^[0-9]*$/)]],
     genero: ['', Validators.required],
@@ -273,6 +274,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     Si se trata de una creación de super Admin, se realiza la llamada al servicio correspondiente, mostrando alertas de éxito o error según sea necesario.
   */
   addSuperadmin(): void {
+    this.isSubmitting = true;
     Object.values(this.superadminForm.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -282,19 +284,20 @@ export class ModalCrearSuperadminComponent implements OnInit {
         const control = this.superadminForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
             return;
         }
     }
 
     // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
-    // if (this.superadminForm.get('nombre').invalid || 
-    //     this.superadminForm.get('apellido').invalid || 
-    //     this.superadminForm.get('documento').invalid || 
-    //     this.superadminForm.get('celular').invalid ||
-    //     (this.superadminForm.get('password').invalid && (!this.idSuperAdmin || this.superadminForm.get('password').value))) {
-    //   this.alertService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
-    //   return;
-    // }
+    if (this.superadminForm.get('nombre').invalid || 
+        this.superadminForm.get('apellido').invalid || 
+        this.superadminForm.get('documento').invalid || 
+        this.superadminForm.get('celular').invalid) {
+      this.alertService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+      this.isSubmitting = false;
+      return;
+    }
   
     // Validaciones opcionales
     const fechaNacControl = this.superadminForm.get('fecha_nac');
@@ -315,6 +318,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
     const emailControl = this.superadminForm.get('email');
     if (emailControl.value && !emailControl.valid) {
       this.alertService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      this.isSubmitting = false;
       return;
     }
   
@@ -380,6 +384,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
           this.superadminService.updateAdmin(this.token, this.idSuperAdmin, formData).subscribe(
             (data) => {
               setTimeout(function (){
+                this.isSubmitting = false;
               }, this.tiempoEspera);
               this.router.navigate(['/list-superadmin']);
               this.alertService.successAlert('Exito', data.message)
@@ -387,6 +392,7 @@ export class ModalCrearSuperadminComponent implements OnInit {
             error => {
               console.error(error);
               if (error.status === 400) {
+                this.isSubmitting = false;
                 this.alertService.errorAlert('Error', error.error.message)
               }
             }
@@ -405,7 +411,12 @@ export class ModalCrearSuperadminComponent implements OnInit {
         error => {
           console.error(error);
           if (error.status === 400) {
+            this.isSubmitting = false;
             this.alertService.errorAlert('Error', error.error.message)
+          }
+          else{
+            this.isSubmitting = false;
+            this.alertService.errorAlert('Error', 'Ocurrió un error al crear el superadmin');
           }
         }
       );
@@ -609,28 +620,28 @@ export class ModalCrearSuperadminComponent implements OnInit {
     para verificar la validez de una fecha seleccionada en relación con las 
     restricciones de edad.
   */
-  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
-    const value = control.value;
-    if (!value) {
-      return null; // Si no hay valor, no se valida
+    dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+      const value = control.value;
+      if (!value) {
+        return null; // Si no hay valor, no se valida
+      }
+  
+      const selectedDate = new Date(value);
+      const today = new Date();
+      const hundredYearsAgo = new Date();
+      hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+  
+      if (selectedDate > today) {
+        return { futureDate: 'La fecha no es válida *' };
+      } else if (selectedDate < hundredYearsAgo) {
+        return { tooOld: 'La fecha no es válida *' };
+      } else if (selectedDate > eighteenYearsAgo) {
+        return { tooRecent: 'Debe tener al menos 18 años *' };
+      } else {
+        return null;
+      }
     }
-
-    const selectedDate = new Date(value);
-    const today = new Date();
-    const hundredYearsAgo = new Date();
-    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
-    const eighteenYearsAgo = new Date();
-    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
-
-    if (selectedDate > today) {
-      return { futureDate: 'La fecha no es válida *' };
-    } else if (selectedDate < hundredYearsAgo) {
-      return { tooOld: 'La fecha no es válida *' };
-    } else if (selectedDate > eighteenYearsAgo) {
-      return { tooRecent: 'Debe tener al menos 18 años *' };
-    } else {
-      return null;
-    }
-  }
 
 }

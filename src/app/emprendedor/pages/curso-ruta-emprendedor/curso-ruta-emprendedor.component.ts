@@ -124,8 +124,7 @@ export class CursoRutaEmprendedorComponent {
 
       if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
-      } else {
-      }
+      } 
     }
     if (!this.token) {
       this.router.navigate(['home']);
@@ -295,9 +294,7 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
-/*
-  Avanza al siguiente contenido en la lección actual.
-*/
+
   goToNextContent() {
     if (this.showActivityDescription) {
       this.showActivityDescription = false;
@@ -331,7 +328,7 @@ export class CursoRutaEmprendedorComponent {
           this.currentLeccionIndex = 0;
           this.currentNivelIndex++;
           if (this.currentNivelIndex >= this.niveles.length) {
-            this.botonAsesoria = true;
+            this.updateBotonAsesoria(); // Llamamos a la nueva función aquí
             this.router.navigate(['ruta']);
             return;
           }
@@ -345,11 +342,31 @@ export class CursoRutaEmprendedorComponent {
     this.closeAllExceptSelected(this.currentNivelIndex, this.currentLeccionIndex, newCurrentContenido.id);
     this.selectedContenido = newCurrentContenido;
     this.updateSelectedContent();
+    this.updateBotonAsesoria(); // Llamamos a la nueva función aquí también
   }
 
   /*
   Regresa a la vista anterior en el historial de navegación.
-*/
+  */
+  updateBotonAsesoria() {
+    if (this.currentRolId === 1 || this.currentRolId === 2) {
+      this.botonAsesoria = false;
+      return;
+    }
+
+    const currentNivel = this.niveles[this.currentNivelIndex];
+    const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
+    
+    this.botonAsesoria = (
+      this.currentNivelIndex === this.niveles.length - 1 &&
+      this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
+      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1
+    );
+  }
+
+  /*
+  Regresa a la vista anterior en el historial de navegación.
+  */
   goBack(): void {
     this.location.back();
   }
@@ -363,7 +380,7 @@ export class CursoRutaEmprendedorComponent {
     if (
       this.currentNivelIndex === this.niveles.length - 1 &&
       this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
-      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1
+      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1 
     ) {
       this.botonAsesoria = true;
     }

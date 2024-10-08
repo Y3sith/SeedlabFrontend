@@ -28,6 +28,8 @@ export class MenuComponent {
   iconColor: string = '#00B3ED';
   rolUser: String;
   id: number = 1;
+  logoutMargin: string;
+  marginprincipal: string;
 
   constructor(private router: Router,
     private authservices: AuthService,
@@ -51,18 +53,31 @@ export class MenuComponent {
     
     if (this.token && this.user.id_rol === 1) {
       this.rolUser = 'Super Admin';
+      this.logoutMargin = 'mt-6 md:mt-16';
+      this.marginprincipal = 'md:mt-24 mt-[55px]';
+
+      
     }
     else if (this.token && this.user.id_rol === 2) {
       this.rolUser = 'Orientador';
+      this.logoutMargin = 'mt-28';
+      this.marginprincipal = 'mt-32';
+
     }
     else if (this.token && this.user.id_rol === 3) {
       this.rolUser = 'Aliado';
+      this.logoutMargin = 'mt-16';
+      this.marginprincipal = 'mt-28';
     }
     else if (this.token && this.user.id_rol === 4) {
       this.rolUser = 'Asesor';
+      this.logoutMargin = 'mt-24';
+      this.marginprincipal = 'mt-48';
     }
     else if (this.token && this.user.id_rol === 5) {
       this.rolUser = 'Emprendedor';
+      this.logoutMargin = 'mt-28';
+      this.marginprincipal = 'mt-32';
     }
   }
 
@@ -89,7 +104,6 @@ export class MenuComponent {
   ngOnInit() {
     this.validateToken();
     this.isAuthenticated = this.authservices.isAuthenticated();
-    console.log(this.isAuthenticated);
     this.logueado = this.token !== null;
     this.getRolUser();
 

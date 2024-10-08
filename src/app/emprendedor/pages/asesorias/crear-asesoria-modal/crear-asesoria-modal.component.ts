@@ -133,6 +133,10 @@ export class CrearAsesoriaModalComponent {
           this.alertService.errorAlert('Error', 'Los campos de la asesoría estan vacios')
         }
       );
+      setTimeout(() => {
+        this.isSubmitting = false;
+        this.dialogRef.close(this.asesoriaForm.value);
+      }, 1500);
     }
   }
 

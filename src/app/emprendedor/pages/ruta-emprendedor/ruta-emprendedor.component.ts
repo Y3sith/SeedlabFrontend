@@ -30,6 +30,7 @@ export class RutaEmprendedorComponent implements OnInit {
   encuestademaduracion: boolean = false;
   mostrarruta: boolean = false;
   laruta: boolean = false;
+  respuesta: any;
 
   actividadForm = this.fb.group({
     id: [null],
@@ -49,74 +50,103 @@ export class RutaEmprendedorComponent implements OnInit {
 
 /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
-    this.validateToken();
-    this.idRespuesta();
+    this.validateTokenAndLoadData();
   }
 
   /*
-    Valida el token y el rol del usuario; redirige si el usuario no tiene permisos.
+    Valida el token y el rol del usuario; redirige si el usuario no tiene permisos y carga la funcon idRespuesta.
   */
-  validateToken(): void {
-    this.token = localStorage.getItem("token");
-    let identityJSON = localStorage.getItem('identity');
-
-    if (identityJSON) {
-      let identity = JSON.parse(identityJSON);
+    private validateTokenAndLoadData(): void {
+      this.token = localStorage.getItem("token");
+      const identityJSON = localStorage.getItem('identity');
+  
+      if (!this.token || !identityJSON) {
+        this.router.navigate(['home']);
+        return;
+      }
+  
+      const identity = JSON.parse(identityJSON);
       this.user = identity;
       this.currentRolId = this.user.id_rol;
 
-      if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
-        this.router.navigate(['home']);
+      if (this.currentRolId !== 1 && this.currentRolId !== 2){
+        this.documento = this.user.emprendedor.documento;
       }
+  
+      if (this.currentRolId !== 5 && this.currentRolId !== 1 && this.currentRolId !== 2) {
+        this.router.navigate(['home']);
+        return;
+      }
+  
+      this.idRespuesta();
     }
-    if (!this.token) {
-      this.router.navigate(['home']);
-    }
-    this.idRespuesta();
-  }
 
   /*
     Obtiene el ID de respuesta del usuario y muestra la ruta si hay respuestas activas.
   */
   idRespuesta(): void {
     this.isLoading = true;
-    this.rutaService.idRespuestas(this.token).subscribe(
-      data => {
-        this.listRespuestaId = data;
-        if (this.currentRolId != 1 && this.currentRolId != 2) {
-          if (this.listRespuestaId && this.listRespuestaId.length > 0 && this.listRespuestaId[0].id !== 0) {
+    if (this.currentRolId !== 1 && this.currentRolId !== 2){
+      this.rutaService.idRespuestas(this.token, this.documento).subscribe(
+        data => {
+          this.isLoading = false;
+          this.respuesta = data;
+          // Esperamos 1 o 0 desde el backend
+          if (this.currentRolId !== 1 && this.currentRolId !== 2) {
+            if (data === 1) {  // Si hay respuestas (backend devuelve 1)
+              this.ishidden = false;
+              this.listarRutaActiva(); 
+              // Mostrar rutas activas
+            } else {  // Si no hay respuestas (backend devuelve 0)
+              this.laruta = true;  // Mostrar mensaje de encuesta de maduración
+            }
+          } else {
             this.ishidden = false;
             this.listarRutaActiva();
-          } else {
-            this.isLoading = false;
-            this.laruta = true;
           }
-        } else {
-          this.ishidden = false;
-          this.listarRutaActiva();
+        },
+        error => {
+          this.isLoading = false;
+          console.error('Error al obtener el ID de respuestas:', error);
         }
-      },
-      error => {
-        this.isLoading = false;
-        console.error('Error al obtener el ID de respuestas:', error);
-      }
-    );
+      );
+    }else{
+      this.ishidden = false;
+      this.isLoading = false;
+      this.listarRutaActiva();
+    }
   }
 
   /*
     Lista la ruta activa del usuario.
   */
   listarRutaActiva(): void {
+    debugger
     if (this.token) {
-      this.rutaService.ruta(this.token).subscribe(
+      this.isLoading = true;
+      this.rutaService.rutasmejorado(this.token).subscribe(
         data => {
           this.rutaList = data;
+          console.log(this.rutaList);
           if (this.rutaList.length > 0) {
             const primeraRuta = this.rutaList[0];
             this.rutaId = primeraRuta.id;
             this.listarRutas();
           } else {
             this.isLoading = false;
+            this.laruta = true;
+          }
+
+          if (this.currentRolId !== 1 && this.currentRolId !== 2) {
+            if (this.respuesta === 1 && this.rutaList.length < 1) {
+            this.laruta = false;
+            }
+          }else{
+            if (this.rutaList.length < 1) {
+              this.laruta = false;
+            }else{
+              this.laruta = true;
+            }
           }
         },
         err => {
@@ -130,12 +160,14 @@ export class RutaEmprendedorComponent implements OnInit {
     Lista las actividades completadas por ruta.
   */
   listarRutas(): void {
+    this.isLoading = true;
     this.rutaService.actividadCompletaxruta(this.token, this.rutaId).subscribe(
       data => {
         this.rutaLista = data;
         this.isLoading = false;
         if (this.rutaList.length > 0 && this.rutaLista.length === 0) {
           this.alertadeactividad = true;
+          this.isLoading = false;
         }
       },
       err => {

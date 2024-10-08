@@ -29,6 +29,8 @@ export class PersonalizacionesComponent implements OnInit {
   idPersonalizacion: number = 1;
   ImagenPreview: string | ArrayBuffer | null = null;
   errorMessage: string = '';
+  currentLogoUrl: string | null = null;
+
 
 
   // crear personalización
@@ -65,7 +67,7 @@ export class PersonalizacionesComponent implements OnInit {
 
     this.personalizacionForm = this.fb.group({
       nombre_sistema: ['', Validators.required],
-      imagen_logo: ['', Validators.required],
+      imagen_logo: [],
       //logo_footer: ['', Validators.required],
       color_principal: ['', Validators.required],
       color_secundario: ['', Validators.required],
@@ -81,6 +83,12 @@ export class PersonalizacionesComponent implements OnInit {
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
+    if (this.idPersonalizacion !== null) {
+      this.loadCurrentPersonalizacion();
+    } else {
+      console.error('No se pudo cargar el ID de personalización');
+      this.alertService.errorAlert('Error', 'No se pudo determinar el ID de personalización');
+    }
   }
 
 
@@ -138,7 +146,12 @@ export class PersonalizacionesComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedImagen = file;
-
+      this.previewUrl = URL.createObjectURL(file);
+      this.currentLogoUrl = null;
+      this.personalizacionForm.patchValue({
+        imagen_logo: file
+      });
+      this.personalizacionForm.get('imagen_logo').markAsTouched();
       // Generate a preview URL
       const reader = new FileReader();
       reader.onload = () => {
@@ -256,14 +269,14 @@ export class PersonalizacionesComponent implements OnInit {
           return; // Si alguna validación falla, se detiene el envío
         }
 
-        const camposObligatorios = ['nombre_sistema','descripcion_footer', 'paginaWeb', 'direccion','ubicacion'];
-    for (const key of camposObligatorios) {
-        const control = this.personalizacionForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
+        const camposObligatorios = ['nombre_sistema', 'descripcion_footer', 'paginaWeb', 'direccion', 'ubicacion'];
+        for (const key of camposObligatorios) {
+          const control = this.personalizacionForm.get(key);
+          if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
             return;
+          }
         }
-    }
 
 
         const id_temp = JSON.parse(itemslocal).id;
@@ -417,6 +430,52 @@ export class PersonalizacionesComponent implements OnInit {
         this.currentSubSectionIndex = this.subSectionPerSection[this.currentIndex] - 1;
       }
     }
+  }
 
+  loadCurrentPersonalizacion() {
+    if (this.idPersonalizacion === null) {
+      console.error("ID de personalización no disponible");
+      this.alertService.errorAlert('Error', 'No se pudo determinar el ID de personalización');
+      return;
+    }
+
+    this.personalizacionesService.getPersonalizacion(this.idPersonalizacion).subscribe(
+      (data: any) => {
+        console.log('Datos de personalización recibidos:', data);
+        if (data && this.isValidPersonalizationData(data)) {
+          this.personalizacionForm.patchValue({
+            nombre_sistema: data.nombre_sistema,
+            color_principal: data.color_principal,
+            color_secundario: data.color_secundario,
+            descripcion_footer: data.descripcion_footer,
+            paginaWeb: data.paginaWeb,
+            email: data.email,
+            telefono: data.telefono,
+            direccion: data.direccion,
+            ubicacion: data.ubicacion
+          });
+
+          if (data.imagen_logo) {
+            this.currentLogoUrl = data.imagen_logo;
+            this.previewUrl = null;
+          }
+        } else {
+          console.error('Datos de personalización no válidos:', data);
+          this.alertService.errorAlert('Error', 'Los datos de personalización no son válidos');
+        }
+      },
+      error => {
+        console.error("Error al cargar la personalización actual", error);
+        this.alertService.errorAlert('Error', 'No se pudo cargar la personalización actual');
+      }
+    );
+  }
+
+  isValidPersonalizationData(data: any): boolean {
+    const requiredFields = [
+      'nombre_sistema', 'color_principal', 'color_secundario', 'descripcion_footer',
+      'paginaWeb', 'email', 'telefono', 'direccion', 'ubicacion'
+    ];
+    return requiredFields.every(field => data.hasOwnProperty(field));
   }
 }

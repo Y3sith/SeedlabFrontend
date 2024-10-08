@@ -8,33 +8,18 @@
     <!-- Encabezado -->
     <div class="flex flex-col justify-between w-full lg:flex-row md:flex-row">
       <mat-toolbar
-        class="flex flex-col items-center justify-between w-full px-4 py-2 bg-white app-header lg:flex-row md:flex-row md:items-center lg:py-20 md:py-20 lg:px-8 md:px-8"
-      >
-        <!-- Logo -->
-        <img
-          [src]="logoUrl"
-          alt="Logo"
-          class="w-64 h-auto mb-4 lg:mb-0 md:mb-0 lg:ml-60 md:ml-4 max-sm:w-36 max-sm:ml-4 max-sm:mb-4"
-        />
-        <!-- Botones de sesión -->
-        <div
-          *ngIf="!isLoggedIn"
-          class="flex flex-col items-center mt-4 space-y-4 lg:flex-row md:flex-col lg:items-center lg:space-x-8 md:space-x-4 lg:space-y-0 md:space-y-3 lg:mt-0 md:mt-0 lg:mr-60 md:mr-24 max-sm:ml-28 max-sm:space-y-3 max-sm:space-x-0"
-        >
-          <a
-            routerLink="/auth/login"
-            mat-button
-            routerLinkActive="active"
-            class="lg:text-base max-sm:text-[12px] bg-[#373435] md:text-lg text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[24px] md:px-[26px] max-sm:text-sm max-sm:py-1 max-sm:px-[10px]"
-            >Iniciar sesión</a
-          >
-          <a
-            routerLink="/auth/registro"
-            mat-button
-            routerLinkActive="active"
-            class="lg:text-base md:text-lg max-sm:text-[12px] bg-[#00B3ED] text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[28px] md:px-[30px] max-sm:text-sm max-sm:py-1 max-sm:px-[16px]"
-            >Registrarse</a
-          >
+        class="flex flex-col items-center max-md:m-10 justify-between w-full px-4 py-2 bg-white app-header lg:flex-row md:flex-row md:items-center lg:py-20 md:py-20 lg:px-8 md:px-8">
+        <!-- Imagen -->
+        <img [src]="logoUrl" alt="Logo"
+          class="w-64 h-auto mb-4 lg:mb-0 md:mb-0 lg:ml-60 md:ml-4 max-sm:w-36 max-sm:ml-4 max-sm:mb-4 ">
+        <!-- Contenedor de los botones -->
+        <div *ngIf="!isLoggedIn"
+          class="flex flex-col items-center mt-4 space-y-4 lg:flex-row md:flex-col lg:items-center lg:space-x-8 md:space-x-4 lg:space-y-0 md:space-y-3 lg:mt-0 md:mt-0 lg:mr-60 md:mr-24 max-sm:ml-28 max-sm:space-y-3 max-sm:space-x-0">
+          <a routerLink="/auth/login" mat-button routerLinkActive="active"
+            class="lg:text-base  max-sm:text-[12px] bg-[#373435] md:text-lg text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[24px] md:px-[26px] max-sm:text-sm max-sm:py-1 max-sm:px-[10px] max-sm:-mt-28">Iniciar
+            sesión</a>
+          <a routerLink="/auth/registro" mat-button routerLinkActive="active"
+            class="lg:text-base md:text-lg max-sm:text-[12px] bg-[#00B3ED] text-white rounded-full font-poppins font-bold lg:py-2 md:py-6 lg:px-[28px] md:px-[30px]  max-sm:text-sm max-sm:py-1 max-sm:px-[16px]">Registrarse</a>
         </div>
       </mat-toolbar>
     </div>
@@ -42,26 +27,25 @@
     <!-- Swiper de Banners -->
     <div class="swiper banner-swiper-container">
       <div class="swiper-wrapper">
-        <div
-          class="swiper-slide banner-swiper-slide"
-          *ngFor="let banner of listBanner; trackBy: trackByBanner"
-        >
-          <picture>
-            <source
-              [srcset]="banner.urlImagen + ' 800w, ' + banner.urlImagen + ' 1600w'"
-              sizes="(max-width: 800px) 100vw, 800px"
-              type="image/webp"
-            />
-            <img
-              [src]="banner.urlImagen"
-              [alt]="banner.descripcion || 'Banner image'"
-              width="800"
-              height="400"
-              (error)="handleImageError($event)"
-              loading="lazy"
-            />
-          </picture>
-        </div>
+        <ng-container *ngFor="let banner of listBanner; trackBy: trackByBanner">
+          <div *ngIf="banner.urlImagen"
+            class="relative flex-wrap items-start justify-center overflow-hidden bg-top bg-cover swiper-slide banner-swiper-slide"
+            style="width: 100% !important;">
+            <picture>
+              <source srcset="{{ banner.urlImagen }} 800w, {{ banner.urlImagen }} 1600w"
+                sizes="(max-width: 800px) 100vw, 800px" type="image/webp"> <!-- Usa la misma URL aquí -->
+              <img [src]="banner.urlImagen" [alt]="banner.descripcion || 'Banner image'" [width]="800" [height]="400">
+            </picture>
+          </div>
+        </ng-container>
+      </div>
+
+
+      <div
+        class="text-lg -translate-y-1/2 cursor-pointer lg:text-2xl z-absolute text-cyan-500 hover:text-cyan-500/50 top-1/2 left-5 swiper-button-prev">
+      </div>
+      <div
+        class="text-lg -translate-y-1/2 cursor-pointer lg:text-2xl z-absolute text-cyan-500 hover:text-cyan-500/50 top-1/2 right-5 swiper-button-next">
       </div>
       <!-- Controles de navegación y paginación -->
       <div class="swiper-button-prev"></div>
@@ -97,26 +81,18 @@
         <div class="swiper allies-swiper-container">
           <div class="swiper-wrapper">
             <div
-              class="swiper-slide allies-swiper-slide"
-              *ngFor="let aliado of listAliados; trackBy: trackByAliado"
-            >
-              <div class="image-container">
-                <img
-                  [src]="aliado.logo"
-                  [alt]="aliado.nombre"
-                  width="400"
-                  height="300"
-                  (error)="handleImageError($event)"
-                  loading="lazy"
-                />
-              </div>
-              <div class="description-container">
-                <p class="text-justify description-line">{{ aliado.descripcion }}</p>
+              class="p-2 swiper-slide mt-36 max-sm:mt-44 lg:flex lg:flex-row lg:items-center max-lg:flex max-lg:flex-col max-lg:items-center"
+              *ngFor="let aliado of listAliados; trackBy: trackByAliado">
+              <img [src]="aliado.logo" [alt]="aliado.nombre" width="400" height="300"
+                class="logo-img max-lg:mb-4 md:mt-16">
+              <div class="relative w-full -mb-24 lg:-ml-1 lg:pl-1 lg:p-1 max-lg:p-4 max-lg:text-center max-sm:-mt-20">
+                <p class="text-justify ml-4 description-line mb-1 max-sm:text-[14px] max-lg:text-center">{{
+                  aliado.descripcion }}</p>
               </div>
             </div>
           </div>
-          <!-- Paginación -->
-          <div class="swiper-pagination"></div>
+
+
         </div>
         <!-- Botón de Todos los Aliados -->
         <div class="flex flex-col items-center mt-8">

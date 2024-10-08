@@ -21,14 +21,15 @@ export class DashboardComponent implements OnInit {
   totalSuperAdmin: any = {};
   totalOrientador: any = {};
   totalAliados: any = {};
-  totalAsesores: any = {};
+  totalAsesoresActivos: any = {};
+  totalAsesoresInactivos: any = {};
   totalEmprendedores: any = {};
   topAliados: any = {};
   topAliadosChartOption: echarts.EChartsOption;
   doughnutChartOption: echarts.EChartsOption;
   pendientesFinalizadasLabels: string[] = ['Pendientes', 'Finalizadas', 'Sin Asignar', 'Asignadas'];
   pendientesFinalizadasData: { data: number[] }[] = [{ data: [0, 0, 0, 0] }];
-  asesoriasCharOption:echarts.EChartsOption;
+  asesoriasCharOption: echarts.EChartsOption;
   isLoading: boolean = false;
 
 
@@ -41,8 +42,8 @@ export class DashboardComponent implements OnInit {
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
-    this.getDatosDashboard();
     this.loadAsesoriasData();
+    this.getDatosDashboard();
   };
 
   /*
@@ -80,81 +81,77 @@ export class DashboardComponent implements OnInit {
     this.dashboardService.dashboardAdmin(this.token).subscribe(
       data => {
         this.totalUsuarios = data;
-        this.totalSuperAdmin = data.usuarios.superadmin;
-        this.totalOrientador = data.usuarios.orientador;
-        this.totalAliados = data.usuarios.aliado;
-        this.totalAsesores = data.usuarios.asesor;
         this.totalEmprendedores = data.usuarios.emprendedor;
         this.topAliados = data.topAliados.original;
 
         // Configuración para la gráfica de Top Aliados
         this.topAliadosChartOption = {
-            title: {},
-            tooltip: {
-              trigger: 'axis'
-            },
-            legend: {
-              orient: 'horizontal', // Cambiar a horizontal para una mejor distribución
-              left: 'left',
-              data: ['Top Aliados'],
-            },
-            toolbox: {
-              show: true,
-              feature: {
-                dataView: { show: true, readOnly: false },
-                magicType: { show: true, type: ['line', 'bar'] },
-                restore: { show: true },
-                saveAsImage: { show: true }
-              }
-            },
-            xAxis: [
-              {
-                type: 'category',
-                data: this.topAliados.map(aliado => aliado.nombre),
-                axisLabel: {
-                  interval: 0, // Muestra todas las etiquetas
-                  rotate: 30,  // Rota las etiquetas para mejor legibilidad
-                  formatter: function (value: string) {
-                    return value.length > 10 ? value.substring(0, 10) + '...' : value;
-                  }
+          title: {},
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: {
+            orient: 'horizontal', // Cambiar a horizontal para una mejor distribución
+            left: 'left',
+            data: ['Top Aliados'],
+          },
+          toolbox: {
+            show: true,
+            feature: {
+              dataView: { show: true, readOnly: false },
+              magicType: { show: true, type: ['line', 'bar'] },
+              restore: { show: true },
+              saveAsImage: { show: true }
+            }
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: this.topAliados.map(aliado => aliado.nombre),
+              axisLabel: {
+                interval: 0, // Muestra todas las etiquetas
+                rotate: 30,  // Rota las etiquetas para mejor legibilidad
+                formatter: function (value: string) {
+                  return value.length > 10 ? value.substring(0, 10) + '...' : value;
                 }
               }
-            ],
-            yAxis: [
-              {
-                type: 'value'
-              }
-            ],
-            series: [
-              {
-                name: 'Top Aliados',
-                type: 'bar',
-                data: this.topAliados.map((aliado, index) => ({
-                  value: aliado.asesoria,
-                  itemStyle: {
-                    color: this.getColorForIndex(index)
-                  }
-                })),
-                label: {
-                  show: true,
-                  position: 'top',
-                  color: '#000',
-                  formatter: '{c}', // Muestra el valor de la barra
-                  fontSize: 12
-                },
-                markLine: {
-                  data: [{ type: 'average', name: 'Avg' }]
-                },
-                barGap: '10%' // Ajusta el espacio entre las barras
-              }
-            ]
-          };
-          
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ],
+          series: [
+            {
+              name: 'Top Aliados',
+              type: 'bar',
+              data: this.topAliados.map((aliado, index) => ({
+                value: aliado.asesoria,
+                itemStyle: {
+                  color: this.getColorForIndex(index)
+                }
+              })),
+              label: {
+                show: true,
+                position: 'top',
+                color: '#000',
+                formatter: '{c}', // Muestra el valor de la barra
+                fontSize: 12
+              },
+              markLine: {
+                data: [{ type: 'average', name: 'Avg' }]
+              },
+              barGap: '10%' // Ajusta el espacio entre las barras
+            }
+          ]
+        };
+
         //Data y grafica generos
         const response = data.generosEmprendedores.original;
-        
+
         const formattedData = response.map(item => ({
-          value: Number(item.total), 
+          value: Number(item.total),
           name: item.genero
         }));
 
@@ -176,8 +173,7 @@ export class DashboardComponent implements OnInit {
                 borderRadius: 10
               },
               label: {
-                show: true,
-                position: 'outside'
+                show: false,
               },
               emphasis: {
                 label: {
@@ -210,14 +206,19 @@ export class DashboardComponent implements OnInit {
   loadAsesoriasData() {
     this.dashboardService.getDashboard(this.token, this.id).subscribe(
       data => {
-        this.pendientesFinalizadasData[0].data = [
-          data['Asesorias Pendientes'] || 0,
-          data['Asesorias Finalizadas'] || 0,
-          data['Asesorias Sin Asignar'] || 0,
-          data['Asesorias Asignadas'] || 0
-        ];
+        // Asignar los valores de asesores activos e inactivos a variables locales
+    this.totalAsesoresActivos = data['Asesores Activos'] || 0;
+    this.totalAsesoresInactivos = data['Asesores Inactivos'] || 0;
 
-        this.asesoriasCharOption ={
+    // Asignar los datos a la estructura de chart
+    this.pendientesFinalizadasData[0].data = [
+      data['Asesorias Pendientes'] || 0,
+      data['Asesorias Finalizadas'] || 0,
+      data['Asesorias Sin Asignar'] || 0,
+      data['Asesorias Asignadas'] || 0
+    ];
+
+        this.asesoriasCharOption = {
           tooltip: {
             trigger: 'item'
           },
@@ -259,5 +260,5 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-  
+
 }

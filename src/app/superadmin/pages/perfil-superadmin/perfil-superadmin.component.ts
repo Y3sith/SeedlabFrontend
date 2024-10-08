@@ -43,8 +43,9 @@ export class PerfilSuperadminComponent {
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
   showEditButton = false;
-  tiempoEspera = 1800;
   isLoading: boolean = false;
+  isSubmitting: boolean = false;
+  buttonMessage: string = "Guardar cambios";
 
 
   /*
@@ -55,14 +56,14 @@ export class PerfilSuperadminComponent {
     apellido: ['', [Validators.required, this.noNumbersValidator]],
     documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
     imagen_perfil: [Validators.required],
-    celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
+    celular: ['', [Validators.required,this.noLettersValidator, this.celularValidator]],
     genero: ['', Validators.required],
     direccion: [],
     id_tipo_documento: [Validators.required],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
-    email: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email, this.emailValidator]],
     password: ['', [Validators.minLength(10), this.passwordValidator]],
     estado: true,
   });
@@ -152,18 +153,24 @@ export class PerfilSuperadminComponent {
   updateAdministrador(): void {
     const formData = new FormData();
     let estadoValue: string;
+    this.isSubmitting = true;
+    this.buttonMessage = "Guardando...";
 
     const municipio = this.perfiladminForm.get('id_municipio');
     if (!municipio || municipio.value === null || municipio.value === '') {
       this.alertService.errorAlert('Error', 'Debes seleccionar un municipio');
+      this.isSubmitting = false;
+      this.buttonMessage ="Guardar cambios";
       return;
     }
 
-    const camposObligatorios = ['nombre','apellido'];
+    const camposObligatorios = ['nombre','apellido','email'];
     for (const key of camposObligatorios) {
         const control = this.perfiladminForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
+            this.buttonMessage ="Guardar cambios";
             return;
         }
     }
@@ -191,6 +198,8 @@ export class PerfilSuperadminComponent {
             }
             if (userAge < 18) {
               this.alertService.errorAlert('Error', 'No puedes actualizar un administrador menor de edad.');
+              this.isSubmitting = false;
+              this.buttonMessage ="Guardar cambios";
               return;
             }
             formData.append(key, date.toISOString().split('T')[0]);
@@ -224,18 +233,33 @@ export class PerfilSuperadminComponent {
       if (result.isConfirmed) {
         this.superadminService.updateAdmin(this.token, this.adminid, formData).subscribe(
           (data) => {
+            this.desactivarboton();
+            this.buttonMessage = "Guardando...";
+            this.isSubmitting = false;
             setTimeout(function () {
               location.reload();
-            }, this.tiempoEspera);
+            },2000);
             this.alertService.successAlert('Exito', data.message);
           },
           (error) => {
+            this.isSubmitting = false;
+            this.buttonMessage ="Guardar cambios";
             console.error('Error from server:', error);
             this.alertService.errorAlert('Error', error.error.message);
           }
         );
+      } else {
+        this.isSubmitting = false;
+        this.buttonMessage ="Guardar cambios";
       }
     });
+  }
+  desactivarboton():void{
+    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+    if (guardarBtn) {
+// Cambia el cursor para indicar que está deshabilitado
+      guardarBtn.style.pointerEvents = 'none';
+    }
   }
 
   /*
@@ -537,4 +561,24 @@ Los datos recibidos se almacenan en la propiedad listTipoDocumento.
       return null;
     }
   }
+   /*
+  Valida el formato del correo electrónico ingresado.
+*/
+emailValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value;
+  const hasAtSymbol = /@/.test(value);
+
+  if (!hasAtSymbol) {
+    return { emailInvalid: 'El correo debe ser válido *' };
+  } else {
+    return null;
+  }
+}
+celularValidator(control: AbstractControl): ValidationErrors | null {
+  const value = control.value ? control.value.toString() : '';
+  if (value.length < 5 || value.length > 10) {
+    return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
+  }
+  return null;
+}
 }

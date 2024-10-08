@@ -74,16 +74,19 @@ export class AsignarAsesorModalComponent implements OnInit {
 
       this.asesoriaService.asignarAsesoria(this.token, idAsesoria, idAsesor).subscribe(
         data => {
-          this.asesoriaAsignada.emit(); // Emit the event
+          this.asesoriaAsignada.emit();
           this.dialogRef.close(true);
           this.alertService.successAlert('Exito', data.message);
         },
         error => {
           console.error('Error al asignar asesoría:', error);
-          //this.alertService.errorAlert('Error', error.error.message);
         }
       );
     }
+    setTimeout(() => {
+      this.isSubmitting = false;
+      this.dialogRef.close(this.asignarForm.value);
+    }, 1500);
   }
   /*
     Este método se utiliza para manejar la acción de cancelar 

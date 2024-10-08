@@ -1,5 +1,5 @@
-import { Component, OnInit, Input,  ChangeDetectorRef } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup,  ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { User } from '../../../../Modelos/user.model';
 import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 import { OrientadorService } from '../../../../servicios/orientador.service';
@@ -29,7 +29,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   orientadorId: any;
   hide = true;
   errorMessage: string = '';
-
+  isSubmitting = false;
 
   //////
   listTipoDocumento: [] = [];
@@ -60,14 +60,14 @@ export class ModalCrearOrientadorComponent implements OnInit {
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     fecha_nac: ['', this.dateRangeValidator],
-    email: ['', [Validators.required,Validators.email]],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.minLength(8)]],
     estado: true,
   });
-  
+
   sectionFields: string[][] = [
-    ['nombre', 'apellido', 'documento', 'id_tipo_documento','fecha_nac', 'genero'], // Sección 1
-    ['celular', 'email','id_departamento', 'id_municipio', 'direccion'], // Sección 2
+    ['nombre', 'apellido', 'documento', 'id_tipo_documento', 'fecha_nac', 'genero'], // Sección 1
+    ['celular', 'email', 'id_departamento', 'id_municipio', 'direccion'], // Sección 2
   ];
 
   constructor(
@@ -81,10 +81,10 @@ export class ModalCrearOrientadorComponent implements OnInit {
     private authService: AuthService,
     private cdRef: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private location:Location
+    private location: Location
   ) {
   }
-   /* Inicializa con esas funciones al cargar la pagina */
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
     this.route.paramMap.subscribe(params => {
@@ -97,7 +97,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
         this.isEditing = false;
       }
     });
-    
+
     if (this.orientadorId != null) {
       this.isEditing = true;
       this.orientadorForm.get('password')?.setValidators([Validators.minLength(8)]);
@@ -203,9 +203,9 @@ export class ModalCrearOrientadorComponent implements OnInit {
             celular: data.celular,
             email: data.email,
             password: '',
-            estado: data.estado 
+            estado: data.estado
           });
-          this.isActive = data.estado === 'Activo'; 
+          this.isActive = data.estado === 'Activo';
           setTimeout(() => {
             this.orientadorForm.get('estado')?.setValue(this.isActive);
           });
@@ -234,30 +234,33 @@ export class ModalCrearOrientadorComponent implements OnInit {
   /*Valida el formulario, construye los datos para crear o actualizar un orientador, y luego envía estos datos al servicio correspondiente.
   Realiza validaciones adicionales, como la edad y la fuerza de la contraseña.*/
   addOrientador(): void {
+    this.isSubmitting = true;  // Comienza el proceso de envío
     Object.values(this.orientadorForm.controls).forEach(control => {
       control.markAsTouched();
     });
-  
-    const camposObligatorios = ['nombre', 'apellido', 'documento','direccion', 'celular', 'email', 'password'];
+
+    const camposObligatorios = ['nombre', 'apellido', 'documento', 'direccion', 'celular', 'email', 'password'];
     for (const key of camposObligatorios) {
-        const control = this.orientadorForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            return;
-        }
+      const control = this.orientadorForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmitting = false;  // Detener el spinner
+        return;
+      }
     }
-  
-    // Validaciones permanentes (excluyendo dirección y contraseña en modo edición)
-    if (this.orientadorForm.get('nombre').invalid || 
-        this.orientadorForm.get('apellido').invalid || 
-        this.orientadorForm.get('documento').invalid || 
-        this.orientadorForm.get('celular').invalid || 
-        (this.orientadorForm.get('password').invalid && (!this.idOrientador || this.orientadorForm.get('password').value))) {
-          this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+
+    // Validaciones permanentes
+    if (this.orientadorForm.get('nombre').invalid ||
+      this.orientadorForm.get('apellido').invalid ||
+      this.orientadorForm.get('documento').invalid ||
+      this.orientadorForm.get('celular').invalid ||
+      (this.orientadorForm.get('password').invalid && (!this.idOrientador || this.orientadorForm.get('password').value))) {
+      this.alertService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
+      this.isSubmitting = false;  // Detener el spinner
       return;
     }
-  
-    // Validaciones opcionales
+
+    // Validaciones opcionales (fechas y emails)
     const fechaNacControl = this.orientadorForm.get('fecha_nac');
     if (fechaNacControl.value) {
       const fechaNac = new Date(fechaNacControl.value);
@@ -268,54 +271,51 @@ export class ModalCrearOrientadorComponent implements OnInit {
         edad--;
       }
       if (edad < 18 || edad > 100) {
-        this.alerService.errorAlert('Error', 'Debes ser mayor de edad');
+        this.alertService.errorAlert('Error', 'Debes ser mayor de edad');
+        this.isSubmitting = false;  // Detener el spinner
         return;
       }
     }
-  
+
     const emailControl = this.orientadorForm.get('email');
     if (emailControl.value && !emailControl.valid) {
-      this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      this.alertService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+      this.isSubmitting = false;  // Detener el spinner
       return;
     }
-  
-    // El resto de tu código existente
+
+    // Preparar datos del formulario
     const formData = new FormData();
     let estadoValue: string;
-    if (this.idOrientador == null) {
-      estadoValue = '1';
-    } else {
-      // Aquí falta la lógica para el caso en que idOrientador no sea null
-    }
-  
+    estadoValue = this.idOrientador == null ? '1' : '';  // Si es nuevo orientador
+
+    // Añadir los datos del formulario a formData
     formData.append('nombre', this.orientadorForm.get('nombre')?.value);
     formData.append('apellido', this.orientadorForm.get('apellido')?.value);
     formData.append('documento', this.orientadorForm.get('documento')?.value);
     formData.append('celular', this.orientadorForm.get('celular')?.value);
     formData.append('genero', this.orientadorForm.get('genero')?.value);
-  
-    // Agregamos la dirección solo si tiene un valor
     const direccionControl = this.orientadorForm.get('direccion');
     if (direccionControl && direccionControl.value) {
       formData.append('direccion', direccionControl.value);
     }
-  
     formData.append('id_tipo_documento', this.orientadorForm.get('id_tipo_documento')?.value);
     formData.append('departamento', this.orientadorForm.get('id_departamento')?.value);
     formData.append('municipio', this.orientadorForm.get('id_municipio')?.value);
     formData.append('email', this.orientadorForm.get('email')?.value);
-  
-    // Agregamos la contraseña solo si tiene un valor o si es un nuevo orientador
+
     const passwordControl = this.orientadorForm.get('password');
     if (passwordControl && (passwordControl.value || !this.idOrientador)) {
       if (passwordControl.valid) {
         formData.append('password', passwordControl.value);
       } else {
-        this.alerService.errorAlert('Error', 'La contraseña no cumple con los requisitos.');
+        this.alertService.errorAlert('Error', 'La contraseña no cumple con los requisitos.');
+        this.isSubmitting = false;  // Detener el spinner
         return;
       }
     }
-  
+
+    // Agregar fecha de nacimiento y estado
     Object.keys(this.orientadorForm.controls).forEach((key) => {
       const control = this.orientadorForm.get(key);
       if (control?.value !== null && control?.value !== undefined) {
@@ -328,54 +328,66 @@ export class ModalCrearOrientadorComponent implements OnInit {
           }
         } else if (key === 'estado') {
           formData.append(key, control.value ? '1' : '0');
-        } else if (key !== 'imagen_perfil' && key !== 'direccion' && 
-                   !(key === 'password' && this.idOrientador && !control.value)) {
+        } else if (key !== 'imagen_perfil' && key !== 'direccion' &&
+          !(key === 'password' && this.idOrientador && !control.value)) {
           formData.append(key, control.value);
         }
       }
     });
-  
+
     if (this.selectedImagen_Perfil) {
       formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
     }
-  
-    /* Actualiza orientador */
+
+    // Actualizar orientador
     if (this.idOrientador != null) {
-      this.alerService.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
+      this.alertService.alertaActivarDesactivar("¿Estás seguro de guardar los cambios?", 'question').then((result) => {
         if (result.isConfirmed) {
           this.orientadorServices.updateOrientador(this.token, this.idOrientador, formData).subscribe(
             (data) => {
               setTimeout(() => {
                 this.router.navigate(['/list-orientador']);
-                this.alerService.successAlert('Exito', data.message);
+                this.alertService.successAlert('Éxito', data.message);
+                this.isSubmitting = false;  // Detener el spinner
               }, this.tiempoEspera);
             },
             error => {
               console.error(error);
+              this.isSubmitting = false;  // Detener el spinner
               if (error.status === 400) {
-                this.alertService.errorAlert('Error', error.error.message)
+                this.isSubmitting = false;
+                this.alertService.errorAlert('Error', error.error.message);
+              } else {
+                this.isSubmitting = false;
+                this.alertService.errorAlert('Error', 'Ocurrió un error al actualizar el orientador.');
               }
             }
           );
         }
       });
     } else {
+      // Crear orientador
       this.orientadorServices.createOrientador(this.token, formData).subscribe(
         data => {
           setTimeout(() => {
-            this.alerService.successAlert('Exito', data.message);
+            this.alertService.successAlert('Éxito', data.message);
             this.router.navigate(['/list-orientador']);
+            this.isSubmitting = false;  // Detener el spinner
           }, this.tiempoEspera);
         },
         error => {
           console.log(error);
+          this.isSubmitting = false;  // Detener el spinner
           if (error.status === 400) {
-            this.alerService.errorAlert('Error', error.error.message);
+            this.alertService.errorAlert('Error', error.error.message);
+          } else {
+            this.alertService.errorAlert('Error', 'Ocurrió un error al crear el orientador.');
           }
         }
       );
     }
   }
+
   /*Alterna el estado activo o inactivo del orientador, actualizando el formulario con el valor correspondiente.*/
   toggleActive() {
     this.isActive = !this.isActive;
@@ -472,7 +484,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     return result;
   }
 
- 
+
   /*Controla el flujo de navegación entre secciones del formulario.
   Verifica si todos los campos de la sección actual son válidos antes de avanzar a la siguiente.
   Tiene validaciones especiales para el correo electrónico y la fecha de nacimiento.
@@ -480,10 +492,10 @@ export class ModalCrearOrientadorComponent implements OnInit {
   next() {
     const form = this.orientadorForm;
     let sectionIsValid = true;
-  
+
     // Obtener los campos de la sección actual
     const currentSectionFields = this.sectionFields[this.currentIndex];
-  
+
     currentSectionFields.forEach(field => {
       const control = form.get(field);
       if (control.invalid) {
@@ -492,7 +504,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
         sectionIsValid = false;
       }
     });
-  
+
     // Validaciones especiales
     if (this.currentIndex === 1) { // Asumiendo que email y fecha_nac están en la sección 2
       const emailControl = form.get('email');
@@ -501,7 +513,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
         emailControl.markAsDirty();
         sectionIsValid = false;
       }
-  
+
       const fechaNacControl = form.get('fecha_nac');
       if (fechaNacControl.value) {
         const fechaNac = new Date(fechaNacControl.value);
@@ -523,7 +535,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
       this.showErrorMessage('Por favor, complete correctamente todos los campos de esta sección antes de continuar.');
       return;
     }
-  
+
     // Si llegamos aquí, la sección actual es válida
     if (this.currentSubSectionIndex < this.subSectionPerSection[this.currentIndex] - 1) {
       this.currentSubSectionIndex++;
@@ -533,24 +545,24 @@ export class ModalCrearOrientadorComponent implements OnInit {
         this.currentSubSectionIndex = 0;
       }
     }
-  
+
     // Limpiar el mensaje de error si existe
     this.clearErrorMessage();
   }
-  
+
   // Función auxiliar para mostrar mensajes de error
   private showErrorMessage(message: string) {
     console.error(message);
     this.alertService.errorAlert('error', message);
     this.errorMessage = message;
   }
-  
+
   // Función auxiliar para limpiar el mensaje de error
   private clearErrorMessage() {
     this.errorMessage = '';
   }
   /*Controla la navegación hacia la sección o subsección anterior del formulario, retrocediendo en el flujo de las secciones/subsecciones.*/
- previous(): void {
+  previous(): void {
     if (this.currentSubSectionIndex > 0) {
       this.currentSubSectionIndex--;
     } else {

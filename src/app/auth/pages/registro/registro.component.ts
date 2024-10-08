@@ -36,7 +36,7 @@ export class RegistroComponent implements OnInit {
   errorMessage: string | null = null;
   email: string;
   isSubmitting: boolean = false;
-
+  buttonMessage: string = "Registrar";
 
   currentIndex = 0;
   progressWidth = 0;
@@ -63,7 +63,7 @@ export class RegistroComponent implements OnInit {
     this.tipoDocumento();
     this.registerForm = this.fb.group({
       documento: ['', [Validators.required, this.documentoValidator]],
-      id_tipo_documento: ['',[Validators.required]],
+      id_tipo_documento: ['', [Validators.required]],
       nombre: ['', [Validators.required, this.noNumbersValidator]],
       apellido: ['', [Validators.required, this.noNumbersValidator]],
       celular: ['', [Validators.required, this.celularValidator]],
@@ -74,7 +74,7 @@ export class RegistroComponent implements OnInit {
       email: ['', [Validators.required, Validators.email, this.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(8), this.passwordValidator]],
       estado: '1',
-      id_departamento: ['',[Validators.required]] // Añadir el campo departamento al formulario
+      id_departamento: ['', [Validators.required]] // Añadir el campo departamento al formulario
     });
   }
 
@@ -88,7 +88,7 @@ export class RegistroComponent implements OnInit {
 
   celularValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value ? control.value.toString() : '';
-    if (value.length < 5 || value.length > 12) {
+    if (value.length < 5 || value.length > 10) {
       return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
     }
     return null;
@@ -240,16 +240,27 @@ export class RegistroComponent implements OnInit {
 
   registro(): void {
     this.submitted = true;
+    this.buttonMessage = "Guardando...";
+    this.isSubmitting = true;
 
     if (this.registerForm.invalid) {
       this.alertService.errorAlert('Error en el Formulario', 'Por favor, complete todos los campos requeridos.');
+      this.isSubmitting = false;
+      this.buttonMessage = "Registrar";
       return;
     }
 
-    this.alertService.successAlert2('Registro exitoso', 'Espere mientras se procesa su registro...');
+    const camposObligatorios = ['nombre', 'apellido','password', 'email','direccion'];
+    for (const key of camposObligatorios) {
+      const control = this.registerForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmitting = false;
+        this.buttonMessage = "Registrar";
+        return;
+      }
+    }
 
-    this.isSubmitting = true;
-    
     const emprendedor = new Emprendedor(
       this.f.documento.value,
       this.f.id_tipo_documento.value,
@@ -270,27 +281,41 @@ export class RegistroComponent implements OnInit {
     this.registroService.registrar(emprendedor).subscribe(
       (response: any) => {
         // this.alertService.successAlert('Registro exitoso', response.message);
-        this.email = response.email;
-        this.router.navigate(['/verification'], { queryParams: { email: this.email } });
+        this.buttonMessage = "Redirigiendo...";
+        setTimeout(() => {
+          this.isSubmitting = false;
+          this.email = response.email;
+          this.router.navigate(['/verification'], { queryParams: { email: this.email } });
+        }, 3000)
       },
       (error) => {
         console.error('Error al registrar:', error);
+        this.isSubmitting = false;
+        this.buttonMessage = "Registrar";
         if (error.status === 400) {
           const errorMessage = error.error.message;
-
+          this.isSubmitting = false;
           if (errorMessage.includes('documento')) {
             this.currentIndex = 0; // Redirige a la sección del documento
             this.f.documento.setErrors({ exists: true });
             this.alertService.errorAlert('Error', 'El número de documento ya existe. Por favor, corrígelo.');
+            this.isSubmitting = false;
+            this.buttonMessage = "Registrar";
           } else if (errorMessage.includes('correo')) {
             this.currentIndex = 1; // Redirige a la sección del correo
             this.f.email.setErrors({ exists: true });
             this.alertService.errorAlert('Error', 'El correo electrónico ya existe. Por favor, corrígelo.');
+            this.isSubmitting = false;
+            this.buttonMessage = "Registrar";
           } else {
             this.alertService.errorAlert('Error', errorMessage);
+            this.isSubmitting = false;
+            this.buttonMessage = "Registrar";
           }
         } else {
           this.alertService.errorAlert('Error', error.message);
+          this.isSubmitting = false;
+          this.buttonMessage = "Registrar";
         }
       }
     );

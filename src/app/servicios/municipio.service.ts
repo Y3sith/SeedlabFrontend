@@ -9,7 +9,7 @@ import { environment } from '../../environment/env';
 export class MunicipioService {
 
   /* URL base para las operaciones relacionadas con municipios */
-  url = environment.apiUrl + 'mun/';
+  url = environment.apiUrl + 'mun';
 
   constructor(private http: HttpClient) { }
 

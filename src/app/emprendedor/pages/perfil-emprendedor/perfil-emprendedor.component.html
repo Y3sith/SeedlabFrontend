@@ -1,8 +1,8 @@
 <form [formGroup]="emprendedorForm">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <div class="container py-6 mx-auto md:py-12 font-poppins ">
+    <div class="container py-6 mx-auto md:py-12 sm:py-12 font-poppins ">
         <!-- Encabezado -->
-        <header class="flex items-center justify-between mb-16 md:flex-row md:pl-4">
+        <header class="flex items-center justify-between md:mb-16 sm:mb-8 ml-12 md:flex-row md:pl-4">
             <app-header [title] [subtitle]="'Perfil'"></app-header>
         </header>
 
@@ -105,7 +105,7 @@
                 <div class="min-[860px]:flex bg-[#e6e6e6] rounded-lg p-4 justify-between h-full w-full">
                     <div class="w-full pt-0 mt-0">
 
-                        <h5 class="mb-4 text-xl font-bold text-center font-poppins">Información de Personal</h5>
+                        <h5 class="mb-4 text-xl font-bold text-center font-poppins">Información Personal</h5>
 
                         <label for="fechaNacimiento" class="block mb-2">Fecha de Nacimiento</label>
                         <input type="date" id="fecha_nac" formControlName="fecha_nac" [readonly]="blockedInputs"

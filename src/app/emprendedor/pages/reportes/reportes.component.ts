@@ -180,7 +180,10 @@ export class ReportesComponent implements AfterViewInit {
     this.getPuntajesForm = {
       title: {
         text: 'Puntajes por Formulario (Sin datos)',
-        left: 'center'
+        left: 'center',
+        textStyle: {
+          fontSize: 14
+        }
       },
       radar: {
         indicator: [
@@ -217,7 +220,10 @@ export class ReportesComponent implements AfterViewInit {
         this.getPuntajesForm = {
           title: {
             text: 'Puntajes por Formulario',
-            left: 'center'
+            left: 'center',
+            textStyle: {
+              fontSize: 10
+            }
           },
           radar: {
             indicator: [

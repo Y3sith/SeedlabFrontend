@@ -82,6 +82,7 @@ export class AddAliadosComponent {
   private imageUrl: string = '';
   urlparaperfil: any;
   Number = Number;
+  isSubmitting = false;
 
   constructor(private aliadoService: AliadoService,
     private actividadService: ActividadService,
@@ -374,16 +375,17 @@ limpiarPrefijo(url: string): string {
     Si se trata de una creación de aliado, se realiza la llamada al servicio correspondiente, mostrando alertas de éxito o error según sea necesario.
   */
   addAliado(): void {
+    this.isSubmitting = true;
     if (this.idAliado == null) {
       if (this.aliadoForm.invalid || this.bannerForm.invalid) {
         // Mostrar alert si algún formulario es inválido
         this.alertService.errorAlert('Error', 'Por favor, completa todos los campos requeridos.');
-
+        this.isSubmitting = false;
         this.formSubmitted = true;
-
         if (this.aliadoForm.invalid) {
           this.formSubmitted = true;
-          return; // Detiene la ejecución si el formulario es inválido
+          this.isSubmitting = false;
+          return; 
         }
         return;
       }
@@ -394,6 +396,7 @@ limpiarPrefijo(url: string): string {
         const control = this.aliadoForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
             return;
         }
     }
@@ -412,6 +415,7 @@ const nombreAliado = this.aliadoForm.get('nombre')?.value;
 if (nombreAliado){
   if (/^\d+$/.test(nombreAliado)) {
     this.alertService.errorAlert('Error', 'El nombre no puede estar compuesto solamente de numeros');
+    this.isSubmitting = false;
     return;
   }
 }
@@ -419,10 +423,12 @@ if (nombreAliado){
     const nombreDescripcion = this.aliadoForm.get('descripcion')?.value;
     if (nombreDescripcion && nombreDescripcion.length > 312) {
       this.alertService.errorAlert('Error', 'La descripción no puede tener más de 312 caracteres.');
+      this.isSubmitting = false;
       return;
     }
     if (nombreDescripcion && nombreDescripcion.length < 210) {
       this.alertService.errorAlert('Error', 'La descripción no puede tener menos de 210 caracteres.');
+      this.isSubmitting = false;
       return;
     }
 
@@ -460,24 +466,27 @@ if (nombreAliado){
     if (this.idAliado != null) {
       this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
         data => {
+          this.isSubmitting = true;
           this.alertService.successAlert('Exito', data.message);
           this.router.navigate(['list-aliados']);
         },
         error => {
           this.alertService.successAlert('Error', error.error.message);
-
+          this.isSubmitting = false;
         }
       )
 
     } else {
       this.aliadoService.crearAliado(this.token, formData).subscribe(
         data => {
+          this.isSubmitting = true;
           this.alertService.successAlert('Exito', data.message);
           this.router.navigate(['list-aliados']);
         },
         error => {
           if (error.status === 400) {
             this.alertService.errorAlert('Error', error.error.message);
+            this.isSubmitting = false;
           }
         });
     }
@@ -621,17 +630,64 @@ if (nombreAliado){
   private processFile(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
-      const previewUrl = e.target.result;
-      if (field === 'urlImagen') {
-        this.bannerForm.patchValue({ urlImagen: previewUrl });  
-        this.bannerPreview = previewUrl;
-      } else if (field === 'logo') {
-        this.aliadoForm.patchValue({ logo: previewUrl });
-        this.logoPreview = previewUrl;
-      } else if (field === 'ruta_multi') {
-        this.aliadoForm.patchValue({ ruta_multi: previewUrl });
-        this.rutaPreview = previewUrl;
-      }
+      const img = new Image();
+      img.onload = () => {
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        if (field === 'logo') {
+          // Configurar el canvas para 1751x1751
+          canvas.width = 1751;
+          canvas.height = 1751;
+          
+          // Calcular las dimensiones para el recorte
+          let size = Math.min(img.width, img.height);
+          let startX = (img.width - size) / 2;
+          let startY = (img.height - size) / 2;
+          
+          // Dibujar la imagen recortada en el canvas
+          ctx.drawImage(img, startX, startY, size, size, 0, 0, 1751, 1751);
+        } else {
+          // Para otros campos, mantener las dimensiones originales
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0, img.width, img.height);
+        }
+        
+        // Convertir el canvas a una URL de datos
+        const dataUrl = canvas.toDataURL('image/jpeg');
+        
+        // Actualizar el formulario y la previsualización
+        if (field === 'urlImagen') {
+          this.bannerForm.patchValue({ urlImagen: dataUrl });  
+          this.bannerPreview = dataUrl;
+        } else if (field === 'logo') {
+          this.aliadoForm.patchValue({ logo: dataUrl });
+          this.logoPreview = dataUrl;
+        } else if (field === 'ruta_multi') {
+          this.aliadoForm.patchValue({ ruta_multi: dataUrl });
+          this.rutaPreview = dataUrl;
+        }
+        
+        // Convertir la URL de datos de vuelta a un archivo
+        fetch(dataUrl)
+          .then(res => res.blob())
+          .then(blob => {
+            const newFile = new File([blob], file.name, { type: 'image/jpeg' });
+            
+            if (field === 'urlImagen') {
+              this.selectedBanner = newFile;
+              this.bannerForm.patchValue({ urlImagen: newFile });
+            } else if (field === 'logo') {
+              this.selectedLogo = newFile;
+              this.aliadoForm.patchValue({ logo: newFile });
+            } else if (field === 'ruta_multi') {
+              this.selectedruta = newFile;
+              this.aliadoForm.patchValue({ ruta_multi: newFile });
+            }
+          });
+      };
+      img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   
