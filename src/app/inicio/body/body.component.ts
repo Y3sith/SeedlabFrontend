@@ -47,26 +47,22 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isAuthenticated();
-    // Eliminamos el setTimeout y manejamos isLoaded adecuadamente
+    
     forkJoin({
       banners: this.aliadoService.getbanner().pipe(
-        tap((banners) => this.precargarImagenes(banners)) // Precarga de imágenes optimizada
+        tap((banners) => this.precargarImagenes(banners)) // Precarga de banners 
       ),
       personalizacion: this.getPersonalizacion(),
       aliados: this.aliadoService.getaliados().pipe(
-        tap((aliados) => this.preloadLogos(aliados)) // Precarga de logos optimizada
+        tap((aliados) => this.preloadLogos(aliados)) // Precarga de logos 
       )
     }).subscribe({
       next: (results) => {
         this.listBanner = results.banners;
-        console.log(this.listBanner);
         this.listAliados = results.aliados;
-        console.log(this.listAliados);
         this.isLoaded = true; // Cambiar el estado a cargado cuando se completa la carga
         this.cdr.markForCheck();
-        this.initSwipers();
-
-        // Inicializar Swipers después de cargar los datos
+        this.initSwipers(); // Inicializar Swipers después de cargar los datos
       },
       error: (err) => {
         console.error('Error al cargar datos:', err);
