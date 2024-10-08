@@ -52,13 +52,14 @@ export class PerfilAliadoComponent implements OnInit {
   showPDF: boolean = false;
   showTexto: boolean = false;
   Number = Number;
-  tiempoEspera = 1800;
   showEditButton = false;
   mostrarRutaMulti: boolean = true;
   private videoUrl: string = '';
   private imageUrl: string = '';
   charCount: number = 0;
   urlparaperfil: any;
+  isSubmitting: boolean = false;
+  buttonMessage: string = "Guardar cambios";
 
   constructor(
     private router: Router,
@@ -76,7 +77,8 @@ export class PerfilAliadoComponent implements OnInit {
       ruta_multi: [null, Validators.required],
       urlpagina: ['', Validators.required],
       id_tipo_dato: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      // email: ['', [Validators.required, Validators.email]],
+      email: [{ value: '', disabled: true }],
       password: ['', [Validators.minLength(8)]],
       estado: [true]
 
@@ -155,17 +157,25 @@ export class PerfilAliadoComponent implements OnInit {
       if (result.isConfirmed) {
         this.aliadoService.EliminarBanner(this.token, id_aliado).subscribe(
           (data) => {
+            this.desactivarboton();
+            this.buttonMessage = "Guardando...";
+            this.isSubmitting = false;
             setTimeout(function () {
               location.reload();
-            }, this.tiempoEspera);
+            }, 2000);
             localStorage.removeItem(`banners:activo`);
             this.alertService.successAlert('Exito', data.message);
           },
           (error) => {
+            this.isSubmitting = false;
+            this.buttonMessage = "Guardar cambios";
             console.error('Error from server:', error);
             this.alertService.errorAlert('Error', error.error.message);
           }
         );
+      } else {
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
       }
     });
   }
@@ -401,9 +411,14 @@ limpiarPrefijo(url: string): string {
     Este método se encarga de actualizar la información del aliado y sus banners.
   */
   upadateAliado(): void {
+    this.isSubmitting = true;
+    this.buttonMessage = "Guardando...";
+
     if (this.aliadoForm.invalid || this.bannerForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar los campos requeridos.');
       this.formSubmitted = true;
+      this.isSubmitting = false;
+      this.buttonMessage = "Guardar cambios";
       return;
     }
 
@@ -412,6 +427,8 @@ limpiarPrefijo(url: string): string {
         const control = this.aliadoForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
+            this.buttonMessage = "Guardar cambios";
             return;
         }
     }
@@ -440,10 +457,14 @@ limpiarPrefijo(url: string): string {
     const nombreDescripcion = this.aliadoForm.get('descripcion')?.value;
     if (nombreDescripcion && nombreDescripcion.length > 312) {
       this.alertService.errorAlert('Error', 'La descripción no puede tener más de 312 caracteres.');
+      this.isSubmitting = false;
+      this.buttonMessage = "Guardar cambios";
       return;
     }
     if (nombreDescripcion && nombreDescripcion.length < 210) {
       this.alertService.errorAlert('Error', 'La descripción no puede tener menos de 210 caracteres.');
+      this.isSubmitting = false;
+      this.buttonMessage = "Guardar cambios";
       return;
     }
     // Agregar campos específicos que se deben asegurar que estén en el FormData
@@ -469,18 +490,34 @@ limpiarPrefijo(url: string): string {
       if (result.isConfirmed) {
         this.aliadoService.editarAliado(this.token, formData, this.idAliado).subscribe(
           (data) => {
+            this.desactivarboton();
+            this.buttonMessage = "Guardando...";
+            this.isSubmitting = false;
             setTimeout(() => {
               location.reload();
-            }, this.tiempoEspera);
+            },2000);
             this.alertService.successAlert('Éxito', data.message);
           },
           (error) => {
+            this.isSubmitting = false;
+            this.buttonMessage = "Guardar cambios";
             console.error('Error desde el servidor:', error);
             this.alertService.errorAlert('Error', error.error.message);
           }
         );
+      } else {
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
       }
     });
+  }
+
+  desactivarboton():void{
+    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+    if (guardarBtn) {
+// Cambia el cursor para indicar que está deshabilitado
+      guardarBtn.style.pointerEvents = 'none';
+    }
   }
 
   /*
