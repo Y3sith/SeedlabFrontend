@@ -14,7 +14,7 @@ import { takeUntil, catchError } from 'rxjs/operators';
   styleUrls: ['./dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DashboardComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   private charts: { [key: string]: echarts.ECharts } = {};
 
@@ -42,13 +42,14 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedEmpresa: string = '';
   selectedTipo: string = '';
   topAliadosEchartsOptions: echarts.EChartsOption;
+  estadisticas: any[] = [];
 
   constructor(
     private dashboardService: DashboardsService,
     private router: Router,
     private empresaService: EmpresaService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.validateToken();
@@ -60,20 +61,9 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getEmpresas();
   }
 
-  ngAfterViewInit() {
-    // Inicializa los gráficos después de que la vista ha sido inicializada
-    this.initCharts();
-  }
-
   ngOnDestroy(): void {
-    // Desuscribirse de todos los observables y destruir los gráficos
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    Object.keys(this.charts).forEach(chartId => {
-      if (this.charts[chartId]) {
-        this.charts[chartId].dispose();
-      }
-    });
   }
 
   validateToken(): void {
@@ -159,6 +149,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           this.topAliados = dashboardData.topAliados.original;
           this.isLoading = false;
 
+          this.setupEstadisticas();
           this.initEChartsBar();
           this.setupPieChart(dashboardData);
           this.setupDoughnutChart(dashboardData);
@@ -176,28 +167,44 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  private initCharts(): void {
-    // Inicializa todos los gráficos
-    this.initChart('echarts-doughnut', this.doughnutChartOption);
-    this.initChart('echarts-registros', this.registrosEchartsOptions);
-    this.initChart('echarts-empXDepar', this.emprenDeparEchartsOptions);
-    this.initChart('echarts-promedio-asesorias', this.promedioAsesoriasEchartsOptions);
-    this.initChart('echarts-top-aliados', this.topAliadosEchartsOptions);
-    this.initChart('echarts-puntajes-form', this.getPuntajesForm);
-  }
-
-  private initChart(chartId: string, options: any): void {
-    const chartDom = document.getElementById(chartId);
-    if (chartDom) {
-      if (this.charts[chartId]) {
-        this.charts[chartId].dispose();
+  private setupEstadisticas(): void {
+    this.estadisticas = [
+      {
+        id: 1,
+        titulo: 'Super Admins',
+        activos: this.totalSuperAdmin['activos'],
+        inactivos: this.totalSuperAdmin['inactivos'],
+        bgColor: 'bg-orange-500'
+      },
+      {
+        id: 2,
+        titulo: 'Orientadores',
+        activos: this.totalOrientador['activos'],
+        inactivos: this.totalOrientador['inactivos'],
+        bgColor: 'bg-green-500'
+      },
+      {
+        id: 3,
+        titulo: 'Aliados',
+        activos: this.totalAliados['activos'],
+        inactivos: this.totalAliados['inactivos'],
+        bgColor: 'bg-red-500'
+      },
+      {
+        id: 4,
+        titulo: 'Asesores',
+        activos: this.totalAsesores['activos'],
+        inactivos: this.totalAsesores['inactivos'],
+        bgColor: 'bg-blue-500'
+      },
+      {
+        id: 5,
+        titulo: 'Emprendedores',
+        activos: this.totalEmprendedores['activos'],
+        inactivos: this.totalEmprendedores['inactivos'],
+        bgColor: 'bg-purple-500'
       }
-      const chart = echarts.init(chartDom);
-      chart.setOption(options);
-      this.charts[chartId] = chart;
-    } else {
-      console.error('No se encontró el contenedor del gráfico:', chartId);
-    }
+    ];
   }
 
   private setupPieChart(data: any): void {
@@ -242,7 +249,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       ]
     };
-    this.initChart('echarts-pie', this.pieChartOption);
   }
 
   private setupDoughnutChart(data: any): void {
@@ -286,7 +292,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       ]
     };
-    this.initChart('echarts-doughnut', this.doughnutChartOption);
   }
 
   private setupPromedioAsesoriasChart(data: any): void {
@@ -340,7 +345,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       ]
     };
-    this.initChart('echarts-promedio-asesorias', this.promedioAsesoriasEchartsOptions);
   }
 
   private setupRegistrosChart(data: any): void {
@@ -415,7 +419,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         ]
       };
-      this.initChart('echarts-registros', this.registrosEchartsOptions);
     } else {
       console.error('Los datos recibidos no tienen la estructura esperada o están vacíos', data);
     }
@@ -495,7 +498,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           ]
         };
-        this.initChart('echarts-empXDepar', this.emprenDeparEchartsOptions);
       })
       .catch(error => console.error('Error al cargar el mapa:', error));
   }
@@ -563,7 +565,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         ]
       };
-      this.initChart('echarts-top-aliados', this.topAliadosEchartsOptions);
     } else {
       console.error('No hay datos disponibles para mostrar en la gráfica.');
     }
@@ -607,7 +608,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       ]
     };
-    this.initChart('echarts-puntajes-form', this.getPuntajesForm);
   }
 
   graficaPuntajesFormulario(tipo: number): void {
@@ -653,7 +653,6 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
               }
             ]
           };
-          this.initChart('echarts-puntajes-form', this.getPuntajesForm);
           this.cdr.markForCheck();
         },
         error => {
@@ -676,5 +675,13 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   trackById(index: number, item: any): number {
     return item.id;
+  }
+
+  trackByEmpresa(index: number, empresa: any): string {
+    return empresa.documento;
+  }
+
+  trackByYear(index: number, year: number): number {
+    return year;
   }
 }
