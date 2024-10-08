@@ -30,6 +30,7 @@ export class RutaEmprendedorComponent implements OnInit {
   encuestademaduracion: boolean = false;
   mostrarruta: boolean = false;
   laruta: boolean = false;
+  respuesta: any;
 
   actividadForm = this.fb.group({
     id: [null],
@@ -89,11 +90,13 @@ export class RutaEmprendedorComponent implements OnInit {
       this.rutaService.idRespuestas(this.token, this.documento).subscribe(
         data => {
           this.isLoading = false;
+          this.respuesta = data;
           // Esperamos 1 o 0 desde el backend
           if (this.currentRolId !== 1 && this.currentRolId !== 2) {
             if (data === 1) {  // Si hay respuestas (backend devuelve 1)
               this.ishidden = false;
-              this.listarRutaActiva();  // Mostrar rutas activas
+              this.listarRutaActiva(); 
+              // Mostrar rutas activas
             } else {  // Si no hay respuestas (backend devuelve 0)
               this.laruta = true;  // Mostrar mensaje de encuesta de maduración
             }
@@ -118,11 +121,13 @@ export class RutaEmprendedorComponent implements OnInit {
     Lista la ruta activa del usuario.
   */
   listarRutaActiva(): void {
+    debugger
     if (this.token) {
       this.isLoading = true;
       this.rutaService.rutasmejorado(this.token).subscribe(
         data => {
           this.rutaList = data;
+          console.log(this.rutaList);
           if (this.rutaList.length > 0) {
             const primeraRuta = this.rutaList[0];
             this.rutaId = primeraRuta.id;
@@ -130,6 +135,18 @@ export class RutaEmprendedorComponent implements OnInit {
           } else {
             this.isLoading = false;
             this.laruta = true;
+          }
+
+          if (this.currentRolId !== 1 && this.currentRolId !== 2) {
+            if (this.respuesta === 1 && this.rutaList.length < 1) {
+            this.laruta = false;
+            }
+          }else{
+            if (this.rutaList.length < 1) {
+              this.laruta = false;
+            }else{
+              this.laruta = true;
+            }
           }
         },
         err => {
