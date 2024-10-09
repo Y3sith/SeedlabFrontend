@@ -75,7 +75,8 @@ export class RegistroComponent implements OnInit {
       email: ['', [Validators.required, Validators.email, this.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(8), this.passwordValidator]],
       estado: '1',
-      id_departamento: ['', [Validators.required]] // Añadir el campo departamento al formulario
+      id_departamento: ['', [Validators.required]], // Añadir el campo departamento al formulario
+      aceptaTerminos: [false, Validators.requiredTrue]
     });
   }
 
