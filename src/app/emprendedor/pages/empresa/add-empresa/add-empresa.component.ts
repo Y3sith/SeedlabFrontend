@@ -10,6 +10,7 @@ import { Empresa } from '../../../../Modelos/empresa.model';
 import { ApoyoEmpresa } from '../../../../Modelos/apoyo-empresa.modelo';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -55,6 +56,9 @@ export class AddEmpresaComponent {
   isEditing: boolean = false;
   nose: boolean = true;
   esVistaCreacion: boolean = false;
+  charCount: number = 0;
+  charCountFunciones: number = 0;
+  falupa = faCircleQuestion;
 
   constructor(
     private fb: FormBuilder,
@@ -143,6 +147,16 @@ export class AddEmpresaComponent {
   */
   goBack(): void {
     this.location.back();
+  }
+
+  updateCharCount(): void {
+    const experienciaValue = this.addEmpresaForm.get('experiencia')?.value || '';
+    this.charCount = experienciaValue.length;
+  }
+
+  updateCharCountFunciones(): void {
+    const funcionesValue = this.addEmpresaForm.get('funciones')?.value || '';
+    this.charCountFunciones = funcionesValue.length;
   }
 
 
