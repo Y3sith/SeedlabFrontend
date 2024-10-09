@@ -86,7 +86,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         if (adminData) {
           this.totalUsuarios = adminData;
           this.totalEmprendedores = adminData.usuarios.emprendedor;
-          this.topAliados = adminData.topAliados.original;
+          this.topAliados = adminData.topAliados;
 
           // Configurar opciones para el gráfico de Top Aliados
           this.setupTopAliadosChart();
@@ -157,7 +157,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           name: 'Top Aliados',
           type: 'bar',
           data: this.topAliados.map((aliado, index) => ({
-            value: aliado.asesoria,
+            value: aliado.asesorias,
             itemStyle: {
               color: this.getColorForIndex(index)
             }
@@ -179,7 +179,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupDoughnutChart(data: any): void {
-    const response = data.generosEmprendedores.original;
+    const response = data.generosEmprendedores;
 
     const formattedData = response.map(item => ({
       value: Number(item.total),
@@ -191,7 +191,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         trigger: 'item'
       },
       legend: {
-        top: '5%',
+        top: '2%',
         left: 'center'
       },
       series: [
@@ -226,8 +226,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         trigger: 'item'
       },
       legend: {
-        top: '5%',
-        left: 'center'
+        top: '2%',
+        left: 'left'
       },
       series: [
         {

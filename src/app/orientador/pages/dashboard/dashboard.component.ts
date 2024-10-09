@@ -130,7 +130,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.totalAliados = adminData.usuarios.aliado;
           this.totalAsesores = adminData.usuarios.asesor;
           this.totalEmprendedores = adminData.usuarios.emprendedor;
-          this.topAliados = adminData.topAliados.original;
+          this.topAliados = adminData.topAliados;
 
           this.setupEstadisticas();
           this.setupTopAliadosChart();
@@ -236,7 +236,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           name: 'Top Aliados',
           type: 'bar',
           data: this.topAliados.map((aliado, index) => ({
-            value: aliado.asesoria,
+            value: aliado.asesorias,
             itemStyle: {
               color: this.getColorForIndex(index)
             }
@@ -258,9 +258,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupPromedioAsesoriasChart(data: any): void {
-    const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(+item.mes));
-    const promedios = data.averageAsesorias.original.promedio_mensual.map(item => +item.promedio_asesorias);
-    const promedioAnual = [+data.averageAsesorias.original.promedio_anual];
+    const meses = data.averageAsesorias.promedio_mensual.map(item => this.getMonthName(+item.mes));
+    const promedios = data.averageAsesorias.promedio_mensual.map(item => +item.promedio_asesorias);
+    const promedioAnual = [+data.averageAsesorias.promedio_anual];
 
     this.promedioAsesoriasEchartsOptions = {
       tooltip: {
@@ -311,7 +311,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupDoughnutChart(data: any): void {
-    const response = data.generosEmprendedores.original;
+    const response = data.generosEmprendedores;
 
     const formattedData = response.map(item => ({
       value: +item.total,
@@ -353,7 +353,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupRegistrosChart(data: any): void {
-    const conteoRegistros = data.conteoRegistros.original.promedios;
+    const conteoRegistros = data.conteoRegistros;
 
     if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
       const emprendedoresData = conteoRegistros.map(item => +item.emprendedores);
