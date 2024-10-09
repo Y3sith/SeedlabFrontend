@@ -146,7 +146,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.totalAliados = dashboardData.usuarios.aliado;
           this.totalAsesores = dashboardData.usuarios.asesor;
           this.totalEmprendedores = dashboardData.usuarios.emprendedor;
-          this.topAliados = dashboardData.topAliados.original;
+          this.topAliados = dashboardData.topAliados;
           this.isLoading = false;
 
           this.setupEstadisticas();
@@ -243,8 +243,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
             show: false
           },
           data: [
-            { value: +data.conteoAsesorias.original.asesoriasAsignadas, name: 'Asignadas' },
-            { value: +data.conteoAsesorias.original.asesoriasSinAsignar, name: 'Sin asignar' }
+            { value: +data.conteoAsesorias.asesoriasAsignadas, name: 'Asignadas' },
+            { value: +data.conteoAsesorias.asesoriasSinAsignar, name: 'Sin asignar' }
           ],
         }
       ]
@@ -252,7 +252,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupDoughnutChart(data: any): void {
-    const response = data.generosEmprendedores.original;
+    const response = data.generosEmprendedores;
     const formattedData = response.map(item => ({
       value: +item.total,
       name: item.genero
@@ -295,9 +295,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupPromedioAsesoriasChart(data: any): void {
-    const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(+item.mes));
-    const promedios = data.averageAsesorias.original.promedio_mensual.map(item => +item.promedio_asesorias);
-    const promedioAnual = [+data.averageAsesorias.original.promedio_anual];
+    const meses = data.averageAsesorias.promedio_mensual.map(item => this.getMonthName(+item.mes));
+    const promedios = data.averageAsesorias.promedio_mensual.map(item => +item.promedio_asesorias);
+    const promedioAnual = [+data.averageAsesorias.promedio_anual];
 
     this.promedioAsesoriasEchartsOptions = {
       tooltip: {
@@ -348,7 +348,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupRegistrosChart(data: any): void {
-    const conteoRegistros = data.conteoRegistros.original.promedios;
+    const conteoRegistros = data.conteoRegistros;
 
     if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
       const emprendedoresData = conteoRegistros.map(item => +item.emprendedores);
@@ -425,7 +425,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private setupEmprenDeparChart(data: any): void {
-    const emprendedoresPorDepartamento = data.emprendedoresPorDepartamento.original.map(
+    const emprendedoresPorDepartamento = data.emprendedoresPorDepartamento.map(
       (item: { departamento: string; total_emprendedores: string }) => ({
         departamento: item.departamento,
         total_emprendedores: Number(item.total_emprendedores) || 0
@@ -549,7 +549,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             name: 'Top Aliados',
             type: 'bar',
             data: this.topAliados.map((aliado, index) => ({
-              value: aliado.asesoria,
+              value: aliado.asesorias,
               itemStyle: {
                 color: this.getColorForIndex(index)
               }

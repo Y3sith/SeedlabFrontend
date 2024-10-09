@@ -699,7 +699,7 @@ export class EncuestaEmpresaComponent {
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
       this.listaRespuestas2[respCounter].id_subpregunta = null;
-      totalXpregunta = 0;
+      totalXpregunta = this.listaRespuestas2[respCounter].valor;
       this.acumXSeccion2 += totalXpregunta;
 
       if (currentPregunta.isAffirmativeQuestion) {
