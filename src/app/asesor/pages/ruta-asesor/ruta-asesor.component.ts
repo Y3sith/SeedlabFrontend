@@ -79,6 +79,10 @@ export class RutaAsesorComponent {
   charCount: number = 0;
   charCountContenido: number = 0;
   falupa = faCircleQuestion;
+  isSubmittingNivel = false;
+  isSubmittingLeccion = false;
+  isSubmittingContenido = false;
+
 
 
   /*
@@ -554,18 +558,32 @@ export class RutaAsesorComponent {
     utilizando los servicios apropiados.
 */
   addNivelSuperAdmin(): void {
+    this.isSubmittingNivel = true;
     this.submittedNivel = true;
     if (this.nivelForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+      this.isSubmittingNivel = false;
       return;
     }
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+      this.isSubmittingNivel = false;
       return;
     } else if (nombreNivel && nombreNivel.length < 5) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
+      this.isSubmittingNivel = false;
       return;
+    }
+
+    const camposObligatorios = ['nombre'];
+    for (const key of camposObligatorios) {
+        const control = this.nivelForm.get(key);
+        if (control && control.value && control.value.trim() === '') {
+            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmittingNivel = false;
+            return;
+        }
     }
     const idAsesor = this.nivelForm.get('id_asesor')?.value;
     const nivel: any = {
@@ -578,6 +596,7 @@ export class RutaAsesorComponent {
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', 'Nivel actualizado correctamente');
+          this.isSubmittingNivel = false;
           this.verNivel();
           this.niveles.push({
             id: data.id,
@@ -592,10 +611,10 @@ export class RutaAsesorComponent {
         },
         error => {
           this.alertServices.errorAlert('Error', error.error.message);
+          this.isSubmittingNivel = false;
           console.log(error);
         }
       );
-    } else {
     }
   }
 
@@ -606,16 +625,20 @@ export class RutaAsesorComponent {
   */
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
+    this.isSubmittingLeccion = true;
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+      this.isSubmittingLeccion = false;
       return;
     } else if (nombreLeccion && nombreLeccion.length < 5) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección debe tener más de 5 caracteres');
+      this.isSubmittingLeccion = false;
       return;
     }
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
+      this.isSubmittingLeccion = false;
       return;
     }
     const camposObligatorios = ['nombre'];
@@ -623,6 +646,7 @@ export class RutaAsesorComponent {
         const control = this.leccionForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmittingLeccion = false;
             return;
         }
     }
@@ -636,12 +660,14 @@ export class RutaAsesorComponent {
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
+          this.isSubmittingLeccion = false;
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.leccionForm.reset();
           this.submittedLeccion = false;
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
         },
         error => {
+          this.isSubmittingLeccion = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -650,6 +676,7 @@ export class RutaAsesorComponent {
       this.superAdminService.crearLeccionSuperAdmin(this.token, leccion).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
+          this.isSubmittingLeccion = false;
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
           this.leccionForm.reset();
@@ -657,6 +684,7 @@ export class RutaAsesorComponent {
           this.leccionForm.patchValue({ id_nivel: leccion.id_nivel });
         },
         error => {
+          this.isSubmittingLeccion = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -830,20 +858,24 @@ export class RutaAsesorComponent {
   Agrega o actualiza el contenido de una lección en el sistema, dependiendo de si el contenido ya existe o no.
 */
   addContenidoLeccionSuperAdmin(): void {
-    this.submittedContent = true
+    this.submittedContent = true;
+    this.isSubmittingContenido = true;
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
 
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
+      this.isSubmittingContenido = false;
       return;
     } else if (tituloContenidoLeccion && tituloContenidoLeccion.length < 5) {
       this.alertServices.errorAlert('Error', 'El titulo debe tener más de 5 caracteres');
+      this.isSubmittingContenido = false;
       return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
     if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 1200) {
       this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 1200 caracteres');
+      this.isSubmittingContenido = false;
       return;
     }
 
@@ -852,6 +884,7 @@ export class RutaAsesorComponent {
         const control = this.contenidoLeccionForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmittingContenido = false;
             return;
         }
     }
@@ -881,11 +914,13 @@ export class RutaAsesorComponent {
       this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
+          this.isSubmittingContenido = false;
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
         },
         error => {
+          this.isSubmittingContenido = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -894,11 +929,13 @@ export class RutaAsesorComponent {
       this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
+          this.isSubmittingContenido = false;
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
         },
         error => {
+          this.isSubmittingContenido = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
