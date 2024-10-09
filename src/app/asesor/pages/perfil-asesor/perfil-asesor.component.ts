@@ -29,7 +29,7 @@ export class PerfilAsesorComponent implements OnInit {
   user: User
   boton: boolean;
   hide = true;
-  bloqueado = true;
+  blockedInputsCorreo = true;
   imagenPreview: string | ArrayBuffer | null = null;
   selectedImagen_perfil: File | null = null;
   submitted = false;
@@ -41,10 +41,11 @@ export class PerfilAsesorComponent implements OnInit {
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
   showEditButton = false;
-  tiempoEspera = 1800;
   asesorId: any;
   isLoading: boolean = false;
   falupa = faCircleQuestion;
+  isSubmitting: boolean = false;
+  buttonMessage: string = "Guardar cambios";
 
   /*
     Formulario de creación o edición para un asesor.
@@ -57,13 +58,14 @@ export class PerfilAsesorComponent implements OnInit {
     imagen_perfil: [null],
     genero: ['', Validators.required],
     fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
-    direccion: ['', [Validators.required, this.noLettersValidator]],
-    celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
+    direccion: ['', [Validators.required]],
+    celular: ['', [Validators.required, this.noLettersValidator, this.celularValidator]],
     id_departamento: ['', Validators.required],
     id_municipio: ['', Validators.required],
     aliado: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    // email: ['', [Validators.required, Validators.email]],
+    email: [{ value: '', disabled: true }],
+    password: ['', [Validators.minLength(10), this.passwordValidator]],
     estado: true,
   });
 
@@ -81,6 +83,7 @@ export class PerfilAsesorComponent implements OnInit {
   ngOnInit(): void {
     this.validateToken();
     this.verEditar();
+    this.desactivarCorreo();
     this.tipodatoDocumento();
     this.cargarDepartamentos();
     this.initializeFormState();
@@ -150,21 +153,50 @@ export class PerfilAsesorComponent implements OnInit {
     )
   }
 
+  desactivarCorreo():void {
+    this.blockedInputsCorreo = true;
+  }
+
+  desactivarboton():void{
+    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+    if (guardarBtn) {
+      guardarBtn.style.pointerEvents = 'none';
+    }
+  }
+
+
   /* Actualiza los datos del asesor */
   editAsesor(): void {
+    if (this.asesorForm.invalid) {
+      // console.log('Formulario inválido. Campos con errores:', this.asesorForm);
+      this.alertService.errorAlert('Error', 'Hay errores en el formulario Revisa los campos.')
+    //   Object.keys(this.asesorForm.controls).forEach(key => {
+    //     const control = this.asesorForm.get(key);
+    //     if (control?.invalid) {
+    //         console.log(`Campo inválido: ${key}, Errores:`, control.errors);
+    //     }
+    // });
+      this.submitted = true;
+      this.isSubmitting = false;
+      this.buttonMessage = "Guardar cambios";
+    return
+    }
+
     const formData = new FormData();
     let estadoValue: string;
+    this.isSubmitting = true;
+    this.buttonMessage = "Guardando...";
 
-    const camposObligatorios = ['nombre','apellido'];
+    const camposObligatorios = ['nombre','apellido','password'];
     for (const key of camposObligatorios) {
         const control = this.asesorForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmitting = false;
+            this.buttonMessage = "Guardar cambios";
             return;
         }
     }
-
-
     Object.keys(this.asesorForm.controls).forEach((key) => {
       const control = this.asesorForm.get(key);
       if (control?.value !== null && control?.value !== undefined && control?.value !== '') {
@@ -184,6 +216,8 @@ export class PerfilAsesorComponent implements OnInit {
             }
             if (userAge < 18) {
               this.alertService.errorAlert('Error', 'No puedes actualizar un administrador menor de edad.');
+              this.isSubmitting = false;
+              this.buttonMessage = "Guardar cambios";
               return;
             }
             formData.append(key, date.toISOString().split('T')[0]);
@@ -219,16 +253,26 @@ export class PerfilAsesorComponent implements OnInit {
       if (result.isConfirmed) {
         this.asesorService.updateAsesor(this.token, this.id, formData).subscribe(
           (data) => {
+            console.log(data);
+            this.desactivarboton();
+            this.buttonMessage = "Guardando...";
+            this.isSubmitting = false;
             setTimeout(function () {
               location.reload();
-            }, this.tiempoEspera);
+            },2000);
             this.alertService.successAlert('Exito', data.message);
           },
           (error) => {
+            this.isSubmitting = false;
+            this.buttonMessage = "Guardar cambios";
             console.error('Error from server:', error);
             this.alertService.errorAlert('Error', error.error.message);
+            console.log(error)
           }
         );
+      } else {
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
       }
     });
   }
@@ -271,6 +315,20 @@ export class PerfilAsesorComponent implements OnInit {
   // Restaura los datos originales
   onCancel(): void {
     location.reload();
+  }
+
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value || value.trim() === '') {
+      return null;
+    }
+    const hasUpperCase = /[A-Z]+/.test(value);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(value);
+    if (hasUpperCase && hasSpecialChar) {
+      return null;
+    } else {
+      return { passwordStrength: 'La contraseña debe contener al menos una letra mayúscula y un carácter especial *' };
+    }
   }
 
 
@@ -489,6 +547,14 @@ export class PerfilAsesorComponent implements OnInit {
     } else {
       return null;
     }
+  }
+
+  celularValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 10) {
+      return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
+    }
+    return null;
   }
 
 }

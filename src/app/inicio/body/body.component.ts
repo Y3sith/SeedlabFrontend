@@ -1,5 +1,6 @@
-import { Component, AfterViewInit, PLATFORM_ID, Inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, AfterViewInit, PLATFORM_ID, Inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, Renderer2 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import { AliadoService } from '../../servicios/aliado.service';
 import Swiper from 'swiper';
 import { Navigation, Autoplay, Pagination } from 'swiper/modules';
@@ -43,11 +44,13 @@ export class BodyComponent implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef,
     private authService: AuthService,
     private personalizacionesService: SuperadminService,
+    private renderer: Renderer2,
+    @Inject(DOCUMENT) private document: Document,
   ) { }
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isAuthenticated();
-    
+
     forkJoin({
       banners: this.aliadoService.getbanner().pipe(
         tap((banners) => this.precargarImagenes(banners)) // Precarga de banners 
@@ -61,6 +64,10 @@ export class BodyComponent implements OnInit, AfterViewInit {
         this.listBanner = results.banners;
         this.listAliados = results.aliados;
         this.isLoaded = true; // Cambiar el estado a cargado cuando se completa la carga
+        
+        // Precargar la imagen del primer banner
+        this.precargarBannerPrincipal();
+
         this.cdr.markForCheck();
         this.initSwipers(); // Inicializar Swipers después de cargar los datos
       },
@@ -73,6 +80,21 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
   }
+
+  private precargarBannerPrincipal(): void {
+    if (this.listBanner && this.listBanner.length > 0) {
+      const firstBanner = this.listBanner[0];
+      if (firstBanner && firstBanner.urlImagen) {
+        const preloadLink = this.renderer.createElement('link');
+        preloadLink.rel = 'preload';
+        preloadLink.href = firstBanner.urlImagen;
+        preloadLink.as = 'image';
+        preloadLink.setAttribute('importance', 'high'); // Opcional: Indica alta prioridad
+        this.renderer.appendChild(this.document.head, preloadLink);
+      }
+    }
+  }
+  
 
   // Implementamos trackBy en ngFor para mejorar el rendimiento
   trackByAliado(index: number, aliado: Aliado): number {

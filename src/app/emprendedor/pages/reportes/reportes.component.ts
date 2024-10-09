@@ -7,6 +7,7 @@ import { EmpresaService } from '../../../servicios/empresa.service';
 import * as echarts from 'echarts';
 import { DashboardsService } from '../../../servicios/dashboard.service';
 import { AlertService } from '../../../servicios/alert.service';
+import { faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class ReportesComponent implements AfterViewInit {
   empresaSeleccionada: string = '';
   getPuntajesForm: echarts.EChartsOption;
   chart: any;
+  falupa = faCircleQuestion;
 
   constructor(
     private fb: FormBuilder,

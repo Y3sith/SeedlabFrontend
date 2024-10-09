@@ -1,17 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { User } from '../../../Modelos/user.model';
 import { Router } from '@angular/router';
 import * as echarts from 'echarts';
 
 import { DashboardsService } from '../../../servicios/dashboard.service';
 import { EmpresaService } from '../../../servicios/empresa.service';
+import { Subject, forkJoin } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+  private unsubscribe$ = new Subject<void>();
+  private charts: { [key: string]: echarts.ECharts } = {};
+
   token: string | null = null;
   user: User = null;
   id: number;
@@ -22,7 +28,7 @@ export class DashboardComponent implements OnInit {
   totalAliados: any = {};
   totalAsesores: any = {};
   totalEmprendedores: any = {};
-  topAliados: any = {};
+  topAliados: any = [];
   pieChartOption: echarts.EChartsOption;
   doughnutChartOption: echarts.EChartsOption;
   registrosEchartsOptions: echarts.EChartsOption;
@@ -35,43 +41,42 @@ export class DashboardComponent implements OnInit {
   listEmpresas = [];
   selectedEmpresa: string = '';
   selectedTipo: string = '';
-  chart: any;
   topAliadosEchartsOptions: echarts.EChartsOption;
-
+  estadisticas: any[] = [];
 
   constructor(
     private dashboardService: DashboardsService,
     private router: Router,
     private empresaService: EmpresaService,
+    private cdr: ChangeDetectorRef
   ) { }
 
-  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (v, i) => currentYear + i);
-    this.selectedYear = this.years[0];
     this.selectedYear = currentYear;
     this.getDatosDashboard(this.selectedYear);
     this.initGraficaVacia();
     this.getEmpresas();
   }
 
-  /*
-  Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
-  formulario o cualquier otra parte de la aplicación.
-  */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
-      let identityJSON = localStorage.getItem('identity');
+      const identityJSON = localStorage.getItem('identity');
 
       if (identityJSON) {
-        let identity = JSON.parse(identityJSON);
+        const identity = JSON.parse(identityJSON);
         this.user = identity;
         this.id = this.user.id;
         this.currentRolId = this.user.id_rol;
-        if (this.currentRolId != 1) {
+        if (this.currentRolId !== 1) {
           this.router.navigate(['home']);
         }
       }
@@ -81,386 +86,420 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-   /*Función que maneja el cambio de año en la interfaz*/
   onYearChange(year: number): void {
-    this.selectedYear = year;
-    this.getDatosDashboard(this.selectedYear);
-  }
-  /*Función que maneja el cambio de tipo en un select (desplegable)*/
-  onSelectChange(event: any): void {
-    this.selectedTipo = event.target.value;
-
-    if (this.selectedTipo) {
-      this.graficaPuntajesFormulario(+this.selectedTipo); 
+    if (this.selectedYear !== year) {
+      this.selectedYear = year;
+      this.getDatosDashboard(this.selectedYear);
     }
   }
 
-  /*Función que obtiene todas las empresas disponibles*/
-  getEmpresas() {
-    this.empresaService.getAllEmpresa(this.token).subscribe(
-      data => {
-        this.listEmpresas = data;
-        this.selectedEmpresa = this.listEmpresas.length > 0 ? this.listEmpresas[0].documento_empresa : null;
-        this.graficaPuntajesFormulario(+this.selectedTipo);
-      },
-      error => {
-        console.error('Error al obtener empresas:', error);
-      }
-    )
+  onSelectChange(event: any): void {
+    const newTipo = event.target.value;
+    if (this.selectedTipo !== newTipo) {
+      this.selectedTipo = newTipo;
+      this.graficaPuntajesFormulario(+this.selectedTipo);
+    }
   }
 
-  /*Función para inicializar un gráfico utilizando ECharts*/
-  initChart(chartId: string, options: any): void {
-    setTimeout(() => {
-      const chartDom = document.getElementById(chartId);
-      if (chartDom) {
-        const chart = echarts.init(chartDom);
-        chart.setOption(options);
-      } else {
-        console.error('No se encontró el contenedor del gráfico:', chartId);
-      }
-    }, 100); // Retraso de 100ms para asegurarse de que el DOM esté listo
+  getEmpresas(): void {
+    this.empresaService.getAllEmpresa(this.token)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        data => {
+          this.listEmpresas = data;
+          this.selectedEmpresa = this.listEmpresas.length > 0 ? this.listEmpresas[0].documento_empresa : null;
+          this.graficaPuntajesFormulario(+this.selectedTipo);
+          this.cdr.markForCheck();
+        },
+        error => {
+          console.error('Error al obtener empresas:', error);
+        }
+      );
   }
 
-  /*Función que maneja el cambio de empresa seleccionada*/
   onEmpresaChange(selectedId: string): void {
-    this.selectedEmpresa = selectedId;
-    this.graficaPuntajesFormulario(+this.selectedTipo);
+    if (this.selectedEmpresa !== selectedId) {
+      this.selectedEmpresa = selectedId;
+      this.graficaPuntajesFormulario(+this.selectedTipo);
+    }
   }
 
-  getDatosDashboard(year): void {
+  getDatosDashboard(year: number): void {
     this.isLoading = true;
-    this.dashboardService.dashboardAdmin(this.token).subscribe(
-      data => {
-        // Asignar los datos devueltos a las variables correspondientes
-        this.totalUsuarios = data;
-        this.totalSuperAdmin = data.usuarios.superadmin;
-        this.totalOrientador = data.usuarios.orientador;
-        this.totalAliados = data.usuarios.aliado;
-        this.totalAsesores = data.usuarios.asesor;
-        this.totalEmprendedores = data.usuarios.emprendedor;
-        this.topAliados = data.topAliados.original;
-        this.isLoading = false;
+    forkJoin({
+      dashboardData: this.dashboardService.dashboardAdmin(this.token),
+      empresas: this.empresaService.getAllEmpresa(this.token)
+    })
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        catchError(error => {
+          console.error('Error al obtener datos del dashboard:', error);
+          this.isLoading = false;
+          return [];
+        })
+      )
+      .subscribe(({ dashboardData, empresas }) => {
+        if (dashboardData) {
+          this.totalUsuarios = dashboardData;
+          this.totalSuperAdmin = dashboardData.usuarios.superadmin;
+          this.totalOrientador = dashboardData.usuarios.orientador;
+          this.totalAliados = dashboardData.usuarios.aliado;
+          this.totalAsesores = dashboardData.usuarios.asesor;
+          this.totalEmprendedores = dashboardData.usuarios.emprendedor;
+          this.topAliados = dashboardData.topAliados.original;
+          this.isLoading = false;
 
-        // Configuración para la gráfica de barras (Top Aliados)
-        this.initEChartsBar();
-        // Configuración para la gráfica de pastel (Asesorías)
-        this.pieChartOption = {
-          tooltip: {
-            trigger: 'item'
+          this.setupEstadisticas();
+          this.initEChartsBar();
+          this.setupPieChart(dashboardData);
+          this.setupDoughnutChart(dashboardData);
+          this.setupPromedioAsesoriasChart(dashboardData);
+          this.setupRegistrosChart(dashboardData);
+          this.setupEmprenDeparChart(dashboardData);
+
+          this.cdr.markForCheck();
+        }
+        if (empresas) {
+          this.listEmpresas = empresas;
+          this.selectedEmpresa = this.listEmpresas.length > 0 ? this.listEmpresas[0].documento_empresa : null;
+          this.graficaPuntajesFormulario(+this.selectedTipo);
+        }
+      });
+  }
+
+  private setupEstadisticas(): void {
+    this.estadisticas = [
+      {
+        id: 1,
+        titulo: 'Super Admins',
+        activos: this.totalSuperAdmin['activos'],
+        inactivos: this.totalSuperAdmin['inactivos'],
+        bgColor: 'bg-orange-500'
+      },
+      {
+        id: 2,
+        titulo: 'Orientadores',
+        activos: this.totalOrientador['activos'],
+        inactivos: this.totalOrientador['inactivos'],
+        bgColor: 'bg-green-500'
+      },
+      {
+        id: 3,
+        titulo: 'Aliados',
+        activos: this.totalAliados['activos'],
+        inactivos: this.totalAliados['inactivos'],
+        bgColor: 'bg-red-500'
+      },
+      {
+        id: 4,
+        titulo: 'Asesores',
+        activos: this.totalAsesores['activos'],
+        inactivos: this.totalAsesores['inactivos'],
+        bgColor: 'bg-blue-500'
+      },
+      {
+        id: 5,
+        titulo: 'Emprendedores',
+        activos: this.totalEmprendedores['activos'],
+        inactivos: this.totalEmprendedores['inactivos'],
+        bgColor: 'bg-purple-500'
+      }
+    ];
+  }
+
+  private setupPieChart(data: any): void {
+    this.pieChartOption = {
+      tooltip: {
+        trigger: 'item'
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+      },
+      series: [
+        {
+          name: 'Asesorías',
+          type: 'pie',
+          radius: ['80%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10
           },
-          toolbox: {
-            feature: {
-              dataView: { show: true, readOnly: false },
-              restore: { show: true },
-              saveAsImage: { show: true }
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
             }
           },
-          legend: {
-            orient: 'vertical',
-            left: 'left',
+          labelLine: {
+            show: false
           },
-          series: [
-            {
-              name: 'Asesorías',
-              type: 'pie',
-              radius: ['80%'],
-              avoidLabelOverlap: false,
-              itemStyle: {
-                borderRadius: 10
-              },
-              emphasis: {
-                itemStyle: {
-                  shadowBlur: 10,
-                  shadowOffsetX: 0,
-                  shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-              },
-              labelLine: {
-                show: false
-              },
-              data: [
-                { value: data.conteoAsesorias.original.asesoriasAsignadas, name: 'Asignadas' },
-                { value: data.conteoAsesorias.original.asesoriasSinAsignar, name: 'Sin asignar' }
-              ],
+          data: [
+            { value: +data.conteoAsesorias.original.asesoriasAsignadas, name: 'Asignadas' },
+            { value: +data.conteoAsesorias.original.asesoriasSinAsignar, name: 'Sin asignar' }
+          ],
+        }
+      ]
+    };
+  }
+
+  private setupDoughnutChart(data: any): void {
+    const response = data.generosEmprendedores.original;
+    const formattedData = response.map(item => ({
+      value: +item.total,
+      name: item.genero
+    }));
+    this.doughnutChartOption = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      series: [
+        {
+          name: 'Géneros',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10
+          },
+          label: {
+            show: true,
+            position: 'outside'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '20',
+              fontWeight: 'bold'
             }
-          ]
-        };
+          },
+          labelLine: {
+            show: true
+          },
+          data: formattedData
+        }
+      ]
+    };
+  }
 
-        //Data promedio asesorias
-        const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(item.mes));
-        const promedios = data.averageAsesorias.original.promedio_mensual.map(item => parseFloat(item.promedio_asesorias));
-        const promedioAnual = data.averageAsesorias.original.promedio_anual; // Asegurarse de convertir a número
+  private setupPromedioAsesoriasChart(data: any): void {
+    const meses = data.averageAsesorias.original.promedio_mensual.map(item => this.getMonthName(+item.mes));
+    const promedios = data.averageAsesorias.original.promedio_mensual.map(item => +item.promedio_asesorias);
+    const promedioAnual = [+data.averageAsesorias.original.promedio_anual];
 
-        //Grafico de promedios
-        this.promedioAsesoriasEchartsOptions = {
-          tooltip: {
-            trigger: 'axis',
+    this.promedioAsesoriasEchartsOptions = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        data: ['Promedio Mensual', `Promedio ${this.selectedYear}`],
+        left: 'left',
+        top: 10,
+        itemGap: 20
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        top: '15%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: meses
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: 'Promedio Mensual',
+          type: 'bar',
+          data: promedios,
+          itemStyle: {
+            color: '#73c0de'
+          }
+        },
+        {
+          name: `Promedio ${this.selectedYear}`,
+          type: 'line',
+          data: promedioAnual,
+          itemStyle: {
+            color: '#ff7f50'
+          }
+        }
+      ]
+    };
+  }
+
+  private setupRegistrosChart(data: any): void {
+    const conteoRegistros = data.conteoRegistros.original.promedios;
+
+    if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
+      const emprendedoresData = conteoRegistros.map(item => +item.emprendedores);
+      const aliadosData = conteoRegistros.map(item => +item.aliados);
+      const meses = conteoRegistros.map(item => this.getMonthName(+item.mes));
+
+      const maxValue = Math.max(...emprendedoresData, ...aliadosData);
+
+      this.registrosEchartsOptions = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        toolbox: {
+          feature: {
+            dataView: { show: true, readOnly: false },
+            magicType: { show: true, type: ['line', 'bar'] },
+            restore: { show: true },
+            saveAsImage: { show: true }
+          }
+        },
+        legend: {
+          data: ['Emprendedor', 'Aliados'],
+          left: 'left',
+          top: 10,
+          itemGap: 20
+        },
+        grid: {
+          top: 60,
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: meses,
             axisPointer: {
               type: 'shadow'
             }
-          },
-          grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-          },
-          xAxis: {
+          }
+        ],
+        yAxis: [
+          {
             type: 'value',
-            boundaryGap: [0, 0.01]
+            name: 'Cantidad',
+            min: 0,
+            max: maxValue + 5,
+            interval: Math.ceil(maxValue / 5)
+          }
+        ],
+        series: [
+          {
+            name: 'Emprendedor',
+            type: 'bar',
+            data: emprendedoresData
           },
-          yAxis: {
-            type: 'category',
-            data: meses
-          },
-          series: [
-            {
-              name: `Promedio Mensual`,
-              data: promedios,
-              type: 'bar',
-              itemStyle: {
-                color: '#73c0de'
-              }
-            },
-            {
-              name: `Promedio ${this.selectedYear}`,
-              data: promedioAnual,  // Convertir el promedio anual en un array para la gráfica
-              type: 'bar',
-            }
-          ]
-        };
+          {
+            name: 'Aliados',
+            type: 'bar',
+            data: aliadosData
+          }
+        ]
+      };
+    } else {
+      console.error('Los datos recibidos no tienen la estructura esperada o están vacíos', data);
+    }
+  }
 
-        //Data y grafica generos
-        const response = data.generosEmprendedores.original;
+  private setupEmprenDeparChart(data: any): void {
+    const emprendedoresPorDepartamento = data.emprendedoresPorDepartamento.original.map(
+      (item: { departamento: string; total_emprendedores: string }) => ({
+        departamento: item.departamento,
+        total_emprendedores: Number(item.total_emprendedores) || 0
+      })
+    );
 
-        // Formatear los datos para el gráfico
-        const formattedData = response.map(item => ({
-          value: Number(item.total), // Convertir total a número
-          name: item.genero
+    // Cargar el archivo geojson para el mapa de Colombia
+    fetch('assets/data/COL1.geo.json')
+      .then(response => response.json())
+      .then(colJson => {
+        echarts.registerMap('Colombia', colJson);
+
+        const mappedData = emprendedoresPorDepartamento.map(item => ({
+          name: this.normalizeName(item.departamento),
+          value: item.total_emprendedores
         }));
 
-        // Configuración de la opción del gráfico
-        this.doughnutChartOption = {
-          tooltip: {
-            trigger: 'item'
-          },
-          legend: {
-            top: '5%',
+        colJson.features.forEach(feature => {
+          feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
+        });
+
+        const maxValue = Math.max(...emprendedoresPorDepartamento.map(item => item.total_emprendedores));
+
+        this.emprenDeparEchartsOptions = {
+          title: {
+            text: 'Emprendedores por Departamento',
             left: 'center'
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: (params) => {
+              return `
+                Departamento: ${params.name}<br>
+                Emprendedores: ${isNaN(params.value) ? 0 : params.value}<br>
+              `;
+            }
+          },
+          visualMap: {
+            min: 0,
+            max: maxValue,
+            left: 'left',
+            top: 'bottom',
+            text: ['Alta', 'Baja'],
+            calculable: true
           },
           series: [
             {
-              name: 'Géneros',
-              type: 'pie',
-              radius: ['40%', '70%'],
-              avoidLabelOverlap: false,
-              itemStyle: {
-                borderRadius: 10
-              },
-              label: {
-                show: true, // Mostrar etiquetas
-                position: 'outside' // Posición afuera
-              },
+              name: 'Emprendedores',
+              type: 'map',
+              map: 'Colombia',
+              roam: true,
+              data: mappedData,
+              nameProperty: 'NOMBRE_DPT',
               emphasis: {
                 label: {
-                  show: true, // Mostrar etiqueta en énfasis
-                  fontSize: '20',
-                  fontWeight: 'bold'
+                  show: true
+                },
+                itemStyle: {
+                  areaColor: '#eee'
                 }
               },
-              labelLine: {
-                show: true // Mostrar líneas de etiqueta
-              },
-              data: formattedData // Usar los datos formateados
+              select: {
+                label: {
+                  show: true
+                },
+                itemStyle: {
+                  color: 'rgb(255, 215, 0)'
+                }
+              }
             }
           ]
         };
-
-        // Inicializar el gráfico
-        this.initChart('echarts-doughnut', this.doughnutChartOption);
-
-        //Data y grafica registros 
-
-        const conteoRegistros = data.conteoRegistros.original.promedios; // Accedemos correctamente a los "promedios"
-
-        if (Array.isArray(conteoRegistros) && conteoRegistros.length > 0) {
-          const emprendedoresData = conteoRegistros.map(item => parseInt(item.emprendedores, 10)); // Aseguramos que sea entero
-          const aliadosData = conteoRegistros.map(item => parseInt(item.aliados, 10));
-          const meses = conteoRegistros.map(item => this.getMonthName(item.mes));
-
-          const maxValue = Math.max(...emprendedoresData, ...aliadosData);
-
-          // Configuración del gráfico ECharts
-          this.registrosEchartsOptions = {
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'cross',
-                crossStyle: {
-                  color: '#999'
-                }
-              }
-            },
-            toolbox: {
-              feature: {
-                dataView: { show: true, readOnly: false },
-                magicType: { show: true, type: ['line', 'bar'] },
-                restore: { show: true },
-                saveAsImage: { show: true }
-              }
-            },
-            legend: {
-              data: ['Emprendedor', 'Aliados'],
-              left: 'left',
-              top: 10,
-              itemGap: 20
-            },
-            grid: {
-              top: 60,
-              left: '3%',
-              right: '4%',
-              bottom: '3%',
-              containLabel: true
-            },
-            xAxis: [
-              {
-                type: 'category',
-                data: meses,
-                axisPointer: {
-                  type: 'shadow'
-                }
-              }
-            ],
-            yAxis: [
-              {
-                type: 'value',
-                name: 'Cantidad',
-                min: 0,
-                max: maxValue + 5,
-                interval: Math.ceil(maxValue / 5)
-              }
-            ],
-            series: [
-              {
-                name: 'Emprendedor',
-                type: 'bar',
-                data: emprendedoresData
-              },
-              {
-                name: 'Aliados',
-                type: 'bar',
-                data: aliadosData
-              }
-            ]
-          };
-
-          // Inicializamos el gráfico
-          this.initChart('echarts-registros', this.registrosEchartsOptions);
-        } else {
-          console.error('Los datos recibidos no tienen la estructura esperada o están vacíos', data);
-        }
-
-        //Data y grafica de emprendedor por departamento
-
-        // Obtener los emprendedores por departamento desde el JSON
-        const emprendedoresPorDepartamento = data.emprendedoresPorDepartamento.original.map(
-          (item: { departamento: string; total_emprendedores: string }) => ({
-            departamento: item.departamento,
-            total_emprendedores: Number(item.total_emprendedores) || 0 // Convertir a número
-          })
-        );
-
-        // Usamos setTimeout para dar tiempo antes de cargar el gráfico
-        setTimeout(() => {
-          // Cargar el archivo geojson para el mapa de Colombia
-          fetch('assets/data/COL1.geo.json')
-            .then(response => response.json())
-            .then(colJson => {
-              // Registrar el mapa de Colombia en ECharts
-              echarts.registerMap('Colombia', colJson);
-
-              // Normalizar nombres y mapear los datos a formato requerido por ECharts
-              const mappedData = emprendedoresPorDepartamento.map(item => ({
-                name: this.normalizeName(item.departamento),
-                value: item.total_emprendedores
-              }));
-
-              // Normalizar los nombres de los departamentos en el archivo geojson
-              colJson.features.forEach(feature => {
-                feature.properties.NOMBRE_DPT = this.normalizeName(feature.properties.NOMBRE_DPT);
-              });
-
-              // Calcular el valor máximo de emprendedores por departamento
-              const maxValue = Math.max(...emprendedoresPorDepartamento.map(item => item.total_emprendedores));
-
-              // Configuración del gráfico ECharts
-              this.emprenDeparEchartsOptions = {
-                title: {
-                  text: 'Emprendedores por Departamento',
-                  left: 'center'
-                },
-                tooltip: {
-                  trigger: 'item',
-                  formatter: function (params) {
-                    return `
-                      Departamento: ${params.name}<br>
-                      Emprendedores: ${isNaN(params.value) ? 0 : params.value}<br>
-                    `;
-                  }
-                },
-                visualMap: {
-                  min: 0,
-                  max: maxValue,
-                  left: 'left',
-                  top: 'bottom',
-                  text: ['Alta', 'Baja'],
-                  calculable: true
-                },
-                series: [
-                  {
-                    name: 'Emprendedores',
-                    type: 'map',
-                    map: 'Colombia',
-                    roam: true,
-                    data: mappedData,
-                    nameProperty: 'NOMBRE_DPT',
-                    emphasis: {
-                      label: {
-                        show: true
-                      },
-                      itemStyle: {
-                        areaColor: '#eee'
-                      }
-                    },
-                    select: {
-                      label: {
-                        show: true
-                      },
-                      itemStyle: {
-                        color: 'rgb(255, 215, 0)'
-                      }
-                    }
-                  }
-                ]
-              };
-
-              // Inicializar el gráfico con el archivo geojson y la configuración de ECharts
-              this.initChart('echarts-empXDepar', this.emprenDeparEchartsOptions);
-            })
-            .catch(error => console.error('Error al cargar el mapa:', error));
-        }, 1000); // Retardo de 1 segundo para cargar el gráfico
-
-
-        
-      },
-      error => {
-        console.log(error);
-      },
-      () => {
-        this.isLoading = false;
-      }
-    );
+      })
+      .catch(error => console.error('Error al cargar el mapa:', error));
   }
 
   initEChartsBar(): void {
@@ -469,11 +508,11 @@ export class DashboardComponent implements OnInit {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'shadow' // Mostrar puntero de tipo sombra para mejor visualización
+            type: 'shadow'
           }
         },
         legend: {
-          orient: 'horizontal', // Cambiar a horizontal para una mejor distribución
+          orient: 'horizontal',
           left: 'left',
           data: ['Top Aliados'],
         },
@@ -490,8 +529,8 @@ export class DashboardComponent implements OnInit {
           type: 'category',
           data: this.topAliados.map(aliado => aliado.nombre),
           axisLabel: {
-            interval: 0, // Muestra todas las etiquetas
-            rotate: 30, // Rota las etiquetas para mejor legibilidad
+            interval: 0,
+            rotate: 30,
             formatter: (value: string) => {
               return value.length > 10 ? value.substring(0, 10) + '...' : value;
             }
@@ -500,32 +539,29 @@ export class DashboardComponent implements OnInit {
         yAxis: {
           type: 'value',
           name: 'Asesorías',
-          min: 0, // Valor mínimo en el eje Y
+          min: 0,
           axisLabel: {
-            formatter: '{value}' // Muestra el valor en el eje Y
+            formatter: '{value}'
           }
         },
         series: [
           {
             name: 'Top Aliados',
-            type: 'bar', // Cambiar a 'bar' si quieres barras
+            type: 'bar',
             data: this.topAliados.map((aliado, index) => ({
               value: aliado.asesoria,
               itemStyle: {
-                color: this.getColorForIndex(index) // Asignar colores
+                color: this.getColorForIndex(index)
               }
             })),
             label: {
               show: true,
               position: 'top',
               color: '#000',
-              formatter: '{c}', // Muestra el valor de la barra
+              formatter: '{c}',
               fontSize: 12
             },
-            markLine: {
-              data: [{ type: 'average', name: 'Avg' }]
-            },
-            barGap: '10%', // Ajusta el espacio entre las barras
+            barGap: '10%',
           }
         ]
       };
@@ -534,24 +570,17 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
   getColorForIndex(index: number): string {
-    // Lista de colores que se asignarán a las barras
     const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#8A2BE2', '#00FA9A', '#FFD700', '#DC143C'];
-    return colors[index % colors.length]; // Asigna un color a cada barra, y repite si hay más barras que colores
+    return colors[index % colors.length];
   }
 
-
-
   getMonthName(monthNumber: number): string {
-    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
     return monthNames[monthNumber - 1];
   }
 
-  /*Configura una gráfica de radar vacía que se muestra cuando no hay datos disponibles.
-  Muestra los puntajes de diferentes criterios como "General", "Técnica", "TRL", "Mercado" y "Financiera", pero con valores cero*/
   initGraficaVacia(): void {
-    // Configuración de la gráfica vacía
     this.getPuntajesForm = {
       title: {
         text: 'Puntajes por Formulario (Sin datos)',
@@ -572,7 +601,7 @@ export class DashboardComponent implements OnInit {
           type: 'radar',
           data: [
             {
-              value: [0, 0, 0, 0, 0], // Valores vacíos
+              value: [0, 0, 0, 0, 0],
               name: 'Sin Empresa Seleccionada'
             }
           ]
@@ -581,68 +610,58 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  /*Muestra una gráfica de radar que visualiza los puntajes de una empresa seleccionada en diferentes categorías (general, técnica, TRL, mercado, financiera).
-  Dependiendo del tipo (primera o segunda evaluación), ajusta el título de la gráfica y actualiza los valores con los datos obtenidos del servicio.
-  Si no hay empresa o tipo seleccionado, muestra una gráfica vacía.*/
   graficaPuntajesFormulario(tipo: number): void {
     if (!this.selectedEmpresa || !tipo) {
       this.initGraficaVacia();
       return;
     }
 
-    this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa, tipo).subscribe(
-      data => {
-        this.getPuntajesForm = {
-          title: {
-            text: tipo === 1 ? 'Puntajes por Formulario (Primera vez)' : 'Puntajes por Formulario (Segunda vez)',
-            left: 'center'
-          },
-          radar: {
-            indicator: [
-              { name: 'General', max: 100 },
-              { name: 'Técnica', max: 100 },
-              { name: 'TRL', max: 9 },
-              { name: 'Mercado', max: 100 },
-              { name: 'Financiera', max: 100 }
-            ]
-          },
-          series: [
-            {
-              name: 'Puntajes',
-              type: 'radar',
-              data: [
-                {
-                  value: [
-                    parseFloat(data.info_general) || 0,
-                    parseFloat(data.info_tecnica) || 0,
-                    parseFloat(data.info_trl) || 0,
-                    parseFloat(data.info_mercado) || 0,
-                    parseFloat(data.info_financiera) || 0
-                  ],
-                  name: `Empresa ${this.selectedEmpresa}` // Cambia si es necesario
-                }
+    this.dashboardService.graficaFormulario(this.token, this.selectedEmpresa, tipo)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(
+        data => {
+          this.getPuntajesForm = {
+            title: {
+              text: tipo === 1 ? 'Puntajes por Formulario (Primera vez)' : 'Puntajes por Formulario (Segunda vez)',
+              left: 'center'
+            },
+            radar: {
+              indicator: [
+                { name: 'General', max: 100 },
+                { name: 'Técnica', max: 100 },
+                { name: 'TRL', max: 9 },
+                { name: 'Mercado', max: 100 },
+                { name: 'Financiera', max: 100 }
               ]
-            }
-          ]
-        };
-
-        // Actualizar la gráfica con los nuevos datos
-        if (this.chart) {
-          this.chart.dispose(); // Destruye el gráfico anterior antes de crear uno nuevo
+            },
+            series: [
+              {
+                name: 'Puntajes',
+                type: 'radar',
+                data: [
+                  {
+                    value: [
+                      +data.info_general || 0,
+                      +data.info_tecnica || 0,
+                      +data.info_trl || 0,
+                      +data.info_mercado || 0,
+                      +data.info_financiera || 0
+                    ],
+                    name: `Empresa ${this.selectedEmpresa}`
+                  }
+                ]
+              }
+            ]
+          };
+          this.cdr.markForCheck();
+        },
+        error => {
+          console.error('Error al obtener los puntajes del formulario:', error);
+          this.initGraficaVacia();
         }
-      },
-      error => {
-        console.error('Error al obtener los puntajes del formulario:', error);
-        this.initGraficaVacia();
-      }
-
-    );
+      );
   }
 
-
-
-  /*Normaliza los nombres de los departamentos eliminando tildes, espacios adicionales y convirtiendo todo a mayúsculas.
-  Esto se usa para garantizar que los nombres coincidan con el formato esperado en el archivo GeoJSON*/
   normalizeName(name: string): string {
     return name.toUpperCase()
       .replace(/Á/g, 'A')
@@ -654,5 +673,15 @@ export class DashboardComponent implements OnInit {
       .trim();
   }
 
+  trackById(index: number, item: any): number {
+    return item.id;
+  }
 
+  trackByEmpresa(index: number, empresa: any): string {
+    return empresa.documento;
+  }
+
+  trackByYear(index: number, year: number): number {
+    return year;
+  }
 }

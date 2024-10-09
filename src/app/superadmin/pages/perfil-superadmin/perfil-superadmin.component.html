@@ -35,11 +35,8 @@
                                 </i>
                             </button>
                             <div class="absolute top-0 right-0 mt-2 mr-2">
-                                <fa-icon 
-                                    [icon]="falupa" 
-                                    class="text-sm cursor-pointer"
-                                    [matTooltip]="'La imagen no debe pesar mas de 5MB. Suba la imagen en formato .webp'"
-                                    matTooltipPosition="right"
+                                <fa-icon [icon]="falupa" class="text-sm cursor-pointer"
+                                    [matTooltip]="'La imagen no debe pesar mas de 5MB.'" matTooltipPosition="right"
                                     style="color: #adb7c7;">
                                 </fa-icon>
                             </div>
@@ -165,18 +162,18 @@
                         <h5 class="mt-6 mb-4 text-xl font-bold text-center font-poppins">Información de Contacto</h5>
 
                         <label for="correo" class="block mb-2">Correo Electrónico</label>
-                        <input type="text" id="correo" formControlName="email" [readonly]="blockedInputs"
-                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                        <input type="text" id="correo" formControlName="email" [readonly]="blockedInputsCORREO" [ngStyle]="{'cursor': blockedInputsCORREO ? 'not-allowed' : 'auto'}"
+                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200"/>
 
                         <label for="celular" class="block mt-4 mb-2">Celular</label>
                         <input type="number" id="celular" formControlName="celular" [readonly]="blockedInputs"
-                            class="w-full h-12 p-2 bg-white border rounded-md md:mb-8 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+                            class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
                         <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
-                            <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos
-                            </div>
+                            <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos</div>
                             <div *ngIf="f.celular.errors.hasLetters">El número de celular no puede contener letras</div>
+                            <div *ngIf="f.celular.errors.lengthError">El número de celular debe tener entre 5 y 10 dígitos *</div>
                         </div>
                     </div>
                     <div class="w-20"></div>
@@ -224,9 +221,21 @@
                     (click)="toggleEditButtonn()">
                     Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500"
-                    *ngIf="!blockedInputs" (click)="updateAdministrador()">
-                    Guardar cambios
+                <button id="guardarBtn" type="submit" [disabled]="isSubmitting"
+                    class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500" *ngIf="!blockedInputs"
+                    (click)="updateAdministrador()">
+                    <span *ngIf="!isSubmitting">{{ buttonMessage }}</span>
+                    <span *ngIf="isSubmitting" class="flex items-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        {{ buttonMessage }}
+                    </span>
                 </button>
             </div>
 

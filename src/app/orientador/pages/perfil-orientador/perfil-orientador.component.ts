@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators, ValidationErrors, FormGroup} from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators, ValidationErrors, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService } from '../../../servicios/alert.service';
 import { OrientadorService } from '../../../servicios/orientador.service';
@@ -28,7 +28,8 @@ export class PerfilOrientadorComponent {
   errorMessage: string | null = null;
   email: string;
   token = '';
-  blockedInputs = true; 
+  blockedInputs = true;
+  blockedInputsCORREO = true;
   bloqueado = true;
   documento: string;
   user: User | null = null;
@@ -38,32 +39,34 @@ export class PerfilOrientadorComponent {
   isAuthenticated: boolean = true;
   selectedImagen_perfil: File | null = null;
   listTipoDocumento: any[] = [];
-  registerForm: FormGroup;  
+  registerForm: FormGroup;
   listOrientador: Orientador[] = [];
   originalData: any;
   perfil: '';
   boton: boolean;
   id: number;
   selectedImagen: File | null = null;
-  orientadorId : number
+  orientadorId: number
   perfilPreview: string | ArrayBuffer | null = null;
   isHidden = true;
   showEditButton = false;
   tiempoEspera = 1800;
   falupa = faCircleQuestion;
   isLoading: boolean = false;
+  isSubmitting: boolean = false;
+  buttonMessage: string = "Guardar cambios";
 
 
-/*
-  Define un formulario reactivo para el perfil del orientador.
-*/
+  /*
+    Define un formulario reactivo para el perfil del orientador.
+  */
   perfilorientadorForm = this.fb.group({
     documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
     nombre: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
     apellido: ['', [Validators.required, this.noNumbersValidator, Validators.minLength(4)]],
-    celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator ]],
+    celular: ['', [Validators.required, this.celularValidator]],
     imagen_perfil: [Validators.required],
-    email: ['', [Validators.required, Validators.email, this.emailValidator]],
+    email: [{ value: '', disabled: true }],
     password: ['', [Validators.minLength(8)]],
     genero: ['', Validators.required],
     fecha_nac: ['', [Validators.required, this.dateRangeValidator]],
@@ -86,12 +89,13 @@ export class PerfilOrientadorComponent {
 
   ) { }
 
-/* Inicializa con esas funciones al cargar la pagina */
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
+    this.bloquearcorreo();
     this.isAuthenticated = this.authServices.isAuthenticated();
-    this.verEditar(); 
-    this.cargarDepartamentos(); 
+    this.verEditar();
+    this.cargarDepartamentos();
     this.tipodato();
     this.initializeFormState();
   }
@@ -120,9 +124,9 @@ export class PerfilOrientadorComponent {
     }
   }
 
-/*
-  Carga la información del orientador para editar su perfil. 
-*/
+  /*
+    Carga la información del orientador para editar su perfil. 
+  */
   verEditar(): void {
     this.isLoading = true;
     if (this.token) {
@@ -183,26 +187,36 @@ export class PerfilOrientadorComponent {
     )
   }
 
-/*
-  Actualiza la información del orientador utilizando un FormData. 
-*/
-  updateOrientador(): void {
-    const formData = new FormData();
-    let estadoValue: string;
+  bloquearcorreo():void{
+    this.blockedInputsCORREO = true;
+  }
 
-    if(this.perfilorientadorForm.invalid){
-      this.alertService.errorAlert('Error', 'Debes completar los campos requeridos por el perfil')
+  /*
+    Actualiza la información del orientador utilizando un FormData. 
+  */
+  updateOrientador(): void {
+    if (this.perfilorientadorForm.invalid) {
+      this.alertService.errorAlert('Error', 'Hay errores en el formulario Revisa los campos.')
       this.submitted = true;
+      this.isSubmitting = false;
+      this.buttonMessage = "Guardar cambios";
       return
     }
 
-    const camposObligatorios = ['nombre','apellido','password'];
+    const formData = new FormData();
+    let estadoValue: string;
+    this.isSubmitting = true;
+    this.buttonMessage = "Guardando...";
+    
+    const camposObligatorios = ['nombre', 'apellido', 'password'];
     for (const key of camposObligatorios) {
-        const control = this.perfilorientadorForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            return;
-        }
+      const control = this.perfilorientadorForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
+        return;
+      }
     }
 
 
@@ -236,43 +250,59 @@ export class PerfilOrientadorComponent {
     if (this.perfilorientadorForm.get('direccion')?.value) {
       formData.append('direccion', this.perfilorientadorForm.get('direccion')?.value);
     }
-  
+
     if (this.selectedImagen_perfil) {
       formData.append('imagen_perfil', this.selectedImagen_perfil, this.selectedImagen_perfil.name);
     }
-        this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
-          if (result.isConfirmed) {
-            this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
-              (data) => {
-                setTimeout(function () {
-                  location.reload();
-                }, this.tiempoEspera);
-                this.alertService.successAlert('Exito', data.message);
-              },
-              (error) => {
-                console.error('Error from server:', error);
-                this.alertService.errorAlert('Error', error.error.message);
-              }
-            );
+    this.alertService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+      if (result.isConfirmed) {
+        this.orientadorService.updateOrientador(this.token, this.orientadorId, formData).subscribe(
+          (data) => {
+            this.desactivarboton();
+            this.buttonMessage = "Guardando...";
+            this.isSubmitting = false;
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+            this.alertService.successAlert('Exito', data.message);
+          },
+          (error) => {
+            this.isSubmitting = false;
+            this.buttonMessage = "Guardar cambios";
+            console.error('Error from server:', error);
+            this.alertService.errorAlert('Error', error.error.message);
           }
-        });
+        );
+      } else {
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
       }
-        
-/*
-  Registra en la consola los errores de validación de cada control 
-  del formulario perfilorientadorForm. Para cada control que tiene 
-  errores, se imprime el nombre del control y los errores correspondientes.
-*/
-    logFormErrors(): void {
-      Object.keys(this.perfilorientadorForm.controls).forEach(key => {
-        const controlErrors = this.perfilorientadorForm.get(key)?.errors;
-        if (controlErrors) {
-          console.error(`Error en el control ${key}:`, controlErrors);
-        }
-      });
-    }
+    });
+  }
 
-  
+  desactivarboton():void{
+    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+    if (guardarBtn) {
+// Cambia el cursor para indicar que está deshabilitado
+      guardarBtn.style.pointerEvents = 'none';
+    }
+  }
+
+  /*
+    Registra en la consola los errores de validación de cada control 
+    del formulario perfilorientadorForm. Para cada control que tiene 
+    errores, se imprime el nombre del control y los errores correspondientes.
+  */
+  logFormErrors(): void {
+    Object.keys(this.perfilorientadorForm.controls).forEach(key => {
+      const controlErrors = this.perfilorientadorForm.get(key)?.errors;
+      if (controlErrors) {
+        console.error(`Error en el control ${key}:`, controlErrors);
+      }
+    });
+  }
+
+
 
   get f() { return this.perfilorientadorForm.controls; }
 
@@ -297,7 +327,7 @@ export class PerfilOrientadorComponent {
   toggleInputsLock(): void {
     this.blockedInputs = !this.blockedInputs;
     const fieldsToToggle = ['documento', 'nombre', 'apellido', 'celular', 'password', 'genero', 'fecha_nac', 'direccion', 'id_municipio', 'id_departamento', 'id_tipo_documento'];
-    
+
     fieldsToToggle.forEach(field => {
       const control = this.perfilorientadorForm.get(field);
       if (control) {
@@ -311,13 +341,13 @@ export class PerfilOrientadorComponent {
       }
     });
     this.cdRef.detectChanges();
-  
+
   }
-/*
-  Carga la lista de departamentos a través del servicio departamentoService.
-  
-*/
-   cargarDepartamentos(): void {
+  /*
+    Carga la lista de departamentos a través del servicio departamentoService.
+    
+  */
+  cargarDepartamentos(): void {
     this.departamentoService.getDepartamento().subscribe(
       (data: any[]) => {
         this.listDepartamentos = data;
@@ -342,9 +372,9 @@ export class PerfilOrientadorComponent {
     this.cargarMunicipios(selectedDepartamento);
   }
 
-/*
-      Este método se encarga de obtener una lista de municipios asociados a un departamento específico.
-    */
+  /*
+        Este método se encarga de obtener una lista de municipios asociados a un departamento específico.
+      */
   cargarMunicipios(departamentoId: string): void {
     this.municipioService.getMunicipios(departamentoId).subscribe(
       (data) => {
@@ -359,7 +389,7 @@ export class PerfilOrientadorComponent {
   /*
       Este método se encarga de restablecer el campo de archivo a su estado inicial, 
       eliminando cualquier valor previamente asignado.
-    */ 
+    */
   resetFileField(field: string) {
     if (field === 'imagen_perfil') {
       this.perfilorientadorForm.patchValue({ imagen_perfil: null });
@@ -375,52 +405,52 @@ export class PerfilOrientadorComponent {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      
+
       let maxSize = 0;
-  
+
       if (field === 'imagen_perfil') {
         maxSize = 5 * 1024 * 1024;
-      } 
-  
+      }
+
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-        event.target.value = ''; 
+        event.target.value = '';
         if (field === 'imagen_perfil') {
           this.perfilorientadorForm.patchValue({ imagen_perfil: null });
           this.selectedImagen_perfil = null;
-          this.perfilPreview = null; 
+          this.perfilPreview = null;
         }
         this.resetFileField(field);
         return;
       }
 
       const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const previewUrl = e.target.result;
-      if (field === 'imagen_perfil') {
-        this.perfilorientadorForm.patchValue({ imagen_perfil: previewUrl });
-        this.perfilPreview = previewUrl;
-      }
-    };
-    reader.readAsDataURL(file);
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'imagen_perfil') {
+          this.perfilorientadorForm.patchValue({ imagen_perfil: previewUrl });
+          this.perfilPreview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
       this.generateImagePreview(file, field);
 
       if (field === 'imagen_perfil') {
         this.selectedImagen_perfil = file;
         this.perfilorientadorForm.patchValue({ imagen_perfil: file });
       }
-      
-  } else {
-    this.resetFileField(field);
-  }
+
+    } else {
+      this.resetFileField(field);
+    }
   }
 
-   /*
-      Este método utiliza `FileReader` para crear una vista previa de la imagen 
-      seleccionada, actualizando la propiedad correspondiente en el componente.
-    */
+  /*
+     Este método utiliza `FileReader` para crear una vista previa de la imagen 
+     seleccionada, actualizando la propiedad correspondiente en el componente.
+   */
   generateImagePreview(file: File, field: string) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -431,115 +461,109 @@ export class PerfilOrientadorComponent {
     };
     reader.readAsDataURL(file);
   }
-    // Restaura los datos originales
-    onCancel(): void {
-      location.reload();
-    }
-  
-    /*muestra boton de guardar cambios*/ 
-    mostrarGuardarCambios(): void {
-      this.boton = false;
-    }
-   /*
-    Activa el modo de edición para el formulario o inputs.
-  */
-    onEdit() {
-      this.blockedInputs = false;
-      this.showEditButton = true;
-      this.toggleInputsLock();
-    }
- 
-    /*
-      El método se encarga de obtener una lista de tipos de documentos desde el servicio de autenticación (`authService`) 
-      y almacenarla en la propiedad `listTipoDocumento`. 
-    */
-    tipodato(): void {
-      if (this.token) {
-        this.authServices.tipoDocumento().subscribe(
-          data => {
-            this.listTipoDocumento = data;
-          },
-          error => {
-            console.log(error);
-          }
-        )
-      }
-    }
-/*
-    Valida que un campo no contenga números.
-  */
-    noNumbersValidator(control: AbstractControl): ValidationErrors | null {
-      const value = control.value;
-      const hasNumbers = /\d/.test(value);
-  
-      if (hasNumbers) {
-        return { hasNumbers: 'El campo no debe contener números *' };
-      } else {
-        return null;
-      }
-    }
+  // Restaura los datos originales
+  onCancel(): void {
+    location.reload();
+  }
 
-/*
-    Valida que un campo no contenga letras.
+  /*muestra boton de guardar cambios*/
+  mostrarGuardarCambios(): void {
+    this.boton = false;
+  }
+  /*
+   Activa el modo de edición para el formulario o inputs.
+ */
+  onEdit() {
+    this.blockedInputs = false;
+    this.showEditButton = true;
+    this.toggleInputsLock();
+  }
+
+  /*
+    El método se encarga de obtener una lista de tipos de documentos desde el servicio de autenticación (`authService`) 
+    y almacenarla en la propiedad `listTipoDocumento`. 
   */
-    noLettersValidator(control: AbstractControl): ValidationErrors | null {
-      const value = control.value;
-      const hasLetters = /[a-zA-Z]/.test(value);
-    
-      if (hasLetters) {
-        return { hasLetters: 'El campo no debe contener letras *' };
-      } else {
-        return null;
-      }
+  tipodato(): void {
+    if (this.token) {
+      this.authServices.tipoDocumento().subscribe(
+        data => {
+          this.listTipoDocumento = data;
+        },
+        error => {
+          console.log(error);
+        }
+      )
     }
+  }
+  /*
+      Valida que un campo no contenga números.
+    */
+  noNumbersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasNumbers = /\d/.test(value);
+
+    if (hasNumbers) {
+      return { hasNumbers: 'El campo no debe contener números *' };
+    } else {
+      return null;
+    }
+  }
+
+  /*
+      Valida que un campo no contenga letras.
+    */
+  noLettersValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    const hasLetters = /[a-zA-Z]/.test(value);
+
+    if (hasLetters) {
+      return { hasLetters: 'El campo no debe contener letras *' };
+    } else {
+      return null;
+    }
+  }
 
   /*
     Valida que la fecha seleccionada no sea anterior a la fecha actual.
   */
-    dateRangeValidator(control: AbstractControl): ValidationErrors | null {
-      const value = control.value;
-      if (!value) {
-        return null;
-      }
-      const selectedDate = new Date(value);
-      const today = new Date();
-      const hundredYearsAgo = new Date();
-      hundredYearsAgo.setFullYear(today.getFullYear() - 100);
-      const eighteenYearsAgo = new Date();
-      eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
-    
-      if (selectedDate > today) {
-        return { futureDate: 'La fecha no es válida *' };
-      } else if (selectedDate < hundredYearsAgo) {
-        return { tooOld: 'La fecha no es válida *' };
-      } else if (selectedDate > eighteenYearsAgo) {
-        return { tooRecent: 'Debe tener al menos 18 años *' };
-      } else {
-        return null;
-      }
-    }
-/*
-    Valida que un número de documento tenga una longitud específica.
-  */
-    documentoValidator(control: AbstractControl): ValidationErrors | null {
-      const value = control.value ? control.value.toString() : '';
-      if (value.length < 5 || value.length > 13) {
-        return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
-      }
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) {
       return null;
     }
+    const selectedDate = new Date(value);
+    const today = new Date();
+    const hundredYearsAgo = new Date();
+    hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
 
-  /*
-  Valida el formato del correo electrónico ingresado.
-*/
-    emailValidator(control: AbstractControl): ValidationErrors | null {
-      const value = control.value;
-      const hasAtSymbol = /@/.test(value);
-  
-      if (!hasAtSymbol) {
-        return { emailInvalid: 'El correo debe ser válido *' };
-      } else {
-        return null;
-      }
+    if (selectedDate > today) {
+      return { futureDate: 'La fecha no es válida *' };
+    } else if (selectedDate < hundredYearsAgo) {
+      return { tooOld: 'La fecha no es válida *' };
+    } else if (selectedDate > eighteenYearsAgo) {
+      return { tooRecent: 'Debe tener al menos 18 años *' };
+    } else {
+      return null;
     }
+  }
+  /*
+      Valida que un número de documento tenga una longitud específica.
+    */
+  documentoValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 13) {
+      return { lengthError: 'El número de documento debe tener entre 5 y 13 dígitos *' };
+    }
+    return null;
+  }
+
+  celularValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 10) {
+      return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
+    }
+    return null;
+  }
 }

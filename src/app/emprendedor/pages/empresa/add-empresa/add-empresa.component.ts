@@ -368,7 +368,7 @@ export class AddEmpresaComponent {
         this.router.navigate(['list-empresa']);
       },
       error => {
-        this.alertService.errorAlert('Error', error.message);
+        this.alertService.errorAlert('Error', error.error.message);
         console.log('ERROR:', error.message);
       }
     );

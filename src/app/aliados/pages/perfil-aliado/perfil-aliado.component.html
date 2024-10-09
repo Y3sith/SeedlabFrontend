@@ -82,15 +82,9 @@
                                     La contraseña debe tener al menos 8 caracteres
                                 </div>
                                 <label for="correo" class="block mt-4 mb-2">Correo Electrónico</label>
-                                <input type="text" id="correo" formControlName="email" [readonly]="blockedInputs"
+                                <input type="text" id="correo" formControlName="email" [readonly]="blockedInputsCORREO" [ngStyle]="{'cursor': blockedInputsCORREO ? 'not-allowed' : 'auto'}"
+                                    [matTooltip]="'No puedes editar el corrreo.'"
                                     class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
-                                <div *ngIf="(formSubmitted || f['email'].touched) && f['email'].invalid"
-                                    class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50"
-                                    role="alert">
-                                    <span *ngIf="f['email'].errors?.['required']">Este campo es requerido *</span>
-                                    <span *ngIf="f['email'].errors?.['email']">Ingrese un correo electrónico
-                                        válido</span>
-                                </div>
                                 <div class="min-[860px]:flex md:h-2">
                                     <label for="tipodocumento" class="block mb-4 md:w-64"></label>
                                 </div>
@@ -257,9 +251,20 @@
                     (click)="toggleEditButtonn()">
                     Cancelar
                 </button>
-                <button type="submit" class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500"
+                <button id="guardarBtn" type="submit" [disabled]="isSubmitting" class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500"
                     *ngIf="!blockedInputs" (click)="upadateAliado()">
-                    Guardar cambios
+                    <span *ngIf="!isSubmitting">{{ buttonMessage }}</span>
+                    <span *ngIf="isSubmitting" class="flex items-center">
+                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                            fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        {{ buttonMessage }}
+                    </span>
                 </button>
             </div>
 

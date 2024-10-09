@@ -38,7 +38,6 @@ export class PerfilEmprendedorComponent implements OnInit {
   estado: boolean;
   isAuthenticated: boolean = true;
   listTipoDocumento: any[] = [];
-  tiempoEspera = 1800;
   emprendedorForm: FormGroup;
   registerForm: FormGroup;
   listEmprendedor: PerfilEmprendedor[] = [];
@@ -52,6 +51,8 @@ export class PerfilEmprendedorComponent implements OnInit {
   showEditButton = false;
   falupa = faCircleQuestion;
   isLoading: boolean = false;
+  isSubmitting: boolean = false;
+  buttonMessage: string = "Guardar cambios";
 
   constructor(
     private fb: FormBuilder,
@@ -68,7 +69,7 @@ export class PerfilEmprendedorComponent implements OnInit {
       apellido: ['', [Validators.required, this.noNumbersValidator]],
       documento: ['', Validators.required],
       imagen_perfil: [Validators.required],
-      celular: ['', [Validators.required, Validators.maxLength(10), this.noLettersValidator]],
+      celular: ['', [Validators.required,this.celularValidator, this.noLettersValidator]],
       genero: ['', Validators.required],
       direccion: [],
       id_tipo_documento: [Validators.required],
@@ -248,18 +249,25 @@ export class PerfilEmprendedorComponent implements OnInit {
     confirmación, mostrando un mensaje de éxito o error.
   */
   updateEmprendedor(): void {
-    const formData = new FormData();
-    let estadoValue: string;
     if (this.emprendedorForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos.');
       this.submitted = true;
+      this.isSubmitting = false;
+      this.buttonMessage = "Guardar cambios";
       return;
     }
+    const formData = new FormData();
+    let estadoValue: string;
+    this.isSubmitting = true;
+    this.buttonMessage = "Guardando...";
+
     const camposObligatoriosApoyo = ['nombre', 'apellido', 'password','celular', 'direccion'];  ///falta la direccion cuando no esta en perfil
     for (const key of camposObligatoriosApoyo) {
       const control = this.emprendedorForm.get(key);
       if (control && control.value && control.value.trim() === '') {
         this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
         return;
       }
     }
@@ -305,18 +313,33 @@ export class PerfilEmprendedorComponent implements OnInit {
       if (result.isConfirmed) {
         this.emprendedorService.updateEmprendedor(this.token, formData, this.documento).subscribe(
           (data) => {
+            this.desactivarBoton();
+            this.buttonMessage = "Guardando...";
+            this.isSubmitting = false;
             setTimeout(function () {
               location.reload();
-            }, this.tiempoEspera);
+            }, 2000);
             this.alertService.successAlert('Exito', data.message);
           },
           (error) => {
+            this.isSubmitting = false;
+            this.buttonMessage = "Guardar cambios";
             console.error('Error from server:', error);
             this.alertService.errorAlert('Error', error.error.message);
           }
         );
+      } else {
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
       }
     });
+  }
+
+  desactivarBoton():void{
+    const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
+    if (guardarBtn) {
+      guardarBtn.style.pointerEvents = 'none';
+    }
   }
 
   /*
@@ -573,6 +596,14 @@ export class PerfilEmprendedorComponent implements OnInit {
     } else {
       return null;
     }
+  }
+
+  celularValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 10) {
+      return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
+    }
+    return null;
   }
 
 }
