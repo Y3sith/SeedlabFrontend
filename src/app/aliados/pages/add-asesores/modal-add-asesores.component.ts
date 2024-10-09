@@ -48,7 +48,8 @@ export class ModalAddAsesoresComponent implements OnInit {
   errorMessage: string = '';
   isLoading: boolean = false;
   isSubmitting = false;
-
+  bloqueado = false;
+  
 /*
   Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
   de campos relacionados con los datos de un asesor. Se aplican validaciones específicas para garantizar que la entrada 
@@ -261,7 +262,7 @@ export class ModalAddAsesoresComponent implements OnInit {
             password: '',
             estado: data.estado,
           });
-
+          this.bloqueado = true;
           this.isActive = data.estado === 'Activo';
           setTimeout(() => {
             this.asesorForm.get('estado')?.setValue(this.isActive);

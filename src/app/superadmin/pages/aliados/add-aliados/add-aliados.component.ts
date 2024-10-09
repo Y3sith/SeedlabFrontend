@@ -54,6 +54,7 @@ export class AddAliadosComponent {
   showFirstSection = true;
   showSecondSection = false;
   tiempoEspera = 1800;
+  bloqueado = false;
 
   showThirdSection = false;
   logoPreview: string | ArrayBuffer | null = null;
@@ -327,6 +328,7 @@ limpiarPrefijo(url: string): string {
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
         let rutaMulti = data.ruta_multi;
+        this.bloqueado = true;
         if (data.id_tipo_dato === 1) {
           this.videoUrl = this.limpiarPrefijo(rutaMulti);
           rutaMulti = this.videoUrl;

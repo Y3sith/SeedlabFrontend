@@ -1353,20 +1353,22 @@ export class EncuestaEmpresaComponent {
         this.saveSection(5, this.listaRespuestas5);
       }
     
-      // Mostrar alerta de confirmación
-      this.alertService.alertaActivarDesactivar(`¿Está seguro de enviar el formulario?`, "warning",  this.buttonMessage,).then((result) => {
-        if (result.isConfirmed) {
-    
-          // Cambiar el mensaje del botón
-          this.buttonMessage = "Enviando...";
-          this.isSubmitting = true;
-    
-          // Llamamos a enviarRespuestasJson
-          this.enviarRespuestasJson();
-    
-        }
-      });
-    }
+      if (!this.isSubmitting) {
+        // Mostrar alerta de confirmación
+        this.alertService.alertaActivarDesactivar(`¿Está seguro de enviar el formulario?`, "warning",  this.buttonMessage,).then((result) => {
+          if (result.isConfirmed) {
+      
+            // Cambiar el mensaje del botón
+            this.buttonMessage = "Enviando...";
+            this.isSubmitting = true;
+      
+            // Llamamos a enviarRespuestasJson
+            this.enviarRespuestasJson();
+      
+          }
+        });
+      }
+      }
     
     
     return isValidForm;

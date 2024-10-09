@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -25,7 +25,9 @@ export class CrearAsesoriaModalComponent {
   docEmprendedor: string | null = null; 
   isorientador = new FormControl(false);
   isSubmitting = false;
-
+  charCount: number = 0;
+  charCount1: number = 0;
+  submitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,13 +39,13 @@ export class CrearAsesoriaModalComponent {
 
   ) {
     this.asesoriaForm = this.fb.group({
-      nombre: [''],
-      notas: [''],
+      nombre: ['', Validators.required],
+      notas: ['', Validators.required],
       isorientador: [false],
       asignacion: [false],
       fecha: [''],
       nom_aliado: ['']
-    });
+    }, { validator: this.aliadoOrientadorValidator });
 
     this.validateToken();
   }
@@ -74,6 +76,20 @@ export class CrearAsesoriaModalComponent {
     }
   }
 
+  aliadoOrientadorValidator(group: FormGroup): {[key: string]: boolean} | null {
+    const nomAliado = group.get('nom_aliado');
+    const isOrientador = group.get('isorientador');
+
+    if (nomAliado && isOrientador) {
+      if ((nomAliado.value && isOrientador.value) || (!nomAliado.value && !isOrientador.value)) {
+        return { 'aliadoOrientadorInvalid': true };
+      }
+    }
+    return null;
+  }
+
+  get f() { return this.asesoriaForm.controls; }
+
 /*
   Carga la lista de aliados a través del servicio de aliados.
 */
@@ -98,11 +114,19 @@ export class CrearAsesoriaModalComponent {
       this.asesoriaForm.get('nom_aliado')?.enable();
     }
   }
+
+  updateCharCount(): void {
+    const descripcionValue = this.asesoriaForm.get('nombre')?.value || '';
+    const notasvalue = this.asesoriaForm.get('notas')?.value || '';
+    this.charCount = descripcionValue.length;
+    this.charCount1 = notasvalue.length;
+  }
   
 /*
   Envía los datos del formulario de asesoría si es válido.
 */
   onSubmit() {
+    this.submitted = true;
     if (this.asesoriaForm.valid) {
       this.isSubmitting = true;
       const formData = this.asesoriaForm.value;
@@ -126,17 +150,17 @@ export class CrearAsesoriaModalComponent {
       }
       this.asesoriaService.crearAsesoria(this.token, formData).subscribe(
         response => {
-          this.dialogRef.close(formData);
           this.alertService.successAlert('Exito', 'Asesoría creada correctamente');
+          setTimeout(() => {
+            this.isSubmitting = false;
+            this.dialogRef.close(this.asesoriaForm.value);
+          }, 1500);
         },
         error => {
+          this.isSubmitting = false;
           this.alertService.errorAlert('Error', 'Los campos de la asesoría estan vacios')
         }
       );
-      setTimeout(() => {
-        this.isSubmitting = false;
-        this.dialogRef.close(this.asesoriaForm.value);
-      }, 1500);
     }
   }
 

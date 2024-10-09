@@ -69,7 +69,7 @@ export class RutaEmprendedorComponent implements OnInit {
       this.user = identity;
       this.currentRolId = this.user.id_rol;
 
-      if (this.currentRolId !== 1 && this.currentRolId !== 2){
+      if (this.currentRolId !== 1 && this.currentRolId !== 2  && this.currentRolId !== 2){
         this.documento = this.user.emprendedor.documento;
       }
   
@@ -121,7 +121,6 @@ export class RutaEmprendedorComponent implements OnInit {
     Lista la ruta activa del usuario.
   */
   listarRutaActiva(): void {
-    debugger
     if (this.token) {
       this.isLoading = true;
       this.rutaService.rutasmejorado(this.token).subscribe(
