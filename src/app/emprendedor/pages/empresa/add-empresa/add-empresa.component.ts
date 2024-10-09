@@ -255,7 +255,6 @@ export class AddEmpresaComponent {
     y actualiza los valores en el formulario.
   */
   cargarDatosEmpresa(): void {
-    //debugger
     this.isLoading = true;
     this.EmpresaService.traerEmpresasola(this.token, this.id_emprendedor, this.id_documentoEmpresa).subscribe(
       data => {
@@ -282,7 +281,6 @@ export class AddEmpresaComponent {
   }
 
   crearEmpresa(): void {
-    // debugger
     this.submitted = true;
     if (this.addEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del formulario');
@@ -547,7 +545,6 @@ export class AddEmpresaComponent {
   Oculta el botón de editar y muestra los botones nuevos.
 */
   limpiarYCambiarBotones() {
-    debugger
     this.addApoyoEmpresaForm.reset();
     this.mostrarBotonEditar = false;
     this.mostrarBotonesNuevos = true;
@@ -558,7 +555,6 @@ export class AddEmpresaComponent {
   */
 
   crearApoyo(): void {
-     debugger
     this.submitted = true;
     if (this.addApoyoEmpresaForm.invalid) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');

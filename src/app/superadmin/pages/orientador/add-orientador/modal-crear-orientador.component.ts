@@ -30,7 +30,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
   hide = true;
   errorMessage: string = '';
   isSubmitting = false;
-
+  bloqueado = false;
   //////
   listTipoDocumento: [] = [];
   listDepartamentos: any[] = [];
@@ -205,6 +205,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
             password: '',
             estado: data.estado
           });
+          this.bloqueado = true;
           this.isActive = data.estado === 'Activo';
           setTimeout(() => {
             this.orientadorForm.get('estado')?.setValue(this.isActive);
