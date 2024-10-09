@@ -21,7 +21,7 @@
     </div>
 
 
-    <div class="relative w-full banner-swiper-container overflow-hidde ">
+    <div class="relative w-full banner-swiper-container overflow-hidde">
       <div class="swiper-wrapper">
         <ng-container *ngFor="let banner of listBanner; trackBy: trackByBanner">
           <div class="swiper-slide banner-swiper-slide" style="width: 100%;">
@@ -44,6 +44,9 @@
         class="text-lg -translate-y-1/2 cursor-pointer lg:text-2xl z-absolute text-cyan-500 hover:text-cyan-500/50 top-1/2 right-5 swiper-button-next">
       </div>
     </div>
+
+    <div class="h-10 max-md:hidden"></div>
+    
     <div class="flex flex-col items-center m-4 -mt-6 bg-white lg:flex-row max-lg:flex-col max-lg:m-11 ">
       <div
         class="text-justify lg:w-[28%] bg-[rgb(0,179,237)]   text-white lg:ml-8 sm:m-6 lg:-mt-044 max-sm:-mt-0 md:-mt-0 max-lg:w-full max-lg:ml-0 max-lg:mt-0 h-[calc(100%-18px)] xl:p-14 mb-24">
@@ -61,14 +64,14 @@
 
       </div>
       <div class="relative w-full lg:w-2/3">
-        <div class="h-auto banner-swiper-container lg:flex lg:flex-row lg:items-center" style="margin-top: -200px;">
+        <div class="h-auto banner-swiper-container lg:flex lg:flex-row lg:items-center">
           <div class="swiper-wrapper">
             <div
-              class="p-2 swiper-slide mt-36 max-sm:mt-44 lg:flex lg:flex-row lg:items-center max-lg:flex max-lg:flex-col max-lg:items-center"
+              class="p-2 swiper-slide lg:flex lg:flex-row lg:items-center max-lg:flex max-lg:flex-col max-lg:items-center"
               *ngFor="let aliado of listAliados; trackBy: trackByAliado">
               <img [src]="aliado.logo" [alt]="aliado.nombre" width="400" height="300"
                 class="logo-img max-lg:mb-4 md:mt-16">
-              <div class="relative w-full -mb-24 lg:-ml-1 lg:pl-1 lg:p-1 max-lg:p-4 max-lg:text-center max-sm:-mt-20">
+              <div class="relative w-full -mb-24 lg:-ml-1 lg:pl-1 lg:p-1 max-lg:p-4 max-lg:text-center max-sm:-mt-8">
                 <p class="text-justify ml-4 description-line mb-1 max-sm:text-[14px] max-lg:text-center">{{
                   aliado.descripcion }}</p>
               </div>
