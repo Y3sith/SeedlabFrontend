@@ -1,7 +1,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<div
-    class="absolute top-0 left-0 w-full  min-h-screen bg-cover bg-center md:bg-center bg-no-repeat bg-[url('./assets/images/fondoLogin.webp')] text-[16px] font-poppins transition-opacity duration-500 ease-in-out"
-    [ngClass]="{'opacity-50': !isLoaded, 'opacity-100': isLoaded}">
+<head>
+    <link rel="preload" href="./assets/images/fondoLogin.webp" as="image">
+</head>
+<div class="absolute top-0 left-0 w-full min-h-screen bg-login bg-cover bg-center md:bg-center bg-no-repeat text-[16px] font-poppins transition-opacity duration-500 ease-in-out"
+[ngClass]="{'opacity-50': !isLoaded, 'opacity-100': isLoaded}">
 
     <div class="grid content-center justify-center min-h-screen ">
         <div class="grid content-center justify-center grid-cols-1 gap-2 pl-0 md:grid-cols-3">
@@ -14,8 +16,8 @@
                 </div>
             </div>
             <div class="col-span-2">
-                <h2 class="text-[#fff] text-center mt-4 md:font-[500] font-poppins">¿Aún no estás registrado en SeedLab? <a
-                        class="no-underline" href="registro"><span class="text-[#00B3ED]">Registrate</span></a></h2>
+                <h2 class="text-[#fff] text-center mt-4 md:font-[500] font-poppins">¿Aún no estás registrado en SeedLab?
+                    <a class="no-underline" href="registro"><span class="text-[#00B3ED]">Registrate</span></a></h2>
 
 
                 <form [formGroup]="loginForm" (ngSubmit)="login()"

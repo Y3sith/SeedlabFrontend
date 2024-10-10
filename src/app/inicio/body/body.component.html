@@ -1,6 +1,5 @@
 <div class="w-full overflow-x-hidden font-poppins ">
-  <div [ngClass]="{'opacity-5': !isLoaded, 'opacity-100': isLoaded}"
-    class="transition-opacity duration-1000 ease-in-out">
+  <div>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <div class="flex flex-col justify-between w-full lg:flex-row md:flex-row">
       <mat-toolbar
@@ -29,7 +28,7 @@
               <source [srcset]="banner.urlImagen + ' 800w, ' + banner.urlImagen + ' 1600w'"
                 sizes="(max-width: 800px) 100vw, 800px" type="image/webp" />
               <img [src]="banner.urlImagen" [alt]="banner.descripcion || 'Banner image'" width="800" height="400"
-                loading="eager" />
+                loading="eager" class="banner-image loading"/>
             </picture>
           </div>
         </ng-container>

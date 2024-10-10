@@ -694,7 +694,7 @@ export class EncuestaEmpresaComponent {
     }
 
     for (let i = 15; i < 28; i++) {
-      
+      debugger
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas2[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas2[respCounter].id_empresa = this.id_empresa;
@@ -828,6 +828,7 @@ export class EncuestaEmpresaComponent {
       }
     }
     this.next();
+    console.log('acumXSeccion2:', this.acumXSeccion2);
     this.saveSection(2, this.listaRespuestas2);
     return isValidForm;
 
@@ -1277,7 +1278,6 @@ export class EncuestaEmpresaComponent {
     }
 
     for (let i = 42; i < 46; i++) {
-      //debugger;
       const currentPregunta = PREGUNTAS[i];
       this.listaRespuestas5[respCounter].id_pregunta = currentPregunta.id;
       this.listaRespuestas5[respCounter].id_empresa = this.id_empresa;
@@ -1426,7 +1426,7 @@ enviarRespuestasJson() {
         respuestas: totalRespuestas,
         id_empresa: this.id_empresa
       };
-
+      debugger
       const puntajes = {
         info_general: this.acumXSeccion1,
         info_financiera: this.acumXSeccion2,
@@ -1436,6 +1436,7 @@ enviarRespuestasJson() {
         documento_empresa: this.id_empresa,
         ver_form: 1
       };
+      console.log(puntajes);
 
       // Primero guardar puntajes y si es exitoso, proceder a guardar las respuestas
     this.puntajeService.savePuntajeSeccion(puntajes, this.id_empresa).pipe(
