@@ -9,11 +9,12 @@ import { AlertService } from '../../../servicios/alert.service';
 import { AuthService } from '../../../servicios/auth.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [FontAwesomeModule, ReactiveFormsModule, CommonModule],
+  imports: [FontAwesomeModule, ReactiveFormsModule, CommonModule, MatCheckboxModule],
   providers: [DepartamentoService, MunicipioService, AuthService, AlertService],
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.css']
@@ -74,7 +75,8 @@ export class RegistroComponent implements OnInit {
       email: ['', [Validators.required, Validators.email, this.emailValidator]],
       password: ['', [Validators.required, Validators.minLength(8), this.passwordValidator]],
       estado: '1',
-      id_departamento: ['', [Validators.required]] // Añadir el campo departamento al formulario
+      id_departamento: ['', [Validators.required]], // Añadir el campo departamento al formulario
+      aceptaTerminos: [false, Validators.requiredTrue]
     });
   }
 

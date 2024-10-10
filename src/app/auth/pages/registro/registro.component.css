@@ -6,16 +6,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"]::-moz-calendar-picker-indicator {
     opacity: 0;
 }
-select {
-    -webkit-appearance: none; /* Para Safari/Chrome */
-    -moz-appearance: none; /* Para Firefox */
-    appearance: none;
-    background-position: right center; /* Ajusta la posición del icono */
-    background-repeat: no-repeat; /* Evita que el icono se repita */
-    padding-right: 1.5em; /* Ajusta el espacio para el icono */
-  }
-
-  input[type="password"]::-ms-reveal { display: none; }
+input[type="password"]::-ms-reveal { display: none; }
 
 h1{
     background-position: 150px;

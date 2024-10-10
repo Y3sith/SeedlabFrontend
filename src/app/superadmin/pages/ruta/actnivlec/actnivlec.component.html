@@ -12,7 +12,7 @@
     </header>
 
     <div *ngIf="isLoading" class="loading-overlay">
-        <div class="spinner " ></div>
+        <div class="spinner "></div>
     </div>
     <!-- <span *ngIf="!isLoading"></span> -->
     <div class="flex items-center justify-center font-poppins">
@@ -111,12 +111,13 @@
                                 </div>
                             </div>
                             <div class="flex justify-center w-full px-4 mt-4">
-                                <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()" [disabled]="isSubmitting"
+                                <button id="guardarBtn" type="button" (click)="addActividadSuperAdmin()"
+                                    [disabled]="isSubmitting"
                                     class="w-auto max-w-md bg-orange-500 text-white py-1 px-10 rounded-full text-lg sm:text-xl md:text-xl font-semibold italic font-poppins transition-all duration-300 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-300">
                                     <span *ngIf="!isSubmitting">Guardar</span>
                                     <span *ngIf="isSubmitting" class="flex items-center">
-                                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24">
+                                        <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                                 stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor"
@@ -168,10 +169,23 @@
                             <div class="flex justify-end items-center mb-4">
                                 <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
                                     isEditing ? 'Guardar' : 'Agregar nivel' }}</span>
-                                <a id="agregarNivelBtn" (click)="addNivelSuperAdmin()" [routerLink]="'#'"
-                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
-                                    <span class="text-3xl font-semibold leading-none ">+</span>
-                                </a>
+                                <button id="agregarNivelBtn" (click)="addNivelSuperAdmin()"
+                                    [disabled]="isSubmittingNivel"
+                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline transition-all duration-300 hover:bg-[#E59D00] focus:outline-none focus:ring-2 focus:ring-[#FFB000]">
+                                    <ng-container *ngIf="!isSubmittingNivel">
+                                        <span class="text-3xl font-semibold leading-none">+</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="isSubmittingNivel">
+                                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                    </ng-container>
+                                </button>
                             </div>
                         </form>
 
@@ -225,12 +239,25 @@
                             <input type="hidden" id="id_nivel" formControlName="id_nivel">
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
-                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
-                                    isEditing ? 'Guardar' : 'Agregar Lección' }}</span>
-                                <a id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()" [routerLink]="'#'"
-                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
-                                    <span class="text-3xl font-semibold leading-none ">+</span>
-                                </a>
+                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1"
+                                    style="font-weight: 600;">{{isEditing ? 'Guardar' : 'Agregar Lección'}}</span>
+                                <button id="agregarLeccionBtn" (click)="addLeccionSuperAdmin()"
+                                    [disabled]="isSubmittingLeccion"
+                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline transition-all duration-300 hover:bg-[#E59D00] focus:outline-none focus:ring-2 focus:ring-[#FFB000]">
+                                    <ng-container *ngIf="!isSubmittingLeccion">
+                                        <span class="text-3xl font-semibold leading-none">+</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="isSubmittingLeccion">
+                                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
+                                        </svg>
+                                    </ng-container>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -392,12 +419,21 @@
                             </div>
                             <!-- Botón para agregar -->
                             <div class="flex justify-end items-center mb-4">
-                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{
-                                    isEditing ? 'Guardar' : 'Agregar Contenido' }}</span>
-                                <a id="agregarContenidoBtn" (click)="addContenidoLeccionSuperAdmin()" [routerLink]="'#'"
-                                    class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline">
-                                    <span class="text-3xl font-semibold leading-none ">+</span>
-                                </a>
+                                <span class="mr-3 text-[#FFB000] text-[18px] italic mb-1" style="font-weight: 600;">{{isEditing ? 'Guardar' : 'Agregar Contenido'}}</span>
+                                <button id="agregarContenidoBtn"
+                                (click)="addContenidoLeccionSuperAdmin()"
+                                [disabled]="isSubmittingContenido"
+                                class="bg-[#FFB000] text-white w-16 h-8 rounded-lg flex items-center justify-center no-underline transition-all duration-300 hover:bg-[#E59D00] focus:outline-none focus:ring-2 focus:ring-[#FFB000]">
+                                <ng-container *ngIf="!isSubmittingContenido">
+                                    <span class="text-3xl font-semibold leading-none">+</span>
+                                </ng-container>
+                                <ng-container *ngIf="isSubmittingContenido">
+                                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                </ng-container>
+                                </button>
                             </div>
                         </form>
                         <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->

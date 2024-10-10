@@ -86,6 +86,9 @@ export class ActnivlecComponent implements OnInit {
   charCount: number = 0;
   charCountContenido: number = 0;
   isSubmitting = false;
+  isSubmittingNivel = false;
+  isSubmittingLeccion = false;
+  isSubmittingContenido = false;
 
   /*
     Este objeto representa el formulario `actividadForm` utilizado para gestionar la información de una actividad.
@@ -610,16 +613,20 @@ export class ActnivlecComponent implements OnInit {
   */
   addNivelSuperAdmin(): void {
     this.submittedNivel = true;
+    this.isSubmittingNivel = true;
     if (this.nivelForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+      this.isSubmittingNivel = false;
       return;
     }
     const nombreNivel = this.nivelForm.get('nombre')?.value;
     if (nombreNivel && nombreNivel.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel no puede tener más de 70 caracteres');
+      this.isSubmittingNivel = false;
       return;
     } else if (nombreNivel && nombreNivel.length < 5) {
       this.alertServices.errorAlert('Error', 'El nombre del nivel debe tener más de 5 caracteres');
+      this.isSubmittingNivel = false;
       return;
     }
     const camposObligatorios = ['nombre'];
@@ -627,6 +634,7 @@ export class ActnivlecComponent implements OnInit {
         const control = this.nivelForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmittingNivel = false;
             return;
         }
     }
@@ -641,6 +649,7 @@ export class ActnivlecComponent implements OnInit {
       this.nivelService.updateNivel(this.token, nivelId, nivel).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', 'Nivel actualizado correctamente');
+          this.isSubmittingNivel = false;
           this.verNivel();
           this.niveles.push({
             id: data.id,
@@ -654,6 +663,7 @@ export class ActnivlecComponent implements OnInit {
           this.nivelForm.patchValue({ id_actividad: nivel.id_actividad });
         },
         error => {
+          this.isSubmittingNivel = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -661,11 +671,13 @@ export class ActnivlecComponent implements OnInit {
     } else {
       if (this.nivelForm.invalid) {
         this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del nivel');
+        this.isSubmittingNivel = false;
         return;
       }
       // console.log('nivel data', nivel);
       this.superAdminService.crearNivelSuperAdmin(this.token, nivel).subscribe(
         (data: any) => {
+          this.isSubmittingNivel = false;
           this.alertServices.successAlert('Exito', data.message);
           // Actualizar la lista de niveles
           this.niveles.push({
@@ -686,6 +698,7 @@ export class ActnivlecComponent implements OnInit {
           this.onNivelChange(data.id.toString());
         },
         error => {
+          this.isSubmittingNivel = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -700,16 +713,20 @@ export class ActnivlecComponent implements OnInit {
   */
   addLeccionSuperAdmin(): void {
     this.submittedLeccion = true;
+    this.isSubmittingLeccion = true;
     const nombreLeccion = this.leccionForm.get('nombre')?.value;
     if (nombreLeccion && nombreLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección no puede tener más de 70 caracteres');
+      this.isSubmittingLeccion = false;
       return;
     } else if (nombreLeccion && nombreLeccion.length < 5) {
       this.alertServices.errorAlert('Error', 'El nombre de la lección debe tener más de 5 caracteres');
+      this.isSubmittingLeccion = false;
       return;
     }
     if (this.leccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos de la lección');
+      this.isSubmittingLeccion = false;
       return;
     }
 
@@ -718,6 +735,7 @@ export class ActnivlecComponent implements OnInit {
         const control = this.leccionForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmittingLeccion = false;
             return;
         }
     }
@@ -734,6 +752,7 @@ export class ActnivlecComponent implements OnInit {
       this.leccionService.updateLeccion(this.token, leccionId, leccion).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
+          this.isSubmittingLeccion = false;
           this.onNivelChange(this.leccionForm.value.id_nivel);
           //this.verLeccicon();
           this.leccionForm.reset();
@@ -742,6 +761,7 @@ export class ActnivlecComponent implements OnInit {
           // console.log('id leccion: ', data.id);
         },
         error => {
+          this.isSubmittingLeccion = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -752,6 +772,7 @@ export class ActnivlecComponent implements OnInit {
         (data: any) => {
           // console.log('datos recibidos', data);
           this.alertServices.successAlert('Exito', data.message);
+          this.isSubmittingLeccion = false;
           this.onNivelChange(this.leccionForm.value.id_nivel);
           this.contenidoLeccionForm.patchValue({ id_leccion: data.id })
           //this.verLeccicon();
@@ -763,6 +784,7 @@ export class ActnivlecComponent implements OnInit {
           // console.log('id leccion: ', data.id);
         },
         error => {
+          this.isSubmittingLeccion = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -943,24 +965,29 @@ export class ActnivlecComponent implements OnInit {
   */
   addContenidoLeccionSuperAdmin(): void {
     this.submittedContent = true
+    this.isSubmittingContenido = true;
     const idLeccion = this.contenidoLeccionForm.get('id_leccion')?.value;
 
     const tituloContenidoLeccion = this.contenidoLeccionForm.get('titulo')?.value;
     if (tituloContenidoLeccion && tituloContenidoLeccion.length > 70) {
       this.alertServices.errorAlert('Error', 'El titulo no puede tener más de 70 caracteres');
+      this.isSubmittingContenido = false;
       return;
     } else if (tituloContenidoLeccion && tituloContenidoLeccion.length < 5) {
       this.alertServices.errorAlert('Error', 'El titulo debe tener más de 5 caracteres');
+      this.isSubmittingContenido = false;
       return;
     }
     const descripcionContenidoLeccion = this.contenidoLeccionForm.get('descripcion')?.value;
     if (descripcionContenidoLeccion && descripcionContenidoLeccion.length > 1200) {
       this.alertServices.errorAlert('Error', 'La descripción no puede tener más de 1200 caracteres');
+      this.isSubmittingContenido = false;
       return;
     }
 
     if (this.contenidoLeccionForm.invalid) {
       this.alertServices.errorAlert('Error', 'Debes completar todos los campos requeridos del contenido');
+      this.isSubmittingContenido = false;
       return;
     }
 
@@ -969,6 +996,7 @@ export class ActnivlecComponent implements OnInit {
         const control = this.contenidoLeccionForm.get(key);
         if (control && control.value && control.value.trim() === '') {
             this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+            this.isSubmittingContenido = false;
             return;
         }
     }
@@ -1002,13 +1030,14 @@ export class ActnivlecComponent implements OnInit {
       this.contenidoLeccionService.updateContenidoLeccion(this.token, contenidoLeccionId, formData).subscribe(
         (data) => {
           this.alertServices.successAlert('Exito', data.message);
-          // console.log('datos recibidos: ', data);
+          this.isSubmittingContenido = false;
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
           //location.reload();
         },
         error => {
+          this.isSubmittingContenido = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
@@ -1017,14 +1046,13 @@ export class ActnivlecComponent implements OnInit {
       this.superAdminService.crearContenicoLeccionSuperAdmin(this.token, formData).subscribe(
         (data: any) => {
           this.alertServices.successAlert('Exito', data.message);
-          // console.log('datos recibidos: ', data);
+          this.isSubmittingContenido = false;
           this.cargarContenidoLeccion(+idLeccion);
           this.contenidoLeccionForm.reset();
           this.submittedContent = false;
-
-          //location.reload();
         },
         error => {
+          this.isSubmittingContenido = false;
           this.alertServices.errorAlert('Error', error.error.message);
           console.log(error);
         }
