@@ -20,6 +20,18 @@ input[type="password"]::-ms-reveal { display: none; }
     animation: giro 1s linear infinite;
 }
 
+.bg-login {
+    background-image: url('/assets/images/fondoLogin_baja_resol.webp');
+    background-image: -webkit-image-set(
+      url('/assets/images/fondoLogin_baja_resol.webp') 1x,
+      url('/assets/images/fondoLogin.webp') 2x
+    );
+    background-image: image-set(
+      url('/assets/images/fondoLogin_baja_resol.webp') 1x,
+      url('/assets/images/fondoLogin.webp') 2x
+    );
+  }
+
 @keyframes giro {
     0% {
         transform: rotate(0deg);

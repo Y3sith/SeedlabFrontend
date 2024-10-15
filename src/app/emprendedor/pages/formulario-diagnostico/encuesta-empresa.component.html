@@ -1007,7 +1007,7 @@
                                 <select [(ngModel)]="respuesta55.opcion" required (change)="updateProgress()"
                                     class="w-full px-2 py-1 transition duration-200 ease-in bg-gray-200 border-0 rounded-lg md:w-36 focus:outline-none focus:ring-2 focus:ring-blue-200 hover:bg-blue-100 focus:bg-blue-100 ">
 
-                                    <option value=sub>
+                                    <option value={{preguntas[25].subPreguntas[0].texto}}>
                                         {{preguntas[25].subPreguntas[0].texto}}</option>
                                     <option value={{preguntas[25].subPreguntas[1].texto}}>
                                         {{preguntas[25].subPreguntas[1].texto}}</option>

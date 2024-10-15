@@ -398,4 +398,13 @@ html {
     padding: 0.75rem;
     margin-top: 1rem;
   }
+
+  .banner-image {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .banner-image.loaded {
+    opacity: 1;
+  }
 }

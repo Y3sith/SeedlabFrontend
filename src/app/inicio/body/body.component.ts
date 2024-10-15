@@ -3,10 +3,8 @@ import { isPlatformBrowser } from '@angular/common';
 import { DOCUMENT } from '@angular/common';
 import { AliadoService } from '../../servicios/aliado.service';
 import Swiper from 'swiper';
-import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import { Aliado } from '../../Modelos/aliado.model';
 import { Banner } from '../../Modelos/banner.model';
-import { MatToolbar } from '@angular/material/toolbar';
 import { AuthService } from '../../servicios/auth.service';
 import { SuperadminService } from '../../servicios/superadmin.service';
 import { Personalizaciones } from '../../Modelos/personalizaciones.model';
@@ -25,16 +23,16 @@ export class BodyComponent implements OnInit, AfterViewInit {
   listBanner: Banner[] = [];
   listFooter: Personalizaciones[] = [];
   isLoggedIn: boolean = false;
-  logoUrl: File;
+  logoUrl: string = ''; // Cambiado de File a string
   sidebarColor: string = '';
   botonesColor: string = '';
-  logoFooter: File;
-  descripcion_footer: Text;
-  paginaWeb: string;
-  email: string;
-  telefono: string;
-  direccion: string;
-  ubicacion: string;
+  logoFooter: string = ''; // Cambiado de File a string
+  descripcion_footer: string = '';
+  paginaWeb: string = '';
+  email: string = '';
+  telefono: string = '';
+  direccion: string = '';
+  ubicacion: string = '';
   id: number = 1;
   isLoaded = false;
 
@@ -51,34 +49,44 @@ export class BodyComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isAuthenticated();
 
-    forkJoin({
-      banners: this.aliadoService.getbanner().pipe(
-        tap((banners) => this.precargarImagenes(banners)) // Precarga de banners 
-      ),
-      personalizacion: this.getPersonalizacion(),
-      aliados: this.aliadoService.getaliados().pipe(
-        tap((aliados) => this.preloadLogos(aliados)) // Precarga de logos 
-      )
-    }).subscribe({
-      next: (results) => {
-        this.listBanner = results.banners;
-        this.listAliados = results.aliados;
-        this.isLoaded = true; // Cambiar el estado a cargado cuando se completa la carga
-        
-        // Precargar la imagen del primer banner
-        this.precargarBannerPrincipal();
-
+    // Cargar banners
+    this.aliadoService.getbanner().pipe(
+      tap((banners) => {
+        this.listBanner = banners;
         this.cdr.markForCheck();
-        this.initSwipers(); // Inicializar Swipers después de cargar los datos
-      },
-      error: (err) => {
-        console.error('Error al cargar datos:', err);
-        this.isLoaded = true;
-      }
-    });
+        this.initBannerSwiper();
+        this.precargarBannerPrincipal();
+      }),
+      catchError(err => {
+        console.error('Error al cargar banners:', err);
+        return of([]);
+      })
+    ).subscribe();
+
+    // Cargar aliados
+    this.aliadoService.getaliados().pipe(
+      tap((aliados) => {
+        this.listAliados = aliados;
+        this.cdr.markForCheck();
+        this.initAlliesSwiper();
+      }),
+      catchError(err => {
+        console.error('Error al cargar aliados:', err);
+        return of([]);
+      })
+    ).subscribe();
+
+    // Cargar personalización
+    this.getPersonalizacion().pipe(
+      catchError(err => {
+        console.error('Error al cargar personalización:', err);
+        return of(null);
+      })
+    ).subscribe();
   }
 
   ngAfterViewInit() {
+    // Inicialización de Swiper ya manejada en ngOnInit
   }
 
   private precargarBannerPrincipal(): void {
@@ -94,7 +102,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
       }
     }
   }
-  
 
   // Implementamos trackBy en ngFor para mejorar el rendimiento
   trackByAliado(index: number, aliado: Aliado): number {
@@ -105,39 +112,18 @@ export class BodyComponent implements OnInit, AfterViewInit {
     return banner.id;
   }
 
-  // Precarga de logos optimizada
-  preloadLogos(aliados: Aliado[]): void {
-    if (isPlatformBrowser(this.platformId)) {
-      aliados.forEach(aliado => {
-        const img = new Image();
-        img.src = aliado.logo as string;
-      });
-    }
-  }
-
-  // Precarga de imágenes optimizada
-  precargarImagenes(banners: Banner[]): void {
-    if (isPlatformBrowser(this.platformId)) {
-      banners.forEach(banner => {
-        const img = new Image();
-        img.src = banner.urlImagen as string;
-      });
-    }
-  }
-
+  // Manejo de errores en imágenes
   handleImageError(event: any) {
     event.target.src = 'assets/images/default-image.jpg';
   }
 
   private initSwipers(): void {
-    setTimeout(() => {
-      this.initBannerSwiper();
-      this.initAlliesSwiper();
-    }, 0);
+    this.initBannerSwiper();
+    this.initAlliesSwiper();
   }
 
   getPersonalizacion(): Observable<any> {
-    const expirationTime = 3600;
+    const expirationTime = 3600; // 1 hora
     const currentTime = Math.floor(Date.now() / 1000);
     const storedData = JSON.parse(localStorage.getItem(`personalization:${this.id}`));
 
@@ -172,6 +158,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
     this.telefono = data.telefono;
     this.direccion = data.direccion;
     this.ubicacion = data.ubicacion;
+    this.cdr.markForCheck(); // Marcar para detección de cambios después de asignar
   }
 
   private initBannerSwiper(): void {
@@ -180,7 +167,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
     }
 
     this.bannerSwiper = new Swiper('.banner-swiper-container', {
-      modules: [Navigation, Autoplay, Pagination],
       slidesPerView: 1,
       spaceBetween: 0,
       loop: true,
@@ -207,7 +193,6 @@ export class BodyComponent implements OnInit, AfterViewInit {
     }
 
     this.alliesSwiper = new Swiper('.allies-swiper-container', {
-      modules: [Pagination],
       slidesPerView: 'auto',
       spaceBetween: 30,
       pagination: {
@@ -220,14 +205,4 @@ export class BodyComponent implements OnInit, AfterViewInit {
       },
     });
   }
-
-  private splitDescription(description: string, wordsPerLine: number): string[] {
-    const words = description.split(' ');
-    const lines = [];
-    for (let i = 0; i < words.length; i += wordsPerLine) {
-      lines.push(words.slice(i, i + wordsPerLine).join(' '));
-    }
-    return lines;
-  }
-
 }
