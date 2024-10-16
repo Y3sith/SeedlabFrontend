@@ -7,48 +7,59 @@
 
     <!-- Barra de búsqueda -->
     <div class="relative flex justify-end w-3/5 md:flex-grow max-md:max-w-l lg:max-w-xl md:mb-10">
-      <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-[#00B3ED] rounded-full w-8 h-8 flex items-center justify-center">
+      <span
+        class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white bg-[#00B3ED] rounded-full w-8 h-8 flex items-center justify-center">
         <i class="fas fa-search text-[18px]"></i>
       </span>
-      <input type="text" [(ngModel)]="userFilter.Nombre_sol"  placeholder="Buscar..."
+      <input type="text" [(ngModel)]="userFilter.Nombre_sol" placeholder="Buscar..."
         class="w-full h-10 pl-2 border-2 rounded-full max-md:w-full max-lg:w-3/4 max-xl:w-4/5 max-lg:alig pr-9 bg-form-gray">
     </div>
   </header>
 
   <div class="flex flex-col px-4 mt-8 mb-4 sm:px-14 font-poppins">
 
-<!-- Contenedor principal -->
-<div class="flex flex-wrap gap-4 w-full md:w-auto ml-[10px] md:ml-[55px] items-center font-poppins md:justify-between justify-end h-auto mb-3">
-  <div class="flex items-center max-md:mr-5">
-    <h5 class="mt-2 font-bold mr-2">FILTROS</h5>
+    <!-- Contenedor principal -->
+    <div
+      class="flex flex-wrap gap-4 w-full md:w-auto ml-[10px] md:ml-[55px] items-center font-poppins md:justify-between justify-end h-auto mb-3">
+      <div class="flex items-center max-md:mr-5">
+        <h5 class="mt-2 font-bold mr-2">FILTROS</h5>
 
-    <!-- Botones de filtro -->
-    <div class="flex flex-wrap items-center p-2 space-x-2 bg-gray-100 rounded-lg">
+        <!-- Botones de filtro -->
+        <div class="flex flex-wrap items-center p-2 space-x-2 bg-gray-100 rounded-lg">
 
-      <!-- Botón de 'Sin asignar' -->
-      <button id="sinAsignar"
-        class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out md:px-4 listado-aseorias"
-        (click)="showSinAsignar()">
-        <span
-          class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg">
-          {{ sinAsignarCount }}
-        </span>
-        <span>Sin asignar</span>
-      </button>
+          <!-- Botón de 'Sin asignar' -->
+          <button id="sinAsignar"
+            class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out md:px-4 listado-aseorias"
+            (click)="showSinAsignar()">
+            <span
+              class="flex items-center justify-center w-6 h-6 mr-2 text-red-700 bg-white border border-red-700 rounded-lg">
+              {{ sinAsignarCount }}
+            </span>
+            <span>Sin asignar</span>
+          </button>
 
-      <!-- Botón de 'Asignadas' -->
-      <button id="Asignadas"
-        class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out btn-color md:px-4 listado-aseorias"
-        (click)="showAsignadas()">
-        <span
-          class="flex items-center justify-center w-6 h-6 mr-2 text-green-500 bg-white border border-green-500 rounded-lg">
-          {{ asignadasCount }}
-        </span>
-        <span>Asignadas</span>
-      </button>
+          <!-- Botón de 'Asignadas' -->
+          <button id="Asignadas"
+            class="flex items-center px-2 py-2 italic text-gray-800 ease-in-out btn-color md:px-4 listado-aseorias"
+            (click)="showAsignadas()">
+            <span
+              class="flex items-center justify-center w-6 h-6 mr-2 text-green-500 bg-white border border-green-500 rounded-lg">
+              {{ asignadasCount }}
+            </span>
+            <span>Asignadas</span>
+          </button>
+
+        </div>
+        <!-- Botón de Agregar -->
+        <!-- <div class="flex items-center h-full max-md:mr-5"> 
+          <span class="mr-3 text-amber-500 text-[25px] italic font-poppins" style="font-weight: 900;">Agregar</span>
+          <button (click)="openCrearAsesoriaModal()"
+            class="flex items-center justify-center w-16 h-8 text-white rounded-lg bg-amber-500">
+            <span class="text-3xl font-semibold leading-none">+</span>
+          </button>
+        </div> -->
+      </div>
     </div>
-  </div>
-</div>
 
 
 
@@ -72,24 +83,27 @@
 
       <!-- Contenedor de las tarjetas -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 w-full p-4 bg-[#FAFAFA] mb-2 ">
-        <div *ngFor="let asesoria of (showTrue ? asesoriasTrue : asesoriasFalse) | filterBy:userFilter | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index"
-        class="relative w-full">
+        <div
+          *ngFor="let asesoria of (showTrue ? asesoriasTrue : asesoriasFalse) | filterBy:userFilter | paginate: { itemsPerPage: itemsPerPage, currentPage: page }; let i = index"
+          class="relative w-full">
 
           <!-- Contenedor de la tarjeta con el efecto de recorte -->
           <div class="relative bg-[#e6e6e6] rounded-lg p-4 py-3 h-auto">
             <!-- Dentro del círculo -->
             <div class="p-2 absolute  rounded-full bg-[#FAFAFA] -top-5 -right-3">
-            <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center"
-              [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
-              <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
-            </div>
+              <div class="rounded-full w-12 h-12 bg-[#FAFAFA] flex items-center justify-center"
+                [ngClass]="{'bg-green-500': showTrue, 'bg-red-500': showFalse}">
+                <i class="fa-solid fa-arrow-up-long transform rotate-45 text-white text-[24px]"></i>
+              </div>
             </div>
 
             <!-- Contenido de la tarjeta -->
-            <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%] font-poppins">{{ asesoria.Nombre_sol }}</h2>
+            <h2 class="text-lg font-black h-[3.3rem] overflow-hidden mt-[24px] ml-[4%] font-poppins">{{
+              asesoria.Nombre_sol }}</h2>
             <p class="italic text-sm text-black mt-[14px] ml-[4%] font-poppins"><strong>Fecha inicio: </strong> {{
               asesoria.fecha_solicitud.slice(0, 10) }}</p>
-            <p class="italic text-sm text-black mb-2 mt-[15px] ml-[4%] font-poppins"><strong>Aliado: </strong>{{ asesoria.nombre }}
+            <p class="italic text-sm text-black mb-2 mt-[15px] ml-[4%] font-poppins"><strong>Aliado: </strong>{{
+              asesoria.nombre }}
             </p>
             <div
               class="block w-full h-[3.7rem] text-black focus:outline-none resize-none overflow-hidden text-ellipsis mb-3 mt-[18px] ml-[4%]"
@@ -127,7 +141,8 @@
               <li>
                 <a href="javascript:void(0)"
                   class="inline-flex items-center justify-center w-8 h-8 pl-2 text-gray-400 no-underline border-2 border-gray-300 rounded-lg hover:bg-gray-200 focus:outline-none"
-                  (click)="changePage('next')" [class.opacity-50]="!canGoNext()" [class.cursor-not-allowed]="!canGoNext()">
+                  (click)="changePage('next')" [class.opacity-50]="!canGoNext()"
+                  [class.cursor-not-allowed]="!canGoNext()">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-4 h-4" fill="currentColor">
                     <path
                       d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z" />
