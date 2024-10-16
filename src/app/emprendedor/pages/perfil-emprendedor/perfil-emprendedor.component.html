@@ -10,8 +10,8 @@
             <div class="spinner " *ngIf="isLoading"></div>
         </div>
 
-        <div
-            class="w-full rounded-lg bg-[#FAFAFA] max-md:mt-20 max-[600px]:px-2 max-[600px]:py-2 min-[851px]:py-2 min-[851px]:px-16 " *ngIf="!isLoading">
+        <div class="w-full rounded-lg bg-[#FAFAFA] max-md:mt-20 max-[600px]:px-2 max-[600px]:py-2 min-[851px]:py-2 min-[851px]:px-16 "
+            *ngIf="!isLoading">
 
             <!-- Contenido -->
             <div class="min-[860px]:flex items-center w-full">
@@ -147,7 +147,8 @@
                         <h5 class="mt-6 mb-4 text-xl font-bold text-center font-poppins">Información de Contacto</h5>
 
                         <label for="correo" class="block mb-2">Correo Electrónico</label>
-                        <input type="text" id="correo" formControlName="email" [readonly]="bloqueado" [ngStyle]="{'cursor': bloqueado ? 'not-allowed' : 'auto'}" 
+                        <input type="text" id="correo" formControlName="email" [readonly]="bloqueado"
+                            [ngStyle]="{'cursor': bloqueado ? 'not-allowed' : 'auto'}"
                             class="w-full h-12 p-2 mb-2 bg-white border rounded-md appearance-none focus:outline-none focus:ring-2 focus:ring-blue-200" />
 
 
@@ -157,9 +158,11 @@
                         <div *ngIf="f['celular'].invalid && (f['celular'].dirty || f['celular'].touched)"
                             class="inline-block p-1 mt-2 mb-1 text-sm text-red-500 rounded-lg bg-red-50" role="alert">
                             <div *ngIf="f.celular.errors.required">Este campo es requerido *</div>
-                            <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos</div>
+                            <div *ngIf="f.celular.errors.maxlength">El número de celular no debe tener más de 10 dígitos
+                            </div>
                             <div *ngIf="f.celular.errors.hasLetters">El número de celular no puede contener letras</div>
-                            <div *ngIf="f.celular.errors.lengthError">El número de celular debe tener entre 5 y 10 dígitos *</div>
+                            <div *ngIf="f.celular.errors.lengthError">El número de celular debe tener entre 5 y 10
+                                dígitos *</div>
                         </div>
                     </div>
                     <div class="w-20"></div>
@@ -207,14 +210,15 @@
                     (click)="toggleEditButtonn()">
                     Cancelar
                 </button>
-                <button id="guardarBtn" type="submit" [disabled]="isSubmitting" class="px-4 py-2 italic font-bold text-white rounded-full bg-amber-500"
-                    *ngIf="!blockedInputs" (click)="updateEmprendedor()">
+                <button id="guardarBtn" type="submit" [disabled]="isSubmitting"
+                    class="px-4 py-2 mr-2 italic font-bold text-white rounded-full bg-amber-500" *ngIf="!blockedInputs"
+                    (click)="updateEmprendedor()">
                     <span *ngIf="!isSubmitting">{{ buttonMessage }}</span>
                     <span *ngIf="isSubmitting" class="flex items-center">
                         <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
                             fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                stroke-width="4"></circle>
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
                             <path class="opacity-75" fill="currentColor"
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
                             </path>
@@ -222,6 +226,10 @@
                         {{ buttonMessage }}
                     </span>
                 </button>
+                <button id="botonDesactivar" class="py-2 px-4 font-bold bg-sky-400 rounded-full hover:bg-red-600 text-white"
+                    *ngIf="!blockedInputs" (click)="desactivarEmprendedor()">Desactivar Cuenta
+                </button>
+
             </div>
 
             <div class="flex justify-end mr-4 md:mr-8">
