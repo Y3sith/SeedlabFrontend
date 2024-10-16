@@ -117,6 +117,9 @@ export class AddEmpresaComponent {
     this.cargarApoyos();
     this.esVistaCreacion = !this.id_documentoEmpresa;
     
+    if (this.listaApoyo && this.listaApoyo.length === 1) {
+      this.onApoyoSelect(this.listaApoyo[0].documento);
+    }
   }
 
   /* Valida el token del login */
@@ -492,10 +495,12 @@ export class AddEmpresaComponent {
           this.ocultarSinApoyo = false;
           this.isEditing = true;
           this.mostrarBotonesNuevos = false;
+          this.onApoyoSelect(this.listaApoyo[0].documento);
         } else {
           this.ocultarSinApoyo = true;
           this.isEditing = false;
           this.mostrarBotonesNuevos = false;
+          this.onApoyoSelect(this.listaApoyo[0].documento);
         }
         this.cd.detectChanges();
       },
@@ -510,24 +515,13 @@ export class AddEmpresaComponent {
   Busca el apoyo seleccionado, activa la edición y 
   actualiza el formulario con los datos del apoyo.
 */
-  onApoyoSelect(documento: string) {
-    const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
-    this.isEditing = true;
-    if (selectedApoyo) {
-      this.selectedApoyoDocumento = selectedApoyo.documento;
-      this.addApoyoEmpresaForm.patchValue({
-        documento: selectedApoyo.documento,
-        nombre: selectedApoyo.nombre,
-        apellido: selectedApoyo.apellido,
-        email: selectedApoyo.email,
-        cargo: selectedApoyo.cargo,
-        telefono: selectedApoyo.telefono,
-        celular: selectedApoyo.celular,
-        id_tipo_documento: selectedApoyo.id_tipo_documento,
-        id_empresa: selectedApoyo.id_empresa,
-      });
-    }
+onApoyoSelect(documento: string) {
+  this.selectedApoyoDocumento = documento;
+  const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
+  if (selectedApoyo) {
+    this.addApoyoEmpresaForm.patchValue(selectedApoyo);
   }
+}
 
   /*
     Método para editar un apoyo. 
