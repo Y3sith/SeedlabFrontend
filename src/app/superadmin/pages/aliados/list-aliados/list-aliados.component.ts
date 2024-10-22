@@ -50,7 +50,6 @@ export class ListAliadosComponent implements OnInit {
       this.aliadoService.getAliadosparalistarbien(this.token, this.userFilter.estadoString).subscribe(
         (data) => {
           this.listaAliado = data;
-          console.log(this.listaAliado);
           this.totalItems = data.length; // Actualiza el total de items
           this.page = 1; // Reinicia la página a 1
           this.updatePaginatedData(); // Actualiza los datos paginados

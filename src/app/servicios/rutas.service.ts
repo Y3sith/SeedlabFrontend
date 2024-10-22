@@ -51,10 +51,11 @@ export class RutaService {
     return this.http.get(url, options);
   }
 
-  rutasActivas(access_token:any): Observable<any>{
-    const options = { headers: this.CreacionHeaders(access_token) };
-    return this.http.get(this.url+'/rutasActivas',options)
-  }
+  //Pendiente por revisar si se borra
+  // rutasActivas(access_token:any): Observable<any>{
+  //   const options = { headers: this.CreacionHeaders(access_token) };
+  //   return this.http.get(this.url+'/rutasActivas',options)
+  // }
 
   createRutas(access_token:any, ruta:Ruta): Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token) };
@@ -65,11 +66,12 @@ export class RutaService {
     const options= { headers: this.CreacionHeaders(access_token)};
     return this.http.get(this.url+'/rutaXid/'+rutaId, options);
   }
-   
-  contenidoRuta(access_token:any, idRuta: number):Observable<any>{
-    const options= { headers: this.CreacionHeaders(access_token)};
-    return this.http.get(this.url+'/mostrarRutaContenido/'+idRuta,options);
-  }
+  
+  //Pendiente revisar
+  // contenidoRuta(access_token:any, idRuta: number):Observable<any>{
+  //   const options= { headers: this.CreacionHeaders(access_token)};
+  //   return this.http.get(this.url+'/mostrarRutaContenido/'+idRuta,options);
+  // }  
 
   actnivleccontXruta(access_token:any, idRuta: number, estado:any):Observable<any>{
     const options = { headers: this.CreacionHeaders(access_token),

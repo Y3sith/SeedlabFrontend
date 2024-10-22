@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { RutaService } from '../../../servicios/rutas.service';
 import { Router } from '@angular/router';
 import { Ruta } from '../../../Modelos/ruta.modelo';
@@ -7,7 +7,7 @@ import { FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-ruta-emprendedor',
   templateUrl: './ruta-emprendedor.component.html',
-  styleUrls: ['./ruta-emprendedor.component.css']
+  styleUrls: ['./ruta-emprendedor.component.css'],
 })
 export class RutaEmprendedorComponent implements OnInit {
   token: string | null = null;

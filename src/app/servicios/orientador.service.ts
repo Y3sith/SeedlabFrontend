@@ -49,7 +49,6 @@ export class OrientadorService {
   /* Obtiene el perfil de usuario de un orientador específico */
   getinformacionOrientador(access_token: any, orientadorId: number): Observable<any> {
     const options = { headers: this.CreacionHeaders(access_token) };
-    const url = `${environment.apiUrl}orientador/userProfileOrientador/${orientadorId}`;
-    return this.http.get(url, options);
+    return this.http.get(`${this.url}userProfileOrientador/${orientadorId}`, options);
   }
 }

@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environment/env'
 import { Asesor } from '../Modelos/asesor.model';
-import { Aliado } from '../Modelos/aliado.model';
-import { AnyTxtRecord } from 'dns';
 
 @Injectable({
   providedIn: 'root'

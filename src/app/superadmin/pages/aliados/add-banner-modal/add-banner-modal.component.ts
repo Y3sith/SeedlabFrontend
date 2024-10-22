@@ -41,7 +41,7 @@ export class AddBannerModalComponent implements OnInit {
   ) {
     this.id_banner = data.id;
     this.idAliado = data.idAliado;
-    
+
     this.bannerForm = this.formBuilder.group({
       urlImagen: [null, Validators.required],
       estadobanner: [1],
@@ -49,10 +49,10 @@ export class AddBannerModalComponent implements OnInit {
 
   }
 
-/*
-    Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
-    formulario o cualquier otra parte de la aplicación.
-*/
+  /*
+      Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 
+      formulario o cualquier otra parte de la aplicación.
+  */
   validateToken(): void {
     if (!this.token) {
       this.token = localStorage.getItem('token');
@@ -87,17 +87,32 @@ export class AddBannerModalComponent implements OnInit {
   verEditar(): void {
     this.aliadoService.getBannerxid(this.token, this.id_banner).subscribe(
       data => {
+        // Obtener la URL completa de la imagen
+        const fullImageUrl = this.getFullImageUrl(data.urlImagenSmall);
+
+        // Actualizar el formulario con los datos del banner
         this.bannerForm.patchValue({
-          urlImagen: data.urlImagen,
+          urlImagen: fullImageUrl, // Asignar la imagen completa al formulario
           estadobanner: data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1
         });
+
+        // Actualizar el preview de la imagen con la URL completa
+        this.bannerPreview = fullImageUrl;
+
         this.isActive = data.estadobanner === 'Activo' || data.estadobanner === true || data.estadobanner === 1;
         this.bannerForm.patchValue({ estadobanner: this.isActive });
       },
       error => {
         console.error(error);
       }
-    )
+    );
+  }
+
+
+
+  // Path de imagen para el banner
+  getFullImageUrl(path: string): string {
+    return `${'http://127.0.0.1:8000/'}${path}`;
   }
 
   /*
@@ -157,21 +172,21 @@ export class AddBannerModalComponent implements OnInit {
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-      
+
       let maxSize = 0;
-  
+
       if (field === 'urlImagen') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
       }
-  
+
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-  
+
         ////Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
-  
+
         // Resetea el campo correspondiente en el formulario y la previsualización
         if (field === 'urlImagen') {
           this.bannerForm.patchValue({ urlImagen: null });
@@ -183,15 +198,15 @@ export class AddBannerModalComponent implements OnInit {
       }
 
       const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const previewUrl = e.target.result;
-      if (field === 'urlImagen') {
-        this.bannerForm.patchValue({ urlImagen: previewUrl });
-        this.bannerPreview = previewUrl;
-      }
-    };
-    reader.readAsDataURL(file);
-  
+      reader.onload = (e: any) => {
+        const previewUrl = e.target.result;
+        if (field === 'urlImagen') {
+          this.bannerForm.patchValue({ urlImagen: previewUrl });
+          this.bannerPreview = previewUrl;
+        }
+      };
+      reader.readAsDataURL(file);
+
       // Genera la previsualización solo si el archivo es de tamaño permitido
       this.generateImagePreview(file, field);
 
@@ -199,10 +214,10 @@ export class AddBannerModalComponent implements OnInit {
         this.selectedBanner = file;
         this.bannerForm.patchValue({ urlImagen: file });
       }
-      
-  } else {
-    this.resetFileField(field);
-  }
+
+    } else {
+      this.resetFileField(field);
+    }
   }
 
   /* 

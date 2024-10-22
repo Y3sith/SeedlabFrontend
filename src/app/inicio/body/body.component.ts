@@ -9,6 +9,7 @@ import { AuthService } from '../../servicios/auth.service';
 import { SuperadminService } from '../../servicios/superadmin.service';
 import { Personalizaciones } from '../../Modelos/personalizaciones.model';
 import { catchError, forkJoin, Observable, of, tap } from 'rxjs';
+import { environment } from '../../../environment/env';
 
 @Component({
   selector: 'app-body',
@@ -51,8 +52,16 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
     // Cargar banners
     this.aliadoService.getbanner().pipe(
-      tap((banners) => {
-        this.listBanner = banners;
+      tap((banners: Banner[]) => {
+        this.listBanner = banners.map(banner => {
+          return new Banner(
+            banner.urlImagenSmall,
+            banner.urlImagenMedium,
+            banner.urlImagenLarge,
+            banner.estadobanner,
+          );
+        });
+        console.log(this.listBanner);
         this.cdr.markForCheck();
         this.initBannerSwiper();
         this.precargarBannerPrincipal();
@@ -62,6 +71,8 @@ export class BodyComponent implements OnInit, AfterViewInit {
         return of([]);
       })
     ).subscribe();
+
+
 
     // Cargar aliados
     this.aliadoService.getaliados().pipe(
@@ -89,19 +100,31 @@ export class BodyComponent implements OnInit, AfterViewInit {
     // Inicialización de Swiper ya manejada en ngOnInit
   }
 
+
+
   private precargarBannerPrincipal(): void {
-    if (this.listBanner && this.listBanner.length > 0) {
-      const firstBanner = this.listBanner[0];
-      if (firstBanner && firstBanner.urlImagen) {
-        const preloadLink = this.renderer.createElement('link');
-        preloadLink.rel = 'preload';
-        preloadLink.href = firstBanner.urlImagen;
-        preloadLink.as = 'image';
-        preloadLink.setAttribute('importance', 'high'); // Opcional: Indica alta prioridad
-        this.renderer.appendChild(this.document.head, preloadLink);
+    try {
+      if (this.listBanner && this.listBanner.length > 0) {
+        const firstBanner = this.listBanner[0];
+        if (firstBanner && firstBanner.urlImagenSmall) {
+          console.log('Preloading first banner image:', firstBanner.urlImagenSmall);
+          const preloadLink = this.renderer.createElement('link');
+          preloadLink.rel = 'preload';
+          preloadLink.href = firstBanner.urlImagenSmall;
+          preloadLink.as = 'image';
+          this.renderer.appendChild(this.document.head, preloadLink);
+        }
       }
+    } catch (error) {
+      console.error('Error during preloading banner:', error);
     }
   }
+
+  getFullImageUrl(path: string): string {
+    // Asumimos que environment.apiUrl no incluye una barra al final
+    return `${'http://127.0.0.1:8000/'}${path}`;
+  }
+
 
   // Implementamos trackBy en ngFor para mejorar el rendimiento
   trackByAliado(index: number, aliado: Aliado): number {

@@ -22,14 +22,18 @@
 
     <div class="relative w-full banner-swiper-container overflow-hidde">
       <div class="swiper-wrapper">
-        <ng-container *ngFor="let banner of listBanner; trackBy: trackByBanner">
+        <ng-container *ngFor="let banner of listBanner;">
           <div class="swiper-slide banner-swiper-slide" style="width: 100%;">
             <picture>
-              <source [srcset]="banner.urlImagen + ' 800w, ' + banner.urlImagen + ' 1600w'"
-                sizes="(max-width: 800px) 100vw, 800px" type="image/webp" />
-              <img [src]="banner.urlImagen" [alt]="banner.descripcion || 'Banner image'" width="800" height="400"
-                loading="eager" class="banner-image loading"/>
-            </picture>
+              <source [srcset]="getFullImageUrl(banner.urlImagenSmall) + ' 800w, ' + 
+                              getFullImageUrl(banner.urlImagenMedium) + ' 1600w, ' + 
+                              getFullImageUrl(banner.urlImagenLarge) + ' 2400w'"
+                      sizes="100vw" 
+                      type="image/webp" />
+              <img [src]="getFullImageUrl(banner.urlImagenMedium)" 
+                   [alt]="'Banner image'"
+                   loading="lazy" />
+          </picture>
           </div>
         </ng-container>
       </div>
@@ -45,7 +49,7 @@
     </div>
 
     <div class="h-10 max-md:hidden"></div>
-    
+
     <div class="flex flex-col items-center m-4 -mt-6 bg-white lg:flex-row max-lg:flex-col max-lg:m-11 ">
       <div
         class="text-justify lg:w-[28%] bg-[rgb(0,179,237)]   text-white lg:ml-8 sm:m-6 lg:-mt-044 max-sm:-mt-0 md:-mt-0 max-lg:w-full max-lg:ml-0 max-lg:mt-0 h-[calc(100%-18px)] xl:p-14">

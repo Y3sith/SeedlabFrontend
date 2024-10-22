@@ -97,14 +97,14 @@ export class AddAliadosComponent {
     private location: Location
   ) {
 
-  /*
-    Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
-    de campos relacionados con los datos de un aliado. Se aplican validaciones específicas para garantizar que la entrada 
-    de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
-    de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
-    organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
-    El estado del aliado se inicializa como `true`, indicando que el aliado está activo por defecto.
-  */
+    /*
+      Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
+      de campos relacionados con los datos de un aliado. Se aplican validaciones específicas para garantizar que la entrada 
+      de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
+      de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
+      organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
+      El estado del aliado se inicializa como `true`, indicando que el aliado está activo por defecto.
+    */
     this.aliadoForm = this.formBuilder.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
@@ -118,14 +118,14 @@ export class AddAliadosComponent {
 
     });
 
-  /*
-    Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
-    de campos relacionados con los datos de un banner. Se aplican validaciones específicas para garantizar que la entrada 
-    de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
-    de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
-    organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
-    El estado del banner se inicializa como `true`, indicando que el banner está activo por defecto.
-  */
+    /*
+      Este código define un formulario reactivo en Angular utilizando FormBuilder para crear y gestionar un grupo 
+      de campos relacionados con los datos de un banner. Se aplican validaciones específicas para garantizar que la entrada 
+      de datos sea correcta, como la obligatoriedad, formatos adecuados (por ejemplo, solo letras, solo números, o formato 
+      de correo electrónico), longitud mínima, y validaciones personalizadas para fechas. Adicionalmente, la estructura `sectionFields` 
+      organiza los campos en secciones, facilitando su disposición o presentación en la interfaz de usuario. 
+      El estado del banner se inicializa como `true`, indicando que el banner está activo por defecto.
+    */
     this.bannerForm = this.formBuilder.group({
       urlImagen: ['', Validators.required],
       estadobanner: [1],
@@ -191,38 +191,38 @@ export class AddAliadosComponent {
     return this.urlparaperfil;
   }
 
-    /*
-  Este método maneja los cambios en el campo `ruta_multi` del formulario `aliadoForm` cuando el usuario actualiza su valor.
+  /*
+Este método maneja los cambios en el campo `ruta_multi` del formulario `aliadoForm` cuando el usuario actualiza su valor.
 */
-onRutaMultiChange(event: any): void {
-  const tipoDatoId = Number(this.aliadoForm.get('id_tipo_dato').value);
-  const newValue = event.target.value;
+  onRutaMultiChange(event: any): void {
+    const tipoDatoId = Number(this.aliadoForm.get('id_tipo_dato').value);
+    const newValue = event.target.value;
 
-  if (tipoDatoId === 1) {
-    this.videoUrl = this.limpiarPrefijo(newValue);
-  } else if (tipoDatoId === 2) {
-    this.imageUrl = newValue;
+    if (tipoDatoId === 1) {
+      this.videoUrl = this.limpiarPrefijo(newValue);
+    } else if (tipoDatoId === 2) {
+      this.imageUrl = newValue;
+    }
+
+    this.aliadoForm.patchValue({ ruta_multi: newValue }, { emitEvent: false });
   }
-
-  this.aliadoForm.patchValue({ ruta_multi: newValue }, { emitEvent: false });
-}
 
 
   /*
   Este método `limpiarPrefijo` elimina un prefijo específico de una URL si está presente.
 */
-limpiarPrefijo(url: string): string {
-  const apiUrl = environment.apiUrl.replace(/\/$/, '');
-  this.urlparaperfil = apiUrl.replace(/\/api\/?$/, '');
-  const prefijo = `${this.urlparaperfil}/storage/`;
+  limpiarPrefijo(url: string): string {
+    const apiUrl = environment.apiUrl.replace(/\/$/, '');
+    this.urlparaperfil = apiUrl.replace(/\/api\/?$/, '');
+    const prefijo = `${this.urlparaperfil}/storage/`;
 
-  if (url.startsWith(prefijo)) {
-    return url.substring(prefijo.length);
-  } else if (url.startsWith(`${apiUrl}/storage/`)) {
-    return url.substring(`${apiUrl}/storage/`.length);
+    if (url.startsWith(prefijo)) {
+      return url.substring(prefijo.length);
+    } else if (url.startsWith(`${apiUrl}/storage/`)) {
+      return url.substring(`${apiUrl}/storage/`.length);
+    }
+    return url;
   }
-  return url;
-}
 
   /* 
   Este metodo lo que hace es abrir un modal para poder editar un banner del aliado
@@ -297,6 +297,11 @@ limpiarPrefijo(url: string): string {
     )
   }
 
+  // Path de imagen para el banner
+  getFullImageUrl(path: string): string {
+    return `${'http://127.0.0.1:8000/'}${path}`;
+  }
+
   /*
   Valida si las dimensiones de la imagen están dentro de los límites dados.
   */
@@ -324,7 +329,7 @@ limpiarPrefijo(url: string): string {
   */
   verEditar(): void {
     this.isLoading = true;
-    this.isEditing =true;
+    this.isEditing = true;
     this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
       data => {
         let rutaMulti = data.ruta_multi;
@@ -387,20 +392,20 @@ limpiarPrefijo(url: string): string {
         if (this.aliadoForm.invalid) {
           this.formSubmitted = true;
           this.isSubmitting = false;
-          return; 
+          return;
         }
         return;
       }
     }
 
-    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina', 'celular','email' ];
+    const camposObligatorios = ['nombre', 'descripcion', 'urlpagina', 'celular', 'email'];
     for (const key of camposObligatorios) {
-        const control = this.aliadoForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            this.isSubmitting = false;
-            return;
-        }
+      const control = this.aliadoForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmitting = false;
+        return;
+      }
     }
 
     const formData = new FormData();
@@ -413,14 +418,14 @@ limpiarPrefijo(url: string): string {
       estadoValue = this.aliadoForm.get('estado')?.value;
     }
 
-const nombreAliado = this.aliadoForm.get('nombre')?.value;
-if (nombreAliado){
-  if (/^\d+$/.test(nombreAliado)) {
-    this.alertService.errorAlert('Error', 'El nombre no puede estar compuesto solamente de numeros');
-    this.isSubmitting = false;
-    return;
-  }
-}
+    const nombreAliado = this.aliadoForm.get('nombre')?.value;
+    if (nombreAliado) {
+      if (/^\d+$/.test(nombreAliado)) {
+        this.alertService.errorAlert('Error', 'El nombre no puede estar compuesto solamente de numeros');
+        this.isSubmitting = false;
+        return;
+      }
+    }
 
     const nombreDescripcion = this.aliadoForm.get('descripcion')?.value;
     if (nombreDescripcion && nombreDescripcion.length > 312) {
@@ -457,9 +462,9 @@ if (nombreAliado){
 
     formData.append('nombre', this.aliadoForm.get('nombre')?.value);
 
-    
+
     if (this.selectedBanner) {
-      formData.append('banner_urlImagen', this.selectedBanner, this.selectedBanner.name);
+      formData.append('bannerFile', this.selectedBanner, this.selectedBanner.name);
     }
     formData.append('banner_estadobanner', this.bannerForm.get('estadobanner')?.value);
 
@@ -529,53 +534,51 @@ if (nombreAliado){
   /*
     El método se encarga de dependiendo del dato multimedia seleccioando aparezca en el selec con el input dispuesto completar
   */
-    onTipoDatoChange(): void {
-      const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
-      let currentRutaMulti = this.aliadoForm.get('ruta_multi').value;
-  
-      this.aliadoForm.get('ruta_multi').clearValidators();
-      this.aliadoForm.get('Video')?.clearValidators();
-      this.aliadoForm.get('Imagen')?.clearValidators();
-      this.aliadoForm.get('PDF')?.clearValidators();
-      this.aliadoForm.get('Texto')?.clearValidators();
-  
-      const tipoDatoIdNumber = Number(tipoDatoId);
-      switch (tipoDatoIdNumber) {
-        case 1:
-          this.showVideo = true;
-          this.showImagen = false;
-          this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
-          this.aliadoForm.patchValue({ ruta_multi: this.videoUrl });
-          console.log('Mostrando Video');
-          break;
-        case 2:
-          this.showImagen = true;
-          this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
-          this.aliadoForm.patchValue({ ruta_multi: this.imageUrl });
-          console.log('Mostrando Imagen');
-          break;
-        default:
-          break;
-      }
-      this.aliadoForm.get('ruta_multi').updateValueAndValidity();
-      this.cdRef.detectChanges();
-    }
+  onTipoDatoChange(): void {
+    const tipoDatoId = this.aliadoForm.get('id_tipo_dato').value;
+    let currentRutaMulti = this.aliadoForm.get('ruta_multi').value;
 
-    obtenerValorBaseDatos(): void {
-      if (this.idAliado) {
-        this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
-          data => {
-            if (data && data.id_tipo_dato) {
-              this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
-              this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
-            }
-          },
-          error => {
-            console.log('Error al obtener el valor de la base de datos:', error);
-          }
-        );
-      }
+    this.aliadoForm.get('ruta_multi').clearValidators();
+    this.aliadoForm.get('Video')?.clearValidators();
+    this.aliadoForm.get('Imagen')?.clearValidators();
+    this.aliadoForm.get('PDF')?.clearValidators();
+    this.aliadoForm.get('Texto')?.clearValidators();
+
+    const tipoDatoIdNumber = Number(tipoDatoId);
+    switch (tipoDatoIdNumber) {
+      case 1:
+        this.showVideo = true;
+        this.showImagen = false;
+        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+        this.aliadoForm.patchValue({ ruta_multi: this.videoUrl });
+        break;
+      case 2:
+        this.showImagen = true;
+        this.aliadoForm.get('ruta_multi').setValidators([Validators.required]);
+        this.aliadoForm.patchValue({ ruta_multi: this.imageUrl });
+        break;
+      default:
+        break;
     }
+    this.aliadoForm.get('ruta_multi').updateValueAndValidity();
+    this.cdRef.detectChanges();
+  }
+
+  obtenerValorBaseDatos(): void {
+    if (this.idAliado) {
+      this.aliadoService.getAliadoxid(this.token, this.idAliado).subscribe(
+        data => {
+          if (data && data.id_tipo_dato) {
+            this.aliadoForm.get('id_tipo_dato').setValue(data.id_tipo_dato);
+            this.onTipoDatoChange(); // Llama a este método para actualizar la visibilidad de los campos
+          }
+        },
+        error => {
+          console.log('Error al obtener el valor de la base de datos:', error);
+        }
+      );
+    }
+  }
 
   /*
     Este método maneja la selección de archivos desde un input de tipo archivo. 
@@ -584,25 +587,25 @@ if (nombreAliado){
   onFileSelecteds(event: any, field: string) {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-  
+
       let maxSize = 0;
-  
+
       if (field === 'urlImagen' || field === 'logo' || field === 'ruta_multi') {
         maxSize = 5 * 1024 * 1024; // 5MB para imágenes
       } else if (field === 'ruta_documento') {
         maxSize = 18 * 1024 * 1024; // 18MB para documentos
       }
-  
+
       if (file.size > maxSize) {
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(2);
         this.alertService.errorAlert('Error', `El archivo es demasiado grande. El tamaño máximo permitido es ${maxSizeMB} MB.`);
         this.resetFileField(field);
-  
+
         // Limpia el archivo seleccionado y resetea la previsualización
         event.target.value = ''; // Borra la selección del input
         return;
       }
-  
+
       // Nueva validación para las dimensiones del logo
       if (field === 'logo') {
         const img = new Image();
@@ -622,7 +625,7 @@ if (nombreAliado){
       }
     }
   }
-  
+
   /* 
   Procesa un archivo seleccionado (imagen o logo) y actualiza los campos correspondientes en el formulario. 
   Utiliza FileReader para convertir el archivo a un formato de URL y asigna esta URL al campo adecuado 
@@ -636,17 +639,17 @@ if (nombreAliado){
       img.onload = () => {
         let canvas = document.createElement('canvas');
         let ctx = canvas.getContext('2d');
-        
+
         if (field === 'logo') {
           // Configurar el canvas para 1751x1751
           canvas.width = 1751;
           canvas.height = 1751;
-          
+
           // Calcular las dimensiones para el recorte
           let size = Math.min(img.width, img.height);
           let startX = (img.width - size) / 2;
           let startY = (img.height - size) / 2;
-          
+
           // Dibujar la imagen recortada en el canvas
           ctx.drawImage(img, startX, startY, size, size, 0, 0, 1751, 1751);
         } else {
@@ -655,13 +658,13 @@ if (nombreAliado){
           canvas.height = img.height;
           ctx.drawImage(img, 0, 0, img.width, img.height);
         }
-        
+
         // Convertir el canvas a una URL de datos
         const dataUrl = canvas.toDataURL('image/jpeg');
-        
+
         // Actualizar el formulario y la previsualización
         if (field === 'urlImagen') {
-          this.bannerForm.patchValue({ urlImagen: dataUrl });  
+          this.bannerForm.patchValue({ urlImagen: dataUrl });
           this.bannerPreview = dataUrl;
         } else if (field === 'logo') {
           this.aliadoForm.patchValue({ logo: dataUrl });
@@ -670,13 +673,13 @@ if (nombreAliado){
           this.aliadoForm.patchValue({ ruta_multi: dataUrl });
           this.rutaPreview = dataUrl;
         }
-        
+
         // Convertir la URL de datos de vuelta a un archivo
         fetch(dataUrl)
           .then(res => res.blob())
           .then(blob => {
             const newFile = new File([blob], file.name, { type: 'image/jpeg' });
-            
+
             if (field === 'urlImagen') {
               this.selectedBanner = newFile;
               this.bannerForm.patchValue({ urlImagen: newFile });
@@ -692,10 +695,10 @@ if (nombreAliado){
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
-  
+
     // Genera la previsualización solo si el archivo es de tamaño permitido
     this.generateImagePreview(file, field);
-  
+
     if (field === 'urlImagen') {
       this.selectedBanner = file;
       this.bannerForm.patchValue({ urlImagen: file });
@@ -710,12 +713,12 @@ if (nombreAliado){
       this.aliadoForm.patchValue({ ruta_multi: file });
     }
   }
-  
+
   onTextInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.aliadoForm.patchValue({ ruta_multi: value });
   }
-  
+
   resetFileField(field: string) {
     if (field === 'urlImagen') {
       this.bannerForm.patchValue({ urlImagen: null });

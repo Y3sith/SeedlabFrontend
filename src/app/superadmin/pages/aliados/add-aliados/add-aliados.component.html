@@ -274,7 +274,7 @@
     <ng-container *ngIf="!isLoading">
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-3 items-center h-full">
         <div *ngFor="let banner of listBanners" class="relative overflow-hidden bg-white rounded-lg shadow-md">
-          <img [src]="banner.urlImagen" alt="Gallery image" class="object-cover w-full h-64">
+          <img [src]="getFullImageUrl(banner.urlImagenSmall)" alt="Gallery image" class="object-cover w-full h-64">
           <div class="absolute flex space-x-2 top-2 right-2">
             <!-- Botón del lápiz -->
             <button
