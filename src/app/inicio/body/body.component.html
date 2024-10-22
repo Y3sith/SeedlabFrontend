@@ -21,21 +21,20 @@
 
 
     <div class="relative w-full banner-swiper-container overflow-hidde">
-      <div class="swiper-wrapper">
-        <ng-container *ngFor="let banner of listBanner;">
-          <div class="swiper-slide banner-swiper-slide" style="width: 100%;">
-            <picture>
-              <source [srcset]="getFullImageUrl(banner.urlImagenSmall) + ' 800w, ' + 
-                              getFullImageUrl(banner.urlImagenMedium) + ' 1600w, ' + 
-                              getFullImageUrl(banner.urlImagenLarge) + ' 2400w'"
-                      sizes="100vw" 
-                      type="image/webp" />
-              <img [src]="getFullImageUrl(banner.urlImagenMedium)" 
-                   [alt]="'Banner image'"
-                   loading="lazy" />
-          </picture>
-          </div>
-        </ng-container>
+      <!-- Banners -->
+      <div *ngIf="isLoaded && listBanner.length > 0">
+        <div class="swiper-wrapper">
+          <ng-container *ngFor="let banner of listBanner; trackBy: trackByBanner">
+            <div class="swiper-slide banner-swiper-slide" style="width: 100%;">
+              <picture>
+                <source [srcset]="getFullImageUrl(banner.urlImagenSmall) + ' 800w, ' + 
+                                getFullImageUrl(banner.urlImagenMedium) + ' 1600w, ' + 
+                                getFullImageUrl(banner.urlImagenLarge) + ' 2400w'" sizes="100vw" type="image/webp" />
+                <img [src]="getFullImageUrl(banner.urlImagenMedium)" [alt]="'Banner image'" loading="lazy" />
+              </picture>
+            </div>
+          </ng-container>
+        </div>
       </div>
 
 
@@ -66,22 +65,25 @@
         </p>
 
       </div>
+      <!-- Aliados  -->
       <div class="relative w-full lg:w-2/3">
-        <div class="h-auto banner-swiper-container lg:flex lg:flex-row lg:items-center">
-          <div class="swiper-wrapper">
-            <div
-              class="p-2 swiper-slide lg:flex lg:flex-row lg:items-center max-lg:flex max-lg:flex-col max-lg:items-center"
-              *ngFor="let aliado of listAliados; trackBy: trackByAliado">
-              <img [src]="aliado.logo" [alt]="aliado.nombre" width="400" height="300"
-                class="logo-img max-lg:mb-4 md:mt-16">
-              <div class="relative w-full -mb-24 lg:-ml-1 lg:pl-1 lg:p-1 max-lg:p-4 max-lg:text-center max-sm:-mt-8">
-                <p class="text-justify ml-4 description-line mb-1 max-sm:text-[14px] max-lg:text-center">{{
-                  aliado.descripcion }}</p>
+        <div *ngIf="isLoaded && listAliados.length > 0">
+          <div class="h-auto banner-swiper-container lg:flex lg:flex-row lg:items-center">
+            <div class="swiper-wrapper">
+              <div
+                class="p-2 swiper-slide lg:flex lg:flex-row lg:items-center max-lg:flex max-lg:flex-col max-lg:items-center"
+                *ngFor="let aliado of listAliados; trackBy: trackByAliado">
+                <img [src]="aliado.logo" [alt]="aliado.nombre" width="400" height="300"
+                  class="logo-img max-lg:mb-4 md:mt-16">
+                <div class="relative w-full -mb-24 lg:-ml-1 lg:pl-1 lg:p-1 max-lg:p-4 max-lg:text-center max-sm:-mt-8">
+                  <p class="text-justify ml-4 description-line mb-1 max-sm:text-[14px] max-lg:text-center">{{
+                    aliado.descripcion }}</p>
+                </div>
               </div>
             </div>
+  
+  
           </div>
-
-
         </div>
         <!-- Pagination and Button container -->
         <div class="relative flex flex-col items-center space-x-2 lg:-mt-8 lg: max-sm:mb-7">

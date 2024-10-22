@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, PLATFORM_ID, Inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, Renderer2 } from '@angular/core';
+import { Component, AfterViewInit, PLATFORM_ID, Inject, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, Renderer2, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DOCUMENT } from '@angular/common';
 import { AliadoService } from '../../servicios/aliado.service';
@@ -8,8 +8,9 @@ import { Banner } from '../../Modelos/banner.model';
 import { AuthService } from '../../servicios/auth.service';
 import { SuperadminService } from '../../servicios/superadmin.service';
 import { Personalizaciones } from '../../Modelos/personalizaciones.model';
-import { catchError, forkJoin, Observable, of, tap } from 'rxjs';
+import { catchError, forkJoin, Observable, of, Subscription, tap } from 'rxjs';
 import { environment } from '../../../environment/env';
+
 
 @Component({
   selector: 'app-body',
@@ -17,7 +18,7 @@ import { environment } from '../../../environment/env';
   styleUrls: ['./body.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // Usando estrategia OnPush
 })
-export class BodyComponent implements OnInit, AfterViewInit {
+export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
   bannerSwiper: Swiper | undefined;
   alliesSwiper: Swiper | undefined;
   listAliados: Aliado[] = [];
@@ -37,6 +38,8 @@ export class BodyComponent implements OnInit, AfterViewInit {
   id: number = 1;
   isLoaded = false;
 
+  private subscriptions: Subscription = new Subscription();
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private aliadoService: AliadoService,
@@ -50,56 +53,67 @@ export class BodyComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isAuthenticated();
 
-    // Cargar banners
-    this.aliadoService.getbanner().pipe(
-      tap((banners: Banner[]) => {
-        this.listBanner = banners.map(banner => {
-          return new Banner(
-            banner.urlImagenSmall,
-            banner.urlImagenMedium,
-            banner.urlImagenLarge,
-            banner.estadobanner,
-          );
-        });
-        console.log(this.listBanner);
+    const banners$ = this.loadBanners();
+    const aliados$ = this.loadAliados();
+    const personalizacion$ = this.getPersonalizacion();
+
+    const combined$ = forkJoin([banners$, aliados$, personalizacion$]);
+
+    this.subscriptions.add(
+      combined$.subscribe(() => {
+        this.isLoaded = true;
         this.cdr.markForCheck();
         this.initBannerSwiper();
-        this.precargarBannerPrincipal();
-      }),
-      catchError(err => {
-        console.error('Error al cargar banners:', err);
-        return of([]);
-      })
-    ).subscribe();
-
-
-
-    // Cargar aliados
-    this.aliadoService.getaliados().pipe(
-      tap((aliados) => {
-        this.listAliados = aliados;
-        this.cdr.markForCheck();
         this.initAlliesSwiper();
-      }),
-      catchError(err => {
-        console.error('Error al cargar aliados:', err);
-        return of([]);
+        this.precargarBannerPrincipal();
       })
-    ).subscribe();
-
-    // Cargar personalización
-    this.getPersonalizacion().pipe(
-      catchError(err => {
-        console.error('Error al cargar personalización:', err);
-        return of(null);
-      })
-    ).subscribe();
+    );
+    
   }
 
   ngAfterViewInit() {
     // Inicialización de Swiper ya manejada en ngOnInit
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+    if (this.bannerSwiper) {
+      this.bannerSwiper.destroy(true, true);
+    }
+    if (this.alliesSwiper) {
+      this.alliesSwiper.destroy(true, true);
+    }
+  }
+
+  private loadBanners(): Observable<Banner[]> {
+    return this.aliadoService.getbanner().pipe(
+      tap((banners: Banner[]) => {
+        this.listBanner = banners.map(banner => new Banner(
+          banner.urlImagenSmall,
+          banner.urlImagenMedium,
+          banner.urlImagenLarge,
+          banner.estadobanner,
+        ));
+        console.log(this.listBanner);
+      }),
+      catchError(err => {
+        console.error('Error al cargar banners:', err);
+        return of([]);
+      })
+    );
+  }
+
+  private loadAliados(): Observable<Aliado[]> {
+    return this.aliadoService.getaliados().pipe(
+      tap((aliados) => {
+        this.listAliados = aliados;
+      }),
+      catchError(err => {
+        console.error('Error al cargar aliados:', err);
+        return of([]);
+      })
+    );
+  }
 
 
   private precargarBannerPrincipal(): void {
@@ -122,7 +136,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   getFullImageUrl(path: string): string {
     // Asumimos que environment.apiUrl no incluye una barra al final
-    return `${'http://127.0.0.1:8000/'}${path}`;
+    return `${'https://api.uccemprende.com/'}${path}`;
   }
 
 
@@ -186,7 +200,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   private initBannerSwiper(): void {
     if (this.bannerSwiper) {
-      this.bannerSwiper.destroy(true, true);
+      return; // Evita re-inicializar si ya está inicializado
     }
 
     this.bannerSwiper = new Swiper('.banner-swiper-container', {
@@ -212,7 +226,7 @@ export class BodyComponent implements OnInit, AfterViewInit {
 
   private initAlliesSwiper(): void {
     if (this.alliesSwiper) {
-      this.alliesSwiper.destroy(true, true);
+      return; // Evita re-inicializar si ya está inicializado
     }
 
     this.alliesSwiper = new Swiper('.allies-swiper-container', {
