@@ -10,6 +10,7 @@ import { SuperadminService } from '../../servicios/superadmin.service';
 import { Personalizaciones } from '../../Modelos/personalizaciones.model';
 import { catchError, forkJoin, Observable, of, Subscription, tap } from 'rxjs';
 import { environment } from '../../../environment/env';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 
 
 @Component({
@@ -63,16 +64,21 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
       combined$.subscribe(() => {
         this.isLoaded = true;
         this.cdr.markForCheck();
-        this.initBannerSwiper();
-        this.initAlliesSwiper();
+
         this.precargarBannerPrincipal();
       })
     );
-    
+
   }
 
   ngAfterViewInit() {
-    // Inicialización de Swiper ya manejada en ngOnInit
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        this.initBannerSwiper();
+        this.initAlliesSwiper();
+        this.cdr.markForCheck();
+      }, 100);
+    }
   }
 
   ngOnDestroy(): void {
@@ -136,7 +142,7 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getFullImageUrl(path: string): string {
     // Asumimos que environment.apiUrl no incluye una barra al final
-    return `${'https://api.uccemprende.com/'}${path}`;
+    return `${environment.imageBaseUrl}/${path}`;
   }
 
 
@@ -199,47 +205,49 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initBannerSwiper(): void {
-    if (this.bannerSwiper) {
-      return; // Evita re-inicializar si ya está inicializado
-    }
+    if (isPlatformBrowser(this.platformId)) {  // Verifica si estamos en el navegador
+      if (this.bannerSwiper) {
+        this.bannerSwiper.destroy(true, true);
+      }
 
-    this.bannerSwiper = new Swiper('.banner-swiper-container', {
-      slidesPerView: 1,
-      spaceBetween: 0,
-      loop: true,
-      autoplay: {
-        delay: 5000,
-        disableOnInteraction: false,
-      },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-        bulletClass: 'swiper-pagination-bullet',
-        bulletActiveClass: 'swiper-pagination-bullet-active',
-      },
-    });
+      this.bannerSwiper = new Swiper('.banner-swiper-container', {
+        modules: [Navigation, Pagination, Autoplay],
+        slidesPerView: 1,
+        spaceBetween: 0,
+        loop: true,
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+        },
+      });
+    }
   }
 
   private initAlliesSwiper(): void {
-    if (this.alliesSwiper) {
-      return; // Evita re-inicializar si ya está inicializado
-    }
+    if (isPlatformBrowser(this.platformId)) {  // Verifica si estamos en el navegador
+      if (this.alliesSwiper) {
+        this.alliesSwiper.destroy(true, true);
+      }
 
-    this.alliesSwiper = new Swiper('.allies-swiper-container', {
-      slidesPerView: 'auto',
-      spaceBetween: 30,
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-        bulletClass: 'swiper-pagination-bullet',
-        bulletActiveClass: 'swiper-pagination-bullet-active',
-        dynamicBullets: true,
-        dynamicMainBullets: 3,
-      },
-    });
+      this.alliesSwiper = new Swiper('.allies-swiper-container', {
+        modules: [Navigation, Pagination, Autoplay],
+        slidesPerView: 'auto',
+        spaceBetween: 30,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true,
+          dynamicBullets: true,
+          dynamicMainBullets: 3,
+        },
+      });
+    }
   }
 }

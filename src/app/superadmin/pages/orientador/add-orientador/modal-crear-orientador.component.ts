@@ -9,6 +9,7 @@ import { DepartamentoService } from '../../../../servicios/departamento.service'
 import { MunicipioService } from '../../../../servicios/municipio.service';
 import { AuthService } from '../../../../servicios/auth.service';
 import { Location } from '@angular/common';
+import { environment } from '../../../../../environment/env';
 
 @Component({
   selector: 'app-modal-crear-orientador',
@@ -109,6 +110,7 @@ export class ModalCrearOrientadorComponent implements OnInit {
     this.cargarDepartamentos();
 
   }
+
   /*getter que facilita el acceso a los controles del formulario reactivo*/
   get f() { return this.orientadorForm.controls; } //aquii
 
@@ -346,11 +348,9 @@ export class ModalCrearOrientadorComponent implements OnInit {
         if (result.isConfirmed) {
           this.orientadorServices.updateOrientador(this.token, this.idOrientador, formData).subscribe(
             (data) => {
-              setTimeout(() => {
                 this.router.navigate(['/list-orientador']);
                 this.alertService.successAlert('Éxito', data.message);
                 this.isSubmitting = false;  // Detener el spinner
-              }, this.tiempoEspera);
             },
             error => {
               console.error(error);
@@ -370,23 +370,26 @@ export class ModalCrearOrientadorComponent implements OnInit {
       // Crear orientador
       this.orientadorServices.createOrientador(this.token, formData).subscribe(
         data => {
-          setTimeout(() => {
+            console.log(data.message);
             this.alertService.successAlert('Éxito', data.message);
             this.router.navigate(['/list-orientador']);
             this.isSubmitting = false;  // Detener el spinner
-          }, this.tiempoEspera);
         },
         error => {
           console.log(error);
           this.isSubmitting = false;  // Detener el spinner
           if (error.status === 400) {
-            this.alertService.errorAlert('Error', error.error.message);
+            this.alertService.errorAlert('Error', error.message);
           } else {
             this.alertService.errorAlert('Error', 'Ocurrió un error al crear el orientador.');
           }
         }
       );
     }
+  }
+
+  getFullImageUrl(path: string): string {
+    return `${environment.imageBaseUrl}${path}`;;
   }
 
   /*Alterna el estado activo o inactivo del orientador, actualizando el formulario con el valor correspondiente.*/

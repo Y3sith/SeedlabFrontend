@@ -22,7 +22,7 @@
 
     <div class="relative w-full banner-swiper-container overflow-hidde">
       <!-- Banners -->
-      <div *ngIf="isLoaded && listBanner.length > 0">
+      
         <div class="swiper-wrapper">
           <ng-container *ngFor="let banner of listBanner; trackBy: trackByBanner">
             <div class="swiper-slide banner-swiper-slide" style="width: 100%;">
@@ -30,12 +30,12 @@
                 <source [srcset]="getFullImageUrl(banner.urlImagenSmall) + ' 800w, ' + 
                                 getFullImageUrl(banner.urlImagenMedium) + ' 1600w, ' + 
                                 getFullImageUrl(banner.urlImagenLarge) + ' 2400w'" sizes="100vw" type="image/webp" />
-                <img [src]="getFullImageUrl(banner.urlImagenMedium)" [alt]="'Banner image'" loading="lazy" />
+                <img [src]="getFullImageUrl(banner.urlImagenMedium)" [alt]="'Banner image'" />
               </picture>
             </div>
           </ng-container>
         </div>
-      </div>
+      
 
 
 
@@ -67,7 +67,7 @@
       </div>
       <!-- Aliados  -->
       <div class="relative w-full lg:w-2/3">
-        <div *ngIf="isLoaded && listAliados.length > 0">
+        
           <div class="h-auto banner-swiper-container lg:flex lg:flex-row lg:items-center">
             <div class="swiper-wrapper">
               <div
@@ -84,7 +84,7 @@
   
   
           </div>
-        </div>
+       
         <!-- Pagination and Button container -->
         <div class="relative flex flex-col items-center space-x-2 lg:-mt-8 lg: max-sm:mb-7">
           <div

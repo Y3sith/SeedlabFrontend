@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AliadoService } from '../../../../servicios/aliado.service';
 import { AlertService } from '../../../../servicios/alert.service';
 import { faCircleQuestion, faImage } from '@fortawesome/free-solid-svg-icons';
+import { environment } from '../../../../../environment/env';
 
 @Component({
   selector: 'app-add-banner-modal',
@@ -112,7 +113,7 @@ export class AddBannerModalComponent implements OnInit {
 
   // Path de imagen para el banner
   getFullImageUrl(path: string): string {
-    return `${'http://127.0.0.1:8000/'}${path}`;
+    return `${environment.imageBaseUrl}/${path}`;;
   }
 
   /*

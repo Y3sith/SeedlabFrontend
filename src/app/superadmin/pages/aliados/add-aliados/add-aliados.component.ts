@@ -299,7 +299,7 @@ Este método maneja los cambios en el campo `ruta_multi` del formulario `aliadoF
 
   // Path de imagen para el banner
   getFullImageUrl(path: string): string {
-    return `${'http://127.0.0.1:8000/'}${path}`;
+    return `${environment.imageBaseUrl}/${path}`;;
   }
 
   /*
