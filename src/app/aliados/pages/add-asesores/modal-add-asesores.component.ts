@@ -11,6 +11,7 @@ import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { environment } from '../../../../environment/env';
 
 @Component({
   selector: 'app-modal-add-asesores',
@@ -294,136 +295,132 @@ export class ModalAddAsesoresComponent implements OnInit {
     Si se trata de una creación de asesor, se realiza la llamada al servicio correspondiente, mostrando alertas de éxito o error según sea necesario.
   */
 
-  addAsesor(): void {
-    this.isSubmitting = true;
-    Object.values(this.asesorForm.controls).forEach(control => {
-      control.markAsTouched();
-    });
-    const camposObligatorios = ['nombre', 'apellido', 'documento', 'direccion', 'celular', 'email', 'password'];
-    for (const key of camposObligatorios) {
-        const control = this.asesorForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            this.isSubmitting = false;
-            return;
-        }
-    }
-    if (this.asesorForm.get('nombre').invalid ||
-      this.asesorForm.get('apellido').invalid ||
-      this.asesorForm.get('documento').invalid ||
-      this.asesorForm.get('celular').invalid ||
-      (this.asesorForm.get('password').invalid && (!this.idAsesor || this.asesorForm.get('password').value))) {
-      this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
-      this.isSubmitting = false;
-      return;
-    }
-    const fechaNacControl = this.asesorForm.get('fecha_nac');
-    if (fechaNacControl.value) {
-      const fechaNac = new Date(fechaNacControl.value);
-      const hoy = new Date();
-      let edad = hoy.getFullYear() - fechaNac.getFullYear();
-      const mes = hoy.getMonth() - fechaNac.getMonth();
-      if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
-        edad--;
+    addAsesor(): void {
+      this.isSubmitting = true;
+      Object.values(this.asesorForm.controls).forEach(control => {
+        control.markAsTouched();
+      });
+      const camposObligatorios = ['nombre', 'apellido', 'documento', 'direccion', 'celular', 'email', 'password'];
+      for (const key of camposObligatorios) {
+          const control = this.asesorForm.get(key);
+          if (control && control.value && control.value.trim() === '') {
+              this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+              this.isSubmitting = false;
+              return;
+          }
       }
-      if (edad < 18 || edad > 100) {
-        this.alerService.errorAlert('Error', 'Debes ser mayor de edad');
+      if (this.asesorForm.get('nombre').invalid ||
+        this.asesorForm.get('apellido').invalid ||
+        this.asesorForm.get('documento').invalid ||
+        this.asesorForm.get('celular').invalid ||
+        (this.asesorForm.get('password').invalid && (!this.idAsesor || this.asesorForm.get('password').value))) {
+        this.alerService.errorAlert('Error', 'Por favor, complete correctamente los campos obligatorios.');
         this.isSubmitting = false;
         return;
       }
-    }
-    const emailControl = this.asesorForm.get('email');
-    if (emailControl.value && !emailControl.valid) {
-      this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
-      this.isSubmitting = false;
-      return;
-    }
-    const formData = new FormData();
-    let estadoValue: string;
-    if (this.idAsesor == null) {
-      estadoValue = '1';
-    } else {
-    }
-    formData.append('nombre', this.asesorForm.get('nombre')?.value);
-    formData.append('apellido', this.asesorForm.get('apellido')?.value);
-    formData.append('documento', this.asesorForm.get('documento')?.value);
-    formData.append('celular', this.asesorForm.get('celular')?.value);
-    formData.append('genero', this.asesorForm.get('genero')?.value);
-    const direccionControl = this.asesorForm.get('direccion');
-    if (direccionControl && direccionControl.value) {
-      formData.append('direccion', direccionControl.value);
-    }
-    formData.append('aliado', this.nombreAliado);
-    formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
-    formData.append('departamento', this.asesorForm.get('id_departamento')?.value);
-    formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
-    formData.append('email', this.asesorForm.get('email')?.value);
-    const passwordControl = this.asesorForm.get('password');
-    if (passwordControl && (passwordControl.value || !this.idAsesor)) {
-      if (passwordControl.valid) {
-        formData.append('password', passwordControl.value);
-      } else {
-        this.alerService.errorAlert('Error', 'La contraseña no cumple con los requisitos.');
+      const fechaNacControl = this.asesorForm.get('fecha_nac');
+      if (fechaNacControl.value) {
+        const fechaNac = new Date(fechaNacControl.value);
+        const hoy = new Date();
+        let edad = hoy.getFullYear() - fechaNac.getFullYear();
+        const mes = hoy.getMonth() - fechaNac.getMonth();
+        if (mes < 0 || (mes === 0 && hoy.getDate() < fechaNac.getDate())) {
+          edad--;
+        }
+        if (edad < 18 || edad > 100) {
+          this.alerService.errorAlert('Error', 'Debes ser mayor de edad');
+          this.isSubmitting = false;
+          return;
+        }
+      }
+      const emailControl = this.asesorForm.get('email');
+      if (emailControl.value && !emailControl.valid) {
+        this.alerService.errorAlert('Error', 'Por favor, ingrese un email válido.');
+        this.isSubmitting = false;
         return;
       }
-    }
-    Object.keys(this.asesorForm.controls).forEach((key) => {
-      const control = this.asesorForm.get(key);
-      if (control?.value !== null && control?.value !== undefined) {
-        if (key === 'fecha_nac') {
-          if (control.value) {
-            const date = new Date(control.value);
-            if (!isNaN(date.getTime())) {
-              formData.append(key, date.toISOString().split('T')[0]);
-            }
-          }
-        } else if (key === 'estado') {
-          formData.append(key, control.value ? '1' : '0');
-        } else if (key !== 'imagen_perfil' && key !== 'direccion' &&
-          !(key === 'password' && this.idAsesor && !control.value)) {
-          formData.append(key, control.value);
+      const formData = new FormData();
+      let estadoValue: string;
+      if (this.idAsesor == null) {
+        estadoValue = '1';
+      } else {
+      }
+      formData.append('nombre', this.asesorForm.get('nombre')?.value);
+      formData.append('apellido', this.asesorForm.get('apellido')?.value);
+      formData.append('documento', this.asesorForm.get('documento')?.value);
+      formData.append('celular', this.asesorForm.get('celular')?.value);
+      formData.append('genero', this.asesorForm.get('genero')?.value);
+      const direccionControl = this.asesorForm.get('direccion');
+      if (direccionControl && direccionControl.value) {
+        formData.append('direccion', direccionControl.value);
+      }
+      formData.append('aliado', this.nombreAliado);
+      formData.append('id_tipo_documento', this.asesorForm.get('id_tipo_documento')?.value);
+      formData.append('departamento', this.asesorForm.get('id_departamento')?.value);
+      formData.append('municipio', this.asesorForm.get('id_municipio')?.value);
+      formData.append('email', this.asesorForm.get('email')?.value);
+      const passwordControl = this.asesorForm.get('password');
+      if (passwordControl && (passwordControl.value || !this.idAsesor)) {
+        if (passwordControl.valid) {
+          formData.append('password', passwordControl.value);
+        } else {
+          this.alerService.errorAlert('Error', 'La contraseña no cumple con los requisitos.');
+          return;
         }
       }
-    });
-    if (this.selectedImagen_Perfil) {
-      formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
-    }
-    /* Actualiza asesor */
-    if (this.idAsesor != null) {
-      this.alerService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
-        if (result.isConfirmed) {
-          this.asesorService.updateAsesorxaliado(this.token, this.idAsesor, formData).subscribe(
-            (data) => {
-              setTimeout(() => {
-                this.router.navigate(['/list-asesores']);
-                this.alerService.successAlert('Exito', data.message);
-              }, this.tiempoEspera);
-            },
-            (error) => {
-              this.alerService.errorAlert('Error', error.error.message);
-              console.error('Error', error.error.message);
-              this.isSubmitting = false;
+      Object.keys(this.asesorForm.controls).forEach((key) => {
+        const control = this.asesorForm.get(key);
+        if (control?.value !== null && control?.value !== undefined) {
+          if (key === 'fecha_nac') {
+            if (control.value) {
+              const date = new Date(control.value);
+              if (!isNaN(date.getTime())) {
+                formData.append(key, date.toISOString().split('T')[0]);
+              }
             }
-          );
+          } else if (key === 'estado') {
+            formData.append(key, control.value ? '1' : '0');
+          } else if (key !== 'imagen_perfil' && key !== 'direccion' &&
+            !(key === 'password' && this.idAsesor && !control.value)) {
+            formData.append(key, control.value);
+          }
         }
       });
-      /* Crea asesor */
-    } else {
-      this.asesorService.createAsesor(this.token, formData).subscribe(
-        (data) => {
-          setTimeout(function () {
-          }, this.tiempoEspera);
-          this.alerService.successAlert('Exito', data.message);
-          this.router.navigate(['/list-asesores']);
-        },
-        (error) => {
-          console.error('Error al crear el asesor:', error);
-          this.alerService.errorAlert('Error', error.error.message);
-          this.isSubmitting = false;
-        }
-      );
+      if (this.selectedImagen_Perfil) {
+        formData.append('imagen_perfil', this.selectedImagen_Perfil, this.selectedImagen_Perfil.name);
+      }
+      /* Actualiza asesor */
+      if (this.idAsesor != null) {
+        this.alerService.alertaActivarDesactivar('¿Estas seguro de guardar los cambios?', 'question').then((result) => {
+          if (result.isConfirmed) {
+            this.asesorService.updateAsesorxaliado(this.token, this.idAsesor, formData).subscribe(
+              (data) => {
+                  this.router.navigate(['/list-asesores']);
+                  this.alerService.successAlert('Exito', data.message);
+              },
+              (error) => {
+                this.alerService.errorAlert('Error', error.error.message);
+                console.error('Error', error.error.message);
+                this.isSubmitting = false;
+              }
+            );
+          }
+        });
+        /* Crea asesor */
+      } else {
+        this.asesorService.createAsesor(this.token, formData).subscribe(
+          (data) => {
+            this.alerService.successAlert('Exito', data.message);
+            this.router.navigate(['/list-asesores']);
+          },
+          (error) => {
+            console.error('Error al crear el asesor:', error);
+            this.alerService.errorAlert('Error', error.error.message);
+            this.isSubmitting = false;
+          }
+        );
+      }
     }
-  }
 
   /*
       Este método es útil para gestionar la activación/desactivación de un asesor en la interfaz de usuario.
@@ -431,6 +428,10 @@ export class ModalAddAsesoresComponent implements OnInit {
   toggleActive() {
     this.isActive = !this.isActive;
     this.asesorForm.patchValue({ estado: this.isActive ? true : false });
+  }
+
+  getFullImageUrl(path: string): string {
+    return `${environment.imageBaseUrl}/${path}`;;
   }
 
   /*

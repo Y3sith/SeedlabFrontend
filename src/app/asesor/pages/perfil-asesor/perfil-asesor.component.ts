@@ -10,6 +10,7 @@ import { AlertService } from '../../../servicios/alert.service';
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { AuthService } from '../../../servicios/auth.service';
+import { environment } from '../../../../environment/env';
 
 @Component({
   selector: 'app-perfil-asesor',
@@ -162,6 +163,10 @@ export class PerfilAsesorComponent implements OnInit {
     if (guardarBtn) {
       guardarBtn.style.pointerEvents = 'none';
     }
+  }
+
+  getFullImageUrl(path: string): string {
+    return `${environment.imageBaseUrl}/${path}`;;
   }
 
 

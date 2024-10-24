@@ -21,7 +21,7 @@
                         <div class="image-container">
                             <ng-container
                                 *ngIf="perfilPreview || asesorForm.get('imagen_perfil')?.value; else defaultImage">
-                                <img [src]="perfilPreview || asesorForm.get('imagen_perfil')?.value"
+                                <img [src]="perfilPreview || getFullImageUrl(asesorForm.get('imagen_perfil')?.value)"
                                     class="profile-image">
                             </ng-container>
                             <ng-template #defaultImage>
