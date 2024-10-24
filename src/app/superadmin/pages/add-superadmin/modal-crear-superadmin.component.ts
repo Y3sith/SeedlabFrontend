@@ -9,6 +9,7 @@ import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { AuthService } from '../../../servicios/auth.service';
 import { Location } from '@angular/common';
+import { environment } from '../../../../environment/env';
 
 @Component({
   selector: 'app-modal-crear-superadmin',
@@ -269,6 +270,10 @@ export class ModalCrearSuperadminComponent implements OnInit {
     }
   }
 
+  getFullImageUrl(path: string): string {
+    return `${environment.imageBaseUrl}/${path}`;
+  }
+
   /*
     Este método gestiona la creación o actualización de un super Admin mediante la recolección de datos desde un formulario reactivo (`superadminForm`) 
     y la validación de la información ingresada. El método determina si se está editando un super Admin existente o creando uno nuevo. 
@@ -405,8 +410,6 @@ export class ModalCrearSuperadminComponent implements OnInit {
     } else {
       this.superadminService.createSuperadmin(this.token, formData).subscribe(
         data => {
-          setTimeout(function () {
-          },this.tiempoEspera);
           this.alertService.successAlert('Exito', data.message);
           this.router.navigate(['/list-superadmin']);
         },

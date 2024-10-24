@@ -8,6 +8,7 @@ import { faCircleQuestion, faEnvelope, faMobileAlt, faUser } from '@fortawesome/
 import { DepartamentoService } from '../../../servicios/departamento.service';
 import { MunicipioService } from '../../../servicios/municipio.service';
 import { AuthService } from '../../../servicios/auth.service';
+import { environment } from '../../../../environment/env';
 
 
 @Component({
@@ -57,7 +58,7 @@ export class PerfilSuperadminComponent {
     apellido: ['', [Validators.required, this.noNumbersValidator]],
     documento: ['', [Validators.required, this.documentoValidator, this.noLettersValidator]],
     imagen_perfil: [Validators.required],
-    celular: ['', [Validators.required,this.noLettersValidator, this.celularValidator]],
+    celular: ['', [Validators.required, this.noLettersValidator, this.celularValidator]],
     genero: ['', Validators.required],
     direccion: [],
     id_tipo_documento: [Validators.required],
@@ -150,7 +151,7 @@ export class PerfilSuperadminComponent {
       )
     }
   }
-  bloquearcorreo():void{
+  bloquearcorreo(): void {
     this.blockedInputsCORREO = true;
   }
 
@@ -161,7 +162,7 @@ export class PerfilSuperadminComponent {
       this.isSubmitting = false;
       this.buttonMessage = "Guardar cambios";
       return;
-  }
+    }
     const formData = new FormData();
     let estadoValue: string;
     this.isSubmitting = true;
@@ -171,19 +172,19 @@ export class PerfilSuperadminComponent {
     if (!municipio || municipio.value === null || municipio.value === '') {
       this.alertService.errorAlert('Error', 'Debes seleccionar un municipio');
       this.isSubmitting = false;
-      this.buttonMessage ="Guardar cambios";
+      this.buttonMessage = "Guardar cambios";
       return;
     }
 
-    const camposObligatorios = ['nombre','apellido','email','password'];
+    const camposObligatorios = ['nombre', 'apellido', 'email', 'password'];
     for (const key of camposObligatorios) {
-        const control = this.perfiladminForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            this.isSubmitting = false;
-            this.buttonMessage ="Guardar cambios";
-            return;
-        }
+      const control = this.perfiladminForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertService.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmitting = false;
+        this.buttonMessage = "Guardar cambios";
+        return;
+      }
     }
     // First pass: handle special cases and avoid duplication
     Object.keys(this.perfiladminForm.controls).forEach((key) => {
@@ -208,7 +209,7 @@ export class PerfilSuperadminComponent {
             if (userAge < 18) {
               this.alertService.errorAlert('Error', 'No puedes actualizar un administrador menor de edad.');
               this.isSubmitting = false;
-              this.buttonMessage ="Guardar cambios";
+              this.buttonMessage = "Guardar cambios";
               return;
             }
             formData.append(key, date.toISOString().split('T')[0]);
@@ -247,26 +248,31 @@ export class PerfilSuperadminComponent {
             this.isSubmitting = false;
             setTimeout(function () {
               location.reload();
-            },2000);
+            }, 2000);
             this.alertService.successAlert('Exito', data.message);
           },
           (error) => {
             this.isSubmitting = false;
-            this.buttonMessage ="Guardar cambios";
+            this.buttonMessage = "Guardar cambios";
             console.error('Error from server:', error);
             this.alertService.errorAlert('Error', error.error.message);
           }
         );
       } else {
         this.isSubmitting = false;
-        this.buttonMessage ="Guardar cambios";
+        this.buttonMessage = "Guardar cambios";
       }
     });
   }
-  desactivarboton():void{
+
+  getFullImageUrl(path: string): string {
+    return `${environment.imageBaseUrl}/${path}`;
+  }
+
+  desactivarboton(): void {
     const guardarBtn = document.getElementById('guardarBtn') as HTMLButtonElement;
     if (guardarBtn) {
-// Cambia el cursor para indicar que está deshabilitado
+      // Cambia el cursor para indicar que está deshabilitado
       guardarBtn.style.pointerEvents = 'none';
     }
   }
@@ -570,11 +576,11 @@ Los datos recibidos se almacenan en la propiedad listTipoDocumento.
       return null;
     }
   }
-celularValidator(control: AbstractControl): ValidationErrors | null {
-  const value = control.value ? control.value.toString() : '';
-  if (value.length < 5 || value.length > 10) {
-    return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
+  celularValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value ? control.value.toString() : '';
+    if (value.length < 5 || value.length > 10) {
+      return { lengthError: 'El número de celular debe tener entre 5 y 10 dígitos *' };
+    }
+    return null;
   }
-  return null;
-}
 }

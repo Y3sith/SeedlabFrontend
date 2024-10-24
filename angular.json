@@ -38,6 +38,11 @@
                 "glob": "**/*",
                 "input": "src/assets/pdfjs",
                 "output": "/assets/pdfjs/"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/data",
+                "output": "/assets/data/"
               }
             ],
             "styles": [

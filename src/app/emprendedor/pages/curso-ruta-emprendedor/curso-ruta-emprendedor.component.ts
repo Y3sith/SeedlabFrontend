@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, Pipe, PipeTransform, } from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeResourceUrl, SafeScript, SafeStyle, SafeUrl } from '@angular/platform-browser';
-import {  Router } from '@angular/router';
-import { Leccion } from '../../../Modelos/leccion.model';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { environment } from '../../../../environment/env';
 import { HttpClient, HttpResponse } from '@angular/common/http';
@@ -97,15 +96,15 @@ export class CursoRutaEmprendedorComponent {
   }
 
 
-/* Inicializa con esas funciones al cargar la pagina */
+  /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit() {
     this.validateToken();
     this.currentNivelIndex = 0;
     this.currentLeccionIndex = 0;
     this.currentContenidoIndex = -1;
+    this.listarRutaActiva();
     this.updateSelectedContent();
     this.loadYouTubeApi();
-    this.listarRutaActiva();
     if (this.actividad) {
       console.log('Actividad recibida');
     } else {
@@ -124,7 +123,7 @@ export class CursoRutaEmprendedorComponent {
 
       if (this.currentRolId != 5 && this.currentRolId != 1 && this.currentRolId != 2) {
         this.router.navigate(['home']);
-      } 
+      }
     }
     if (!this.token) {
       this.router.navigate(['home']);
@@ -139,7 +138,6 @@ export class CursoRutaEmprendedorComponent {
       this.rutaService.ruta(this.token).subscribe(
         data => {
           this.rutaList = data;
-
           if (this.rutaList.length > 0) {
             const primeraRuta = this.rutaList[0];
             this.rutaId = primeraRuta.id;
@@ -170,10 +168,10 @@ export class CursoRutaEmprendedorComponent {
     );
   }
 
-/*
-  Inicializa el reproductor de YouTube para cada contenido de tipo video después de
-   que la vista se haya inicializado.
-*/
+  /*
+    Inicializa el reproductor de YouTube para cada contenido de tipo video después de
+     que la vista se haya inicializado.
+  */
   ngAfterViewInit() {
     this.contenidoLeccion.forEach((contenido, index) => {
       if (this.getContentType(contenido) === 'video') {
@@ -183,11 +181,12 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
-/*
-  Inicializa los niveles a partir de la actividad, filtrando lecciones que tienen contenido y marcando cada nivel y lección como no expandido.
-*/
+  /*
+    Inicializa los niveles a partir de la actividad, filtrando lecciones que tienen contenido y marcando cada nivel y lección como no expandido.
+  */
   initializeNiveles() {
     this.niveles = this.actividad.nivel
+
       .map((nivel: any) => {
         const mappedNivel = {
           ...nivel,
@@ -213,9 +212,9 @@ export class CursoRutaEmprendedorComponent {
       });
   }
 
-/*
-  Alterna la expansión de un nivel seleccionado, cerrando otros niveles y asegurando que las lecciones no estén expandidas.
-*/
+  /*
+    Alterna la expansión de un nivel seleccionado, cerrando otros niveles y asegurando que las lecciones no estén expandidas.
+  */
   toggleNivel(selectedNivelIndex: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
       if (nivelIndex === selectedNivelIndex) {
@@ -229,9 +228,9 @@ export class CursoRutaEmprendedorComponent {
     });
   }
 
-/*
-  Alterna la expansión de una lección en un nivel seleccionado, cerrando otras lecciones dentro del mismo nivel.
-*/
+  /*
+    Alterna la expansión de una lección en un nivel seleccionado, cerrando otras lecciones dentro del mismo nivel.
+  */
   toggleLeccion(selectedNivelIndex: number, selectedLeccionIndex: number) {
     const nivel = this.niveles[selectedNivelIndex];
     nivel.lecciones.forEach((leccion, leccionIndex) => {
@@ -263,10 +262,10 @@ export class CursoRutaEmprendedorComponent {
     this.closeAllExceptSelected(nivelIndex, leccionIndex, contenido.id);
   }
 
-/*
-  Cierra todos los niveles y lecciones excepto el seleccionado, asegurando que 
-  la jerarquía de expansión se mantenga.
-*/
+  /*
+    Cierra todos los niveles y lecciones excepto el seleccionado, asegurando que 
+    la jerarquía de expansión se mantenga.
+  */
   closeAllExceptSelected(selectedNivelIndex: number, selectedLeccionIndex: number, selectedContenidoId: number) {
     this.niveles.forEach((nivel, nivelIndex) => {
       if (nivelIndex < selectedNivelIndex) {
@@ -356,7 +355,7 @@ export class CursoRutaEmprendedorComponent {
 
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
-    
+
     this.botonAsesoria = (
       this.currentNivelIndex === this.niveles.length - 1 &&
       this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
@@ -371,31 +370,31 @@ export class CursoRutaEmprendedorComponent {
     this.location.back();
   }
 
-/*
-  Activa el botón de asesoría si se está en el último contenido de la última lección.
-*/
+  /*
+    Activa el botón de asesoría si se está en el último contenido de la última lección.
+  */
   boton() {
     const currentNivel = this.niveles[this.currentNivelIndex];
     const currentLeccion = currentNivel.lecciones[this.currentLeccionIndex];
     if (
       this.currentNivelIndex === this.niveles.length - 1 &&
       this.currentLeccionIndex === currentNivel.lecciones.length - 1 &&
-      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1 
+      this.currentContenidoIndex === currentLeccion.contenido_lecciones.length - 1
     ) {
       this.botonAsesoria = true;
     }
   }
 
-/*
-  Maneja el clic en el botón para avanzar al siguiente contenido.
-*/
+  /*
+    Maneja el clic en el botón para avanzar al siguiente contenido.
+  */
   onNextContentClick() {
     this.goToNextContent();
   }
 
-/*
-  Expande todos los niveles hasta el índice del nivel actual.
-*/
+  /*
+    Expande todos los niveles hasta el índice del nivel actual.
+  */
   expandCurrentPath() {
     for (let i = 0; i <= this.currentNivelIndex; i++) {
       if (this.niveles[i]) {
@@ -421,9 +420,9 @@ export class CursoRutaEmprendedorComponent {
       this.currentContenidoIndex === contenidoIndex;
   }
 
-/*
-  Devuelve un objeto de estilo para el contenido basado en si es el actual.
-*/
+  /*
+    Devuelve un objeto de estilo para el contenido basado en si es el actual.
+  */
   getContentStyle(nivelIndex: number, leccionIndex: number, contenidoIndex: number): object {
     const isCurrent = this.isCurrentContent(nivelIndex, leccionIndex, contenidoIndex);
     return {
@@ -449,9 +448,9 @@ export class CursoRutaEmprendedorComponent {
   }
 
 
-/*
-  Navega al contenido anterior y actualiza el estado de los niveles y lecciones seleccionados.
-*/
+  /*
+    Navega al contenido anterior y actualiza el estado de los niveles y lecciones seleccionados.
+  */
   goToPreviousContent() {
     if (this.currentContenidoIndex > 0) {
       this.currentContenidoIndex--;
@@ -478,9 +477,9 @@ export class CursoRutaEmprendedorComponent {
   }
 
 
-/*
-  Actualiza el contenido seleccionado basado en el índice actual de nivel, lección y contenido.
-*/
+  /*
+    Actualiza el contenido seleccionado basado en el índice actual de nivel, lección y contenido.
+  */
   updateSelectedContent() {
 
     if (this.showActivityDescription) {
@@ -494,18 +493,18 @@ export class CursoRutaEmprendedorComponent {
     this.currentLeccionFuente = null;
   }
 
-/*
-  Carga la API de YouTube al añadir un script al documento.
-*/
+  /*
+    Carga la API de YouTube al añadir un script al documento.
+  */
   loadYouTubeApi() {
     const tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     document.body.appendChild(tag);
   }
 
-/*
-  Crea un reproductor de YouTube con el ID del video y el ID del elemento contenedor.
-*/
+  /*
+    Crea un reproductor de YouTube con el ID del video y el ID del elemento contenedor.
+  */
   createYouTubePlayer(videoId: string, elementId: string) {
     return new (window as any).YT.Player(elementId, {
       height: '360',
@@ -533,37 +532,48 @@ export class CursoRutaEmprendedorComponent {
     return `https://www.youtube-nocookie.com/embed/${videoId}`;
   }
 
-/*
-  Extrae el ID de un video de YouTube a partir de su URL.
-*/
+  /*
+    Extrae el ID de un video de YouTube a partir de su URL.
+  */
   getYouTubeVideoId(url: string): string {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
     return (match && match[2].length === 11) ? match[2] : '';
   }
 
-/*
-  Genera la URL correcta para un archivo a partir de una ruta relativa.
-*/
-  getCorrectFileUrl(relativePath: string): string { 
+  /*
+    Genera la URL correcta para un archivo a partir de una ruta relativa.
+  */
+  getCorrectFileUrl(relativePath: string): string {
+    // Limpiar la base URL eliminando '/api/' y cualquier barra al final
     let baseUrl = environment.apiUrl.replace('/api/', '/');
-    baseUrl = baseUrl.replace(/\/+$/, '');
-    relativePath = relativePath.replace(/^\/+/, '');
-    return `${baseUrl}/${relativePath}`;
-}
+    baseUrl = baseUrl.replace(/\/+$/, ''); // Eliminar barra final del baseUrl
 
-/*
-  Crea una URL segura para un archivo PDF a partir de una URL dada.
-*/
+    // Limpiar el relativePath eliminando cualquier barra al principio
+    relativePath = relativePath.replace(/^\/+/, ''); // Eliminar barras al inicio del relativePath
+
+    // Verificar y eliminar el "doble storage"
+    if (relativePath.includes('storage/storage')) {
+      relativePath = relativePath.replace('storage/storage', 'storage');
+    }
+
+    // Construir la URL final
+    return `${baseUrl}/${relativePath}`;
+  }
+
+
+  /*
+    Crea una URL segura para un archivo PDF a partir de una URL dada.
+  */
   getPdfUrl(url: string): SafeResourceUrl {
     const cleanUrl = url.replace(/^\/?(storage\/)?/, '');
     const fullUrl = `${environment.apiUrl}/storage/${cleanUrl}`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(fullUrl);
   }
 
-/*
-  Descarga un archivo PDF dado su ID de contenido.
-*/
+  /*
+    Descarga un archivo PDF dado su ID de contenido.
+  */
   downloadPDF(contenidoId: number) {
     this.rutaService.descargarArchivo(contenidoId).subscribe({
       next: (response: HttpResponse<Blob>) => {
@@ -589,10 +599,10 @@ export class CursoRutaEmprendedorComponent {
       }
     });
   }
-  
-/*
-  Obtiene el color correspondiente a un índice dado.
-*/
+
+  /*
+    Obtiene el color correspondiente a un índice dado.
+  */
   getItemColor(index: number): string {
     const colors = [
       '#F4384B', // Rojo
@@ -608,18 +618,18 @@ export class CursoRutaEmprendedorComponent {
     return colors[index % colors.length];
   }
 
-/*
-  Obtiene el color para la actividad.
-*/
+  /*
+    Obtiene el color para la actividad.
+  */
   getColor(): string {
     return this.actividad.colorIndex !== undefined
       ? this.getItemColor(this.actividad.colorIndex)
       : '#FA7D00';
   }
 
-/*
-  Obtiene el color del texto en función del color de fondo.
-*/
+  /*
+    Obtiene el color del texto en función del color de fondo.
+  */
   getTextColor(): string {
     const color = this.getColor();
     const r = parseInt(color.slice(1, 3), 16);
@@ -629,17 +639,17 @@ export class CursoRutaEmprendedorComponent {
     return brightness > 128 ? 'black' : 'white';
   }
 
-/*
-  Obtiene un color más claro a partir del color actual.
-*/
+  /*
+    Obtiene un color más claro a partir del color actual.
+  */
   getLighterColor(amount: number): string {
     const color = this.getColor();
     return this.lightenColor(color, amount);
   }
 
-/*
-  Aclara un color dado en función de la cantidad especificada.
-*/
+  /*
+    Aclara un color dado en función de la cantidad especificada.
+  */
   lightenColor(color: string, amount: number): string {
     const num = parseInt(color.replace("#", ""), 16);
     const scaleFactor = 7;
@@ -649,9 +659,9 @@ export class CursoRutaEmprendedorComponent {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
   }
 
-/*
-  Determina el tipo de contenido basado en la fuente y el tipo de dato.
-*/
+  /*
+    Determina el tipo de contenido basado en la fuente y el tipo de dato.
+  */
   getContentType(contenido: any): string {
     if (!contenido || !contenido.fuente_contenido) return 'unknown';
     const fuente = contenido.fuente_contenido.toLowerCase();

@@ -18,7 +18,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 
 
-import { NgChartsModule } from 'ng2-charts';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PerfilAliadoComponent } from './pages/perfil-aliado/perfil-aliado.component';
 import { AddBannerComponent } from './pages/add-banner/add-banner.component';
@@ -65,7 +64,6 @@ import { ListActividadesComponent } from './pages/list-actividades/list-activida
     MatIconModule,
     SharedModule,
     FontAwesomeModule,
-    NgChartsModule,
     MatTooltipModule,
     RouterModule,
     MatToolbarModule

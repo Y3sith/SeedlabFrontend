@@ -19,7 +19,7 @@ import { Navigation, Pagination, Autoplay } from 'swiper/modules';
   styleUrls: ['./body.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush // Usando estrategia OnPush
 })
-export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
+export class BodyComponent implements OnInit, AfterViewInit {
   bannerSwiper: Swiper | undefined;
   alliesSwiper: Swiper | undefined;
   listAliados: Aliado[] = [];
@@ -64,7 +64,6 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
       combined$.subscribe(() => {
         this.isLoaded = true;
         this.cdr.markForCheck();
-
         this.precargarBannerPrincipal();
       })
     );
@@ -81,15 +80,6 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-    if (this.bannerSwiper) {
-      this.bannerSwiper.destroy(true, true);
-    }
-    if (this.alliesSwiper) {
-      this.alliesSwiper.destroy(true, true);
-    }
-  }
 
   private loadBanners(): Observable<Banner[]> {
     return this.aliadoService.getbanner().pipe(
@@ -100,7 +90,6 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
           banner.urlImagenLarge,
           banner.estadobanner,
         ));
-        console.log(this.listBanner);
       }),
       catchError(err => {
         console.error('Error al cargar banners:', err);
@@ -127,7 +116,6 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.listBanner && this.listBanner.length > 0) {
         const firstBanner = this.listBanner[0];
         if (firstBanner && firstBanner.urlImagenSmall) {
-          console.log('Preloading first banner image:', firstBanner.urlImagenSmall);
           const preloadLink = this.renderer.createElement('link');
           preloadLink.rel = 'preload';
           preloadLink.href = firstBanner.urlImagenSmall;
@@ -141,7 +129,6 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getFullImageUrl(path: string): string {
-    // Asumimos que environment.apiUrl no incluye una barra al final
     return `${environment.imageBaseUrl}/${path}`;
   }
 
@@ -158,11 +145,6 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
   // Manejo de errores en imágenes
   handleImageError(event: any) {
     event.target.src = 'assets/images/default-image.jpg';
-  }
-
-  private initSwipers(): void {
-    this.initBannerSwiper();
-    this.initAlliesSwiper();
   }
 
   getPersonalizacion(): Observable<any> {
@@ -216,7 +198,7 @@ export class BodyComponent implements OnInit, AfterViewInit, OnDestroy {
         spaceBetween: 0,
         loop: true,
         autoplay: {
-          delay: 5000,
+          delay: 1000,
           disableOnInteraction: false,
         },
         navigation: {

@@ -12,6 +12,7 @@ import { ModalAddRutaComponent } from './pages/ruta/modal-add-ruta/modal-add-rut
 import { SuperadminRoutingModule } from './superadmin-routing.module';
 import { ModalCrearOrientadorComponent } from './pages/orientador/add-orientador/modal-crear-orientador.component';
 import { ActnivlecComponent } from './pages/ruta/actnivlec/actnivlec.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
@@ -22,7 +23,6 @@ import { SharedModule } from '../shared.module';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 
 import { NgChartsModule } from 'ng2-charts';

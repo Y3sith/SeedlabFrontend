@@ -28,10 +28,13 @@ export class ModalActividadComponent implements OnInit {
   ngOnInit() {
     if (this.actividad && this.actividad.fuente) {
       const baseUrl = environment.apiUrl.replace(/\/api\/?$/, '');
-      const fuenteAjustada = this.actividad.fuente.startsWith('/')
-        ? this.actividad.fuente.slice(1)
-        : this.actividad.fuente;
-      this.imagenUrl = `${baseUrl}/${fuenteAjustada}`;
+      let fuenteAjustada = this.actividad.fuente;
+      // Si la ruta tiene doble "storage", eliminar una
+      if (fuenteAjustada.includes('/storage/storage/')) {
+        fuenteAjustada = fuenteAjustada.replace('/storage/storage/', '/storage/');
+      }
+      this.imagenUrl = `${baseUrl}${fuenteAjustada}`;
+      console.log(this.imagenUrl);
     }
   }
 

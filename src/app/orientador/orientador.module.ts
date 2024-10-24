@@ -12,7 +12,7 @@ import { SharedModule } from '../shared.module';
 import { ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import {TooltipPosition, MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule} from '@angular/material/tooltip';
 
 
 import { NgChartsModule } from 'ng2-charts';
