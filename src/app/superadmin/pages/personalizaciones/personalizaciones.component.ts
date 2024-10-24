@@ -328,9 +328,8 @@ export class PersonalizacionesComponent implements OnInit {
   restorePersonalizacion(): void {
     this.personalizacionesService.restorePersonalization(this.token, this.idPersonalizacion).subscribe(
       data => {
-        //console.log("Personalización restaurada!!!!!!");
         this.alertService.successAlert('Exito', data.message);
-        //location.reload();
+        console.log(data.message);
         localStorage.removeItem(`personalization`);
         setTimeout(() => {
           location.reload();
@@ -441,7 +440,6 @@ export class PersonalizacionesComponent implements OnInit {
 
     this.personalizacionesService.getPersonalizacion(this.idPersonalizacion).subscribe(
       (data: any) => {
-        console.log('Datos de personalización recibidos:', data);
         if (data && this.isValidPersonalizationData(data)) {
           this.personalizacionForm.patchValue({
             nombre_sistema: data.nombre_sistema,

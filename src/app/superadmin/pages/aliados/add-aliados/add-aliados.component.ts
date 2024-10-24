@@ -153,13 +153,18 @@ export class AddAliadosComponent {
   ngOnInit(): void {
     this.validateToken();
     this.tipoDato();
-    this.verEditar();
-    this.obtenerValorBaseDatos();
+
+    if (this.idAliado != null) {
+      this.verEditar();
+      this.obtenerValorBaseDatos();
+      this.verEditarBanners();
+    }
+
     this.ocultosBotones();
     this.mostrarToggle();
     this.toggleActive();
-    this.verEditarBanners();
   }
+
 
   /*
   Este método asegura que el token y la identidad del usuario estén disponibles para su uso en el 

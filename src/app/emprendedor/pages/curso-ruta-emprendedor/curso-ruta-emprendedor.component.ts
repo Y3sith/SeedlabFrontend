@@ -105,11 +105,6 @@ export class CursoRutaEmprendedorComponent {
     this.listarRutaActiva();
     this.updateSelectedContent();
     this.loadYouTubeApi();
-    if (this.actividad) {
-      console.log('Actividad recibida');
-    } else {
-      console.error('No se recibió información de la actividad');
-    }
   }
 
   /* Valida el token del login */

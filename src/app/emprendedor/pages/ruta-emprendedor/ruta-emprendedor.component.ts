@@ -126,7 +126,6 @@ export class RutaEmprendedorComponent implements OnInit {
       this.rutaService.rutasmejorado(this.token).subscribe(
         data => {
           this.rutaList = data;
-          console.log(this.rutaList);
           if (this.rutaList.length > 0) {
             const primeraRuta = this.rutaList[0];
             this.rutaId = primeraRuta.id;

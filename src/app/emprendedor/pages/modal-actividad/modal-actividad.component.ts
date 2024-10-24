@@ -34,7 +34,6 @@ export class ModalActividadComponent implements OnInit {
         fuenteAjustada = fuenteAjustada.replace('/storage/storage/', '/storage/');
       }
       this.imagenUrl = `${baseUrl}${fuenteAjustada}`;
-      console.log(this.imagenUrl);
     }
   }
 
