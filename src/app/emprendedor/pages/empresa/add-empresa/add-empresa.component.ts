@@ -112,11 +112,20 @@ export class AddEmpresaComponent {
     this.validateToken();
     this.cargarDepartamentos();
     this.tipodato();
-    this.cargarDatosEmpresa();
     this.cargarDepartamentos();
-    this.cargarApoyos();
+
     this.esVistaCreacion = !this.id_documentoEmpresa;
-    
+    // Solo cargar datos de la empresa si estamos en modo edición
+    if (this.id_documentoEmpresa) {
+      this.cargarDatosEmpresa();
+      this.cargarApoyos();
+    } else {
+      // Si es creación, no cargamos datos de empresa ni apoyos
+      this.isEditing = false;
+      this.ocultarSinApoyo = true;
+      this.isLoading = false;
+    }
+    // Verificar que la lista de apoyos no esté vacía antes de intentar seleccionar un apoyo
     if (this.listaApoyo && this.listaApoyo.length === 1) {
       this.onApoyoSelect(this.listaApoyo[0].documento);
     }
@@ -276,8 +285,7 @@ export class AddEmpresaComponent {
     this.EmpresaService.traerEmpresasola(this.token, this.id_emprendedor, this.id_documentoEmpresa).subscribe(
       data => {
         this.empresa = data;
-        this.apoyo = data.apoyo;
-
+        this.apoyo = data.apoyos;
         this.setFormValues();
         this.cargarDepartamentos();
         this.cargarApoyos();
@@ -491,17 +499,28 @@ export class AddEmpresaComponent {
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
-        if (this.listaApoyo && this.listaApoyo.length > 0 ) {
+        console.log(this.listaApoyo)
+        if (this.listaApoyo && this.listaApoyo.length > 0) {
           this.ocultarSinApoyo = false;
           this.isEditing = true;
           this.mostrarBotonesNuevos = false;
-          this.onApoyoSelect(this.listaApoyo[0].documento);
+
+          // Verificar si existe el documento antes de llamar a onApoyoSelect
+          if (this.listaApoyo[0]?.documento) {
+            this.onApoyoSelect(this.listaApoyo[0].documento);
+          } else {
+            console.warn('El primer elemento de listaApoyo no tiene el campo documento.');
+          }
+
         } else {
           this.ocultarSinApoyo = true;
           this.isEditing = false;
           this.mostrarBotonesNuevos = false;
-          this.onApoyoSelect(this.listaApoyo[0].documento);
+
+          // Evitar llamar a onApoyoSelect si la lista está vacía
+          console.warn('No hay apoyos disponibles en la lista.');
         }
+
         this.cd.detectChanges();
       },
       error => {
@@ -510,18 +529,19 @@ export class AddEmpresaComponent {
     );
   }
 
+
   /*
   Maneja la selección de un apoyo. 
   Busca el apoyo seleccionado, activa la edición y 
   actualiza el formulario con los datos del apoyo.
 */
-onApoyoSelect(documento: string) {
-  this.selectedApoyoDocumento = documento;
-  const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
-  if (selectedApoyo) {
-    this.addApoyoEmpresaForm.patchValue(selectedApoyo);
+  onApoyoSelect(documento: string) {
+    this.selectedApoyoDocumento = documento;
+    const selectedApoyo = this.listaApoyo.find(apoyo => apoyo.documento === documento);
+    if (selectedApoyo) {
+      this.addApoyoEmpresaForm.patchValue(selectedApoyo);
+    }
   }
-}
 
   /*
     Método para editar un apoyo. 
@@ -568,7 +588,7 @@ onApoyoSelect(documento: string) {
       this.alertService.errorAlert('Error', 'Debes completar todos los campos requeridos del apoyo');
       return;
     }
-    const apoyos : any = {
+    const apoyos: any = {
       documento: this.addApoyoEmpresaForm.get('documento')?.value,
       nombre: this.addApoyoEmpresaForm.get('nombre')?.value,
       apellido: this.addApoyoEmpresaForm.get('apellido')?.value,
