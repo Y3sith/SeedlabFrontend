@@ -411,8 +411,6 @@ export class AddEmpresaComponent {
     const empresaData = this.addEmpresaForm.value;
     this.EmpresaService.updateEmpresas(this.token, this.id_documentoEmpresa, empresaData).subscribe(
       response => {
-        setTimeout(function () {
-        }, this.tiempoEspera);
         this.alertService.successAlert('Exito', 'Empresa editado con exito');
         this.router.navigate(['list-empresa']);
       },
@@ -499,7 +497,6 @@ export class AddEmpresaComponent {
     this.EmpresaService.getApoyo(this.token, this.id_documentoEmpresa).subscribe(
       data => {
         this.listaApoyo = data;
-        console.log(this.listaApoyo)
         if (this.listaApoyo && this.listaApoyo.length > 0) {
           this.ocultarSinApoyo = false;
           this.isEditing = true;
@@ -602,9 +599,6 @@ export class AddEmpresaComponent {
 
     this.EmpresaService.crearApoyo(this.token, apoyos).subscribe(
       data => {
-        setTimeout(function () {
-          location.reload();
-        }, this.tiempoEspera);
         this.alertService.successAlert('Exito', 'Apoyo creado con exito');
 
       },
