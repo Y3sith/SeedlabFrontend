@@ -152,7 +152,7 @@ export class ActnivlecComponent implements OnInit {
     private location: Location,
   ) { }
 
-  
+
   /* Inicializa con esas funciones al cargar la pagina */
   ngOnInit(): void {
     this.validateToken();
@@ -227,7 +227,7 @@ export class ActnivlecComponent implements OnInit {
   */
   tipoDato(): void {
     if (this.token) {
-      this.isLoading=true;
+      this.isLoading = true;
       this.actividadService.getTipoDato(this.token).subscribe(
         data => {
 
@@ -283,11 +283,11 @@ export class ActnivlecComponent implements OnInit {
         data => {
           this.listarAliadoo = data;
           // console.log('Aliado: ', data)
-          this.isLoading=false;
+          this.isLoading = false;
         },
         error => {
           console.log(error);
-          this.isLoading=false;
+          this.isLoading = false;
         }
       )
     }
@@ -298,7 +298,7 @@ export class ActnivlecComponent implements OnInit {
   */
   verEditar(): void {
     if (this.actividadId !== null) {
-      this.isLoading=true;
+      this.isLoading = true;
       this.actividadService.ActiNivelLeccionContenido(this.token, this.actividadId).subscribe(
         data => {
           this.listActividadContenido = data;
@@ -324,13 +324,13 @@ export class ActnivlecComponent implements OnInit {
               this.activivarFormulariosBotones();
               this.updateCharCount();
               // console.log('Actividad: ', data);
-              this.isLoading=false;
+              this.isLoading = false;
             },
           );
         },
         error => {
           console.log('Error al cargar la actividad: ', error);
-          this.isLoading=false;
+          this.isLoading = false;
         }
       );
     }
@@ -361,7 +361,7 @@ export class ActnivlecComponent implements OnInit {
       this.nivelForm.get('nombre')?.disable();
 
     }
-    
+
     if (this.contenidoLeccion && this.contenidoLeccion.length > 0) {
       const primerContenido = this.contenidoLeccion[0];
       this.contenidoLeccionForm.patchValue({
@@ -382,9 +382,9 @@ export class ActnivlecComponent implements OnInit {
     this.charCount = descripcionValue.length;
   }
 
-/*
-  Agrega o actualiza una actividad en el sistema dependiendo del estado de `actividadId`.
-*/
+  /*
+    Agrega o actualiza una actividad en el sistema dependiendo del estado de `actividadId`.
+  */
   addActividadSuperAdmin(): void {
     this.submitted = true;
     this.isSubmitting = true;
@@ -395,7 +395,7 @@ export class ActnivlecComponent implements OnInit {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad no puede tener más de 39 caracteres');
       this.isSubmitting = false;
       return;
-    } else if (nombreActividad && nombreActividad.length  < 5) {
+    } else if (nombreActividad && nombreActividad.length < 5) {
       this.alertServices.errorAlert('Error', 'El nombre de la actividad debe tener más de 5 caracteres');
       this.isSubmitting = false;
       return;
@@ -406,7 +406,7 @@ export class ActnivlecComponent implements OnInit {
       this.alertServices.errorAlert('Error', 'La descripcion de la actividad no puede tener más de 470 caracteres');
       this.isSubmitting = false;
       return;
-    } else if (descripcionActividad && descripcionActividad.length  < 300) {
+    } else if (descripcionActividad && descripcionActividad.length < 300) {
       this.alertServices.errorAlert('Error', 'La descripcion de la actividad debe tener más de 300 caracteres');
       this.isSubmitting = false;
       return;
@@ -419,12 +419,12 @@ export class ActnivlecComponent implements OnInit {
 
     const camposObligatorios = ['nombre', 'descripcion'];
     for (const key of camposObligatorios) {
-        const control = this.actividadForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            this.isSubmitting = false;
-            return;
-        }
+      const control = this.actividadForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmitting = false;
+        return;
+      }
     }
 
     if (this.idactividad == null) {
@@ -446,49 +446,67 @@ export class ActnivlecComponent implements OnInit {
       }
     }
     if (this.actividadId == null) {
-      this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podran modificar en el apartado de editar", 'question').then((result) => {
-        if (result.isConfirmed) {
-
-          this.superAdminService.crearActividadSuperAdmin(this.token, formData).subscribe(
-            (data: any) => {
-              const actividadCreada = data[0];
-              this.nivelForm.patchValue({ id_actividad: actividadCreada.id });
-              this.alertServices.successAlert('Exito', data.message);
-              this.isSubmitting = false;
-              this.desactivarcamposActividad();
-              this.activarformularios();
-              this.habilitarBotones();
-              this.isSubmitting = false;
-            },
-            error => {
-              console.log(error);
-              this.isSubmitting = false
-              this.alertServices.errorAlert('Error', error.error.message);
-            }
-          );
-        }else{
+      this.alertServices
+        .alertaActivarDesactivar(
+          "¿Estás seguro de guardar los cambios? Verifica los datos ingresados, una vez guardados solo se podrán modificar en el apartado de editar",
+          'question'
+        )
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.isSubmitting = true; // Asegurarse de que el spinner se active correctamente.
+            this.superAdminService.crearActividadSuperAdmin(this.token, formData).subscribe(
+              (data: any) => {
+                if (data && data.actividad.id) {
+                  this.nivelForm.patchValue({ id_actividad: data.actividad.id });
+                  this.alertServices.successAlert('Éxito', data.message);
+                  this.desactivarcamposActividad();
+                  this.activarformularios();
+                  this.habilitarBotones();
+                  this.isSubmitting = false;
+                } else {
+                  console.error('La respuesta no contiene un ID válido:', data);
+                }
+              },
+              (error) => {
+                console.log(error);
+                this.alertServices.errorAlert('Error', error.error.message);
+                this.isSubmitting = false; // También aquí para detener el spinner en caso de error.
+              }
+            );
+          } else {
+            this.isSubmitting = false; // Se detiene si no confirma la acción.
+          }
+        })
+        .catch((err) => {
+          console.error(err); // Capturar cualquier error en el flujo de promesas
           this.isSubmitting = false;
-        }
-      })
+        });
     } else {
-      this.alertServices.alertaActivarDesactivar("¿Estas seguro de guardar los cambios?", 'question').then((result) => {
-        if (result.isConfirmed) {
-          this.actividadService.updateActividad(this.token, this.actividadId, formData).subscribe(
-            data => {
-              this.alertServices.successAlert('Exito', data.message);
-              this.isSubmitting = false;
-            },
-            error => {
-              this.isSubmitting = false;
-              console.log(error);
-              const errorMessage = error.error?.error || 'Ocurrió un error inesperado';
-              this.alertServices.errorAlert('Error', error.error.message);
-            }
-          )
-        }else{
+      this.alertServices
+        .alertaActivarDesactivar("¿Estás seguro de guardar los cambios?", 'question')
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.isSubmitting = true; // Asegurarse de que el spinner se active correctamente.
+            this.actividadService.updateActividad(this.token, this.actividadId, formData).subscribe(
+              (data) => {
+                this.alertServices.successAlert('Éxito', data.message);
+                this.isSubmitting = false; // Aquí se detiene el spinner.
+              },
+              (error) => {
+                console.log(error);
+                const errorMessage = error.error?.error || 'Ocurrió un error inesperado';
+                this.alertServices.errorAlert('Error', errorMessage);
+                this.isSubmitting = false; // También aquí para detener el spinner en caso de error.
+              }
+            );
+          } else {
+            this.isSubmitting = false; // Se detiene si no confirma la acción.
+          }
+        })
+        .catch((err) => {
+          console.error(err); // Capturar cualquier error en el flujo de promesas
           this.isSubmitting = false;
-        }
-      })
+        });
     }
   }
 
@@ -631,12 +649,12 @@ export class ActnivlecComponent implements OnInit {
     }
     const camposObligatorios = ['nombre'];
     for (const key of camposObligatorios) {
-        const control = this.nivelForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            this.isSubmittingNivel = false;
-            return;
-        }
+      const control = this.nivelForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmittingNivel = false;
+        return;
+      }
     }
     const nivel: any = {
       nombre: nombreNivel,
@@ -732,12 +750,12 @@ export class ActnivlecComponent implements OnInit {
 
     const camposObligatorios = ['nombre'];
     for (const key of camposObligatorios) {
-        const control = this.leccionForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            this.isSubmittingLeccion = false;
-            return;
-        }
+      const control = this.leccionForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmittingLeccion = false;
+        return;
+      }
     }
 
     const leccion: any = {
@@ -842,7 +860,7 @@ export class ActnivlecComponent implements OnInit {
             id_leccion: '',
             nombre: ''
           });
-          this.contenidoLeccionForm.reset(); 
+          this.contenidoLeccionForm.reset();
           this.contenidoLeccion = [];
         }
       },
@@ -955,11 +973,11 @@ export class ActnivlecComponent implements OnInit {
   /*
     Actualiza el contador de caracteres para el campo 'descripcion' en el formulario de contenido de la lección.
   */
-  updateCharCountContenido(){
+  updateCharCountContenido() {
     const descripcionContenido = this.contenidoLeccionForm.get('descripcion')?.value || '';
     this.charCountContenido = descripcionContenido.length;
   }
-  
+
   /*
     Agrega o actualiza el contenido de una lección en el sistema, dependiendo de si el contenido ya existe o no.
   */
@@ -991,14 +1009,14 @@ export class ActnivlecComponent implements OnInit {
       return;
     }
 
-    const camposObligatorios = ['titulo','descripcion'];
+    const camposObligatorios = ['titulo', 'descripcion'];
     for (const key of camposObligatorios) {
-        const control = this.contenidoLeccionForm.get(key);
-        if (control && control.value && control.value.trim() === '') {
-            this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
-            this.isSubmittingContenido = false;
-            return;
-        }
+      const control = this.contenidoLeccionForm.get(key);
+      if (control && control.value && control.value.trim() === '') {
+        this.alertServices.errorAlert('Error', `El campo ${key} no puede contener solo espacios en blanco.`);
+        this.isSubmittingContenido = false;
+        return;
+      }
     }
 
 
@@ -1110,7 +1128,7 @@ export class ActnivlecComponent implements OnInit {
     this.actividadForm.get('fuente').updateValueAndValidity();
   }
 
-  
+
   /*
     Este método se llama cuando hay una entrada de texto en el campo 'fuente'.
   */
@@ -1192,9 +1210,9 @@ export class ActnivlecComponent implements OnInit {
     this.cdRef.detectChanges();
   }
 
-/*
-  Este método gestiona la entrada de texto en el campo 'fuente_contenido' del formulario de contenido de lección.
-*/
+  /*
+    Este método gestiona la entrada de texto en el campo 'fuente_contenido' del formulario de contenido de lección.
+  */
   onTextInputContenido(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.contenidoLeccionForm.patchValue({ fuente_contenido: value });
@@ -1242,9 +1260,9 @@ export class ActnivlecComponent implements OnInit {
     }
   }
 
-/*
-  Este método maneja la selección de archivos en un campo de formulario específico. 
-*/
+  /*
+    Este método maneja la selección de archivos en un campo de formulario específico. 
+  */
   resetFileFieldContenido(field: string) {
     if (field === 'fuente_contenido') {
       this.contenidoLeccionForm.patchValue({ fuente_contenido: null });
@@ -1252,10 +1270,10 @@ export class ActnivlecComponent implements OnInit {
       this.fuentePreviewContenido = null;
     }
   }
-  
-/*
-  Este método maneja la selección de archivos en un campo de formulario específico. 
-*/
+
+  /*
+    Este método maneja la selección de archivos en un campo de formulario específico. 
+  */
   resetFuenteFieldContenido(): void {
     this.contenidoLeccionForm.patchValue({ fuente_contenido: '' });
     this.selectedfuenteContenido = null;
